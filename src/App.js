@@ -90,6 +90,16 @@ function sfc32(a, b, c, d) {
   };
 }
 
+function forEachCard(gameState, callback) {
+  for (let i = 0; i < gameState.players.length; ++i) {
+    const player = gameState.players[i];
+    for (let j = 0; j < player.board.length; ++j) {
+      const boardCard = player.board[j];
+      callback(player, i, boardCard, j);
+    }
+  }
+}
+
 const TICK_RATE = 100;
 
 function runGameTick(gameState) {
@@ -108,8 +118,9 @@ function runGameTick(gameState) {
       nextGameState.players[playerID].board[boardCardID][attribute];
     nextGameState.players[playerID].board[boardCardID][attribute] = value;
 
-    nextGameState.players.forEach((targetPlayer, targetPlayerID) => {
-      targetPlayer.board.forEach((targetBoardCard, targetBoardCardID) => {
+    forEachCard(
+      nextGameState,
+      (targetPlayer, targetPlayerID, targetBoardCard, targetBoardCardID) => {
         Object.values(targetBoardCard.card.Abilities).forEach((ability) => {
           if (
             (ability.Trigger.$type === "TTriggerOnCardPerformedHaste" &&
@@ -148,16 +159,17 @@ function runGameTick(gameState) {
             });
           }
         });
-      });
-    });
+      }
+    );
   }
 
   function updatePlayerAttribute(playerID, attribute, value) {
     const existingValue = nextGameState.players[playerID][attribute];
     nextGameState.players[playerID][attribute] = value;
 
-    nextGameState.players.forEach((targetPlayer, targetPlayerID) => {
-      targetPlayer.board.forEach((targetBoardCard, targetBoardCardID) => {
+    forEachCard(
+      nextGameState,
+      (targetPlayer, targetPlayerID, targetBoardCard, targetBoardCardID) => {
         Object.values(targetBoardCard.card.Abilities).forEach((ability) => {
           if (
             (ability.Trigger.$type === "TTriggerOnCardPerformedPoison" &&
@@ -185,8 +197,8 @@ function runGameTick(gameState) {
             );
           }
         });
-      });
-    });
+      }
+    );
   }
 
   function testPrerequisite(
@@ -712,44 +724,43 @@ function runGameTick(gameState) {
   }
 
   const cardTriggerList = [];
-  gameState.players.forEach((player, playerID) => {
-    player.board.forEach((boardCard, boardCardID) => {
-      const nextBoardCard = nextGameState.players[playerID].board[boardCardID];
-      let tickRate = TICK_RATE;
-      if (boardCard.Slow > 0) {
-        tickRate /= 2;
-      }
-      if (boardCard.Haste > 0) {
-        tickRate *= 2;
-      }
-      let tick = TICK_RATE;
-      nextBoardCard.Slow = Math.max(0, boardCard.Slow - tick);
-      nextBoardCard.Haste = Math.max(0, boardCard.Haste - tick);
+  forEachCard(gameState, (player, playerID, boardCard, boardCardID) => {
+    const nextBoardCard = nextGameState.players[playerID].board[boardCardID];
+    let tickRate = TICK_RATE;
+    if (boardCard.Slow > 0) {
+      tickRate /= 2;
+    }
+    if (boardCard.Haste > 0) {
+      tickRate *= 2;
+    }
+    let tick = TICK_RATE;
+    nextBoardCard.Slow = Math.max(0, boardCard.Slow - tick);
+    nextBoardCard.Haste = Math.max(0, boardCard.Haste - tick);
+    if (boardCard.Freeze > 0) {
+      nextBoardCard.Freeze -= tick;
+      tick = boardCard.Freeze;
       if (boardCard.Freeze > 0) {
-        nextBoardCard.Freeze -= tick;
-        tick = boardCard.Freeze;
-        if (boardCard.Freeze > 0) {
-          tick = 0;
-        } else {
-          tick = -boardCard.Freeze;
-          nextBoardCard.Freeze = 0;
-        }
+        tick = 0;
       } else {
-        nextBoardCard.tick = Math.min(
-          boardCard.tick + tickRate,
-          boardCard.CooldownMax
-        );
+        tick = -boardCard.Freeze;
+        nextBoardCard.Freeze = 0;
       }
+    } else {
+      nextBoardCard.tick = Math.min(
+        boardCard.tick + tickRate,
+        boardCard.CooldownMax
+      );
+    }
 
-      if (nextBoardCard.tick === boardCard.CooldownMax) {
-        cardTriggerList.push([playerID, boardCardID]);
-      }
-    });
+    if (nextBoardCard.tick === boardCard.CooldownMax) {
+      cardTriggerList.push([playerID, boardCardID]);
+    }
   });
 
   cardTriggerList.forEach(([playerID, boardCardID]) => {
-    gameState.players.forEach((targetPlayer, targetPlayerID) => {
-      targetPlayer.board.forEach((targetBoardCard, targetBoardCardID) => {
+    forEachCard(
+      gameState,
+      (targetPlayer, targetPlayerID, targetBoardCard, targetBoardCardID) => {
         Object.values(targetBoardCard.card.Abilities).forEach((ability) => {
           if (
             ability.Trigger.$type === "TTriggerOnCardFired" &&
@@ -789,16 +800,17 @@ function runGameTick(gameState) {
             });
           }
         });
-      });
-    });
+      }
+    );
 
     nextGameState.players[playerID].board[boardCardID].tick = 0;
   });
 
   nextGameState.players.forEach((player, playerID) => {
     if (player.Health < 0) {
-      nextGameState.players.forEach((targetPlayer, targetPlayerID) => {
-        targetPlayer.board.forEach((targetBoardCard, targetBoardCardID) => {
+      forEachCard(
+        nextGameState,
+        (targetPlayer, targetPlayerID, targetBoardCard, targetBoardCardID) => {
           Object.values(targetBoardCard.card.Abilities).forEach((ability) => {
             if (ability.Trigger.$type === "TTriggerOnPlayerDied") {
               const abilityPlayerID = getTargetPlayer(
@@ -816,8 +828,8 @@ function runGameTick(gameState) {
               );
             }
           });
-        });
-      });
+        }
+      );
     }
   });
 
