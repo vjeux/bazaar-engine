@@ -10,6 +10,33 @@ const Cards = JSON.parse(pako.inflate(compressed, { to: "string" }));
 
 const CardsValues = Object.values(Cards);
 
+const initialGameState = {
+  tick: 0,
+  isPlaying: true,
+  players: [
+    getBoardPlayer({ MaxHealth: 400, HealthRegen: 0 }, [
+      // getBoardCard("Switchblade", "Silver"),
+      // getBoardCard("Bar of Gold", "Bronze"),
+      getBoardCard("Fang", "Bronze"),
+      getBoardCard("Fang", "Bronze"),
+      // getBoardCard("Citrus", "Bronze"),
+      // getBoardCard("Fang", "Bronze"),
+      // getBoardCard("Fang", "Bronze"),
+      // getBoardCard("Fang", "Bronze"),
+      // getBoardCard("Colossal Popsicle", "Diamond"),
+      // getBoardCard("Beach Ball", "Silver"),
+    ]),
+    getBoardPlayer({ MaxHealth: 350, HealthRegen: 5 }, [
+      getBoardCard("Powder Flask", "Silver"),
+      // getBoardCard("Ballista", "Silver"),
+      getBoardCard("Atomic Clock", "Silver"),
+      // getBoardCard("Blow Torch", "Silver"),
+      // getBoardCard("Solar Farm", "Silver"),
+    ]),
+  ],
+  getRand: sfc32(0, 10000, 10000000, 100000000000),
+};
+
 function getBoardCard(name, tier, modifiers) {
   const card = CardsValues.find(
     (card) => card.Localization.Title.Text === name
@@ -31,6 +58,7 @@ function getBoardCard(name, tier, modifiers) {
     Slow: 0,
     Freeze: 0,
     Haste: 0,
+    ...(attributes.AmmoMax ? { Ammo: attributes.AmmoMax } : {}),
   };
   return result;
 }
@@ -46,33 +74,6 @@ function getBoardPlayer(stats, board) {
     board,
   };
 }
-
-const initialGameState = {
-  tick: 0,
-  isPlaying: true,
-  players: [
-    getBoardPlayer({ MaxHealth: 400, HealthRegen: 0 }, [
-      // getBoardCard("Switchblade", "Silver"),
-      // getBoardCard("Bar of Gold", "Bronze"),
-      getBoardCard("Fang", "Bronze"),
-      // getBoardCard("Fang", "Bronze"),
-      getBoardCard("Citrus", "Bronze"),
-      // getBoardCard("Fang", "Bronze"),
-      // getBoardCard("Fang", "Bronze"),
-      // getBoardCard("Fang", "Bronze"),
-      // getBoardCard("Colossal Popsicle", "Diamond"),
-      // getBoardCard("Beach Ball", "Silver"),
-    ]),
-    getBoardPlayer({ MaxHealth: 350, HealthRegen: 5 }, [
-      // getBoardCard("Dock Lines", "Silver"),
-      // getBoardCard("Cauldron", "Silver"),
-      // getBoardCard("Beach Ball", "Silver"),
-      getBoardCard("Blow Torch", "Silver"),
-      getBoardCard("Solar Farm", "Silver"),
-    ]),
-  ],
-  getRand: sfc32(0, 10000, 10000000, 100000000000),
-};
 
 function sfc32(a, b, c, d) {
   return function () {
@@ -331,7 +332,6 @@ function runGameTick(gameState) {
         triggerPlayerID,
         targetPlayerID
       );
-      const health = nextGameState.players[playerID].Health;
       const shield = nextGameState.players[playerID].Shield;
       const amount =
         gameState.players[triggerPlayerID].board[triggerBoardCardID]
@@ -402,6 +402,48 @@ function runGameTick(gameState) {
         gameState.players[targetPlayerID].board[
           targetBoardCardID
         ].ShieldApplyAmount;
+    } else if (action.$type === "TActionPlayerReviveHeal") {
+      const playerID = getTargetPlayer(
+        action.Target,
+        triggerPlayerID,
+        targetPlayerID
+      );
+      nextGameState.players[playerID].Health = 0;
+    } else if (action.$type === "TActionCardReload") {
+      const targetCards = getTargetCards(
+        action.Target,
+        triggerPlayerID,
+        triggerBoardCardID,
+        targetPlayerID,
+        targetBoardCardID
+      );
+      const amount =
+        gameState.players[targetPlayerID].board[targetBoardCardID].ReloadAmount;
+      const targetCount =
+        gameState.players[targetPlayerID].board[targetBoardCardID]
+          .ReloadTargets;
+
+      targetCards
+        .slice(0, targetCount)
+        .forEach(([actionTargetPlayerID, actionTargetBoardCardID]) => {
+          const nextBoardCard =
+            nextGameState.players[actionTargetPlayerID].board[
+              actionTargetBoardCardID
+            ];
+          const value = nextBoardCard.Ammo;
+          const newValue = Math.min(
+            nextBoardCard.AmmoMax,
+            nextBoardCard.Ammo + amount
+          );
+          if (value !== newValue) {
+            updateCardAttribute(
+              actionTargetPlayerID,
+              actionTargetBoardCardID,
+              "Ammo",
+              newValue
+            );
+          }
+        });
     } else if (
       action.$type === "TActionCardFreeze" ||
       action.$type === "TActionCardSlow" ||
@@ -501,30 +543,46 @@ function runGameTick(gameState) {
         targetPlayerID,
         targetBoardCardID
       );
-      getTargetCards(
+
+      const targetCards = getTargetCards(
         action.Target,
         triggerPlayerID,
         triggerBoardCardID,
         targetPlayerID,
         targetBoardCardID
-      ).forEach(([actionTargetPlayerID, actionTargetBoardCardID]) => {
-        const oldValue =
-          nextGameState.players[actionTargetPlayerID].board[
-            actionTargetBoardCardID
-          ][action.AttributeType];
-        if (oldValue === undefined) {
-          return;
-        }
-        const newValue =
-          action.Operation === "Add" ? oldValue + actionValue : oldValue;
+      );
 
-        updateCardAttribute(
-          actionTargetPlayerID,
-          actionTargetBoardCardID,
-          action.AttributeType,
-          newValue
-        );
-      });
+      const targetCount =
+        action.TargetCount == null
+          ? targetCards.length
+          : getActionValue(
+              action.TargetCount,
+              triggerPlayerID,
+              triggerBoardCardID,
+              targetPlayerID,
+              targetBoardCardID
+            );
+
+      targetCards
+        .slice(0, targetCount)
+        .forEach(([actionTargetPlayerID, actionTargetBoardCardID]) => {
+          const oldValue =
+            nextGameState.players[actionTargetPlayerID].board[
+              actionTargetBoardCardID
+            ][action.AttributeType];
+          if (oldValue === undefined) {
+            return;
+          }
+          const newValue =
+            action.Operation === "Add" ? oldValue + actionValue : oldValue;
+
+          updateCardAttribute(
+            actionTargetPlayerID,
+            actionTargetBoardCardID,
+            action.AttributeType,
+            newValue
+          );
+        });
     } else if (action.$type === "TActionPlayerModifyAttribute") {
       const actionValue = getActionValue(
         action.Value,
@@ -612,6 +670,23 @@ function runGameTick(gameState) {
           gameState.players[targetPlayerID].board.length - 1
         ) {
           results.push([targetPlayerID, targetBoardCardID + 1]);
+        }
+      } else if (target.TargetMode === "RightCard") {
+        if (target.IncludeOrigin) {
+          results.push([targetPlayerID, targetBoardCardID]);
+        }
+        if (
+          targetBoardCardID !==
+          gameState.players[targetPlayerID].board.length - 1
+        ) {
+          results.push([targetPlayerID, targetBoardCardID + 1]);
+        }
+      } else if (target.TargetMode === "LeftCard") {
+        if (target.IncludeOrigin) {
+          results.push([targetPlayerID, targetBoardCardID]);
+        }
+        if (targetBoardCardID !== 0) {
+          results.push([targetPlayerID, targetBoardCardID - 1]);
         }
       }
     } else if (
@@ -753,11 +828,21 @@ function runGameTick(gameState) {
     }
 
     if (nextBoardCard.tick === boardCard.CooldownMax) {
-      cardTriggerList.push([playerID, boardCardID]);
+      if (
+        !nextBoardCard.AmmoMax ||
+        (nextBoardCard.AmmoMax && nextBoardCard.Ammo > 0)
+      ) {
+        cardTriggerList.push([playerID, boardCardID]);
+      }
     }
   });
 
   cardTriggerList.forEach(([playerID, boardCardID]) => {
+    const boardCard = gameState.players[playerID].board[boardCardID];
+    if (boardCard.AmmoMax) {
+      nextGameState.players[playerID].board[boardCardID].Ammo--;
+    }
+
     forEachCard(
       gameState,
       (targetPlayer, targetPlayerID, targetBoardCard, targetBoardCardID) => {
@@ -858,18 +943,22 @@ const CARD_HEIGHT = 150;
 
 function BoardCard({ boardCard }) {
   const card = boardCard.card;
+  const cardWidth =
+    card.Size === "Small"
+      ? CARD_HEIGHT / 2
+      : card.Size === "Medium"
+      ? CARD_HEIGHT / 1
+      : CARD_HEIGHT * 1.5;
+
+  const paddingTop = 20;
   return (
     <div
       style={{
         margin: 5,
         position: "relative",
-        height: CARD_HEIGHT,
-        width:
-          card.Size === "Small"
-            ? CARD_HEIGHT / 2
-            : card.Size === "Medium"
-            ? CARD_HEIGHT / 1
-            : CARD_HEIGHT * 1.5,
+        height: CARD_HEIGHT + paddingTop,
+        width: cardWidth,
+        overflow: "hidden",
       }}
     >
       <img
@@ -881,15 +970,12 @@ function BoardCard({ boardCard }) {
         style={{
           filter: boardCard.Freeze > 0 ? "grayscale(1)" : "",
           opacity: boardCard.Freeze > 0 ? 0.5 : 1,
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
           borderRadius: 5,
+          position: "relative",
+          top: paddingTop,
         }}
-        height="100%"
-        width="100%"
+        height={CARD_HEIGHT}
+        width={cardWidth}
       />
       {boardCard.CooldownMax > 0 ? (
         <div
@@ -898,10 +984,17 @@ function BoardCard({ boardCard }) {
             left: 0,
             right: 0,
             bottom: (boardCard.tick / boardCard.CooldownMax) * CARD_HEIGHT,
+            borderTop: "2px solid white",
+            color: "white",
+            textAlign: "right",
+            fontSize: "8pt",
+            boxSizing: "border-box",
             height: 2,
-            backgroundColor: "white",
           }}
-        />
+        >
+          {(boardCard.tick / 1000).toFixed(1)} /{" "}
+          {(boardCard.CooldownMax / 1000).toFixed(1)}&nbsp;
+        </div>
       ) : null}
       <div
         style={{
@@ -959,6 +1052,7 @@ function BoardCard({ boardCard }) {
           left: "50%",
           transform: "translate(-50%, -50%)",
           display: "flex",
+          top: paddingTop,
         }}
       >
         {boardCard.DamageAmount !== undefined && (
@@ -1026,6 +1120,37 @@ function BoardCard({ boardCard }) {
           </div>
         )}
       </div>
+      {boardCard.AmmoMax && (
+        <div
+          style={{
+            position: "absolute",
+            left: "50%",
+            transform: "translateX(-50%)",
+            bottom: 0,
+            display: "flex",
+            backgroundColor: "gray",
+            padding: "2px 5px",
+            marginBottom: 5,
+            borderRadius: 5,
+          }}
+        >
+          {[...new Array(boardCard.AmmoMax)].map((_, i) => {
+            return (
+              <div
+                style={{
+                  width: 10,
+                  height: 10,
+                  borderRadius: 10,
+                  backgroundColor:
+                    boardCard.Ammo > i ? "orange" : "transparent",
+                  margin: "1px 1px",
+                  border: "1px solid orange",
+                }}
+              />
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
@@ -1073,74 +1198,5 @@ export default function App() {
         onChange={(e) => setStepCount(e.target.value)}
       />
     </div>
-  );
-}
-
-function CardWithTooltip({ card }) {
-  return (
-    <div>
-      <div>{card.Localization.Title.Text}</div>
-      <div>
-        {[...card.Heroes, ...card.HiddenTags, ...card.Tags, card.Size].join(
-          ", "
-        )}
-      </div>
-      <div>
-        {card.Localization.Tooltips.map((tooltip, i) => {
-          return (
-            <div>
-              {tooltip.Content &&
-                tooltip.Content.Text &&
-                tooltip.Content.Text.replace(/\{ability.([0-9])\}/, (_, id) =>
-                  Object.values(card.Tiers)
-                    .map((tier) =>
-                      card.Abilities[i]
-                        ? tier.Attributes[
-                            fieldForActionType[card.Abilities[i].Action.$type]
-                          ]
-                        : "??"
-                    )
-                    .join(" >> ")
-                )}
-            </div>
-          );
-        })}
-      </div>
-      <img
-        src={
-          "https://www.howbazaar.gg/images/items/" +
-          (card.InternalName ? card.InternalName.replace(/ /g, "") : "") +
-          ".avif"
-        }
-        height={CARD_HEIGHT}
-        width={
-          card.Size === "Small"
-            ? CARD_HEIGHT / 2
-            : card.Size === "Medium"
-            ? CARD_HEIGHT / 1
-            : CARD_HEIGHT * 1.5
-        }
-      />
-    </div>
-  );
-}
-
-function CardsWithTooltips() {
-  return (
-    <>
-      {Object.values(Cards)
-        .filter((card) => {
-          return card.Localization.Title.Text === "Fang";
-          return card.$type === "TCardItem";
-        })
-        .map((card) => {
-          return (
-            <>
-              <CardWithTooltip card={card} />
-              <hr />
-            </>
-          );
-        })}
-    </>
   );
 }
