@@ -38,6 +38,7 @@ const initialGameState = {
       // getBoardCard("Crusher Claw", "Silver"),
       // getBoardCard("Blue Piggles A", "Silver"),
       // getBoardCard("Cutlass", "Silver"),
+      getBoardCard("Copper Ed", "Silver"),
       getBoardCard("Agility Boots", "Silver"),
       getBoardCard("Crusher Claw", "Silver"),
       getBoardCard("Abacus", "Gold"),
@@ -1199,7 +1200,7 @@ for (let i = 0; i < 1000; ++i) {
 
 const CARD_HEIGHT = 150;
 
-function BoardCard({ boardCard }) {
+function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
   const card = boardCard.card;
   const tier = boardCard.tier;
   const cardWidth =
@@ -1212,121 +1213,190 @@ function BoardCard({ boardCard }) {
   const paddingTop = 20;
   const borderSize = 4;
   return (
-    <div
-      style={{
-        margin: 5,
-        position: "relative",
-        height: CARD_HEIGHT + paddingTop + 2 * borderSize,
-        width: cardWidth + 2 * borderSize,
-        overflow: "hidden",
-      }}
-    >
-      <img
-        src={
-          "https://www.howbazaar.gg/images/items/" +
-          (card.InternalName ? card.InternalName.replace(/[ ']/g, "") : "") +
-          ".avif"
-        }
+    <div className="tooltipContainer">
+      <div
         style={{
-          filter: boardCard.Freeze > 0 ? "grayscale(1)" : "",
-          opacity: boardCard.Freeze > 0 ? 0.5 : 1,
-          borderRadius: 5,
+          margin: 5,
           position: "relative",
-          top: paddingTop,
-          border: borderSize + "px solid",
-          borderColor:
-            tier === "Bronze"
-              ? "brown"
-              : tier === "Silver"
-              ? "gray"
-              : tier === "Gold"
-              ? "yellow"
-              : "blue",
+          height: CARD_HEIGHT + paddingTop + 2 * borderSize,
+          width: cardWidth + 2 * borderSize,
+          overflow: "hidden",
         }}
-        height={CARD_HEIGHT}
-        width={cardWidth}
-      />
-      {boardCard.CooldownMax > 0 ? (
+      >
+        <img
+          src={
+            "https://www.howbazaar.gg/images/items/" +
+            (card.InternalName ? card.InternalName.replace(/[ ']/g, "") : "") +
+            ".avif"
+          }
+          style={{
+            filter: boardCard.Freeze > 0 ? "grayscale(1)" : "",
+            opacity: boardCard.Freeze > 0 ? 0.5 : 1,
+            borderRadius: 5,
+            position: "relative",
+            top: paddingTop,
+            border: borderSize + "px solid",
+            borderColor:
+              tier === "Bronze"
+                ? "brown"
+                : tier === "Silver"
+                ? "gray"
+                : tier === "Gold"
+                ? "yellow"
+                : "blue",
+          }}
+          height={CARD_HEIGHT}
+          width={cardWidth}
+        />
+        {boardCard.CooldownMax > 0 ? (
+          <div
+            style={{
+              position: "absolute",
+              left: 0,
+              right: 0,
+              bottom: (boardCard.tick / boardCard.CooldownMax) * CARD_HEIGHT,
+              borderTop: "2px solid white",
+              color: "white",
+              textAlign: "right",
+              fontSize: "8pt",
+              boxSizing: "border-box",
+              height: 2,
+            }}
+          >
+            {(boardCard.tick / 1000).toFixed(1)} /{" "}
+            {(boardCard.CooldownMax / 1000).toFixed(1)}&nbsp;&nbsp;
+          </div>
+        ) : null}
         <div
           style={{
             position: "absolute",
-            left: 0,
-            right: 0,
-            bottom: (boardCard.tick / boardCard.CooldownMax) * CARD_HEIGHT,
-            borderTop: "2px solid white",
+            top: 20,
+            left: "50%",
+            top: "50%",
+            transform: "translate(-50%, -50%)",
+            display: "flex",
+            flexDirection: "column",
             color: "white",
-            textAlign: "right",
-            fontSize: "8pt",
-            boxSizing: "border-box",
-            height: 2,
+            whiteSpace: "preserve nowrap",
           }}
         >
-          {(boardCard.tick / 1000).toFixed(1)} /{" "}
-          {(boardCard.CooldownMax / 1000).toFixed(1)}&nbsp;&nbsp;
+          {boardCard.Freeze > 0 ? (
+            <div
+              style={{
+                background: "rgba(0.2, 0.2, 0.2, 0.5)",
+                padding: "2px 5px",
+                borderRadius: 5,
+                margin: 2,
+              }}
+            >
+              ❄️ {(boardCard.Freeze / 1000).toFixed(1)}
+            </div>
+          ) : null}
+          {boardCard.Slow > 0 ? (
+            <div
+              style={{
+                background: "rgba(0.2, 0.2, 0.2, 0.5)",
+                padding: "2px 5px",
+                borderRadius: 5,
+                margin: 2,
+              }}
+            >
+              🐌 {(boardCard.Slow / 1000).toFixed(1)}
+            </div>
+          ) : null}
+          {boardCard.Haste > 0 ? (
+            <div
+              style={{
+                background: "rgba(0.2, 0.2, 0.2, 0.5)",
+                padding: "2px 5px",
+                borderRadius: 5,
+                margin: 2,
+              }}
+            >
+              ⏱️ {(boardCard.Haste / 1000).toFixed(1)}
+            </div>
+          ) : null}
         </div>
-      ) : null}
-      <div
-        style={{
-          position: "absolute",
-          top: 20,
-          left: "50%",
-          top: "50%",
-          transform: "translate(-50%, -50%)",
-          display: "flex",
-          flexDirection: "column",
-          color: "white",
-          whiteSpace: "preserve nowrap",
-        }}
-      >
-        {boardCard.Freeze > 0 ? (
+        <div
+          style={{
+            position: "absolute",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+            display: "flex",
+            top: paddingTop,
+          }}
+        >
+          {boardCard.DamageAmount !== undefined && (
+            <div
+              style={{
+                backgroundColor: "red",
+                padding: "2px 5px",
+                margin: "0 2px",
+                borderRadius: 5,
+                color: "white",
+              }}
+            >
+              {boardCard.DamageAmount}
+            </div>
+          )}
+          {boardCard.HealAmount !== undefined && (
+            <div
+              style={{
+                backgroundColor: "limegreen",
+                padding: "2px 5px",
+                margin: "0 2px",
+                borderRadius: 5,
+                color: "white",
+              }}
+            >
+              {boardCard.HealAmount}
+            </div>
+          )}
+          {boardCard.BurnApplyAmount !== undefined && (
+            <div
+              style={{
+                backgroundColor: "orange",
+                padding: "2px 5px",
+                margin: "0 2px",
+                borderRadius: 5,
+                color: "white",
+              }}
+            >
+              {boardCard.BurnApplyAmount}
+            </div>
+          )}
+          {boardCard.PoisonApplyAmount !== undefined && (
+            <div
+              style={{
+                backgroundColor: "purple",
+                padding: "2px 5px",
+                margin: "0 2px",
+                borderRadius: 5,
+                color: "white",
+              }}
+            >
+              {boardCard.PoisonApplyAmount}
+            </div>
+          )}
+          {boardCard.ShieldApplyAmount !== undefined && (
+            <div
+              style={{
+                backgroundColor: "yellow",
+                borderRadius: 5,
+                padding: "2px 5px",
+                margin: "0 2px",
+              }}
+            >
+              {boardCard.ShieldApplyAmount}
+            </div>
+          )}
+        </div>
+        {boardCard.CritChance > 0 && (
           <div
             style={{
-              background: "rgba(0.2, 0.2, 0.2, 0.5)",
-              padding: "2px 5px",
-              borderRadius: 5,
-              margin: 2,
-            }}
-          >
-            ❄️ {(boardCard.Freeze / 1000).toFixed(1)}
-          </div>
-        ) : null}
-        {boardCard.Slow > 0 ? (
-          <div
-            style={{
-              background: "rgba(0.2, 0.2, 0.2, 0.5)",
-              padding: "2px 5px",
-              borderRadius: 5,
-              margin: 2,
-            }}
-          >
-            🐌 {(boardCard.Slow / 1000).toFixed(1)}
-          </div>
-        ) : null}
-        {boardCard.Haste > 0 ? (
-          <div
-            style={{
-              background: "rgba(0.2, 0.2, 0.2, 0.5)",
-              padding: "2px 5px",
-              borderRadius: 5,
-              margin: 2,
-            }}
-          >
-            ⏱️ {(boardCard.Haste / 1000).toFixed(1)}
-          </div>
-        ) : null}
-      </div>
-      <div
-        style={{
-          position: "absolute",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
-          display: "flex",
-          top: paddingTop,
-        }}
-      >
-        {boardCard.DamageAmount !== undefined && (
-          <div
-            style={{
+              position: "absolute",
+              bottom: 31.5,
+              left: 5,
               backgroundColor: "red",
               padding: "2px 5px",
               margin: "0 2px",
@@ -1334,25 +1404,15 @@ function BoardCard({ boardCard }) {
               color: "white",
             }}
           >
-            {boardCard.DamageAmount}
+            {boardCard.CritChance + "%"}
           </div>
         )}
-        {boardCard.HealAmount !== undefined && (
+        {boardCard.SellPrice !== undefined && (
           <div
             style={{
-              backgroundColor: "limegreen",
-              padding: "2px 5px",
-              margin: "0 2px",
-              borderRadius: 5,
-              color: "white",
-            }}
-          >
-            {boardCard.HealAmount}
-          </div>
-        )}
-        {boardCard.BurnApplyAmount !== undefined && (
-          <div
-            style={{
+              position: "absolute",
+              bottom: 6.5,
+              left: 5,
               backgroundColor: "orange",
               padding: "2px 5px",
               margin: "0 2px",
@@ -1360,98 +1420,83 @@ function BoardCard({ boardCard }) {
               color: "white",
             }}
           >
-            {boardCard.BurnApplyAmount}
+            {boardCard.SellPrice}
           </div>
         )}
-        {boardCard.PoisonApplyAmount !== undefined && (
+        {boardCard.AmmoMax && (
           <div
             style={{
-              backgroundColor: "purple",
+              position: "absolute",
+              left: "50%",
+              transform: "translateX(-50%)",
+              bottom: 0,
+              display: "flex",
+              backgroundColor: "gray",
               padding: "2px 5px",
-              margin: "0 2px",
+              marginBottom: 5,
               borderRadius: 5,
-              color: "white",
             }}
           >
-            {boardCard.PoisonApplyAmount}
-          </div>
-        )}
-        {boardCard.ShieldApplyAmount !== undefined && (
-          <div
-            style={{
-              backgroundColor: "yellow",
-              borderRadius: 5,
-              padding: "2px 5px",
-              margin: "0 2px",
-            }}
-          >
-            {boardCard.ShieldApplyAmount}
+            {[...new Array(boardCard.AmmoMax)].map((_, i) => {
+              return (
+                <div
+                  style={{
+                    width: 10,
+                    height: 10,
+                    borderRadius: 10,
+                    backgroundColor:
+                      boardCard.Ammo > i ? "orange" : "transparent",
+                    margin: "1px 1px",
+                    border: "1px solid orange",
+                  }}
+                />
+              );
+            })}
           </div>
         )}
       </div>
-      {boardCard.CritChance > 0 && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: 31.5,
-            left: 5,
-            backgroundColor: "red",
-            padding: "2px 5px",
-            margin: "0 2px",
-            borderRadius: 5,
-            color: "white",
-          }}
-        >
-          {boardCard.CritChance + "%"}
+      <div
+        style={{
+          position: "absolute",
+          maxWidth: 300,
+          backgroundColor: "#222",
+          color: "white",
+          border: "1px solid black",
+          borderRadius: 5,
+          padding: "5px 10px",
+        }}
+        className="tooltip"
+      >
+        <div style={{ margin: "5px 0px 5px 0", fontWeight: "bold" }}>
+          {boardCard.card.Localization.Title.Text}
         </div>
-      )}
-      {boardCard.SellPrice !== undefined && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: 6.5,
-            left: 5,
-            backgroundColor: "orange",
-            padding: "2px 5px",
-            margin: "0 2px",
-            borderRadius: 5,
-            color: "white",
-          }}
-        >
-          {boardCard.SellPrice}
-        </div>
-      )}
-      {boardCard.AmmoMax && (
-        <div
-          style={{
-            position: "absolute",
-            left: "50%",
-            transform: "translateX(-50%)",
-            bottom: 0,
-            display: "flex",
-            backgroundColor: "gray",
-            padding: "2px 5px",
-            marginBottom: 5,
-            borderRadius: 5,
-          }}
-        >
-          {[...new Array(boardCard.AmmoMax)].map((_, i) => {
-            return (
-              <div
-                style={{
-                  width: 10,
-                  height: 10,
-                  borderRadius: 10,
-                  backgroundColor:
-                    boardCard.Ammo > i ? "orange" : "transparent",
-                  margin: "1px 1px",
-                  border: "1px solid orange",
-                }}
-              />
-            );
-          })}
-        </div>
-      )}
+        {boardCard.TooltipIds.map((tooltipId) => {
+          const tooltip = boardCard.card.Localization.Tooltips[
+            tooltipId
+          ].Content.Text.replace(/\{([a-z]+)\.([0-9+])\}/g, (_, type, id) => {
+            const action =
+              boardCard.card[type === "aura" ? "Auras" : "Abilities"][id]
+                .Action;
+            if (action.Value) {
+              return getActionValue(
+                gameState,
+                gameState,
+                action.Value,
+                playerID,
+                boardCardID,
+                playerID,
+                boardCardID
+              );
+            }
+            const match = action.$type.match(/^TActionPlayer([A-Za-z]+)Apply$/);
+            if (match) {
+              return boardCard[`${match[1]}ApplyAmount`];
+            }
+            return `{?${type}.${id}}`;
+          });
+          return <div style={{ margin: "10px 10px" }}>{tooltip}</div>;
+        })}
+      </div>
     </div>
   );
 }
@@ -1472,7 +1517,13 @@ function Game({ gameState }) {
         const board = (
           <div key="board" style={{ display: "flex" }}>
             {player.board.map((boardCard, i) => (
-              <BoardCard boardCard={boardCard} key={i} />
+              <BoardCard
+                boardCard={boardCard}
+                gameState={gameState}
+                key={i}
+                playerID={playerID}
+                boardCardID={i}
+              />
             ))}
           </div>
         );
