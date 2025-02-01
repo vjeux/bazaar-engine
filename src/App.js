@@ -29,15 +29,15 @@ const initialGameState = {
       // getBoardCard("Fang", "Bronze"),
       // getBoardCard("Fang", "Bronze"),
       // getBoardCard("Fang", "Bronze"),
-      // getBoardCard("Colossal Popsicle", "Diamond"),
       // getBoardCard("Beach Ball", "Silver"),
     ]),
     getBoardPlayer({ MaxHealth: 350, HealthRegen: 5 }, [
       // getBoardCard("Powder Flask", "Silver"),
       // getBoardCard("Abacus", "Silver"),
       // getBoardCard("Crusher Claw", "Silver"),
-      // getBoardCard("Blue Piggles A", "Silver"),
-      // getBoardCard("Cutlass", "Silver"),
+      // getBoardCard("Colossal Popsicle", "Diamond"),
+      getBoardCard("Blue Piggles A", "Silver"),
+      getBoardCard("Cutlass", "Silver"),
       getBoardCard("Copper Ed", "Silver"),
       getBoardCard("Agility Boots", "Silver"),
       getBoardCard("Crusher Claw", "Silver"),
@@ -1487,6 +1487,9 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
                 playerID,
                 boardCardID
               );
+            }
+            if (action.$type === "TActionPlayerDamage") {
+              return boardCard.DamageAmount;
             }
             const match = action.$type.match(/^TActionPlayer([A-Za-z]+)Apply$/);
             if (match) {
