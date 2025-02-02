@@ -22,16 +22,16 @@ const initialGameState = {
   tick: 0,
   isPlaying: true,
   players: [
-    getBoardPlayer({ MaxHealth: 400, HealthRegen: 0 }, [
+    getBoardPlayer({ MaxHealth: 5034, HealthRegen: 0 }, [
       // getBoardCard("Switchblade", "Silver"),
       // getBoardCard("Bar of Gold", "Bronze"),
       // getBoardCard("Citrus", "Bronze"),
-      // getBoardCard("Fang", "Bronze"),
-      // getBoardCard("Fang", "Bronze"),
+      getBoardCard("Athanor", "Bronze"),
+      getBoardCard("Fire Claw", "Diamond"),
       // getBoardCard("Fang", "Bronze"),
       // getBoardCard("Beach Ball", "Silver"),
     ]),
-    getBoardPlayer({ MaxHealth: 350, HealthRegen: 5 }, [
+    getBoardPlayer({ MaxHealth: 450, HealthRegen: 5 }, [
       // getBoardCard("Powder Flask", "Silver"),
       // getBoardCard("Abacus", "Silver"),
       // getBoardCard("Crusher Claw", "Silver"),
@@ -1210,7 +1210,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
       ? CARD_HEIGHT / 1
       : CARD_HEIGHT * 1.5;
 
-  const paddingTop = 20;
+  const paddingTop = 12;
   const borderSize = 4;
   return (
     <div className="tooltipContainer">
@@ -1464,6 +1464,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
           border: "1px solid black",
           borderRadius: 5,
           padding: "5px 10px",
+          zIndex: 1,
         }}
         className="tooltip"
       >
@@ -1508,13 +1509,124 @@ function Game({ gameState }) {
   return (
     <div>
       {gameState.players.map((player, playerID) => {
+        const ticks = Math.floor(player.MaxHealth / 50);
         const healthBar = (
-          <div key="healthbar">
-            Health: {player.Health}
-            {player.HealthRegen > 0 ? <>, Regen: {player.HealthRegen}</> : null}
-            {player.Shield > 0 ? <>, Shield: {player.Shield}</> : null}
-            {player.Poison > 0 ? <>, Poison: {player.Poison}</> : null}
-            {player.Burn > 0 ? <>, Burn: {player.Burn}</> : null}
+          <div
+            key="healthbar"
+            style={{
+              border: "1px solid #3abf39",
+              borderRadius: 5,
+              height: 30,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "rgba(87, 66, 52, 0.4)",
+              position: "relative",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                backgroundColor: player.Poison > 0 ? "#076044" : "#1da81c",
+                position: "absolute",
+                top: 0,
+                bottom: 0,
+                left: 0,
+                width: (player.Health / player.MaxHealth) * 100 + "%",
+              }}
+            />
+            <div
+              style={{
+                backgroundColor: "rgba(217, 174, 45, 0.5)",
+                position: "absolute",
+                top: 0,
+                bottom: "50%",
+                left: 0,
+                width:
+                  Math.min(1, player.Shield / player.MaxHealth) * 100 + "%",
+              }}
+            />
+            {[...new Array(ticks)].map((_, i) => {
+              if (i === 0) {
+                return;
+              }
+              return (
+                <div
+                  style={{
+                    backgroundColor: "#3abf39",
+                    position: "absolute",
+                    opacity: 0.5,
+                    width: 1,
+                    top: i % 5 === 0 ? 1 : 5,
+                    bottom: i % 5 === 0 ? 1 : 5,
+                    left: (i / ticks) * 100 + "%",
+                  }}
+                />
+              );
+            })}
+            <div
+              style={{
+                position: "relative",
+                fontSize: "20pt",
+                textShadow:
+                  "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
+                fontSmoothing: "antialiased",
+              }}
+            >
+              <span
+                style={{
+                  color: "white",
+                  display: "inline-block",
+                  margin: "0 5px",
+                }}
+              >
+                {player.Health}
+              </span>
+              {player.Shield >= 1 ? (
+                <span
+                  style={{
+                    color: "#ffd62e",
+                    display: "inline-block",
+                    margin: "0 5px",
+                  }}
+                >
+                  {Math.floor(player.Shield)}
+                </span>
+              ) : null}
+              {player.Poison > 0 ? (
+                <span
+                  style={{
+                    color: "#1e976d",
+                    display: "inline-block",
+                    margin: "0 5px",
+                  }}
+                >
+                  {player.Poison}
+                </span>
+              ) : null}
+              {player.Burn > 0 ? (
+                <span
+                  style={{
+                    color: "#d99c3e",
+                    display: "inline-block",
+                    margin: "0 5px",
+                  }}
+                >
+                  {player.Burn}
+                </span>
+              ) : null}
+              {player.HealthRegen > 0 ? (
+                <span
+                  style={{
+                    color: "#96dd4b",
+                    display: "inline-block",
+                    margin: "0 5px",
+                  }}
+                >
+                  {player.HealthRegen}
+                </span>
+              ) : null}
+            </div>
           </div>
         );
         const board = (
@@ -1545,7 +1657,7 @@ export default function App() {
     <div className="App">
       <Game gameState={steps[stepCount]} />
       <input
-        style={{ width: "100%" }}
+        style={{ width: "100%", marginTop: 20 }}
         type="range"
         min="0"
         max={steps.length - 1}
