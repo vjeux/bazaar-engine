@@ -22,27 +22,35 @@ const initialGameState = {
   tick: 0,
   isPlaying: true,
   players: [
-    getBoardPlayer({ MaxHealth: 5034, HealthRegen: 0 }, [
-      // getBoardCard("Switchblade", "Silver"),
-      // getBoardCard("Bar of Gold", "Bronze"),
-      // getBoardCard("Citrus", "Bronze"),
-      getBoardCard("Athanor", "Bronze"),
-      getBoardCard("Fire Claw", "Diamond"),
-      // getBoardCard("Fang", "Bronze"),
-      // getBoardCard("Beach Ball", "Silver"),
-    ]),
-    getBoardPlayer({ MaxHealth: 450, HealthRegen: 5 }, [
-      // getBoardCard("Powder Flask", "Silver"),
-      // getBoardCard("Abacus", "Silver"),
-      // getBoardCard("Crusher Claw", "Silver"),
-      // getBoardCard("Colossal Popsicle", "Diamond"),
-      getBoardCard("Blue Piggles A", "Silver"),
-      getBoardCard("Cutlass", "Silver"),
-      getBoardCard("Copper Ed", "Silver"),
-      getBoardCard("Agility Boots", "Silver"),
-      getBoardCard("Crusher Claw", "Silver"),
-      getBoardCard("Abacus", "Gold"),
-    ]),
+    getBoardPlayer(
+      { MaxHealth: 3300, HealthRegen: 0 },
+      [
+        // getBoardCard("Switchblade", "Silver"),
+        // getBoardCard("Bar of Gold", "Bronze"),
+        // getBoardCard("Citrus", "Bronze"),
+        getBoardCard("Athanor", "Bronze"),
+        getBoardCard("Fire Claw", "Diamond"),
+        getBoardCard("Fang", "Bronze"),
+        // getBoardCard("Beach Ball", "Silver"),
+      ],
+      []
+    ),
+    getBoardPlayer(
+      { MaxHealth: 2450, HealthRegen: 5 },
+      [
+        // getBoardCard("Powder Flask", "Silver"),
+        // getBoardCard("Abacus", "Silver"),
+        // getBoardCard("Crusher Claw", "Silver"),
+        getBoardCard("Colossal Popsicle", "Diamond"),
+        // getBoardCard("Blue Piggles A", "Silver"),
+        getBoardCard("Cutlass", "Silver"),
+        getBoardCard("Barrel", "Silver"),
+        // getBoardCard("Agility Boots", "Silver"),
+        getBoardCard("Crusher Claw", "Silver"),
+        // getBoardCard("Abacus", "Gold"),
+      ],
+      [getBoardSkill("Aggressive", "Silver")]
+    ),
   ],
 
   getRand: sfc32(0, 10000, 10000000, 100000000000),
@@ -92,7 +100,44 @@ function getBoardCard(name, tier, modifiers) {
   return result;
 }
 
-function getBoardPlayer(stats, board) {
+function getBoardSkill(name, tier, modifiers) {
+  const card = CardsValues.find(
+    (card) => card.Localization.Title.Text === name
+  );
+  let attributes = {};
+  if (!card.Tiers[tier]) {
+    throw new Error(
+      name +
+        " doesn't have tier " +
+        tier +
+        ", the first one is " +
+        Object.keys(card.Tiers)[0]
+    );
+  }
+  const tierNames = Object.keys(card.Tiers);
+  for (let i = 0; i < tierNames.length; ++i) {
+    const tierName = tierNames[i];
+    const tierValues = card.Tiers[tierName];
+    attributes = {
+      ...attributes,
+      ...tierValues.Attributes,
+      AbilityIds: tierValues.AbilityIds,
+      AuraIds: tierValues.AuraIds,
+      TooltipIds: tierValues.TooltipIds,
+    };
+    if (tierName === tier) {
+      break;
+    }
+  }
+  const result = {
+    card,
+    ...attributes,
+    tier,
+  };
+  return result;
+}
+
+function getBoardPlayer(stats, boardCards, boardSkills) {
   return {
     MaxHealth: stats.MaxHealth,
     Health: stats.MaxHealth,
@@ -100,7 +145,7 @@ function getBoardPlayer(stats, board) {
     Shield: 0,
     Burn: 0,
     Poison: 0,
-    board,
+    board: [...boardCards, ...boardSkills],
   };
 }
 
@@ -825,9 +870,13 @@ function getTargetCards(
     results.push([triggerPlayerID, triggerBoardCardID]);
   } else if (target.$type === "TTargetCardPositional") {
     if (target.TargetMode === "AllRightCards") {
+      const lengthCardItems =
+        gameState.players[targetPlayerID].board.findLastIndex(
+          (boardCard) => boardCard.card.$type === "TCardItem"
+        ) + 1;
       for (
         let i = targetBoardCardID + (target.IncludeOrigin ? 0 : 1);
-        i < gameState.players[targetPlayerID].board.length;
+        i < lengthCardItems;
         ++i
       ) {
         results.push([targetPlayerID, i]);
@@ -847,20 +896,22 @@ function getTargetCards(
       if (targetBoardCardID !== 0) {
         results.push([targetPlayerID, targetBoardCardID - 1]);
       }
-      if (
-        targetBoardCardID !==
-        gameState.players[targetPlayerID].board.length - 1
-      ) {
+      const lengthCardItems =
+        gameState.players[targetPlayerID].board.findLastIndex(
+          (boardCard) => boardCard.card.$type === "TCardItem"
+        ) + 1;
+      if (targetBoardCardID !== lengthCardItems - 1) {
         results.push([targetPlayerID, targetBoardCardID + 1]);
       }
     } else if (target.TargetMode === "RightCard") {
       if (target.IncludeOrigin) {
         results.push([targetPlayerID, targetBoardCardID]);
       }
-      if (
-        targetBoardCardID !==
-        gameState.players[targetPlayerID].board.length - 1
-      ) {
+      const lengthCardItems =
+        gameState.players[targetPlayerID].board.findLastIndex(
+          (boardCard) => boardCard.card.$type === "TCardItem"
+        ) + 1;
+      if (targetBoardCardID !== lengthCardItems - 1) {
         results.push([targetPlayerID, targetBoardCardID + 1]);
       }
     } else if (target.TargetMode === "LeftCard") {
@@ -879,7 +930,11 @@ function getTargetCards(
       target.TargetSection === "SelfHand" ||
       target.TargetSection === "SelfBoard"
     ) {
-      for (let i = 0; i < gameState.players[targetPlayerID].board.length; ++i) {
+      const lengthCardItems =
+        gameState.players[targetPlayerID].board.findLastIndex(
+          (boardCard) => boardCard.card.$type === "TCardItem"
+        ) + 1;
+      for (let i = 0; i < lengthCardItems; ++i) {
         if (
           i !== targetBoardCardID ||
           (i === targetBoardCardID && !target.ExcludeSelf)
@@ -891,11 +946,11 @@ function getTargetCards(
       target.TargetSection === "OpponentHand" ||
       target.TargetSection === "OpponentBoard"
     ) {
-      for (
-        let i = 0;
-        i < gameState.players[(targetPlayerID + 1) % 2].board.length;
-        ++i
-      ) {
+      const lengthCardItems =
+        gameState.players[(targetPlayerID + 1) % 2].board.findLastIndex(
+          (boardCard) => boardCard.card.$type === "TCardItem"
+        ) + 1;
+      for (let i = 0; i < lengthCardItems; ++i) {
         results.push([(targetPlayerID + 1) % 2, i]);
       }
     }
@@ -1050,6 +1105,10 @@ function runGameTick(initialGameState) {
   const cardTriggerList = [];
   forEachCard(gameState, (player, playerID, boardCard, boardCardID) => {
     const nextBoardCard = nextGameState.players[playerID].board[boardCardID];
+    if (nextBoardCard.card.$type === "TCardSkill") {
+      return;
+    }
+
     let tickRate = TICK_RATE;
     if (boardCard.Slow > 0) {
       tickRate /= 2;
@@ -1114,6 +1173,8 @@ function runGameTick(initialGameState) {
             );
           } else if (ability.Trigger.$type === "TTriggerOnItemUsed") {
             const subjects = getTargetCards(
+              gameState,
+              nextGameState,
               ability.Trigger.Subject,
               playerID,
               boardCardID,
@@ -1199,6 +1260,56 @@ for (let i = 0; i < 1000; ++i) {
 }
 
 const CARD_HEIGHT = 150;
+
+function Tooltip({ boardCard, gameState, playerID, boardCardID }) {
+  return (
+    <div
+      style={{
+        position: "absolute",
+        maxWidth: 300,
+        backgroundColor: "#222",
+        color: "white",
+        border: "1px solid black",
+        borderRadius: 5,
+        padding: "5px 10px",
+        zIndex: 1,
+      }}
+      className="tooltip"
+    >
+      <div style={{ margin: "5px 0px 5px 0", fontWeight: "bold" }}>
+        {boardCard.card.Localization.Title.Text}
+      </div>
+      {boardCard.TooltipIds.map((tooltipId) => {
+        const tooltip = boardCard.card.Localization.Tooltips[
+          tooltipId
+        ].Content.Text.replace(/\{([a-z]+)\.([0-9+])\}/g, (_, type, id) => {
+          const action =
+            boardCard.card[type === "aura" ? "Auras" : "Abilities"][id].Action;
+          if (action.Value) {
+            return getActionValue(
+              gameState,
+              gameState,
+              action.Value,
+              playerID,
+              boardCardID,
+              playerID,
+              boardCardID
+            );
+          }
+          if (action.$type === "TActionPlayerDamage") {
+            return boardCard.DamageAmount;
+          }
+          const match = action.$type.match(/^TActionPlayer([A-Za-z]+)Apply$/);
+          if (match) {
+            return boardCard[`${match[1]}ApplyAmount`];
+          }
+          return `{?${type}.${id}}`;
+        });
+        return <div style={{ margin: "10px 10px" }}>{tooltip}</div>;
+      })}
+    </div>
+  );
+}
 
 function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
   const card = boardCard.card;
@@ -1455,52 +1566,63 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
           </div>
         )}
       </div>
+      <Tooltip
+        boardCard={boardCard}
+        gameState={gameState}
+        playerID={playerID}
+        boardCardID={boardCardID}
+      />
+    </div>
+  );
+}
+
+function BoardSkill({ boardCard, gameState, playerID, boardCardID }) {
+  const card = boardCard.card;
+  const tier = boardCard.tier;
+
+  const borderSize = 4;
+  const IMAGE_SIZE = 30;
+  return (
+    <div className="tooltipContainer">
       <div
         style={{
-          position: "absolute",
-          maxWidth: 300,
-          backgroundColor: "#222",
-          color: "white",
-          border: "1px solid black",
-          borderRadius: 5,
-          padding: "5px 10px",
-          zIndex: 1,
+          margin: 5,
+          position: "relative",
+          height: IMAGE_SIZE + borderSize * 2,
+          width: IMAGE_SIZE + borderSize * 2,
+          overflow: "hidden",
         }}
-        className="tooltip"
       >
-        <div style={{ margin: "5px 0px 5px 0", fontWeight: "bold" }}>
-          {boardCard.card.Localization.Title.Text}
-        </div>
-        {boardCard.TooltipIds.map((tooltipId) => {
-          const tooltip = boardCard.card.Localization.Tooltips[
-            tooltipId
-          ].Content.Text.replace(/\{([a-z]+)\.([0-9+])\}/g, (_, type, id) => {
-            const action =
-              boardCard.card[type === "aura" ? "Auras" : "Abilities"][id]
-                .Action;
-            if (action.Value) {
-              return getActionValue(
-                gameState,
-                gameState,
-                action.Value,
-                playerID,
-                boardCardID,
-                playerID,
-                boardCardID
-              );
-            }
-            if (action.$type === "TActionPlayerDamage") {
-              return boardCard.DamageAmount;
-            }
-            const match = action.$type.match(/^TActionPlayer([A-Za-z]+)Apply$/);
-            if (match) {
-              return boardCard[`${match[1]}ApplyAmount`];
-            }
-            return `{?${type}.${id}}`;
-          });
-          return <div style={{ margin: "10px 10px" }}>{tooltip}</div>;
-        })}
+        <img
+          src={
+            "https://www.howbazaar.gg/images/skills/" +
+            (card.InternalName ? card.InternalName.replace(/[ ']/g, "") : "") +
+            ".avif"
+          }
+          style={{
+            borderRadius: "100%",
+            position: "relative",
+            top: 0,
+            border: borderSize + "px solid",
+            borderColor:
+              tier === "Bronze"
+                ? "brown"
+                : tier === "Silver"
+                ? "gray"
+                : tier === "Gold"
+                ? "yellow"
+                : "blue",
+          }}
+          height={IMAGE_SIZE}
+          width={IMAGE_SIZE}
+        />
       </div>
+      <Tooltip
+        boardCard={boardCard}
+        gameState={gameState}
+        playerID={playerID}
+        boardCardID={boardCardID}
+      />
     </div>
   );
 }
@@ -1532,7 +1654,8 @@ function Game({ gameState }) {
                 top: 0,
                 bottom: 0,
                 left: 0,
-                width: (player.Health / player.MaxHealth) * 100 + "%",
+                width:
+                  Math.max(0, player.Health / player.MaxHealth) * 100 + "%",
               }}
             />
             <div
@@ -1580,7 +1703,7 @@ function Game({ gameState }) {
                   margin: "0 5px",
                 }}
               >
-                {player.Health}
+                {Math.floor(player.Health)}
               </span>
               {player.Shield >= 1 ? (
                 <span
@@ -1631,19 +1754,38 @@ function Game({ gameState }) {
         );
         const board = (
           <div key="board" style={{ display: "flex" }}>
-            {player.board.map((boardCard, i) => (
-              <BoardCard
-                boardCard={boardCard}
-                gameState={gameState}
-                key={i}
-                playerID={playerID}
-                boardCardID={i}
-              />
-            ))}
+            {player.board
+              .filter((x) => x.card.$type === "TCardItem")
+              .map((boardCard, i) => (
+                <BoardCard
+                  boardCard={boardCard}
+                  gameState={gameState}
+                  key={i}
+                  playerID={playerID}
+                  boardCardID={i}
+                />
+              ))}
+          </div>
+        );
+        const boardSkills = (
+          <div key="skills" style={{ display: "flex" }}>
+            {player.board
+              .filter((x) => x.card.$type === "TCardSkill")
+              .map((boardCard, i) => (
+                <BoardSkill
+                  boardCard={boardCard}
+                  gameState={gameState}
+                  key={i}
+                  playerID={playerID}
+                  boardCardID={player.board.indexOf(boardCard)}
+                />
+              ))}
           </div>
         );
         const display =
-          playerID === 0 ? [healthBar, board] : [board, healthBar];
+          playerID === 0
+            ? [boardSkills, healthBar, board]
+            : [board, healthBar, boardSkills];
         return <div key={playerID}>{display}</div>;
       })}
     </div>
