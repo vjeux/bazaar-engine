@@ -27,7 +27,7 @@ const initialGameState = {
       [
         // getBoardCard("Switchblade", "Silver"),
         // getBoardCard("Bar of Gold", "Bronze"),
-        // getBoardCard("Citrus", "Bronze"),
+        getBoardCard("Vial of Blood", "Silver"),
         getBoardCard("Duct Tape", "Bronze"),
         // getBoardCard("Fire Claw", "Diamond"),
         getBoardCard("Fang", "Bronze"),
@@ -189,6 +189,10 @@ function forEachAura(boardCard, callback) {
     const auraId = boardCard.AuraIds[i];
     callback(boardCard.card.Auras[auraId]);
   }
+}
+
+function hasCooldown(boardCard) {
+  return "CooldownMax" in boardCard;
 }
 
 function updateCardAttribute(
@@ -654,9 +658,8 @@ function runAction(
 
     targetCards
       .filter(([actionTargetPlayerID, actionTargetBoardCardID]) => {
-        return (
+        return hasCooldown(
           gameState.players[actionTargetPlayerID].board[actionTargetBoardCardID]
-            .CooldownMax > 0
         );
       })
       .sort((a, b) => {
@@ -702,9 +705,8 @@ function runAction(
 
     targetCards
       .filter(([actionTargetPlayerID, actionTargetBoardCardID]) => {
-        return (
+        return hasCooldown(
           gameState.players[actionTargetPlayerID].board[actionTargetBoardCardID]
-            .CooldownMax > 0
         );
       })
       .slice(0, targetCount)
@@ -1110,6 +1112,9 @@ function runGameTick(initialGameState) {
     if (nextBoardCard.card.$type === "TCardSkill") {
       return;
     }
+    if (!hasCooldown(nextBoardCard)) {
+      return;
+    }
 
     let tickRate = TICK_RATE;
     if (boardCard.Slow > 0) {
@@ -1393,7 +1398,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
           height={CARD_HEIGHT}
           width={cardWidth}
         />
-        {boardCard.CooldownMax > 0 ? (
+        {hasCooldown(boardCard) ? (
           <div
             style={{
               position: "absolute",
