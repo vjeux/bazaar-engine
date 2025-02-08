@@ -1248,6 +1248,7 @@ function runGameTick(initialGameState) {
   Tickrate is every 0.2 seconds
   Increase by 1 every tick
   */
+  // TODO: End game when it reaches 600 dmg per tick
   const sandstorm_initial_tick = 30000;
   const sandstorm_tickrate = 200;
 
