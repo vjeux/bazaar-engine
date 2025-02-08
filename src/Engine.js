@@ -1120,6 +1120,8 @@ function runGameTick(initialGameState) {
           forEachAbility(targetBoardCard, (ability) => {
             if (ability.Trigger.$type === "TTriggerOnPlayerDied") {
               const abilityPlayerID = getTargetPlayer(
+                gameState,
+                nextGameState,
                 ability.Trigger.Subject,
                 playerID,
                 targetPlayerID

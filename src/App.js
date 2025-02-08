@@ -23,7 +23,7 @@ const Encounters = JSON.parse(
 
 const CardsValues = Object.values(Cards);
 
-const MonstersList = parseMonsters(Encounters);
+console.log(Encounters);
 
 /* Bugs
 
@@ -55,7 +55,8 @@ const initialGameState = {
     //   []
     // ),
     //getMonsterByName("Dire Inglet"),
-    MonstersList[0][1],
+    getBoardMonster("Sparring Partner"),
+    // MonstersList[0][1],
     getBoardPlayer(
       { MaxHealth: 3500, HealthRegen: 0 },
       [
@@ -127,7 +128,6 @@ function _createBoardCardFromCard(card, tier) {
     tier: tier
   };
 
-  // If the attributes include AmmoMax, set Ammo to that value.
   if ("AmmoMax" in attributes) {
     result.Ammo = attributes.AmmoMax;
   }
@@ -161,10 +161,10 @@ function getBoardCard(name, tier, modifiers = null) {
  * @returns {Object} The board card.
  * @throws Will throw an error if the card with the given ID is not found.
  */
-function getBoardCardWithId(cardId, tier) {
-  const card = CardsValues.find((c) => c.Id === cardId);
+function getBoardCardFromId(cardId, tier) {
+  const card = Cards[cardId];
   if (!card) {
-    throw new Error(`Card with id ${cardId} not found`);
+    throw new Error(`Card from id ${cardId} not found`);
   }
   return _createBoardCardFromCard(card, tier);
 }
@@ -218,67 +218,32 @@ function getBoardPlayer(stats, boardCards, boardSkills) {
   };
 }
 
-/**
- * Parses encounter data to extract monster information and construct board players.
- *
- * @param {Object} encounters - The encounter data object.
- * @param {Array} [encounters.data=[]] - An array of daily encounter data objects.
- * @param {Array} [encounters.data[].groups=[]] - An array of groups within a day, each group being an array of monsters.
- * @returns {Array.<Array>} An array of tuples, each containing a monster's name (string) and its corresponding board player object.
- */
-function parseMonsters(encounters) {
-  let data = encounters;
-
-  const monstersList = [];
-  const dayData = data.data || [];
-  dayData.forEach((dayInfo) => {
-    const groups = dayInfo.groups || [];
-    groups.forEach((group) => {
-      group.forEach((monster) => {
-        const name = monster.cardName || "Unnamed Monster";
-        const health = monster.health || 0;
-        const stats = { MaxHealth: health, HealthRegen: 0 };
-
-        let boardCards = [];
-        if (Array.isArray(monster.items) && monster.items.length > 0) {
-          boardCards = monster.items.map((item) =>
-            getBoardCardWithId(item.card.id, item.tierType)
-          );
-        }
-
-        let boardSkills = [];
-        if (Array.isArray(monster.skills) && monster.skills.length > 0) {
-          monster.skills.forEach((skill) => {
-            try {
-              if (skill.card && skill.tierType) {
-                boardSkills.push(
-                  getBoardSkill(skill.card.name, skill.tierType)
-                );
-              }
-            } catch (error) {
-              // Skip this skill if there's an error.
-              console.error(
-                "Error reading monster skill from monster:",
-                name,
-                ", skill:",
-                skill.card.name,
-                ", error:",
-                error
-              );
-            }
-          });
-        }
-
-        const boardPlayer = getBoardPlayer(stats, boardCards, boardSkills);
-        monstersList.push([name, boardPlayer]);
-      });
-    });
-  });
-  return monstersList;
+function getBoardPlayerFromMonsterCard(monsterCard) {
+  return getBoardPlayer(
+    { MaxHealth: monsterCard.health },
+    monsterCard.items.map((item) =>
+      getBoardCardFromId(item.card.id, item.tierType)
+    ),
+    monsterCard.skills.map((item) =>
+      getBoardCardFromId(item.card.id, item.tierType)
+    )
+  );
 }
 
-function getMonsterByName(name) {
-  return MonstersList.find((monster) => monster[0] === name)[1];
+function getBoardMonster(name) {
+  for (let i = 0; i < Encounters.data.length; ++i) {
+    const day = Encounters.data[i];
+    for (let j = 0; j < day.groups.length; ++j) {
+      const group = day.groups[j];
+      for (let k = 0; k < group.length; ++k) {
+        const monsterCard = group[k];
+        if (monsterCard.cardName === name) {
+          return getBoardPlayerFromMonsterCard(monsterCard);
+        }
+      }
+    }
+  }
+  throw new Exception(`Can't find a monster with name ${name}`);
 }
 
 function sfc32(a, b, c, d) {
@@ -352,7 +317,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
         <img
           src={
             "https://www.howbazaar.gg/images/items/" +
-            (card.InternalName ? card.InternalName.replace(/[ ']/g, "") : "") +
+            boardCard.card.Localization.Title.Text.replace(/[ ']/g, "") +
             ".avif"
           }
           style={{
@@ -628,7 +593,7 @@ function BoardSkill({ boardCard, gameState, playerID, boardCardID }) {
         <img
           src={
             "https://www.howbazaar.gg/images/skills/" +
-            (card.InternalName ? card.InternalName.replace(/[ ']/g, "") : "") +
+            boardCard.card.Localization.Title.Text.replace(/[ ']/g, "") +
             ".avif"
           }
           style={{
