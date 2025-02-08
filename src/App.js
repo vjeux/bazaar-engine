@@ -195,6 +195,29 @@ function hasCooldown(boardCard) {
   return "CooldownMax" in boardCard;
 }
 
+/**
+ * Sandstorm
+ *
+ * Starts at 30 seconds, at 1 dmg
+ * Tickrate is every 0.2 seconds
+ * Increase by 1 every tick
+ * End Game when reaches 600 damage per tick
+ */
+const sandstormInitialTick = 30000;
+const sandstormTickRate = 200;
+
+const sandstormDamagePerTick = {};
+let sandstormDamage = 1;
+let sandstormTick = sandstormInitialTick;
+while (true) {
+  sandstormDamagePerTick[sandstormTick] = sandstormDamage;
+  sandstormDamage++;
+  sandstormTick += sandstormTickRate;
+  if (sandstormDamage > 600) {
+    break;
+  }
+}
+
 function updateCardAttribute(
   gameState,
   nextGameState,
@@ -1241,41 +1264,21 @@ function runGameTick(initialGameState) {
     }
   });
 
-  /* 
-  Sandstorm
-
-  Start at 30 seconds, at 1 dmg
-  Tickrate is every 0.2 seconds
-  Increase by 1 every tick
-  */
-  // TODO: End game when it reaches 600 dmg per tick
-  const sandstorm_initial_tick = 30000;
-  const sandstorm_tickrate = 200;
-
-  let tickDamage = 0;
-  if (nextGameState.tick - sandstorm_initial_tick > 0) {
-    if (
-      (nextGameState.tick - sandstorm_initial_tick) % sandstorm_tickrate ===
-      0
-    ) {
-      tickDamage = Math.floor(
-        (nextGameState.tick - sandstorm_initial_tick) / sandstorm_tickrate
-      );
-    }
+  // Sandstorm
+  const sandstormDamage = sandstormDamagePerTick[nextGameState.tick];
+  if (sandstormDamage > 0) {
+    nextGameState.players.forEach((player) => {
+      const shield = player.Shield;
+      const nextShield = Math.max(0, shield - sandstormDamage);
+      if (nextShield > 0) {
+        player.Shield = nextShield;
+      } else {
+        const nextHealthDamage = sandstormDamage - shield;
+        player.Shield = 0;
+        player.Health -= nextHealthDamage;
+      }
+    });
   }
-  nextGameState.sandstorm_damage = tickDamage;
-  nextGameState.players.forEach((player) => {
-    const shield = player.Shield;
-    // Damage shield first, then health
-    const nextShield = Math.max(0, shield - tickDamage);
-    if (nextShield > 0) {
-      player.Shield = nextShield;
-    } else {
-      const nextHealthDamage = tickDamage - shield;
-      player.Shield = 0;
-      player.Health -= nextHealthDamage;
-    }
-  });
 
   // Death
   nextGameState.players.forEach((player, playerID) => {
@@ -1914,7 +1917,7 @@ function Game({ gameState }) {
             : [board, healthBar, boardSkills];
         return <div key={playerID}>{display}</div>;
       })}
-      <p>Sandstorm damage: {gameState.sandstorm_damage}</p>
+      <p>Sandstorm damage: {sandstormDamagePerTick[gameState.tick]}</p>
     </div>
   );
 }
