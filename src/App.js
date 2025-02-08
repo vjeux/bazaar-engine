@@ -8,7 +8,21 @@ import { useState } from "react";
 const compressed = new Uint8Array(JSON.parse(localStorage.getItem("Cards")));
 const Cards = JSON.parse(pako.inflate(compressed, { to: "string" }));
 
+// import Encounters from "./json/encounterDays.json";
+// const compressed_encounters = JSON.stringify([
+//   ...pako.deflate(JSON.stringify(Encounters))
+// ]);
+// localStorage.setItem("Encounters", compressed_encounters);
+const compressed_encounters = new Uint8Array(
+  JSON.parse(localStorage.getItem("Encounters"))
+);
+const Encounters = JSON.parse(
+  pako.inflate(compressed_encounters, { to: "string" })
+);
+
 const CardsValues = Object.values(Cards);
+
+const MonstersList = parseMonsters(Encounters);
 
 /* Bugs
 
@@ -18,24 +32,28 @@ getBoardCard("Abacus", "Gold"),
 
 */
 
+console.log(MonstersList[1]);
+
 const initialGameState = {
   tick: 0,
   isPlaying: true,
   players: [
-    getBoardPlayer(
-      { MaxHealth: 2000, HealthRegen: 0 },
-      [
-        // getBoardCard("Switchblade", "Silver"),
-        // getBoardCard("Bar of Gold", "Bronze"),
-        // getBoardCard("Vial of Blood", "Silver"),
-        getBoardCard("Ballista", "Gold"),
-        // getBoardCard("Fire Claw", "Diamond"),
-        getBoardCard("Uzi", "Bronze"),
-        getBoardCard("Uzi", "Bronze")
-        // getBoardCard("Beach Ball", "Silver"),
-      ],
-      []
-    ),
+    // getBoardPlayer(
+    //   { MaxHealth: 2000, HealthRegen: 0 },
+    //   [
+    //     // getBoardCard("Switchblade", "Silver"),
+    //     // getBoardCard("Bar of Gold", "Bronze"),
+    //     // getBoardCard("Vial of Blood", "Silver"),
+    //     getBoardCard("Ballista", "Gold"),
+    //     // getBoardCard("Fire Claw", "Diamond"),
+    //     getBoardCard("Uzi", "Bronze"),
+    //     getBoardCard("Uzi", "Bronze")
+    //     // getBoardCard("Beach Ball", "Silver"),
+    //   ],
+    //   []
+    // ),
+    getMonsterByName("Dire Inglet"),
+    //MonstersList[1][1],
     getBoardPlayer(
       { MaxHealth: 3500, HealthRegen: 0 },
       [
@@ -194,6 +212,62 @@ function getBoardPlayer(stats, boardCards, boardSkills) {
     Poison: 0,
     board: [...boardCards, ...boardSkills]
   };
+}
+
+/**
+ * Parses encounter data to extract monster information and construct board players.
+ *
+ * @param {Object} encounters - The encounter data object.
+ * @param {Array} [encounters.data=[]] - An array of daily encounter data objects.
+ * @param {Array} [encounters.data[].groups=[]] - An array of groups within a day, each group being an array of monsters.
+ * @returns {Array.<Array>} An array of tuples, each containing a monster's name (string) and its corresponding board player object.
+ */
+function parseMonsters(encounters) {
+  let data = encounters;
+
+  const monstersList = [];
+  const dayData = data.data || [];
+  dayData.forEach((dayInfo) => {
+    const groups = dayInfo.groups || [];
+    groups.forEach((group) => {
+      group.forEach((monster) => {
+        const name = monster.cardName || "Unnamed Monster";
+        const health = monster.health || 0;
+        const stats = { MaxHealth: health, HealthRegen: 0 };
+
+        let boardCards = [];
+        if (Array.isArray(monster.items) && monster.items.length > 0) {
+          boardCards = monster.items.map((item) =>
+            getBoardCardWithId(item.card.id, item.tierType)
+          );
+        }
+
+        let boardSkills = [];
+        if (Array.isArray(monster.skills) && monster.skills.length > 0) {
+          monster.skills.forEach((skill) => {
+            try {
+              if (skill.card && skill.tierType) {
+                boardSkills.push(
+                  getBoardSkill(skill.card.name, skill.tierType)
+                );
+              }
+            } catch (error) {
+              // Skip this skill if there's an error.
+              console.error("Error reading monster skill:", error);
+            }
+          });
+        }
+
+        const boardPlayer = getBoardPlayer(stats, boardCards, boardSkills);
+        monstersList.push([name, boardPlayer]);
+      });
+    });
+  });
+  return monstersList;
+}
+
+function getMonsterByName(name) {
+  return MonstersList.find((monster) => monster[0] === name)[1];
 }
 
 function sfc32(a, b, c, d) {
