@@ -23,8 +23,6 @@ const Encounters = JSON.parse(
 
 const CardsValues = Object.values(Cards);
 
-console.log(Encounters);
-
 /* Bugs
 
 // Aura for crusher claw applies before aura for abacus
@@ -40,33 +38,17 @@ const initialGameState = {
   tick: 0,
   isPlaying: true,
   players: [
-    // getBoardPlayer(
-    //   { MaxHealth: 2000, HealthRegen: 0 },
-    //   [
-    //     // getBoardCard("Switchblade", "Silver"),
-    //     // getBoardCard("Bar of Gold", "Bronze"),
-    //     // getBoardCard("Vial of Blood", "Silver"),
-    //     getBoardCard("Ballista", "Gold"),
-    //     // getBoardCard("Fire Claw", "Diamond"),
-    //     getBoardCard("Uzi", "Bronze"),
-    //     getBoardCard("Uzi", "Bronze")
-    //     // getBoardCard("Beach Ball", "Silver"),
-    //   ],
-    //   []
-    // ),
-    //getMonsterByName("Dire Inglet"),
     getBoardMonster("Sparring Partner"),
-    // MonstersList[0][1],
     getBoardPlayer(
-      { MaxHealth: 3500, HealthRegen: 0 },
+      { HealthMax: 3500, HealthRegen: 0 },
       [
         // getBoardCard("Powder Flask", "Silver"),
         // getBoardCard("Abacus", "Silver"),
         // getBoardCard("Crusher Claw", "Silver"),
         // getBoardCard("Colossal Popsicle", "Diamond"),
         // getBoardCard("Blue Piggles A", "Silver"),
-        getBoardCard("Cutlass", "Silver"),
-        getBoardCard("Barrel", "Silver")
+        getBoardCard("Cauldron", "Diamond"),
+        getBoardCard("Weather Glass", "Diamond")
         // getBoardCard("Agility Boots", "Silver"),
         // getBoardCard("Crusher Claw", "Silver"),
         // getBoardCard("Abacus", "Gold"),
@@ -208,19 +190,21 @@ function getBoardSkill(name, tier, modifiers) {
 
 function getBoardPlayer(stats, boardCards, boardSkills) {
   return {
-    MaxHealth: stats.MaxHealth,
-    Health: stats.MaxHealth,
+    HealthMax: stats.HealthMax,
+    Health: stats.HealthMax,
     HealthRegen: stats.HealthRegen ?? 0,
     Shield: 0,
     Burn: 0,
     Poison: 0,
+    Gold: 0,
+    Income: 0,
     board: [...boardCards, ...boardSkills]
   };
 }
 
 function getBoardPlayerFromMonsterCard(monsterCard) {
   return getBoardPlayer(
-    { MaxHealth: monsterCard.health },
+    { HealthMax: monsterCard.health },
     monsterCard.items.map((item) =>
       getBoardCardFromId(item.card.id, item.tierType)
     ),
@@ -628,7 +612,7 @@ function Game({ gameState }) {
   return (
     <div>
       {gameState.players.map((player, playerID) => {
-        const ticks = Math.floor(player.MaxHealth / 50);
+        const ticks = Math.floor(player.HealthMax / 50);
         const healthBar = (
           <div
             key="healthbar"
@@ -651,7 +635,7 @@ function Game({ gameState }) {
                 top: 0,
                 bottom: 0,
                 left: 0,
-                width: Math.max(0, player.Health / player.MaxHealth) * 100 + "%"
+                width: Math.max(0, player.Health / player.HealthMax) * 100 + "%"
               }}
             />
             <div
@@ -661,7 +645,7 @@ function Game({ gameState }) {
                 top: 0,
                 bottom: "50%",
                 left: 0,
-                width: Math.min(1, player.Shield / player.MaxHealth) * 100 + "%"
+                width: Math.min(1, player.Shield / player.HealthMax) * 100 + "%"
               }}
             />
             {[...new Array(ticks)].map((_, i) => {

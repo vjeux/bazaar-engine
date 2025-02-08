@@ -349,7 +349,7 @@ function runAction(
       }
     }
     nextGameState.players[playerID].Health = Math.min(
-      nextGameState.players[playerID].MaxHealth,
+      nextGameState.players[playerID].HealthMax,
       nextGameState.players[playerID].Health + amount
     );
     if (nextGameState.players[playerID].Poison > 0) {
@@ -384,6 +384,26 @@ function runAction(
       "Poison",
       nextGameState.players[playerID].Poison + amount
     );
+  } else if (action.$type === "TActionPlayerPoisonRemove") {
+    const playerID = getTargetPlayer(
+      gameState,
+      nextGameState,
+      action.Target,
+      triggerPlayerID,
+      targetPlayerID
+    );
+
+    const targetBoardCard =
+      gameState.players[triggerPlayerID].board[targetBoardCardID];
+    let amount = targetBoardCard.PoisonRemoveAmount;
+
+    updatePlayerAttribute(
+      gameState,
+      nextGameState,
+      playerID,
+      "Poison",
+      Math.max(0, nextGameState.players[playerID].Poison - amount)
+    );
   } else if (action.$type === "TActionPlayerBurnApply") {
     const playerID = getTargetPlayer(
       gameState,
@@ -410,6 +430,26 @@ function runAction(
       "Burn",
       nextGameState.players[playerID].Burn + amount
     );
+  } else if (action.$type === "TActionPlayerBurnRemove") {
+    const playerID = getTargetPlayer(
+      gameState,
+      nextGameState,
+      action.Target,
+      triggerPlayerID,
+      targetPlayerID
+    );
+
+    const targetBoardCard =
+      gameState.players[triggerPlayerID].board[targetBoardCardID];
+    let amount = targetBoardCard.BurnRemoveAmount;
+
+    updatePlayerAttribute(
+      gameState,
+      nextGameState,
+      playerID,
+      "Burn",
+      Math.max(0, nextGameState.players[playerID].Burn - amount)
+    );
   } else if (action.$type === "TActionPlayerShieldApply") {
     const playerID = getTargetPlayer(
       gameState,
@@ -435,6 +475,26 @@ function runAction(
       playerID,
       "Shield",
       nextGameState.players[playerID].Shield + amount
+    );
+  } else if (action.$type === "TActionPlayerShieldRemove") {
+    const playerID = getTargetPlayer(
+      gameState,
+      nextGameState,
+      action.Target,
+      triggerPlayerID,
+      targetPlayerID
+    );
+
+    const targetBoardCard =
+      gameState.players[triggerPlayerID].board[targetBoardCardID];
+    let amount = targetBoardCard.ShieldRemoveAmount;
+
+    updatePlayerAttribute(
+      gameState,
+      nextGameState,
+      playerID,
+      "Shield",
+      Math.max(0, nextGameState.players[playerID].Shield - amount)
     );
   } else if (action.$type === "TActionPlayerReviveHeal") {
     const playerID = getTargetPlayer(
@@ -690,10 +750,36 @@ function getActionValue(
     let amount = value.DefaultValue;
     targetCards.forEach(([valueTargetPlayerID, valueTargetBoardCardID]) => {
       amount +=
-        gameState.players[valueTargetPlayerID].board[valueTargetBoardCardID][
-          value.AttributeType
-        ] ?? 0;
+        nextGameState.players[valueTargetPlayerID].board[
+          valueTargetBoardCardID
+        ][value.AttributeType] ?? 0;
     });
+    if (value.Modifier != null) {
+      const modifierValue = getActionValue(
+        gameState,
+        nextGameState,
+        value.Modifier.Value,
+        triggerPlayerID,
+        triggerBoardCardID,
+        targetPlayerID,
+        targetBoardCardID
+      );
+      if (value.Modifier.ModifyMode === "Multiply") {
+        amount *= modifierValue;
+      }
+    }
+    return amount;
+  } else if (value.$type === "TReferenceValuePlayerAttribute") {
+    const valueTargetPlayerID = getTargetPlayer(
+      gameState,
+      nextGameState,
+      value.Target,
+      triggerPlayerID,
+      targetPlayerID
+    );
+    let amount = value.DefaultValue;
+    amount +=
+      nextGameState.players[valueTargetPlayerID][value.AttributeType] ?? 0;
     if (value.Modifier != null) {
       const modifierValue = getActionValue(
         gameState,
@@ -873,15 +959,15 @@ function getTargetPlayer(
 ) {
   if (target.$type === "TTargetPlayerRelative") {
     if (target.TargetMode === "Opponent") {
-      return (triggerPlayerID + 1) % 2;
+      return (targetPlayerID + 1) % 2;
     } else if (target.TargetMode === "Self") {
-      return triggerPlayerID;
+      return targetPlayerID;
     }
   } else if (target.$type === "TTargetCardSection") {
     if (target.TargetSection === "SelfBoard") {
-      return triggerPlayerID;
+      return targetPlayerID;
     } else {
-      return (triggerPlayerID + 1) % 2;
+      return (targetPlayerID + 1) % 2;
     }
   }
 }
@@ -935,7 +1021,7 @@ function runGameTick(initialGameState) {
       if (player.HealthRegen > 0) {
         nextGameState.players[playerID].Health = Math.min(
           nextGameState.players[playerID].Health + player.HealthRegen,
-          nextGameState.players[playerID].MaxHealth
+          nextGameState.players[playerID].HealthMax
         );
       }
     });
@@ -1071,7 +1157,7 @@ function runGameTick(initialGameState) {
             subjects.forEach(([subjectPlayerID, subjectBoardCardID]) => {
               if (
                 subjectPlayerID === playerID &&
-                boardCardID === subjectBoardCardID
+                subjectBoardCardID === boardCardID
               ) {
                 runAction(
                   gameState,
@@ -1126,16 +1212,18 @@ function runGameTick(initialGameState) {
                 playerID,
                 targetPlayerID
               );
-              runAction(
-                gameState,
-                nextGameState,
-                ability.Action,
-                ability.Prerequisites,
-                abilityPlayerID,
-                null,
-                targetPlayerID,
-                targetBoardCardID
-              );
+              if (abilityPlayerID === playerID) {
+                runAction(
+                  gameState,
+                  nextGameState,
+                  ability.Action,
+                  ability.Prerequisites,
+                  abilityPlayerID,
+                  null,
+                  targetPlayerID,
+                  targetBoardCardID
+                );
+              }
             }
           });
         }
