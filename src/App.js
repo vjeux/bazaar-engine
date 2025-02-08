@@ -90,6 +90,9 @@ function _createBoardCardFromCard(card, tier) {
 
   // If the provided tier is not available, default to the first tier available.
   if (!(tier in card.Tiers)) {
+    console.error(
+      `Tier ${tier} not found for card ${card.Localization.Title.Text}`
+    );
     const tierKeys = Object.keys(card.Tiers);
     const firstTier = tierKeys.length > 0 ? tierKeys[0] : null;
     tier = firstTier;
