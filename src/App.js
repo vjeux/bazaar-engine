@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 const compressed = new Uint8Array(JSON.parse(localStorage.getItem("Cards")));
 const Cards = JSON.parse(pako.inflate(compressed, { to: "string" }));
 
-// import Encounters from "./json/encounterDays.json";
+// import Encounters from "./json/encounterDays.json"; // from https://www.howbazaar.gg/api/monsterEncounterDays
 // const compressed_encounters = JSON.stringify([
 //   ...pako.deflate(JSON.stringify(Encounters))
 // ]);
@@ -254,7 +254,14 @@ function parseMonsters(encounters) {
               }
             } catch (error) {
               // Skip this skill if there's an error.
-              console.error("Error reading monster skill:", error);
+              console.error(
+                "Error reading monster skill from monster:",
+                name,
+                ", skill:",
+                skill.card.name,
+                ", error:",
+                error
+              );
             }
           });
         }
