@@ -1,0 +1,16 @@
+{
+  "818c1c4b-4ddf-4d06-b369-e2a56c1cfb2d": {
+    "Id": "818c1c4b-4ddf-4d06-b369-e2a56c1cfb2d",
+    "VictoriesToWin": 10,
+    "NumCarpetSocketsUnlockPerLevel": 2,
+    "Prestige": {
+      "PrestigeInitial": 20,
+      "PrestigeMax": 20
+    },
+    "NumberOfDays": 10,
+    "HoursInADay": 6,
+    "ExperiencePerLevel": 8,
+    "ExperiencePerHour": 1,
+    "MaxLevel": 999
+  }
+}

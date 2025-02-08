@@ -2,7 +2,7 @@ import "./styles.css";
 import pako from "pako";
 import { useState } from "react";
 
-// import Cards from "./v2_Cards.json";
+// import Cards from "./json/v2_Cards.json";
 // const compressed = JSON.stringify([...pako.deflate(JSON.stringify(Cards))]);
 // localStorage.setItem("Cards", compressed);
 const compressed = new Uint8Array(JSON.parse(localStorage.getItem("Cards")));
@@ -23,7 +23,7 @@ const initialGameState = {
   isPlaying: true,
   players: [
     getBoardPlayer(
-      { MaxHealth: 500, HealthRegen: 0 },
+      { MaxHealth: 2000, HealthRegen: 0 },
       [
         // getBoardCard("Switchblade", "Silver"),
         // getBoardCard("Bar of Gold", "Bronze"),
@@ -31,7 +31,7 @@ const initialGameState = {
         getBoardCard("Ballista", "Gold"),
         // getBoardCard("Fire Claw", "Diamond"),
         getBoardCard("Uzi", "Bronze"),
-        getBoardCard("Uzi", "Bronze"),
+        getBoardCard("Uzi", "Bronze")
         // getBoardCard("Beach Ball", "Silver"),
       ],
       []
@@ -44,19 +44,18 @@ const initialGameState = {
         // getBoardCard("Crusher Claw", "Silver"),
         // getBoardCard("Colossal Popsicle", "Diamond"),
         // getBoardCard("Blue Piggles A", "Silver"),
-        // getBoardCard("Cutlass", "Silver"),
-        // getBoardCard("Barrel", "Silver"),
+        getBoardCard("Cutlass", "Silver"),
+        getBoardCard("Barrel", "Silver")
         // getBoardCard("Agility Boots", "Silver"),
         // getBoardCard("Crusher Claw", "Silver"),
         // getBoardCard("Abacus", "Gold"),
       ],
-      [
-        //getBoardSkill("Aggressive", "Silver")
-      ]
-    ),
+      [getBoardSkill("Aggressive", "Silver")]
+    )
   ],
   multicast: [],
   getRand: sfc32(0, 10000, 10000000, 100000000000),
+  sandstorm_damage: 0
 };
 
 function getBoardCard(name, tier, modifiers) {
@@ -82,7 +81,7 @@ function getBoardCard(name, tier, modifiers) {
       ...tierValues.Attributes,
       AbilityIds: tierValues.AbilityIds,
       AuraIds: tierValues.AuraIds,
-      TooltipIds: tierValues.TooltipIds,
+      TooltipIds: tierValues.TooltipIds
     };
     if (tierName === tier) {
       break;
@@ -98,7 +97,7 @@ function getBoardCard(name, tier, modifiers) {
     ...(attributes.AmmoMax ? { Ammo: attributes.AmmoMax } : {}),
     CritChance: 0,
     DamageCrit: 0,
-    tier,
+    tier
   };
   return result;
 }
@@ -126,7 +125,7 @@ function getBoardSkill(name, tier, modifiers) {
       ...tierValues.Attributes,
       AbilityIds: tierValues.AbilityIds,
       AuraIds: tierValues.AuraIds,
-      TooltipIds: tierValues.TooltipIds,
+      TooltipIds: tierValues.TooltipIds
     };
     if (tierName === tier) {
       break;
@@ -135,7 +134,7 @@ function getBoardSkill(name, tier, modifiers) {
   const result = {
     card,
     ...attributes,
-    tier,
+    tier
   };
   return result;
 }
@@ -148,7 +147,7 @@ function getBoardPlayer(stats, boardCards, boardSkills) {
     Shield: 0,
     Burn: 0,
     Poison: 0,
-    board: [...boardCards, ...boardSkills],
+    board: [...boardCards, ...boardSkills]
   };
 }
 
@@ -648,10 +647,10 @@ function runAction(
       action.$type === "TActionCardFreeze"
         ? ["FreezeAmount", "FreezeTargets", "Freeze"]
         : action.$type === "TActionCardSlow"
-        ? ["SlowAmount", "SlowTargets", "Slow"]
-        : action.$type === "TActionCardHaste"
-        ? ["HasteAmount", "HasteTargets", "Haste"]
-        : [];
+          ? ["SlowAmount", "SlowTargets", "Slow"]
+          : action.$type === "TActionCardHaste"
+            ? ["HasteAmount", "HasteTargets", "Haste"]
+            : [];
     const amount =
       gameState.players[targetPlayerID].board[targetBoardCardID][amountKey];
     const targetCount =
@@ -968,7 +967,7 @@ function getTargetCards(
         currentIndex--;
         [results[currentIndex], results[randomIndex]] = [
           results[randomIndex],
-          results[currentIndex],
+          results[currentIndex]
         ];
       }
     }
@@ -1040,18 +1039,18 @@ function runGameTick(initialGameState) {
     ...initialGameState,
     players: initialGameState.players.map((player) => ({
       ...player,
-      board: player.board.map((boardCard) => ({ ...boardCard })),
+      board: player.board.map((boardCard) => ({ ...boardCard }))
     })),
-    multicast: [...initialGameState.multicast],
+    multicast: [...initialGameState.multicast]
   };
 
   const gameState = {
     ...initialGameState,
     players: initialGameState.players.map((player) => ({
       ...player,
-      board: player.board.map((boardCard) => ({ ...boardCard })),
+      board: player.board.map((boardCard) => ({ ...boardCard }))
     })),
-    multicast: [...initialGameState.multicast],
+    multicast: [...initialGameState.multicast]
   };
 
   // Run Auras
@@ -1157,7 +1156,7 @@ function runGameTick(initialGameState) {
             nextGameState.multicast.push({
               tick: nextGameState.tick + (i + 1) * MULTICAST_DELAY,
               playerID,
-              boardCardID,
+              boardCardID
             });
           }
         }
@@ -1170,7 +1169,7 @@ function runGameTick(initialGameState) {
       cardTriggerList.push([
         multicast.playerID,
         multicast.boardCardID,
-        /* isMulticast */ true,
+        /* isMulticast */ true
       ]);
       nextGameState.multicast.splice(
         nextGameState.multicast.indexOf(multicast),
@@ -1242,6 +1241,42 @@ function runGameTick(initialGameState) {
     }
   });
 
+  /* 
+  Sandstorm
+
+  Start at 30 seconds, at 1 dmg
+  Tickrate is every 0.2 seconds
+  Increase by 1 every tick
+  */
+  // TODO: End game when it reaches 600 dmg per tick
+  const sandstorm_initial_tick = 30000;
+  const sandstorm_tickrate = 200;
+
+  let tickDamage = 0;
+  if (nextGameState.tick - sandstorm_initial_tick > 0) {
+    if (
+      (nextGameState.tick - sandstorm_initial_tick) % sandstorm_tickrate ===
+      0
+    ) {
+      tickDamage = Math.floor(
+        (nextGameState.tick - sandstorm_initial_tick) / sandstorm_tickrate
+      );
+    }
+  }
+  nextGameState.sandstorm_damage = tickDamage;
+  nextGameState.players.forEach((player) => {
+    const shield = player.Shield;
+    // Damage shield first, then health
+    const nextShield = Math.max(0, shield - tickDamage);
+    if (nextShield > 0) {
+      player.Shield = nextShield;
+    } else {
+      const nextHealthDamage = tickDamage - shield;
+      player.Shield = 0;
+      player.Health -= nextHealthDamage;
+    }
+  });
+
   // Death
   nextGameState.players.forEach((player, playerID) => {
     if (player.Health < 0) {
@@ -1308,7 +1343,7 @@ function Tooltip({ boardCard, gameState, playerID, boardCardID }) {
         border: "1px solid black",
         borderRadius: 5,
         padding: "5px 10px",
-        zIndex: 1,
+        zIndex: 1
       }}
       className="tooltip"
     >
@@ -1393,8 +1428,8 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
     card.Size === "Small"
       ? CARD_HEIGHT / 2
       : card.Size === "Medium"
-      ? CARD_HEIGHT / 1
-      : CARD_HEIGHT * 1.5;
+        ? CARD_HEIGHT / 1
+        : CARD_HEIGHT * 1.5;
 
   const paddingTop = 12;
   const borderSize = 4;
@@ -1406,7 +1441,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
           position: "relative",
           height: CARD_HEIGHT + paddingTop + 2 * borderSize,
           width: cardWidth + 2 * borderSize,
-          overflow: "hidden",
+          overflow: "hidden"
         }}
       >
         <img
@@ -1426,10 +1461,10 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
               tier === "Bronze"
                 ? "brown"
                 : tier === "Silver"
-                ? "gray"
-                : tier === "Gold"
-                ? "yellow"
-                : "blue",
+                  ? "gray"
+                  : tier === "Gold"
+                    ? "yellow"
+                    : "blue"
           }}
           height={CARD_HEIGHT}
           width={cardWidth}
@@ -1446,7 +1481,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
               textAlign: "right",
               fontSize: "8pt",
               boxSizing: "border-box",
-              height: 2,
+              height: 2
             }}
           >
             {(boardCard.tick / 1000).toFixed(1)} /{" "}
@@ -1463,7 +1498,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
             display: "flex",
             flexDirection: "column",
             color: "white",
-            whiteSpace: "preserve nowrap",
+            whiteSpace: "preserve nowrap"
           }}
         >
           {boardCard.Freeze > 0 ? (
@@ -1472,7 +1507,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
                 background: "rgba(0.2, 0.2, 0.2, 0.5)",
                 padding: "2px 5px",
                 borderRadius: 5,
-                margin: 2,
+                margin: 2
               }}
             >
               ❄️ {(boardCard.Freeze / 1000).toFixed(1)}
@@ -1484,7 +1519,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
                 background: "rgba(0.2, 0.2, 0.2, 0.5)",
                 padding: "2px 5px",
                 borderRadius: 5,
-                margin: 2,
+                margin: 2
               }}
             >
               🐌 {(boardCard.Slow / 1000).toFixed(1)}
@@ -1496,7 +1531,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
                 background: "rgba(0.2, 0.2, 0.2, 0.5)",
                 padding: "2px 5px",
                 borderRadius: 5,
-                margin: 2,
+                margin: 2
               }}
             >
               ⏱️ {(boardCard.Haste / 1000).toFixed(1)}
@@ -1509,7 +1544,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
             left: "50%",
             transform: "translate(-50%, -50%)",
             display: "flex",
-            top: paddingTop,
+            top: paddingTop
           }}
         >
           {boardCard.DamageAmount !== undefined && (
@@ -1519,7 +1554,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
                 padding: "2px 5px",
                 margin: "0 2px",
                 borderRadius: 5,
-                color: "white",
+                color: "white"
               }}
             >
               {boardCard.DamageAmount}
@@ -1532,7 +1567,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
                 padding: "2px 5px",
                 margin: "0 2px",
                 borderRadius: 5,
-                color: "white",
+                color: "white"
               }}
             >
               {boardCard.HealAmount}
@@ -1545,7 +1580,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
                 padding: "2px 5px",
                 margin: "0 2px",
                 borderRadius: 5,
-                color: "white",
+                color: "white"
               }}
             >
               {boardCard.BurnApplyAmount}
@@ -1558,7 +1593,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
                 padding: "2px 5px",
                 margin: "0 2px",
                 borderRadius: 5,
-                color: "white",
+                color: "white"
               }}
             >
               {boardCard.PoisonApplyAmount}
@@ -1570,7 +1605,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
                 backgroundColor: "yellow",
                 borderRadius: 5,
                 padding: "2px 5px",
-                margin: "0 2px",
+                margin: "0 2px"
               }}
             >
               {boardCard.ShieldApplyAmount}
@@ -1587,7 +1622,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
               padding: "2px 5px",
               margin: "0 2px",
               borderRadius: 5,
-              color: "white",
+              color: "white"
             }}
           >
             {boardCard.CritChance + "%"}
@@ -1603,7 +1638,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
               padding: "2px 5px",
               margin: "0 2px",
               borderRadius: 5,
-              color: "white",
+              color: "white"
             }}
           >
             {boardCard.SellPrice}
@@ -1620,7 +1655,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
               padding: "1px 3px",
               borderRadius: 5,
               fontSize: "9pt",
-              color: "white",
+              color: "white"
             }}
           >
             x{boardCard.Multicast}
@@ -1637,7 +1672,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
               backgroundColor: "gray",
               padding: "2px 5px",
               marginBottom: 5,
-              borderRadius: 5,
+              borderRadius: 5
             }}
           >
             {[...new Array(boardCard.AmmoMax)].map((_, i) => {
@@ -1650,7 +1685,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
                     backgroundColor:
                       boardCard.Ammo > i ? "orange" : "transparent",
                     margin: "1px 1px",
-                    border: "1px solid orange",
+                    border: "1px solid orange"
                   }}
                 />
               );
@@ -1682,7 +1717,7 @@ function BoardSkill({ boardCard, gameState, playerID, boardCardID }) {
           position: "relative",
           height: IMAGE_SIZE + borderSize * 2,
           width: IMAGE_SIZE + borderSize * 2,
-          overflow: "hidden",
+          overflow: "hidden"
         }}
       >
         <img
@@ -1700,10 +1735,10 @@ function BoardSkill({ boardCard, gameState, playerID, boardCardID }) {
               tier === "Bronze"
                 ? "brown"
                 : tier === "Silver"
-                ? "gray"
-                : tier === "Gold"
-                ? "yellow"
-                : "blue",
+                  ? "gray"
+                  : tier === "Gold"
+                    ? "yellow"
+                    : "blue"
           }}
           height={IMAGE_SIZE}
           width={IMAGE_SIZE}
@@ -1736,7 +1771,7 @@ function Game({ gameState }) {
               justifyContent: "center",
               backgroundColor: "rgba(87, 66, 52, 0.4)",
               position: "relative",
-              overflow: "hidden",
+              overflow: "hidden"
             }}
           >
             <div
@@ -1746,8 +1781,7 @@ function Game({ gameState }) {
                 top: 0,
                 bottom: 0,
                 left: 0,
-                width:
-                  Math.max(0, player.Health / player.MaxHealth) * 100 + "%",
+                width: Math.max(0, player.Health / player.MaxHealth) * 100 + "%"
               }}
             />
             <div
@@ -1757,8 +1791,7 @@ function Game({ gameState }) {
                 top: 0,
                 bottom: "50%",
                 left: 0,
-                width:
-                  Math.min(1, player.Shield / player.MaxHealth) * 100 + "%",
+                width: Math.min(1, player.Shield / player.MaxHealth) * 100 + "%"
               }}
             />
             {[...new Array(ticks)].map((_, i) => {
@@ -1775,7 +1808,7 @@ function Game({ gameState }) {
                     width: 1,
                     top: i % 5 === 0 ? 1 : 5,
                     bottom: i % 5 === 0 ? 1 : 5,
-                    left: (i / ticks) * 100 + "%",
+                    left: (i / ticks) * 100 + "%"
                   }}
                 />
               );
@@ -1786,14 +1819,14 @@ function Game({ gameState }) {
                 fontSize: "20pt",
                 textShadow:
                   "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
-                fontSmoothing: "antialiased",
+                fontSmoothing: "antialiased"
               }}
             >
               <span
                 style={{
                   color: "white",
                   display: "inline-block",
-                  margin: "0 5px",
+                  margin: "0 5px"
                 }}
               >
                 {Math.floor(player.Health)}
@@ -1803,7 +1836,7 @@ function Game({ gameState }) {
                   style={{
                     color: "#ffd62e",
                     display: "inline-block",
-                    margin: "0 5px",
+                    margin: "0 5px"
                   }}
                 >
                   {Math.floor(player.Shield)}
@@ -1814,7 +1847,7 @@ function Game({ gameState }) {
                   style={{
                     color: "#1e976d",
                     display: "inline-block",
-                    margin: "0 5px",
+                    margin: "0 5px"
                   }}
                 >
                   {player.Poison}
@@ -1825,7 +1858,7 @@ function Game({ gameState }) {
                   style={{
                     color: "#d99c3e",
                     display: "inline-block",
-                    margin: "0 5px",
+                    margin: "0 5px"
                   }}
                 >
                   {player.Burn}
@@ -1836,7 +1869,7 @@ function Game({ gameState }) {
                   style={{
                     color: "#96dd4b",
                     display: "inline-block",
-                    margin: "0 5px",
+                    margin: "0 5px"
                   }}
                 >
                   {player.HealthRegen}
@@ -1881,8 +1914,13 @@ function Game({ gameState }) {
             : [board, healthBar, boardSkills];
         return <div key={playerID}>{display}</div>;
       })}
+      <p>Sandstorm damage: {gameState.sandstorm_damage}</p>
     </div>
   );
+}
+
+function stepCountToSeconds(stepCount) {
+  return (stepCount * TICK_RATE) / 1000;
 }
 
 export default function App() {
@@ -1899,6 +1937,10 @@ export default function App() {
         value={stepCount}
         onChange={(e) => setStepCount(e.target.value)}
       />
+      <p>Time: {stepCountToSeconds(stepCount).toFixed(1)}s </p>
+      <p>
+        Steps: {stepCount}/{steps.length - 1}
+      </p>
     </div>
   );
 }

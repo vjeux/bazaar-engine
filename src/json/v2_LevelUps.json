@@ -1,0 +1,122 @@
+{
+  "1": {
+    "Level": 1,
+    "HealthIncrease": 50
+  },
+  "2": {
+    "Level": 2,
+    "HealthIncrease": 100
+  },
+  "3": {
+    "Level": 3,
+    "HealthIncrease": 150
+  },
+  "4": {
+    "Level": 4,
+    "HealthIncrease": 200
+  },
+  "5": {
+    "Level": 5,
+    "HealthIncrease": 250
+  },
+  "6": {
+    "Level": 6,
+    "HealthIncrease": 300
+  },
+  "7": {
+    "Level": 7,
+    "HealthIncrease": 350
+  },
+  "8": {
+    "Level": 8,
+    "HealthIncrease": 400
+  },
+  "9": {
+    "Level": 9,
+    "HealthIncrease": 450
+  },
+  "10": {
+    "Level": 10,
+    "HealthIncrease": 500
+  },
+  "11": {
+    "Level": 11,
+    "HealthIncrease": 550
+  },
+  "12": {
+    "Level": 12,
+    "HealthIncrease": 600
+  },
+  "13": {
+    "Level": 13,
+    "HealthIncrease": 650
+  },
+  "14": {
+    "Level": 14,
+    "HealthIncrease": 700
+  },
+  "15": {
+    "Level": 15,
+    "HealthIncrease": 750
+  },
+  "16": {
+    "Level": 16,
+    "HealthIncrease": 800
+  },
+  "17": {
+    "Level": 17,
+    "HealthIncrease": 850
+  },
+  "18": {
+    "Level": 18,
+    "HealthIncrease": 900
+  },
+  "19": {
+    "Level": 19,
+    "HealthIncrease": 950
+  },
+  "20": {
+    "Level": 20,
+    "HealthIncrease": 1000
+  },
+  "21": {
+    "Level": 21,
+    "HealthIncrease": 1050
+  },
+  "22": {
+    "Level": 22,
+    "HealthIncrease": 1100
+  },
+  "23": {
+    "Level": 23,
+    "HealthIncrease": 1150
+  },
+  "24": {
+    "Level": 24,
+    "HealthIncrease": 1200
+  },
+  "25": {
+    "Level": 25,
+    "HealthIncrease": 1250
+  },
+  "26": {
+    "Level": 26,
+    "HealthIncrease": 1300
+  },
+  "27": {
+    "Level": 27,
+    "HealthIncrease": 1350
+  },
+  "28": {
+    "Level": 28,
+    "HealthIncrease": 1400
+  },
+  "29": {
+    "Level": 29,
+    "HealthIncrease": 1450
+  },
+  "30": {
+    "Level": 30,
+    "HealthIncrease": 1500
+  }
+}
