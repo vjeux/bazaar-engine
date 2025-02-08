@@ -1613,12 +1613,13 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
           <div
             style={{
               position: "absolute",
-              bottom: 6.5,
-              left: 5,
-              backgroundColor: "orange",
-              padding: "2px 5px",
-              margin: "0 2px",
+              left: "50%",
+              transform: "translateX(-50%)",
+              top: 25,
+              backgroundColor: "rgba(0, 0, 0, 0.4)",
+              padding: "1px 3px",
               borderRadius: 5,
+              fontSize: "9pt",
               color: "white",
             }}
           >
