@@ -1,6 +1,6 @@
 import "./styles.css";
 import pako from "pako";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // import Cards from "./json/v2_Cards.json";
 // const compressed = JSON.stringify([...pako.deflate(JSON.stringify(Cards))]);
@@ -8,7 +8,21 @@ import { useState } from "react";
 const compressed = new Uint8Array(JSON.parse(localStorage.getItem("Cards")));
 const Cards = JSON.parse(pako.inflate(compressed, { to: "string" }));
 
+// import Encounters from "./json/encounterDays.json"; // from https://www.howbazaar.gg/api/monsterEncounterDays
+// const compressed_encounters = JSON.stringify([
+//   ...pako.deflate(JSON.stringify(Encounters))
+// ]);
+// localStorage.setItem("Encounters", compressed_encounters);
+const compressed_encounters = new Uint8Array(
+  JSON.parse(localStorage.getItem("Encounters"))
+);
+const Encounters = JSON.parse(
+  pako.inflate(compressed_encounters, { to: "string" })
+);
+
 const CardsValues = Object.values(Cards);
+
+const MonstersList = parseMonsters(Encounters);
 
 /* Bugs
 
@@ -16,26 +30,31 @@ const CardsValues = Object.values(Cards);
 getBoardCard("Crusher Claw", "Silver"),
 getBoardCard("Abacus", "Gold"),
 
+Non Working monster indexes
+- 1, 7, 17,22, 30, 34, 36, 41, 43, 46, 49, 50, 51 .... probably more
+
 */
 
 const initialGameState = {
   tick: 0,
   isPlaying: true,
   players: [
-    getBoardPlayer(
-      { MaxHealth: 2000, HealthRegen: 0 },
-      [
-        // getBoardCard("Switchblade", "Silver"),
-        // getBoardCard("Bar of Gold", "Bronze"),
-        // getBoardCard("Vial of Blood", "Silver"),
-        getBoardCard("Ballista", "Gold"),
-        // getBoardCard("Fire Claw", "Diamond"),
-        getBoardCard("Uzi", "Bronze"),
-        getBoardCard("Uzi", "Bronze")
-        // getBoardCard("Beach Ball", "Silver"),
-      ],
-      []
-    ),
+    // getBoardPlayer(
+    //   { MaxHealth: 2000, HealthRegen: 0 },
+    //   [
+    //     // getBoardCard("Switchblade", "Silver"),
+    //     // getBoardCard("Bar of Gold", "Bronze"),
+    //     // getBoardCard("Vial of Blood", "Silver"),
+    //     getBoardCard("Ballista", "Gold"),
+    //     // getBoardCard("Fire Claw", "Diamond"),
+    //     getBoardCard("Uzi", "Bronze"),
+    //     getBoardCard("Uzi", "Bronze")
+    //     // getBoardCard("Beach Ball", "Silver"),
+    //   ],
+    //   []
+    // ),
+    //getMonsterByName("Dire Inglet"),
+    MonstersList[0][1],
     getBoardPlayer(
       { MaxHealth: 3500, HealthRegen: 0 },
       [
@@ -58,48 +77,96 @@ const initialGameState = {
   sandstorm_damage: 0
 };
 
-function getBoardCard(name, tier, modifiers) {
-  const card = CardsValues.find(
-    (card) => card.Localization.Title.Text === name
-  );
-  let attributes = {};
-  if (!card.Tiers[tier]) {
-    throw new Error(
-      name +
-        " doesn't have tier " +
-        tier +
-        ", the first one is " +
-        Object.keys(card.Tiers)[0]
+/**
+ * Creates a board card from a card object and a specified tier.
+ * If the given tier does not exist in the card's Tiers, the first available tier is used.
+ *
+ * @param {Object} card - The card object from CardsValues.
+ * @param {string} tier - The desired tier.
+ * @returns {Object} The board card object.
+ */
+function _createBoardCardFromCard(card, tier) {
+  const attributes = {};
+
+  // If the provided tier is not available, default to the first tier available.
+  if (!(tier in card.Tiers)) {
+    console.error(
+      `Tier ${tier} not found for card ${card.Localization.Title.Text}`
     );
+    const tierKeys = Object.keys(card.Tiers);
+    const firstTier = tierKeys.length > 0 ? tierKeys[0] : null;
+    tier = firstTier;
   }
+
+  // Iterate over the tiers in order and merge their attributes until the desired tier is reached.
   const tierNames = Object.keys(card.Tiers);
-  for (let i = 0; i < tierNames.length; ++i) {
-    const tierName = tierNames[i];
-    const tierValues = card.Tiers[tierName];
-    attributes = {
-      ...attributes,
-      ...tierValues.Attributes,
-      AbilityIds: tierValues.AbilityIds,
-      AuraIds: tierValues.AuraIds,
-      TooltipIds: tierValues.TooltipIds
-    };
-    if (tierName === tier) {
+  for (const tn of tierNames) {
+    const tierValues = card.Tiers[tn];
+
+    // Merge in the tier's attributes.
+    Object.assign(attributes, tierValues.Attributes || {});
+    attributes.AbilityIds = tierValues.AbilityIds;
+    attributes.AuraIds = tierValues.AuraIds;
+    attributes.TooltipIds = tierValues.TooltipIds;
+
+    if (tn === tier) {
       break;
     }
   }
+
+  // Create the result object with default simulation fields.
   const result = {
-    card,
+    card: card,
     ...attributes,
     tick: 0,
     Slow: 0,
     Freeze: 0,
     Haste: 0,
-    ...(attributes.AmmoMax ? { Ammo: attributes.AmmoMax } : {}),
     CritChance: 0,
     DamageCrit: 0,
-    tier
+    tier: tier
   };
+
+  // If the attributes include AmmoMax, set Ammo to that value.
+  if ("AmmoMax" in attributes) {
+    result.Ammo = attributes.AmmoMax;
+  }
+
   return result;
+}
+
+/**
+ * Retrieves a board card by its localized title text.
+ *
+ * @param {string} name - The localized title of the card.
+ * @param {string} tier - The desired tier.
+ * @param {*} [modifiers=null] - Optional modifiers (unused in this implementation).
+ * @returns {Object} The board card.
+ * @throws Will throw an error if the card is not found.
+ */
+function getBoardCard(name, tier, modifiers = null) {
+  // Find the card by its localized title text.
+  const card = CardsValues.find((c) => c.Localization?.Title?.Text === name);
+  if (!card) {
+    throw new Error(`Card ${name} not found`);
+  }
+  return _createBoardCardFromCard(card, tier);
+}
+
+/**
+ * Retrieves a board card by its card ID.
+ *
+ * @param {number} cardId - The ID of the card.
+ * @param {string} tier - The desired tier.
+ * @returns {Object} The board card.
+ * @throws Will throw an error if the card with the given ID is not found.
+ */
+function getBoardCardWithId(cardId, tier) {
+  const card = CardsValues.find((c) => c.Id === cardId);
+  if (!card) {
+    throw new Error(`Card with id ${cardId} not found`);
+  }
+  return _createBoardCardFromCard(card, tier);
 }
 
 function getBoardSkill(name, tier, modifiers) {
@@ -149,6 +216,69 @@ function getBoardPlayer(stats, boardCards, boardSkills) {
     Poison: 0,
     board: [...boardCards, ...boardSkills]
   };
+}
+
+/**
+ * Parses encounter data to extract monster information and construct board players.
+ *
+ * @param {Object} encounters - The encounter data object.
+ * @param {Array} [encounters.data=[]] - An array of daily encounter data objects.
+ * @param {Array} [encounters.data[].groups=[]] - An array of groups within a day, each group being an array of monsters.
+ * @returns {Array.<Array>} An array of tuples, each containing a monster's name (string) and its corresponding board player object.
+ */
+function parseMonsters(encounters) {
+  let data = encounters;
+
+  const monstersList = [];
+  const dayData = data.data || [];
+  dayData.forEach((dayInfo) => {
+    const groups = dayInfo.groups || [];
+    groups.forEach((group) => {
+      group.forEach((monster) => {
+        const name = monster.cardName || "Unnamed Monster";
+        const health = monster.health || 0;
+        const stats = { MaxHealth: health, HealthRegen: 0 };
+
+        let boardCards = [];
+        if (Array.isArray(monster.items) && monster.items.length > 0) {
+          boardCards = monster.items.map((item) =>
+            getBoardCardWithId(item.card.id, item.tierType)
+          );
+        }
+
+        let boardSkills = [];
+        if (Array.isArray(monster.skills) && monster.skills.length > 0) {
+          monster.skills.forEach((skill) => {
+            try {
+              if (skill.card && skill.tierType) {
+                boardSkills.push(
+                  getBoardSkill(skill.card.name, skill.tierType)
+                );
+              }
+            } catch (error) {
+              // Skip this skill if there's an error.
+              console.error(
+                "Error reading monster skill from monster:",
+                name,
+                ", skill:",
+                skill.card.name,
+                ", error:",
+                error
+              );
+            }
+          });
+        }
+
+        const boardPlayer = getBoardPlayer(stats, boardCards, boardSkills);
+        monstersList.push([name, boardPlayer]);
+      });
+    });
+  });
+  return monstersList;
+}
+
+function getMonsterByName(name) {
+  return MonstersList.find((monster) => monster[0] === name)[1];
 }
 
 function sfc32(a, b, c, d) {
@@ -1927,7 +2057,21 @@ function stepCountToSeconds(stepCount) {
 }
 
 export default function App() {
-  let [stepCount, setStepCount] = useState(0);
+  const [stepCount, setStepCount] = useState(0);
+  const [autoScroll, setAutoScroll] = useState(false);
+  const [autoReset, setAutoReset] = useState(false);
+
+  useEffect(() => {
+    if (!autoScroll) return;
+
+    const interval = setInterval(() => {
+      setStepCount((prev) =>
+        prev >= steps.length - 1 ? (autoReset ? 0 : prev) : prev + 1
+      );
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [autoScroll, autoReset]);
 
   return (
     <div className="App">
@@ -1938,8 +2082,27 @@ export default function App() {
         min="0"
         max={steps.length - 1}
         value={stepCount}
-        onChange={(e) => setStepCount(e.target.value)}
+        onChange={(e) => setStepCount(Number(e.target.value))}
       />
+      <div style={{ marginTop: 10 }}>
+        <label style={{ marginRight: 10 }}>
+          <input
+            type="checkbox"
+            checked={autoScroll}
+            onChange={(e) => setAutoScroll(e.target.checked)}
+          />{" "}
+          Auto Scroll
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={autoReset}
+            onChange={(e) => setAutoReset(e.target.checked)}
+          />{" "}
+          Auto Reset
+        </label>
+      </div>
+
       <p>Time: {stepCountToSeconds(stepCount).toFixed(1)}s </p>
       <p>
         Steps: {stepCount}/{steps.length - 1}
