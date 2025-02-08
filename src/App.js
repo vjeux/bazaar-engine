@@ -1,6 +1,6 @@
 import "./styles.css";
 import pako from "pako";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // import Cards from "./json/v2_Cards.json";
 // const compressed = JSON.stringify([...pako.deflate(JSON.stringify(Cards))]);
@@ -2043,7 +2043,21 @@ function stepCountToSeconds(stepCount) {
 }
 
 export default function App() {
-  let [stepCount, setStepCount] = useState(0);
+  const [stepCount, setStepCount] = useState(0);
+  const [autoScroll, setAutoScroll] = useState(false);
+  const [autoReset, setAutoReset] = useState(false);
+
+  useEffect(() => {
+    if (!autoScroll) return;
+
+    const interval = setInterval(() => {
+      setStepCount((prev) =>
+        prev >= steps.length - 1 ? (autoReset ? 0 : prev) : prev + 1
+      );
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [autoScroll, autoReset]);
 
   return (
     <div className="App">
@@ -2054,8 +2068,27 @@ export default function App() {
         min="0"
         max={steps.length - 1}
         value={stepCount}
-        onChange={(e) => setStepCount(e.target.value)}
+        onChange={(e) => setStepCount(Number(e.target.value))}
       />
+      <div style={{ marginTop: 10 }}>
+        <label style={{ marginRight: 10 }}>
+          <input
+            type="checkbox"
+            checked={autoScroll}
+            onChange={(e) => setAutoScroll(e.target.checked)}
+          />{" "}
+          Auto Scroll
+        </label>
+        <label>
+          <input
+            type="checkbox"
+            checked={autoReset}
+            onChange={(e) => setAutoReset(e.target.checked)}
+          />{" "}
+          Auto Reset
+        </label>
+      </div>
+
       <p>Time: {stepCountToSeconds(stepCount).toFixed(1)}s </p>
       <p>
         Steps: {stepCount}/{steps.length - 1}
