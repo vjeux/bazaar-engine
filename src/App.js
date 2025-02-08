@@ -2,11 +2,11 @@ import "./styles.css";
 import pako from "pako";
 import { useState } from "react";
 
-// import Cards from "./v2_Cards.json";
+import Cards from "./v2_Cards.json";
 // const compressed = JSON.stringify([...pako.deflate(JSON.stringify(Cards))]);
 // localStorage.setItem("Cards", compressed);
-const compressed = new Uint8Array(JSON.parse(localStorage.getItem("Cards")));
-const Cards = JSON.parse(pako.inflate(compressed, { to: "string" }));
+// const compressed = new Uint8Array(JSON.parse(localStorage.getItem("Cards")));
+// const Cards = JSON.parse(pako.inflate(compressed, { to: "string" }));
 
 const CardsValues = Object.values(Cards);
 
@@ -1282,7 +1282,19 @@ function Tooltip({ boardCard, gameState, playerID, boardCardID }) {
       {boardCard.TooltipIds.map((tooltipId) => {
         const tooltip = boardCard.card.Localization.Tooltips[
           tooltipId
-        ].Content.Text.replace(/\{([a-z]+)\.([0-9+])\}/g, (_, type, id) => {
+        ].Content.Text.replace(
+          /\{([a-z]+)\.([0-9+])\.targets\}/g,
+          (_, type, id) => {
+            const action =
+              boardCard.card[type === "aura" ? "Auras" : "Abilities"][id]
+                .Action;
+            const target = action.Target;
+            if (target.$type === "TTargetCardRandom") {
+              return 1;
+            }
+            return `{?${type}.${id}.targets}`;
+          }
+        ).replace(/\{([a-z]+)\.([0-9+])\}/g, (_, type, id, targets) => {
           const action =
             boardCard.card[type === "aura" ? "Auras" : "Abilities"][id].Action;
           if (action.Value) {
@@ -1296,8 +1308,25 @@ function Tooltip({ boardCard, gameState, playerID, boardCardID }) {
               boardCardID
             );
           }
+          if (action.$type === "TActionGameSpawnCards") {
+            return getActionValue(
+              gameState,
+              gameState,
+              action.SpawnContext.Limit,
+              playerID,
+              boardCardID,
+              playerID,
+              boardCardID
+            );
+          }
           if (action.$type === "TActionPlayerDamage") {
             return boardCard.DamageAmount;
+          }
+          if (action.$type === "TActionCardReload") {
+            return boardCard.ReloadAmount;
+          }
+          if (action.$type === "TActionCardFreeze") {
+            return boardCard.FreezeAmount / 1000;
           }
           const match = action.$type.match(/^TActionPlayer([A-Za-z]+)Apply$/);
           if (match) {
