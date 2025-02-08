@@ -58,48 +58,93 @@ const initialGameState = {
   sandstorm_damage: 0
 };
 
-function getBoardCard(name, tier, modifiers) {
-  const card = CardsValues.find(
-    (card) => card.Localization.Title.Text === name
-  );
-  let attributes = {};
-  if (!card.Tiers[tier]) {
-    throw new Error(
-      name +
-        " doesn't have tier " +
-        tier +
-        ", the first one is " +
-        Object.keys(card.Tiers)[0]
-    );
+/**
+ * Creates a board card from a card object and a specified tier.
+ * If the given tier does not exist in the card's Tiers, the first available tier is used.
+ *
+ * @param {Object} card - The card object from CardsValues.
+ * @param {string} tier - The desired tier.
+ * @returns {Object} The board card object.
+ */
+function _createBoardCardFromCard(card, tier) {
+  const attributes = {};
+
+  // If the provided tier is not available, default to the first tier available.
+  if (!(tier in card.Tiers)) {
+    const tierKeys = Object.keys(card.Tiers);
+    const firstTier = tierKeys.length > 0 ? tierKeys[0] : null;
+    tier = firstTier;
   }
+
+  // Iterate over the tiers in order and merge their attributes until the desired tier is reached.
   const tierNames = Object.keys(card.Tiers);
-  for (let i = 0; i < tierNames.length; ++i) {
-    const tierName = tierNames[i];
-    const tierValues = card.Tiers[tierName];
-    attributes = {
-      ...attributes,
-      ...tierValues.Attributes,
-      AbilityIds: tierValues.AbilityIds,
-      AuraIds: tierValues.AuraIds,
-      TooltipIds: tierValues.TooltipIds
-    };
-    if (tierName === tier) {
+  for (const tn of tierNames) {
+    const tierValues = card.Tiers[tn];
+
+    // Merge in the tier's attributes.
+    Object.assign(attributes, tierValues.Attributes || {});
+    attributes.AbilityIds = tierValues.AbilityIds;
+    attributes.AuraIds = tierValues.AuraIds;
+    attributes.TooltipIds = tierValues.TooltipIds;
+
+    if (tn === tier) {
       break;
     }
   }
+
+  // Create the result object with default simulation fields.
   const result = {
-    card,
+    card: card,
     ...attributes,
     tick: 0,
     Slow: 0,
     Freeze: 0,
     Haste: 0,
-    ...(attributes.AmmoMax ? { Ammo: attributes.AmmoMax } : {}),
     CritChance: 0,
     DamageCrit: 0,
-    tier
+    tier: tier
   };
+
+  // If the attributes include AmmoMax, set Ammo to that value.
+  if ("AmmoMax" in attributes) {
+    result.Ammo = attributes.AmmoMax;
+  }
+
   return result;
+}
+
+/**
+ * Retrieves a board card by its localized title text.
+ *
+ * @param {string} name - The localized title of the card.
+ * @param {string} tier - The desired tier.
+ * @param {*} [modifiers=null] - Optional modifiers (unused in this implementation).
+ * @returns {Object} The board card.
+ * @throws Will throw an error if the card is not found.
+ */
+function getBoardCard(name, tier, modifiers = null) {
+  // Find the card by its localized title text.
+  const card = CardsValues.find((c) => c.Localization?.Title?.Text === name);
+  if (!card) {
+    throw new Error(`Card ${name} not found`);
+  }
+  return _createBoardCardFromCard(card, tier);
+}
+
+/**
+ * Retrieves a board card by its card ID.
+ *
+ * @param {number} cardId - The ID of the card.
+ * @param {string} tier - The desired tier.
+ * @returns {Object} The board card.
+ * @throws Will throw an error if the card with the given ID is not found.
+ */
+function getBoardCardWithId(cardId, tier) {
+  const card = CardsValues.find((c) => c.Id === cardId);
+  if (!card) {
+    throw new Error(`Card with id ${cardId} not found`);
+  }
+  return _createBoardCardFromCard(card, tier);
 }
 
 function getBoardSkill(name, tier, modifiers) {
