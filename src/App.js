@@ -30,9 +30,10 @@ const MonstersList = parseMonsters(Encounters);
 getBoardCard("Crusher Claw", "Silver"),
 getBoardCard("Abacus", "Gold"),
 
-*/
+Non Working monster indexes
+- 1, 7, 17,22, 30, 34, 36, 41, 43, 46, 49, 50, 51 .... probably more
 
-console.log(MonstersList[1]);
+*/
 
 const initialGameState = {
   tick: 0,
@@ -52,8 +53,8 @@ const initialGameState = {
     //   ],
     //   []
     // ),
-    getMonsterByName("Dire Inglet"),
-    //MonstersList[1][1],
+    //getMonsterByName("Dire Inglet"),
+    MonstersList[0][1],
     getBoardPlayer(
       { MaxHealth: 3500, HealthRegen: 0 },
       [
