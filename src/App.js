@@ -2,11 +2,11 @@ import "./styles.css";
 import pako from "pako";
 import { useState } from "react";
 
-import Cards from "./v2_Cards.json";
+// import Cards from "./v2_Cards.json";
 // const compressed = JSON.stringify([...pako.deflate(JSON.stringify(Cards))]);
 // localStorage.setItem("Cards", compressed);
-// const compressed = new Uint8Array(JSON.parse(localStorage.getItem("Cards")));
-// const Cards = JSON.parse(pako.inflate(compressed, { to: "string" }));
+const compressed = new Uint8Array(JSON.parse(localStorage.getItem("Cards")));
+const Cards = JSON.parse(pako.inflate(compressed, { to: "string" }));
 
 const CardsValues = Object.values(Cards);
 
@@ -28,8 +28,8 @@ const initialGameState = {
         // getBoardCard("Switchblade", "Silver"),
         // getBoardCard("Bar of Gold", "Bronze"),
         // getBoardCard("Citrus", "Bronze"),
-        getBoardCard("Athanor", "Bronze"),
-        getBoardCard("Fire Claw", "Diamond"),
+        getBoardCard("Duct Tape", "Bronze"),
+        // getBoardCard("Fire Claw", "Diamond"),
         getBoardCard("Fang", "Bronze"),
         // getBoardCard("Beach Ball", "Silver"),
       ],
@@ -41,15 +41,17 @@ const initialGameState = {
         // getBoardCard("Powder Flask", "Silver"),
         // getBoardCard("Abacus", "Silver"),
         // getBoardCard("Crusher Claw", "Silver"),
-        getBoardCard("Colossal Popsicle", "Diamond"),
+        // getBoardCard("Colossal Popsicle", "Diamond"),
         // getBoardCard("Blue Piggles A", "Silver"),
-        getBoardCard("Cutlass", "Silver"),
-        getBoardCard("Barrel", "Silver"),
+        // getBoardCard("Cutlass", "Silver"),
+        // getBoardCard("Barrel", "Silver"),
         // getBoardCard("Agility Boots", "Silver"),
-        getBoardCard("Crusher Claw", "Silver"),
+        // getBoardCard("Crusher Claw", "Silver"),
         // getBoardCard("Abacus", "Gold"),
       ],
-      [getBoardSkill("Aggressive", "Silver")]
+      [
+        //getBoardSkill("Aggressive", "Silver")
+      ]
     ),
   ],
 
@@ -448,14 +450,14 @@ function runAction(
       targetPlayerID
     );
     const shield = nextGameState.players[playerID].Shield;
-    const triggerBoardCard =
-      gameState.players[triggerPlayerID].board[triggerBoardCardID];
-    let amount = triggerBoardCard.DamageAmount;
-    const critChance = triggerBoardCard.CritChance;
+    const targetBoardCard =
+      gameState.players[triggerPlayerID].board[targetBoardCardID];
+    let amount = targetBoardCard.DamageAmount;
+    const critChance = targetBoardCard.CritChance;
     if (critChance > 0) {
       if (gameState.getRand() * 100 < critChance) {
         amount *= 2;
-        const damageCrit = triggerBoardCard.DamageCrit;
+        const damageCrit = targetBoardCard.DamageCrit;
         if (damageCrit !== undefined) {
           amount *= 1 + damageCrit / 100;
         }
@@ -479,10 +481,10 @@ function runAction(
       targetPlayerID
     );
 
-    const triggerBoardCard =
-      gameState.players[triggerPlayerID].board[triggerBoardCardID];
-    let amount = triggerBoardCard.HealAmount;
-    const critChance = triggerBoardCard.CritChance;
+    const targetBoardCard =
+      gameState.players[triggerPlayerID].board[targetBoardCardID];
+    let amount = targetBoardCard.HealAmount;
+    const critChance = targetBoardCard.CritChance;
     if (critChance > 0) {
       if (gameState.getRand() * 100 < critChance) {
         amount *= 2;
@@ -507,10 +509,10 @@ function runAction(
       targetPlayerID
     );
 
-    const triggerBoardCard =
-      gameState.players[triggerPlayerID].board[triggerBoardCardID];
-    let amount = triggerBoardCard.PoisonApplyAmount;
-    const critChance = triggerBoardCard.CritChance;
+    const targetBoardCard =
+      gameState.players[triggerPlayerID].board[targetBoardCardID];
+    let amount = targetBoardCard.PoisonApplyAmount;
+    const critChance = targetBoardCard.CritChance;
     if (critChance > 0) {
       if (gameState.getRand() * 100 < critChance) {
         amount *= 2;
@@ -533,10 +535,10 @@ function runAction(
       targetPlayerID
     );
 
-    const triggerBoardCard =
-      gameState.players[triggerPlayerID].board[triggerBoardCardID];
-    let amount = triggerBoardCard.BurnApplyAmount;
-    const critChance = triggerBoardCard.CritChance;
+    const targetBoardCard =
+      gameState.players[triggerPlayerID].board[targetBoardCardID];
+    let amount = targetBoardCard.BurnApplyAmount;
+    const critChance = targetBoardCard.CritChance;
     if (critChance > 0) {
       if (gameState.getRand() * 100 < critChance) {
         amount *= 2;
@@ -559,10 +561,10 @@ function runAction(
       targetPlayerID
     );
 
-    const triggerBoardCard =
-      gameState.players[triggerPlayerID].board[triggerBoardCardID];
-    let amount = triggerBoardCard.ShieldApplyAmount;
-    const critChance = triggerBoardCard.CritChance;
+    const targetBoardCard =
+      gameState.players[triggerPlayerID].board[targetBoardCardID];
+    let amount = targetBoardCard.ShieldApplyAmount;
+    const critChance = targetBoardCard.CritChance;
     if (critChance > 0) {
       if (gameState.getRand() * 100 < critChance) {
         amount *= 2;
@@ -1327,6 +1329,9 @@ function Tooltip({ boardCard, gameState, playerID, boardCardID }) {
           }
           if (action.$type === "TActionCardFreeze") {
             return boardCard.FreezeAmount / 1000;
+          }
+          if (action.$type === "TActionCardSlow") {
+            return boardCard.SlowAmount / 1000;
           }
           const match = action.$type.match(/^TActionPlayer([A-Za-z]+)Apply$/);
           if (match) {
