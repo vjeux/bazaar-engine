@@ -73,8 +73,7 @@ const initialGameState = {
     )
   ],
   multicast: [],
-  getRand: sfc32(0, 10000, 10000000, 100000000000),
-  sandstorm_damage: 0
+  getRand: sfc32(0, 10000, 10000000, 100000000000)
 };
 
 /**
