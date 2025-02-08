@@ -23,20 +23,21 @@ const initialGameState = {
   isPlaying: true,
   players: [
     getBoardPlayer(
-      { MaxHealth: 3300, HealthRegen: 0 },
+      { MaxHealth: 500, HealthRegen: 0 },
       [
         // getBoardCard("Switchblade", "Silver"),
         // getBoardCard("Bar of Gold", "Bronze"),
         // getBoardCard("Vial of Blood", "Silver"),
-        getBoardCard("Black Pepper", "Gold"),
+        getBoardCard("Ballista", "Gold"),
         // getBoardCard("Fire Claw", "Diamond"),
-        getBoardCard("Fang", "Bronze"),
+        getBoardCard("Uzi", "Bronze"),
+        getBoardCard("Uzi", "Bronze"),
         // getBoardCard("Beach Ball", "Silver"),
       ],
       []
     ),
     getBoardPlayer(
-      { MaxHealth: 2450, HealthRegen: 5 },
+      { MaxHealth: 3500, HealthRegen: 0 },
       [
         // getBoardCard("Powder Flask", "Silver"),
         // getBoardCard("Abacus", "Silver"),
@@ -54,7 +55,7 @@ const initialGameState = {
       ]
     ),
   ],
-
+  multicast: [],
   getRand: sfc32(0, 10000, 10000000, 100000000000),
 };
 
@@ -1041,6 +1042,7 @@ function runGameTick(initialGameState) {
       ...player,
       board: player.board.map((boardCard) => ({ ...boardCard })),
     })),
+    multicast: [...initialGameState.multicast],
   };
 
   const gameState = {
@@ -1049,6 +1051,7 @@ function runGameTick(initialGameState) {
       ...player,
       board: player.board.map((boardCard) => ({ ...boardCard })),
     })),
+    multicast: [...initialGameState.multicast],
   };
 
   // Run Auras
@@ -1147,15 +1150,39 @@ function runGameTick(initialGameState) {
         !nextBoardCard.AmmoMax ||
         (nextBoardCard.AmmoMax && nextBoardCard.Ammo > 0)
       ) {
-        cardTriggerList.push([playerID, boardCardID]);
+        cardTriggerList.push([playerID, boardCardID, /* isMulticast */ false]);
+        if ("Multicast" in nextBoardCard) {
+          const MULTICAST_DELAY = 300;
+          for (let i = 0; i < nextBoardCard.Multicast - 1; ++i) {
+            nextGameState.multicast.push({
+              tick: nextGameState.tick + (i + 1) * MULTICAST_DELAY,
+              playerID,
+              boardCardID,
+            });
+          }
+        }
       }
     }
   });
 
+  gameState.multicast.forEach((multicast) => {
+    if (multicast.tick <= nextGameState.tick) {
+      cardTriggerList.push([
+        multicast.playerID,
+        multicast.boardCardID,
+        /* isMulticast */ true,
+      ]);
+      nextGameState.multicast.splice(
+        nextGameState.multicast.indexOf(multicast),
+        1
+      );
+    }
+  });
+
   // Trigger Cards
-  cardTriggerList.forEach(([playerID, boardCardID]) => {
+  cardTriggerList.forEach(([playerID, boardCardID, isMulticast]) => {
     const boardCard = gameState.players[playerID].board[boardCardID];
-    if (boardCard.AmmoMax) {
+    if (!isMulticast && boardCard.AmmoMax) {
       nextGameState.players[playerID].board[boardCardID].Ammo--;
     }
 
@@ -1210,7 +1237,9 @@ function runGameTick(initialGameState) {
       }
     );
 
-    nextGameState.players[playerID].board[boardCardID].tick = 0;
+    if (!isMulticast) {
+      nextGameState.players[playerID].board[boardCardID].tick = 0;
+    }
   });
 
   // Death
@@ -1578,6 +1607,22 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
             }}
           >
             {boardCard.SellPrice}
+          </div>
+        )}
+        {boardCard.Multicast !== undefined && boardCard.Multicast > 1 && (
+          <div
+            style={{
+              position: "absolute",
+              bottom: 6.5,
+              left: 5,
+              backgroundColor: "orange",
+              padding: "2px 5px",
+              margin: "0 2px",
+              borderRadius: 5,
+              color: "white",
+            }}
+          >
+            x{boardCard.Multicast}
           </div>
         )}
         {boardCard.AmmoMax && (
