@@ -1241,18 +1241,27 @@ function runGameTick(initialGameState) {
     }
   });
 
-  // Sandstorm damage
-  // Start at 30 seconds, at 1 dmg
-  // Tickrate is every 0.2 seconds
-  // Increase by 1 every tick
+  /* 
+  Sandstorm
+
+  Start at 30 seconds, at 1 dmg
+  Tickrate is every 0.2 seconds
+  Increase by 1 every tick
+  */
   const sandstorm_initial_tick = 30000;
   const sandstorm_tickrate = 200;
-  const tickDamage = Math.floor(
-    Math.max(
-      (nextGameState.tick - sandstorm_initial_tick) / sandstorm_tickrate,
+
+  let tickDamage = 0;
+  if (nextGameState.tick - sandstorm_initial_tick > 0) {
+    if (
+      (nextGameState.tick - sandstorm_initial_tick) % sandstorm_tickrate ===
       0
-    )
-  );
+    ) {
+      tickDamage = Math.floor(
+        (nextGameState.tick - sandstorm_initial_tick) / sandstorm_tickrate
+      );
+    }
+  }
   nextGameState.sandstorm_damage = tickDamage;
   nextGameState.players.forEach((player) => {
     const shield = player.Shield;
@@ -1927,9 +1936,9 @@ export default function App() {
         value={stepCount}
         onChange={(e) => setStepCount(e.target.value)}
       />
-      <p>{stepCountToSeconds(stepCount).toFixed(1)}s </p>
+      <p>Time: {stepCountToSeconds(stepCount).toFixed(1)}s </p>
       <p>
-        {stepCount}/{steps.length - 1}
+        Steps: {stepCount}/{steps.length - 1}
       </p>
     </div>
   );
