@@ -27,8 +27,8 @@ const initialGameState = {
       [
         // getBoardCard("Switchblade", "Silver"),
         // getBoardCard("Bar of Gold", "Bronze"),
-        getBoardCard("Vial of Blood", "Silver"),
-        getBoardCard("Duct Tape", "Bronze"),
+        // getBoardCard("Vial of Blood", "Silver"),
+        getBoardCard("Black Pepper", "Gold"),
         // getBoardCard("Fire Claw", "Diamond"),
         getBoardCard("Fang", "Bronze"),
         // getBoardCard("Beach Ball", "Silver"),
@@ -1286,7 +1286,7 @@ function Tooltip({ boardCard, gameState, playerID, boardCardID }) {
       <div style={{ margin: "5px 0px 5px 0", fontWeight: "bold" }}>
         {boardCard.card.Localization.Title.Text}
       </div>
-      {boardCard.TooltipIds.map((tooltipId) => {
+      {boardCard.TooltipIds.map((tooltipId, i) => {
         const tooltip = boardCard.card.Localization.Tooltips[
           tooltipId
         ].Content.Text.replace(
@@ -1338,13 +1338,20 @@ function Tooltip({ boardCard, gameState, playerID, boardCardID }) {
           if (action.$type === "TActionCardSlow") {
             return boardCard.SlowAmount / 1000;
           }
+          if (action.$type === "TActionCardCharge") {
+            return boardCard.ChargeAmount / 1000;
+          }
           const match = action.$type.match(/^TActionPlayer([A-Za-z]+)Apply$/);
           if (match) {
             return boardCard[`${match[1]}ApplyAmount`];
           }
           return `{?${type}.${id}}`;
         });
-        return <div style={{ margin: "10px 10px" }}>{tooltip}</div>;
+        return (
+          <div style={{ margin: "10px 10px" }} key={"tooltip" + i}>
+            {tooltip}
+          </div>
+        );
       })}
     </div>
   );
@@ -1714,6 +1721,7 @@ function Game({ gameState }) {
               }
               return (
                 <div
+                  key={"tick" + i}
                   style={{
                     backgroundColor: "#3abf39",
                     position: "absolute",
