@@ -1009,6 +1009,29 @@ function runGameTick(initialGameState) {
     });
   });
 
+  // Start fight
+  if (gameState.tick === 0) {
+    forEachCard(
+      nextGameState,
+      (targetPlayer, targetPlayerID, targetBoardCard, targetBoardCardID) => {
+        forEachAbility(targetBoardCard, (ability) => {
+          if (ability.Trigger.$type === "TTriggerOnFightStarted") {
+            runAction(
+              gameState,
+              nextGameState,
+              ability.Action,
+              ability.Prerequisites,
+              targetPlayerID,
+              null,
+              targetPlayerID,
+              targetBoardCardID
+            );
+          }
+        });
+      }
+    );
+  }
+
   // Run Tick
   nextGameState.tick += TICK_RATE;
 
