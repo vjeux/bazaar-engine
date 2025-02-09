@@ -1,3 +1,49 @@
+import { Tier, V2Card } from "./types/cardTypes";
+
+export interface GameState {
+  tick: number;
+  isPlaying: boolean;
+  players: Player[];
+  multicast: any[];
+  getRand: () => number;
+}
+
+export interface Player {
+  HealthMax: number;
+  Health: number;
+  HealthRegen: number;
+  Shield: number;
+  Burn: number;
+  Poison: number;
+  Gold: number;
+  Income: number;
+  board: (BoardCard | BoardSkill)[];
+}
+
+export interface BoardCard {
+  card: V2Card;
+  tick: number;
+  Slow: number;
+  Freeze: number;
+  Haste: number;
+  CritChance: number;
+  DamageCrit: number;
+  tier: Tier;
+  Ammo?: number;
+  DamageAmount?: number;
+  HealAmount?: number;
+  BurnApplyAmount?: number;
+  PoisonApplyAmount?: number;
+  ShieldApplyAmount?: number;
+  [key: string]: any;
+}
+
+interface BoardSkill {
+  card: V2Card;
+  tier: Tier;
+  [key: string]: any;
+}
+
 function forEachCard(gameState, callback) {
   for (let i = 0; i < gameState.players.length; ++i) {
     const player = gameState.players[i];

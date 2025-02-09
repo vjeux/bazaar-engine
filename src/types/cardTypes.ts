@@ -416,10 +416,10 @@ export interface FluffyConditions {
 
 export enum Tier {
   Bronze = "Bronze",
-  Diamond = "Diamond",
+  Silver = "Silver",
   Gold = "Gold",
-  Legendary = "Legendary",
-  Silver = "Silver"
+  Diamond = "Diamond",
+  Legendary = "Legendary"
 }
 
 export interface PurpleTarget {
@@ -2698,14 +2698,14 @@ export interface Condition6 {
 }
 
 export interface Tiers {
-  Gold?: Bronze;
-  Diamond: Bronze;
-  Bronze?: Bronze;
-  Silver?: Bronze;
-  Legendary?: Bronze;
+  Gold?: TierInfo;
+  Diamond: TierInfo;
+  Bronze?: TierInfo;
+  Silver?: TierInfo;
+  Legendary?: TierInfo;
 }
 
-export interface Bronze {
+export interface TierInfo {
   Attributes: { [key: string]: number };
   AbilityIds: string[];
   AuraIds: string[];
