@@ -43,8 +43,8 @@ const initialGameState = {
   tick: 0,
   isPlaying: true,
   players: [
-    // getBoardMonster("Bounty Hunter"),
-    getBoardPlayer({ HealthMax: 3500 }, [], []),
+    getBoardMonster("Mimic"),
+    // getBoardPlayer({ HealthMax: 3500 }, [], []),
     getBoardPlayer(
       { HealthMax: 3500, HealthRegen: 0 },
       [
@@ -76,8 +76,17 @@ const initialGameState = {
  * @param {string} tier - The desired tier.
  * @returns {Object} The board card object.
  */
-function _createBoardCardFromCard(card, tier) {
-  const attributes = {};
+function _createBoardCardFromCard(card, tier, enchantment) {
+  let attributes = {
+    Abilities: card.Abilities,
+    Auras: card.Auras,
+    Localization: {
+      Tooltips: card.Localization.Tooltips,
+      Title: {
+        Text: card.Localization.Title.Text
+      }
+    }
+  };
 
   // If the provided tier is not available, default to the first tier available.
   if (!(tier in card.Tiers)) {
@@ -94,8 +103,7 @@ function _createBoardCardFromCard(card, tier) {
   for (const tn of tierNames) {
     const tierValues = card.Tiers[tn];
 
-    // Merge in the tier's attributes.
-    Object.assign(attributes, tierValues.Attributes || {});
+    attributes = { ...attributes, ...(tierValues.Attributes ?? {}) };
     attributes.AbilityIds = tierValues.AbilityIds;
     attributes.AuraIds = tierValues.AuraIds;
     attributes.TooltipIds = tierValues.TooltipIds;
@@ -103,6 +111,45 @@ function _createBoardCardFromCard(card, tier) {
     if (tn === tier) {
       break;
     }
+  }
+
+  if (enchantment) {
+    const enchant = card.Enchantments[enchantment];
+
+    attributes = { ...attributes, ...enchant.Attributes };
+    if (enchant.HasAbilities) {
+      attributes.Abilities = { ...attributes.Abilities, ...enchant.Abilities };
+      attributes.AbilityIds = [
+        ...attributes.AbilityIds,
+        ...Object.keys(enchant.Abilities)
+      ];
+    }
+    if (enchant.HasAuras) {
+      attributes.Auras = { ...attributes.Auras, ...enchant.Auras };
+      attributes.AuraIds = [
+        ...attributes.AuraIds,
+        ...Object.keys(enchant.Auras)
+      ];
+    }
+
+    attributes.Tags = [...(attributes.Tags ?? []), ...enchant.Tags];
+    attributes.HiddenTags = [
+      ...(attributes.HiddenTags ?? []),
+      ...enchant.HiddenTags
+    ];
+
+    attributes.Localization.Tooltips = [
+      ...attributes.Localization.Tooltips,
+      ...enchant.Localization.Tooltips
+    ];
+    attributes.TooltipIds = [
+      ...attributes.TooltipIds,
+      ...enchant.Localization.Tooltips.map((tooltip) =>
+        attributes.Localization.Tooltips.indexOf(tooltip)
+      )
+    ];
+
+    attributes.Localization.Title.Text = `${enchantment} ${attributes.Localization.Title.Text}`;
   }
 
   // Create the result object with default simulation fields.
@@ -130,17 +177,17 @@ function _createBoardCardFromCard(card, tier) {
  *
  * @param {string} name - The localized title of the card.
  * @param {string} tier - The desired tier.
- * @param {*} [modifiers=null] - Optional modifiers (unused in this implementation).
+ * @param {?string} enchantment - The desired enchantment.
  * @returns {Object} The board card.
  * @throws Will throw an error if the card is not found.
  */
-function getBoardCard(name, tier, modifiers = null) {
+function getBoardCard(name, tier, enchantment) {
   // Find the card by its localized title text.
   const card = CardsValues.find((c) => c.Localization?.Title?.Text === name);
   if (!card) {
     throw new Error(`Card ${name} not found`);
   }
-  return _createBoardCardFromCard(card, tier);
+  return _createBoardCardFromCard(card, tier, enchantment);
 }
 
 /**
@@ -148,15 +195,16 @@ function getBoardCard(name, tier, modifiers = null) {
  *
  * @param {number} cardId - The ID of the card.
  * @param {string} tier - The desired tier.
+ * @param {?string} enchantment - The desired enchantment.
  * @returns {Object} The board card.
  * @throws Will throw an error if the card with the given ID is not found.
  */
-function getBoardCardFromId(cardId, tier) {
+function getBoardCardFromId(cardId, tier, enchantment) {
   const card = Cards[cardId];
   if (!card) {
     throw new Error(`Card from id ${cardId} not found`);
   }
-  return _createBoardCardFromCard(card, tier);
+  return _createBoardCardFromCard(card, tier, enchantment);
 }
 
 function getBoardSkill(name, tier, modifiers) {
@@ -214,7 +262,7 @@ function getBoardPlayerFromMonsterCard(monsterCard) {
   return getBoardPlayer(
     { HealthMax: monsterCard.health },
     monsterCard.items.map((item) =>
-      getBoardCardFromId(item.card.id, item.tierType)
+      getBoardCardFromId(item.card.id, item.tierType, item.enchantmentType)
     ),
     monsterCard.skills.map((item) =>
       getBoardCardFromId(item.card.id, item.tierType)
@@ -272,7 +320,7 @@ function Tooltip({ boardCard, gameState, playerID, boardCardID }) {
       className="tooltip"
     >
       <div style={{ margin: "5px 0px 5px 0", fontWeight: "bold" }}>
-        {boardCard.card.Localization.Title.Text}
+        {boardCard.Localization.Title.Text}
       </div>
       {getTooltips(gameState, playerID, boardCardID).map((tooltip, i) => (
         <div style={{ margin: "10px 10px" }} key={"tooltip" + i}>

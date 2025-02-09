@@ -11,14 +11,14 @@ function forEachCard(gameState, callback) {
 function forEachAbility(boardCard, callback) {
   for (let i = 0; i < boardCard.AbilityIds.length; ++i) {
     const abilityId = boardCard.AbilityIds[i];
-    callback(boardCard.card.Abilities[abilityId]);
+    callback(boardCard.Abilities[abilityId]);
   }
 }
 
 function forEachAura(boardCard, callback) {
   for (let i = 0; i < boardCard.AuraIds.length; ++i) {
     const auraId = boardCard.AuraIds[i];
-    callback(boardCard.card.Auras[auraId]);
+    callback(boardCard.Auras[auraId]);
   }
 }
 
@@ -1277,22 +1277,22 @@ function runGameTick(initialGameState) {
 export function getTooltips(gameState, playerID, boardCardID) {
   const boardCard = gameState.players[playerID].board[boardCardID];
   return boardCard.TooltipIds.map((tooltipId) => {
-    const tooltip = boardCard.card.Localization.Tooltips[
+    const tooltip = boardCard.Localization.Tooltips[
       tooltipId
     ].Content.Text.replace(
-      /\{([a-z]+)\.([0-9+])\.targets\}/g,
+      /\{([a-z]+)\.([a-z0-9]+)\.targets\}/g,
       (_, type, id) => {
         const action =
-          boardCard.card[type === "aura" ? "Auras" : "Abilities"][id].Action;
+          boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
         const target = action.Target;
         if (target.$type === "TTargetCardRandom") {
           return 1;
         }
         return `{?${type}.${id}.targets}`;
       }
-    ).replace(/\{([a-z]+)\.([0-9+])\}/g, (_, type, id, targets) => {
+    ).replace(/\{([a-z]+)\.([a-z0-9]+)\}/g, (_, type, id, targets) => {
       const action =
-        boardCard.card[type === "aura" ? "Auras" : "Abilities"][id].Action;
+        boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
       if (action.Value) {
         return getActionValue(
           gameState,
