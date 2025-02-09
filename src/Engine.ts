@@ -1,4 +1,4 @@
-import { Tier, V2Card, Ability } from "./types/cardTypes";
+import { Tier, V2Card, Ability, AbilityPrerequisite } from "./types/cardTypes";
 
 export interface GameState {
   tick: number;
@@ -254,7 +254,7 @@ function testPrerequisite(
       return value <= comparisonValue;
     }
   }
-  // Return true if no prerequisites
+  // Return true if no prerequisites count
   return true;
 }
 
@@ -350,13 +350,15 @@ function testConditions(
     }
     return true;
   }
+  // Return false for any unhandled conditions
+  return false;
 }
 
 function runAction(
   gameState: GameState,
   nextGameState: GameState,
   action: any,
-  prerequisites: any,
+  prerequisites: AbilityPrerequisite[] | null,
   triggerPlayerID: number,
   triggerBoardCardID: number,
   targetPlayerID: number,
