@@ -29,6 +29,9 @@ const CardsValues = Object.values(Cards);
 getBoardCard("Crusher Claw", "Silver"),
 getBoardCard("Abacus", "Gold"),
 
+// Sparring Partner heals to half life because Aura is not triggered at the right time
+getBoardMonster("Sparring Partner"),
+
 Non Working monster indexes
 - 1, 7, 17,22, 30, 34, 36, 41, 43, 46, 49, 50, 51 .... probably more
 

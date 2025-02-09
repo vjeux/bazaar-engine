@@ -1014,35 +1014,35 @@ function runGameTick(initialGameState) {
 
   // Poison + Regen
   if (gameState.tick % 1000 === 0) {
-    gameState.players.forEach((player, playerID) => {
+    nextGameState.players.forEach((player, playerID) => {
       if (player.Poison > 0) {
-        nextGameState.players[playerID].Health -= player.Poison;
+        player.Health -= player.Poison;
       }
       if (player.HealthRegen > 0) {
-        nextGameState.players[playerID].Health = Math.min(
-          nextGameState.players[playerID].Health + player.HealthRegen,
-          nextGameState.players[playerID].HealthMax
+        player.Health = Math.min(
+          player.Health + player.HealthRegen,
+          player.HealthMax
         );
       }
     });
   }
 
-  // Shield
+  // Burn
   if (gameState.tick % 500 === 0) {
-    gameState.players.forEach((player, playerID) => {
+    nextGameState.players.forEach((player, playerID) => {
       if (player.Burn > 0) {
-        const shield = nextGameState.players[playerID].Shield;
+        const shield = player.Shield;
         const amount = player.Burn;
 
         const nextShield = Math.max(0, shield - amount / 2);
         if (nextShield > 0) {
-          nextGameState.players[playerID].Shield = nextShield;
+          player.Shield = nextShield;
         } else {
           const nextAmount = amount - shield * 2;
-          nextGameState.players[playerID].Shield = 0;
-          nextGameState.players[playerID].Health -= nextAmount;
+          player.Shield = 0;
+          player.Health -= nextAmount;
         }
-        nextGameState.players[playerID].Burn--;
+        player.Burn--;
       }
     });
   }
