@@ -47,24 +47,25 @@ const initialGameState = {
   tick: 0,
   isPlaying: true,
   players: [
-    getBoardMonster("Hulking Experiment"),
+    getBoardMonster("Lord of the Wastes"),
     // getBoardPlayer({ HealthMax: 3500 }, [], []),
     getBoardPlayer(
       { HealthMax: 3500, HealthRegen: 0 },
       [
-        // getBoardCard("Powder Flask", "Silver"),
+        // getBoardCard("Powder Flask", "Silver")
         // getBoardCard("Abacus", "Silver"),
         // getBoardCard("Crusher Claw", "Silver"),
         // getBoardCard("Colossal Popsicle", "Diamond"),
         // getBoardCard("Blue Piggles A", "Silver"),
         // getBoardCard("Octopus", "Diamond")
         // getBoardCard("Weather Glass", "Diamond")
-        // getBoardCard("Agility Boots", "Silver"),
+        // getBoardCard("Agility Boots", "Silver")
         // getBoardCard("Crusher Claw", "Silver"),
-        // getBoardCard("Abacus", "Gold"),
+        // getBoardCard("Alpha Ray", "Gold"),
+        // getBoardCard("Fang", "Gold")
       ],
       [
-        getBoardSkill("Adaptive Ordinance", "Silver") //
+        // getBoardSkill("Foreboding Winds", "Gold") //
       ]
     )
   ],
@@ -539,16 +540,17 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
           <div
             style={{
               position: "absolute",
-              bottom: 31.5,
+              bottom: 29,
               left: 5,
               backgroundColor: "red",
-              padding: "2px 5px",
+              padding: "1px 3px",
               margin: "0 2px",
               borderRadius: 5,
+              fontSize: "9pt",
               color: "white"
             }}
           >
-            {boardCard.CritChance + "%"}
+            🎯 {boardCard.CritChance + "%"}
           </div>
         )}
         {boardCard.SellPrice !== undefined && (
@@ -558,13 +560,14 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
               bottom: 6.5,
               left: 5,
               backgroundColor: "orange",
-              padding: "2px 5px",
+              padding: "1px 3px",
               margin: "0 2px",
               borderRadius: 5,
+              fontSize: "9pt",
               color: "white"
             }}
           >
-            {boardCard.SellPrice}
+            💰 {boardCard.SellPrice}
           </div>
         )}
         {boardCard.Multicast !== undefined && boardCard.Multicast > 1 && (
@@ -846,12 +849,15 @@ function stepCountToSeconds(stepCount) {
   return (stepCount * TICK_RATE) / 1000;
 }
 
-const steps = run(initialGameState, 1000);
+const steps = run(initialGameState, 41);
 
 export default function App() {
   const [stepCount, setStepCount] = useState(0);
   const [autoScroll, setAutoScroll] = useState(false);
   const [autoReset, setAutoReset] = useState(false);
+
+  // If you live reload with a step higher than the length, it would throw.
+  let boundedStepCount = Math.min(steps.length - 1, stepCount);
 
   useEffect(() => {
     if (!autoScroll) return;
@@ -867,13 +873,13 @@ export default function App() {
 
   return (
     <div className="App">
-      <Game gameState={steps[stepCount]} />
+      <Game gameState={steps[boundedStepCount]} />
       <input
         style={{ width: "100%", marginTop: 20 }}
         type="range"
         min="0"
         max={steps.length - 1}
-        value={stepCount}
+        value={boundedStepCount}
         onChange={(e) => setStepCount(Number(e.target.value))}
       />
       <div style={{ marginTop: 10 }}>
@@ -895,9 +901,9 @@ export default function App() {
         </label>
       </div>
 
-      <p>Time: {stepCountToSeconds(stepCount).toFixed(1)}s </p>
+      <p>Time: {stepCountToSeconds(boundedStepCount).toFixed(1)}s </p>
       <p>
-        Steps: {stepCount}/{steps.length - 1}
+        Steps: {boundedStepCount}/{steps.length - 1}
       </p>
     </div>
   );

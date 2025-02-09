@@ -942,6 +942,22 @@ function getTargetCards(
       for (let i = 0; i < lengthCardItems; ++i) {
         results.push([(targetPlayerID + 1) % 2, i]);
       }
+    } else if (target.TargetSection === "AllHands") {
+      gameState.players.forEach((player, playerID) => {
+        const lengthCardItems =
+          gameState.players[playerID].board.findLastIndex(
+            (boardCard) => boardCard.card.$type === "TCardItem"
+          ) + 1;
+        for (let i = 0; i < lengthCardItems; ++i) {
+          if (
+            playerID !== targetPlayerID ||
+            i !== targetBoardCardID ||
+            (i === targetBoardCardID && !target.ExcludeSelf)
+          ) {
+            results.push([playerID, i]);
+          }
+        }
+      });
     }
 
     if (target.$type === "TTargetCardRandom") {
@@ -1232,8 +1248,8 @@ function runGameTick(initialGameState) {
                   nextGameState,
                   ability.Action,
                   ability.Prerequisites,
-                  playerID,
-                  boardCardID,
+                  subjectPlayerID,
+                  subjectBoardCardID,
                   targetPlayerID,
                   targetBoardCardID
                 );
@@ -1368,6 +1384,12 @@ export function getTooltips(gameState, playerID, boardCardID) {
           return boardCard.DamageAmount;
         } else if (action.$type === "TActionCardReload") {
           return boardCard.ReloadAmount;
+        } else if (action.$type === "TActionPlayerHeal") {
+          return boardCard.HealAmount;
+        } else if (action.$type === "TActionPlayerShield") {
+          return boardCard.ShieldApplyAmount;
+        } else if (action.$type === "TActionPlayerPoison") {
+          return boardCard.PoisonApplyAmount;
         } else if (action.$type === "TActionCardFreeze") {
           return boardCard.FreezeAmount / 1000;
         } else if (action.$type === "TActionCardHaste") {
