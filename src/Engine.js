@@ -180,8 +180,18 @@ function testPrerequisite(
       targetPlayerID,
       targetBoardCardID
     );
+    const value = subjects.length;
+    const comparisonValue = prerequisite.Amount;
     if (prerequisite.Comparison === "Equal") {
-      return subjects.length === prerequisite.Amount;
+      return value === comparisonValue;
+    } else if (prerequisite.Comparison === "GreaterThan") {
+      return value > comparisonValue;
+    } else if (prerequisite.Comparison === "GreaterThanOrEqual") {
+      return value >= comparisonValue;
+    } else if (prerequisite.Comparison === "LessThan") {
+      return value < comparisonValue;
+    } else if (prerequisite.Comparison === "LessThanOrEqual") {
+      return value <= comparisonValue;
     }
   }
 }
@@ -1113,9 +1123,9 @@ function runGameTick(initialGameState) {
         (nextBoardCard.AmmoMax && nextBoardCard.Ammo > 0)
       ) {
         cardTriggerList.push([playerID, boardCardID, /* isMulticast */ false]);
-        if ("Multicast" in nextBoardCard) {
+        if ("Multicast" in boardCard) {
           const MULTICAST_DELAY = 300;
-          for (let i = 0; i < nextBoardCard.Multicast - 1; ++i) {
+          for (let i = 0; i < boardCard.Multicast - 1; ++i) {
             nextGameState.multicast.push({
               tick: nextGameState.tick + (i + 1) * MULTICAST_DELAY,
               playerID,

@@ -43,7 +43,8 @@ const initialGameState = {
   tick: 0,
   isPlaying: true,
   players: [
-    getBoardMonster("Bounty Hunter"),
+    // getBoardMonster("Bounty Hunter"),
+    getBoardPlayer({ HealthMax: 3500 }, [], []),
     getBoardPlayer(
       { HealthMax: 3500, HealthRegen: 0 },
       [
@@ -58,7 +59,9 @@ const initialGameState = {
         // getBoardCard("Crusher Claw", "Silver"),
         // getBoardCard("Abacus", "Gold"),
       ],
-      [getBoardSkill("Aggressive", "Silver")]
+      [
+        // getBoardSkill("Aggressive", "Silver")
+      ]
     )
   ],
   multicast: [],
