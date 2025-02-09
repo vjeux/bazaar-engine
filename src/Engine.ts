@@ -236,7 +236,7 @@ function testPrerequisite(
   nextGameState: GameState,
   prerequisite: any,
   triggerPlayerID: number,
-  triggerBoardCardID: number | null,
+  triggerBoardCardID: number | null, // Unsure wether we shoud allow null here,
   targetPlayerID: number,
   targetBoardCardID: number
 ): boolean {
@@ -369,9 +369,9 @@ function runAction(
   gameState: GameState,
   nextGameState: GameState,
   action: AbilityAction,
-  prerequisites: AbilityPrerequisite[] | null,
+  prerequisites: AbilityPrerequisite[] | null, // null means no prerequisites
   triggerPlayerID: number,
-  triggerBoardCardID: number | null,
+  triggerBoardCardID: number | null, // Equal to null on events like death, where no card triggered it
   targetPlayerID: number,
   targetBoardCardID: number
 ): boolean {
@@ -847,7 +847,7 @@ function getActionValue(
   nextGameState: GameState,
   value: FluffyValue,
   triggerPlayerID: number,
-  triggerBoardCardID: number | null,
+  triggerBoardCardID: number | null, // Equal to null on events like death, where no card triggered it
   targetPlayerID: number,
   targetBoardCardID: number
 ): number {
@@ -875,6 +875,7 @@ function getActionValue(
         ][value.AttributeType] ?? 0;
     });
   } else if (
+    // This check will never be reached because we already check it previously
     value.$type === "TReferenceValueCardAttribute" ||
     value.$type === "TReferenceValueCardAttributeAggregate"
   ) {
@@ -939,7 +940,7 @@ function getTargetCards(
   nextGameState: GameState,
   target: any,
   triggerPlayerID: number,
-  triggerBoardCardID: number | null,
+  triggerBoardCardID: number | null, // Unsure wether we shoud allow null here,
   targetPlayerID: number,
   targetBoardCardID: number
 ): Array<[number, number]> {
@@ -1105,7 +1106,7 @@ function getTargetCards(
 function getTargetPlayer(
   gameState: GameState,
   nextGameState: GameState,
-  target: any,
+  target: any, // Unsure which is correct here
   triggerPlayerID: number,
   targetPlayerID: number
 ): number {
@@ -1122,6 +1123,7 @@ function getTargetPlayer(
       return (targetPlayerID + 1) % 2;
     }
   }
+  throw new Error("Unhandled target type: " + target.$type);
 }
 
 export const TICK_RATE = 100;
@@ -1223,7 +1225,7 @@ function runGameTick(initialGameState: GameState): [GameState, GameState] {
   }
 
   // Ticks
-  const cardTriggerList = [];
+  const cardTriggerList: [number, number, boolean][] = [];
   forEachCard(gameState, (player, playerID, boardCard, boardCardID) => {
     const nextBoardCard = nextGameState.players[playerID].board[boardCardID];
     if (nextBoardCard.card.$type === "TCardSkill") {
@@ -1293,7 +1295,7 @@ function runGameTick(initialGameState: GameState): [GameState, GameState] {
     }
   });
 
-  const cardCrittedList = [];
+  const cardCrittedList: number[][] = [];
 
   // Trigger Cards
   cardTriggerList.forEach(([playerID, boardCardID, isMulticast]) => {
@@ -1453,11 +1455,11 @@ export function getTooltips(
 ): string[] {
   const boardCard = gameState.players[playerID].board[boardCardID];
   return boardCard.TooltipIds.map((tooltipId: string) => {
-    const tooltip = boardCard.Localization.Tooltips[
+    const tooltip: string | number = boardCard.Localization.Tooltips[
       tooltipId
     ].Content.Text.replace(
       /\{([a-z]+)\.([a-z0-9]+)\.targets\}/g,
-      (_, type, id) => {
+      (_: any, type: string, id: string | number) => {
         const action =
           boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
         const target = action.Target;
@@ -1467,69 +1469,75 @@ export function getTooltips(
         return `{?${type}.${id}.targets}`;
       }
     )
-      .replace(/\{([a-z]+)\.([a-z0-9]+)\.mod\}/g, (_, type, id) => {
-        const action =
-          boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
-        return getActionValue(
-          gameState,
-          gameState,
-          action.Value.Modifier.Value,
-          playerID,
-          boardCardID,
-          playerID,
-          boardCardID
-        );
-      })
-      .replace(/\{([a-z]+)\.([a-z0-9]+)\}/g, (_, type, id, targets) => {
-        const action =
-          boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
-        if (action.Value) {
+      .replace(
+        /\{([a-z]+)\.([a-z0-9]+)\.mod\}/g,
+        (_: any, type: string, id: string | number) => {
+          const action =
+            boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
           return getActionValue(
             gameState,
             gameState,
-            action.Value,
+            action.Value.Modifier.Value,
             playerID,
             boardCardID,
             playerID,
             boardCardID
           );
         }
-        if (action.$type === "TActionGameSpawnCards") {
-          return getActionValue(
-            gameState,
-            gameState,
-            action.SpawnContext.Limit,
-            playerID,
-            boardCardID,
-            playerID,
-            boardCardID
-          );
+      )
+      .replace(
+        /\{([a-z]+)\.([a-z0-9]+)\}/g,
+        (_: any, type: string, id: string | number, targets: any) => {
+          const action =
+            boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
+          if (action.Value) {
+            return getActionValue(
+              gameState,
+              gameState,
+              action.Value,
+              playerID,
+              boardCardID,
+              playerID,
+              boardCardID
+            );
+          }
+          if (action.$type === "TActionGameSpawnCards") {
+            return getActionValue(
+              gameState,
+              gameState,
+              action.SpawnContext.Limit,
+              playerID,
+              boardCardID,
+              playerID,
+              boardCardID
+            );
+          }
+          if (action.$type === "TActionPlayerDamage") {
+            return boardCard.DamageAmount;
+          } else if (action.$type === "TActionCardReload") {
+            return boardCard.ReloadAmount;
+          } else if (action.$type === "TActionPlayerHeal") {
+            return boardCard.HealAmount;
+          } else if (action.$type === "TActionPlayerShield") {
+            return boardCard.ShieldApplyAmount;
+          } else if (action.$type === "TActionPlayerPoison") {
+            return boardCard.PoisonApplyAmount;
+          } else if (action.$type === "TActionCardFreeze") {
+            return boardCard.FreezeAmount / 1000;
+          } else if (action.$type === "TActionCardHaste") {
+            return boardCard.HasteAmount / 1000;
+          } else if (action.$type === "TActionCardSlow") {
+            return boardCard.SlowAmount / 1000;
+          } else if (action.$type === "TActionCardCharge") {
+            return boardCard.ChargeAmount / 1000;
+          }
+          const match = action.$type.match(/^TActionPlayer([A-Za-z]+)Apply$/);
+          if (match) {
+            return boardCard[`${match[1]}ApplyAmount`];
+          }
+          return `{?${type}.${id}}`;
         }
-        if (action.$type === "TActionPlayerDamage") {
-          return boardCard.DamageAmount;
-        } else if (action.$type === "TActionCardReload") {
-          return boardCard.ReloadAmount;
-        } else if (action.$type === "TActionPlayerHeal") {
-          return boardCard.HealAmount;
-        } else if (action.$type === "TActionPlayerShield") {
-          return boardCard.ShieldApplyAmount;
-        } else if (action.$type === "TActionPlayerPoison") {
-          return boardCard.PoisonApplyAmount;
-        } else if (action.$type === "TActionCardFreeze") {
-          return boardCard.FreezeAmount / 1000;
-        } else if (action.$type === "TActionCardHaste") {
-          return boardCard.HasteAmount / 1000;
-        } else if (action.$type === "TActionCardSlow") {
-          return boardCard.SlowAmount / 1000;
-        } else if (action.$type === "TActionCardCharge") {
-          return boardCard.ChargeAmount / 1000;
-        }
-        const match = action.$type.match(/^TActionPlayer([A-Za-z]+)Apply$/);
-        if (match) {
-          return boardCard[`${match[1]}ApplyAmount`];
-        }
-        return `{?${type}.${id}}`;
-      });
+      );
     return tooltip;
   });
 }
