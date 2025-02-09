@@ -21,6 +21,8 @@ const Encounters = JSON.parse(
   pako.inflate(compressed_encounters, { to: "string" })
 );
 
+console.log(Encounters);
+
 const CardsValues = Object.values(Cards);
 
 /* Bugs
@@ -41,7 +43,7 @@ const initialGameState = {
   tick: 0,
   isPlaying: true,
   players: [
-    getBoardMonster("Sparring Partner"),
+    getBoardMonster("Bounty Hunter"),
     getBoardPlayer(
       { HealthMax: 3500, HealthRegen: 0 },
       [
@@ -535,6 +537,7 @@ function BoardCard({ boardCard, gameState, playerID, boardCardID }) {
             {[...new Array(boardCard.AmmoMax)].map((_, i) => {
               return (
                 <div
+                  key={"ammo" + i}
                   style={{
                     width: 10,
                     height: 10,
