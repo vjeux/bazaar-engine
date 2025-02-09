@@ -917,23 +917,20 @@ function getActionValue(
     );
     amount = targetCards.length;
   }
-
-  // If no amount found, throw an error
-  if (!amount)
-    if (value.Modifier != null) {
-      const modifierValue = getActionValue(
-        gameState,
-        nextGameState,
-        value.Modifier.Value,
-        triggerPlayerID,
-        triggerBoardCardID,
-        targetPlayerID,
-        targetBoardCardID
-      );
-      if (value.Modifier.ModifyMode === "Multiply") {
-        amount *= modifierValue;
-      }
+  if (value.Modifier != null) {
+    const modifierValue = getActionValue(
+      gameState,
+      nextGameState,
+      value.Modifier.Value,
+      triggerPlayerID,
+      triggerBoardCardID,
+      targetPlayerID,
+      targetBoardCardID
+    );
+    if (value.Modifier.ModifyMode === "Multiply") {
+      amount *= modifierValue;
     }
+  }
   return amount;
 }
 
