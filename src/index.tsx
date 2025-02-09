@@ -24,7 +24,11 @@ function genDataFromLocalStorage(
         const compressed = JSON.stringify([
           ...pako.deflate(JSON.stringify(data))
         ]);
-        localStorage.setItem(localStorageKey, compressed);
+        try {
+          localStorage.setItem(localStorageKey, compressed);
+        } catch (e) {
+          // Ignore quota errors
+        }
         success(data);
       });
     } else {
