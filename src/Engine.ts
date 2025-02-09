@@ -1,4 +1,11 @@
-import { Tier, V2Card, Ability, AbilityPrerequisite } from "./types/cardTypes";
+import {
+  Tier,
+  V2Card,
+  Ability,
+  AbilityPrerequisite,
+  FluffyValue,
+  AbilityAction
+} from "./types/cardTypes";
 
 export interface GameState {
   tick: number;
@@ -38,18 +45,20 @@ export interface BoardCard {
   [key: string]: any;
 }
 
-interface BoardSkill {
+export interface BoardSkill {
   card: V2Card;
   tier: Tier;
   [key: string]: any;
 }
+
+export type BoardCardOrSkill = BoardCard | BoardSkill;
 
 function forEachCard(
   gameState: GameState,
   callback: (
     player: Player,
     playerIndex: number,
-    boardCard: BoardCard,
+    boardCard: BoardCardOrSkill,
     boardCardIndex: number
   ) => void
 ): void {
@@ -63,7 +72,7 @@ function forEachCard(
 }
 
 function forEachAbility(
-  boardCard: BoardCard,
+  boardCard: BoardCardOrSkill,
   callback: (ability: Ability) => void
 ): void {
   for (let i = 0; i < boardCard.AbilityIds.length; ++i) {
@@ -82,7 +91,7 @@ function forEachAura(
   }
 }
 
-function hasCooldown(boardCard: BoardCard): boolean {
+function hasCooldown(boardCard: BoardCardOrSkill): boolean {
   return "CooldownMax" in boardCard;
 }
 
@@ -97,7 +106,7 @@ function hasCooldown(boardCard: BoardCard): boolean {
 const sandstormInitialTick = 30000;
 const sandstormTickRate = 200;
 
-const sandstormDamagePerTick = {};
+const sandstormDamagePerTick: Record<number, number> = {};
 let sandstormDamage = 1;
 let sandstormTick = sandstormInitialTick;
 while (true) {
@@ -173,12 +182,12 @@ function updateCardAttribute(
   }
 }
 
-function updatePlayerAttribute(
+function updatePlayerAttribute<K extends keyof Player>(
   gameState: GameState,
   nextGameState: GameState,
   playerID: number,
-  attribute: string,
-  value: number
+  attribute: K,
+  value: Player[K]
 ): void {
   const existingValue = nextGameState.players[playerID][attribute];
   nextGameState.players[playerID][attribute] = value;
@@ -226,7 +235,7 @@ function testPrerequisite(
   nextGameState: GameState,
   prerequisite: any,
   triggerPlayerID: number,
-  triggerBoardCardID: number,
+  triggerBoardCardID: number | null,
   targetPlayerID: number,
   targetBoardCardID: number
 ): boolean {
@@ -354,16 +363,17 @@ function testConditions(
   return false;
 }
 
+// Returns true if the action critted
 function runAction(
   gameState: GameState,
   nextGameState: GameState,
-  action: any,
+  action: AbilityAction,
   prerequisites: AbilityPrerequisite[] | null,
   triggerPlayerID: number,
-  triggerBoardCardID: number,
+  triggerBoardCardID: number | null,
   targetPlayerID: number,
   targetBoardCardID: number
-): void {
+): boolean {
   let hasCritted = false;
   if (prerequisites != null) {
     for (let i = 0; i < prerequisites.length; ++i) {
@@ -378,7 +388,7 @@ function runAction(
           targetBoardCardID
         )
       ) {
-        return;
+        return false;
       }
     }
   }
@@ -654,6 +664,15 @@ function runAction(
           : action.$type === "TActionCardHaste"
             ? ["HasteAmount", "HasteTargets", "Haste"]
             : [];
+    if (amountKey == null || targetsKey == null || tickKey == null) {
+      throw new Error(
+        "Card:" +
+          gameState.players[targetPlayerID].board[targetBoardCardID].card
+            .InternalName +
+          "is missing an amount, target or tick key for " +
+          action.$type
+      );
+    }
     const amount =
       gameState.players[targetPlayerID].board[targetBoardCardID][amountKey];
     const targetCount =
@@ -825,13 +844,13 @@ function runAction(
 function getActionValue(
   gameState: GameState,
   nextGameState: GameState,
-  value: any,
+  value: FluffyValue,
   triggerPlayerID: number,
-  triggerBoardCardID: number,
+  triggerBoardCardID: number | null,
   targetPlayerID: number,
   targetBoardCardID: number
 ): number {
-  let amount;
+  let amount: number | undefined = undefined;
   if (value.$type === "TFixedValue") {
     amount = value.Value;
   } else if (
@@ -898,20 +917,22 @@ function getActionValue(
     amount = targetCards.length;
   }
 
-  if (value.Modifier != null) {
-    const modifierValue = getActionValue(
-      gameState,
-      nextGameState,
-      value.Modifier.Value,
-      triggerPlayerID,
-      triggerBoardCardID,
-      targetPlayerID,
-      targetBoardCardID
-    );
-    if (value.Modifier.ModifyMode === "Multiply") {
-      amount *= modifierValue;
+  // If no amount found, throw an error
+  if (!amount)
+    if (value.Modifier != null) {
+      const modifierValue = getActionValue(
+        gameState,
+        nextGameState,
+        value.Modifier.Value,
+        triggerPlayerID,
+        triggerBoardCardID,
+        targetPlayerID,
+        targetBoardCardID
+      );
+      if (value.Modifier.ModifyMode === "Multiply") {
+        amount *= modifierValue;
+      }
     }
-  }
   return amount;
 }
 
@@ -920,11 +941,11 @@ function getTargetCards(
   nextGameState: GameState,
   target: any,
   triggerPlayerID: number,
-  triggerBoardCardID: number,
+  triggerBoardCardID: number | null,
   targetPlayerID: number,
   targetBoardCardID: number
 ): Array<[number, number]> {
-  const results = [];
+  const results: [number, number | null][] = [];
   if (target.$type === "TTargetCardSelf") {
     results.push([targetPlayerID, targetBoardCardID]);
   } else if (target.$type === "TTargetCardTriggerSource") {

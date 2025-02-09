@@ -2784,6 +2784,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/pako@npm:^2.0.3":
+  version: 2.0.3
+  resolution: "@types/pako@npm:2.0.3"
+  checksum: 10c0/45119ac3c4e8a77317c35493327039b74e333562f06ce038048228918d8ddfaa7958125aab960d1565b3861046022754c414dba1eecb210c44a32c415956bee2
+  languageName: node
+  linkType: hard
+
 "@types/parse-json@npm:^4.0.0":
   version: 4.0.2
   resolution: "@types/parse-json@npm:4.0.2"
@@ -10845,6 +10852,7 @@ __metadata:
   resolution: "react@workspace:."
   dependencies:
     "@types/node": "npm:^22.13.1"
+    "@types/pako": "npm:^2.0.3"
     "@types/react": "npm:^19.0.8"
     "@types/react-dom": "npm:^19.0.3"
     loader-utils: "npm:3.2.1"
