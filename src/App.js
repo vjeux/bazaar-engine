@@ -34,17 +34,23 @@ getBoardCard("Abacus", "Gold"),
 // Sparring Partner heals to half life because Aura is not triggered at the right time
 getBoardMonster("Sparring Partner"),
 
-Non Working monster indexes
-- 1, 7, 17,22, 30, 34, 36, 41, 43, 46, 49, 50, 51 .... probably more
+// Freeze skills aren't working properly
+getBoardMonster("Volkas Enforcer"),
 
+// Need to implement lifesteal
+
+// Sandstorm ticks are not correct, there should be a bunch of -1 at
+// the beginning: https://youtu.be/IurqE_Egvr0?si=_x2pflCNfuxdUGvQ&t=64
+
+// Arms Race isn't working properly nor its tooltip.
 */
 
 const initialGameState = {
   tick: 0,
   isPlaying: true,
   players: [
-    getBoardMonster("Mimic"),
-    // getBoardPlayer({ HealthMax: 3500 }, [], []),
+    // getBoardMonster("Veteran Octopus"),
+    getBoardPlayer({ HealthMax: 3500 }, [], []),
     getBoardPlayer(
       { HealthMax: 3500, HealthRegen: 0 },
       [
@@ -53,14 +59,14 @@ const initialGameState = {
         // getBoardCard("Crusher Claw", "Silver"),
         // getBoardCard("Colossal Popsicle", "Diamond"),
         // getBoardCard("Blue Piggles A", "Silver"),
-        getBoardCard("Cauldron", "Diamond"),
-        getBoardCard("Weather Glass", "Diamond")
+        getBoardCard("Octopus", "Diamond")
+        // getBoardCard("Weather Glass", "Diamond")
         // getBoardCard("Agility Boots", "Silver"),
         // getBoardCard("Crusher Claw", "Silver"),
         // getBoardCard("Abacus", "Gold"),
       ],
       [
-        // getBoardSkill("Aggressive", "Silver")
+        getBoardSkill("Hyper Focus", "Diamond") //
       ]
     )
   ],
@@ -211,7 +217,16 @@ function getBoardSkill(name, tier, modifiers) {
   const card = CardsValues.find(
     (card) => card.Localization.Title.Text === name
   );
-  let attributes = {};
+  let attributes = {
+    Abilities: card.Abilities,
+    Auras: card.Auras,
+    Localization: {
+      Tooltips: card.Localization.Tooltips,
+      Title: {
+        Text: card.Localization.Title.Text
+      }
+    }
+  };
   if (!card.Tiers[tier]) {
     throw new Error(
       name +
@@ -833,7 +848,7 @@ function stepCountToSeconds(stepCount) {
   return (stepCount * TICK_RATE) / 1000;
 }
 
-const steps = run(initialGameState, 1000);
+const steps = run(initialGameState, 10);
 
 export default function App() {
   const [stepCount, setStepCount] = useState(0);

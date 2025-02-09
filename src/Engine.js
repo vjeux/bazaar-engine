@@ -232,6 +232,15 @@ function testConditions(
     } else if (conditions.ComparisonOperator === "LessThanOrEqual") {
       return value <= comparisonValue;
     }
+  } else if (conditions.$type === "TCardConditionalSize") {
+    const is = conditions.Sizes.includes(
+      gameState.players[targetPlayerID].board[targetBoardCardID].card.Size
+    );
+    if (conditions.IsNot) {
+      return !is;
+    } else {
+      return is;
+    }
   } else if (
     conditions.$type === "TCardConditionalHiddenTag" ||
     conditions.$type === "TCardConditionalTag"
@@ -695,8 +704,13 @@ function runAction(
         if (oldValue === undefined) {
           return;
         }
+
         const newValue =
-          action.Operation === "Add" ? oldValue + actionValue : oldValue;
+          action.Operation === "Add"
+            ? oldValue + actionValue
+            : action.Operation === "Multiply"
+              ? oldValue * actionValue
+              : oldValue;
 
         updateCardAttribute(
           gameState,
@@ -742,8 +756,9 @@ function getActionValue(
   targetPlayerID,
   targetBoardCardID
 ) {
+  let amount;
   if (value.$type === "TFixedValue") {
-    return value.Value;
+    amount = value.Value;
   } else if (
     value.$type === "TReferenceValueCardAttribute" ||
     value.$type === "TReferenceValueCardAttributeAggregate"
@@ -757,28 +772,33 @@ function getActionValue(
       targetPlayerID,
       targetBoardCardID
     );
-    let amount = value.DefaultValue;
+    amount = value.DefaultValue;
     targetCards.forEach(([valueTargetPlayerID, valueTargetBoardCardID]) => {
       amount +=
         nextGameState.players[valueTargetPlayerID].board[
           valueTargetBoardCardID
         ][value.AttributeType] ?? 0;
     });
-    if (value.Modifier != null) {
-      const modifierValue = getActionValue(
-        gameState,
-        nextGameState,
-        value.Modifier.Value,
-        triggerPlayerID,
-        triggerBoardCardID,
-        targetPlayerID,
-        targetBoardCardID
-      );
-      if (value.Modifier.ModifyMode === "Multiply") {
-        amount *= modifierValue;
-      }
-    }
-    return amount;
+  } else if (
+    value.$type === "TReferenceValueCardAttribute" ||
+    value.$type === "TReferenceValueCardAttributeAggregate"
+  ) {
+    const targetCards = getTargetCards(
+      gameState,
+      nextGameState,
+      value.Target,
+      triggerPlayerID,
+      triggerBoardCardID,
+      targetPlayerID,
+      targetBoardCardID
+    );
+    amount = value.DefaultValue;
+    targetCards.forEach(([valueTargetPlayerID, valueTargetBoardCardID]) => {
+      amount +=
+        nextGameState.players[valueTargetPlayerID].board[
+          valueTargetBoardCardID
+        ][value.AttributeType] ?? 0;
+    });
   } else if (value.$type === "TReferenceValuePlayerAttribute") {
     const valueTargetPlayerID = getTargetPlayer(
       gameState,
@@ -787,25 +807,37 @@ function getActionValue(
       triggerPlayerID,
       targetPlayerID
     );
-    let amount = value.DefaultValue;
+    amount = value.DefaultValue;
     amount +=
       nextGameState.players[valueTargetPlayerID][value.AttributeType] ?? 0;
-    if (value.Modifier != null) {
-      const modifierValue = getActionValue(
-        gameState,
-        nextGameState,
-        value.Modifier.Value,
-        triggerPlayerID,
-        triggerBoardCardID,
-        targetPlayerID,
-        targetBoardCardID
-      );
-      if (value.Modifier.ModifyMode === "Multiply") {
-        amount *= modifierValue;
-      }
-    }
-    return amount;
+  } else if (value.$type === "TReferenceValueCardCount") {
+    const targetCards = getTargetCards(
+      gameState,
+      nextGameState,
+      value.Target,
+      triggerPlayerID,
+      triggerBoardCardID,
+      targetPlayerID,
+      targetBoardCardID
+    );
+    amount = targetCards.length;
   }
+
+  if (value.Modifier != null) {
+    const modifierValue = getActionValue(
+      gameState,
+      nextGameState,
+      value.Modifier.Value,
+      triggerPlayerID,
+      triggerBoardCardID,
+      targetPlayerID,
+      targetBoardCardID
+    );
+    if (value.Modifier.ModifyMode === "Multiply") {
+      amount *= modifierValue;
+    }
+  }
+  return amount;
 }
 
 function getTargetCards(
@@ -1290,52 +1322,66 @@ export function getTooltips(gameState, playerID, boardCardID) {
         }
         return `{?${type}.${id}.targets}`;
       }
-    ).replace(/\{([a-z]+)\.([a-z0-9]+)\}/g, (_, type, id, targets) => {
-      const action =
-        boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
-      if (action.Value) {
+    )
+      .replace(/\{([a-z]+)\.([a-z0-9]+)\.mod\}/g, (_, type, id) => {
+        const action =
+          boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
         return getActionValue(
           gameState,
           gameState,
-          action.Value,
+          action.Value.Modifier.Value,
           playerID,
           boardCardID,
           playerID,
           boardCardID
         );
-      }
-      if (action.$type === "TActionGameSpawnCards") {
-        return getActionValue(
-          gameState,
-          gameState,
-          action.SpawnContext.Limit,
-          playerID,
-          boardCardID,
-          playerID,
-          boardCardID
-        );
-      }
-      if (action.$type === "TActionPlayerDamage") {
-        return boardCard.DamageAmount;
-      }
-      if (action.$type === "TActionCardReload") {
-        return boardCard.ReloadAmount;
-      }
-      if (action.$type === "TActionCardFreeze") {
-        return boardCard.FreezeAmount / 1000;
-      }
-      if (action.$type === "TActionCardSlow") {
-        return boardCard.SlowAmount / 1000;
-      }
-      if (action.$type === "TActionCardCharge") {
-        return boardCard.ChargeAmount / 1000;
-      }
-      const match = action.$type.match(/^TActionPlayer([A-Za-z]+)Apply$/);
-      if (match) {
-        return boardCard[`${match[1]}ApplyAmount`];
-      }
-      return `{?${type}.${id}}`;
-    });
+      })
+      .replace(/\{([a-z]+)\.([a-z0-9]+)\}/g, (_, type, id, targets) => {
+        const action =
+          boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
+        if (action.Value) {
+          return getActionValue(
+            gameState,
+            gameState,
+            action.Value,
+            playerID,
+            boardCardID,
+            playerID,
+            boardCardID
+          );
+        }
+        if (action.$type === "TActionGameSpawnCards") {
+          return getActionValue(
+            gameState,
+            gameState,
+            action.SpawnContext.Limit,
+            playerID,
+            boardCardID,
+            playerID,
+            boardCardID
+          );
+        }
+        if (action.$type === "TActionPlayerDamage") {
+          return boardCard.DamageAmount;
+        }
+        if (action.$type === "TActionCardReload") {
+          return boardCard.ReloadAmount;
+        }
+        if (action.$type === "TActionCardFreeze") {
+          return boardCard.FreezeAmount / 1000;
+        }
+        if (action.$type === "TActionCardSlow") {
+          return boardCard.SlowAmount / 1000;
+        }
+        if (action.$type === "TActionCardCharge") {
+          return boardCard.ChargeAmount / 1000;
+        }
+        const match = action.$type.match(/^TActionPlayer([A-Za-z]+)Apply$/);
+        if (match) {
+          return boardCard[`${match[1]}ApplyAmount`];
+        }
+        return `{?${type}.${id}}`;
+      });
     return tooltip;
   });
 }
