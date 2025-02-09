@@ -37,7 +37,8 @@ getBoardMonster("Volkas Enforcer"),
 
 function getInitialGameState(
   Cards: V2Cards,
-  Encounters: EncounterDays
+  Encounters: EncounterDays,
+  encounterName: string | undefined
 ): GameState {
   const CardsValues = Object.values(Cards);
 
@@ -45,7 +46,7 @@ function getInitialGameState(
     tick: 0,
     isPlaying: true,
     players: [
-      getBoardMonster("Lord of the Wastes"),
+      getBoardMonster(encounterName || "Lord of the Wastes"),
       // getBoardPlayer({ HealthMax: 3500 }, [], []),
       getBoardPlayer(
         { HealthMax: 3500, HealthRegen: 0 },
@@ -397,7 +398,7 @@ function BoardCardElement({
     return null;
   }
   const imgUrl = `https://www.howbazaar.gg/images/items/${localeText.replace(
-    /[ ']/g,
+    /[ '-]/g,
     ""
   )}.avif`;
 
@@ -692,7 +693,7 @@ function BoardSkillElement({
     return null;
   }
   const imgUrl = `https://www.howbazaar.gg/images/skills/${localeText.replace(
-    /[ ']/g,
+    /[ '-]/g,
     ""
   )}.avif`;
 
@@ -973,8 +974,44 @@ export default function App({
   Cards: V2Cards;
   Encounters: EncounterDays;
 }) {
-  const initialGameState = getInitialGameState(Cards, Encounters);
+  const [initialGameState, setInitialGameState] = useState(
+    getInitialGameState(Cards, Encounters, undefined)
+  );
   const steps = run(initialGameState, 1000);
 
-  return <Game steps={steps} />;
+  const encounters = Encounters.data
+    .map((data) => {
+      return data.groups
+        .map((day) => {
+          return day
+            .map((card) => {
+              return { card, day: data.day };
+            })
+            .flat();
+        })
+        .flat();
+    })
+    .flat();
+
+  return (
+    <div>
+      <select
+        onChange={(e) => {
+          setInitialGameState(
+            getInitialGameState(Cards, Encounters, e.target.value)
+          );
+        }}
+      >
+        <option value="">Select an encounter</option>
+        {encounters.map((encounter) => {
+          return (
+            <option value={encounter.card.cardName}>
+              Day {encounter.day} - {encounter.card.cardName}
+            </option>
+          );
+        })}
+      </select>
+      <Game steps={steps} />
+    </div>
+  );
 }
