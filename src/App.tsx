@@ -39,321 +39,298 @@ getBoardMonster("Volkas Enforcer"),
 // the beginning: https://youtu.be/IurqE_Egvr0?si=_x2pflCNfuxdUGvQ&t=64
 */
 
-let Cards: V2Cards;
-let Encounters: EncounterDays;
+function getInitialGameState(
+  Cards: V2Cards,
+  Encounters: EncounterDays
+): GameState {
+  const CardsValues = Object.values(Cards);
 
-const storedCards = localStorage.getItem("Cards");
-if (storedCards) {
-  const compressed = new Uint8Array(JSON.parse(storedCards));
-  Cards = JSON.parse(pako.inflate(compressed, { to: "string" }));
-} else {
-  // Compress and store the Cards data if not in localStorage.
-  const compressed = pako.deflate(JSON.stringify(cardsData));
-  const compressedArray = Array.from(new Uint8Array(compressed));
-  localStorage.setItem("Cards", JSON.stringify(compressedArray));
-  Cards = cardsData as V2Cards;
-}
-
-const storedEncounters = localStorage.getItem("Encounters");
-if (storedEncounters) {
-  const compressed_encounters = new Uint8Array(JSON.parse(storedEncounters));
-  Encounters = JSON.parse(
-    pako.inflate(compressed_encounters, { to: "string" })
-  );
-} else {
-  // Compress and store the Encounters data if not in localStorage.
-  const compressed = pako.deflate(JSON.stringify(encountersData));
-  const compressedArray = Array.from(new Uint8Array(compressed));
-  localStorage.setItem("Encounters", JSON.stringify(compressedArray));
-  Encounters = encountersData as EncounterDays;
-}
-
-console.log(Encounters);
-
-const CardsValues = Object.values(Cards);
-
-const initialGameState: GameState = {
-  tick: 0,
-  isPlaying: true,
-  players: [
-    getBoardMonster("Lord of the Wastes"),
-    // getBoardPlayer({ HealthMax: 3500 }, [], []),
-    getBoardPlayer(
-      { HealthMax: 3500, HealthRegen: 0 },
-      [
-        // getBoardCard("Powder Flask", "Silver")
-        // getBoardCard("Abacus", "Silver"),
-        // getBoardCard("Crusher Claw", "Silver"),
-        // getBoardCard("Colossal Popsicle", "Diamond"),
-        // getBoardCard("Blue Piggles A", "Silver"),
-        // getBoardCard("Octopus", "Diamond")
-        // getBoardCard("Weather Glass", "Diamond")
-        // getBoardCard("Agility Boots", "Silver")
-        // getBoardCard("Crusher Claw", "Silver"),
-        // getBoardCard("Alpha Ray", "Gold"),
-        // getBoardCard("Fang", "Gold")
-      ],
-      [
-        // getBoardSkill("Foreboding Winds", "Gold") //
-      ]
-    )
-  ],
-  multicast: [],
-  getRand: sfc32(0, 10000, 10000000, 100000000000)
-};
-
-/**
- * Creates a BoardCard from the given card by merging tier attributes and applying an optional enchantment.
- *
- * If the provided tier does not exist, the function falls back to the first available tier and logs an error.
- */
-function _createBoardCardFromCard(
-  card: V2Card,
-  tier: Tier,
-  enchantment: keyof Enchantments | null = null
-): BoardCard {
-  let attributes: Partial<BoardCard> = {
-    Abilities: card.Abilities,
-    Auras: card.Auras,
-    Localization: {
-      Tooltips: card.Localization.Tooltips,
-      Title: {
-        Text: card.Localization.Title.Text
-      }
-    }
-  };
-
-  // If the provided tier is not available, default to the first tier available.
-  if (!card.Tiers || !(tier in card.Tiers)) {
-    console.error(
-      `Tier ${tier} not found for card ${card.Localization.Title.Text}`
-    );
-    // Get tier key
-    const tierKeys = Object.keys(card.Tiers || {});
-    if (tierKeys.length === 0) {
-      throw new Error(`Card ${card.Localization.Title.Text} has no tiers`);
-    }
-    tier = tierKeys[0] as Tier;
-  }
-
-  // Iterate over the tiers in order and merge their attributes until the desired tier is reached.
-  for (const [tn, tierValues] of Object.entries(card.Tiers || {})) {
-    attributes = {
-      ...attributes,
-      ...(tierValues?.Attributes ?? {}),
-      AbilityIds: tierValues?.AbilityIds || attributes.AbilityIds,
-      AuraIds: tierValues?.AuraIds || attributes.AuraIds,
-      TooltipIds: tierValues?.TooltipIds || attributes.TooltipIds
-    };
-
-    if (tn === tier) {
-      break;
-    }
-  }
-
-  if (enchantment) {
-    if (!card.Enchantments) {
-      throw new Error(
-        `No enchantments available for card ${card.Localization.Title.Text}`
-      );
-    }
-    const enchant = card.Enchantments[enchantment];
-    if (!enchant) {
-      throw new Error(
-        `Enchantment ${enchantment} not found for card ${card.Localization.Title.Text}`
-      );
-    }
-    attributes = { ...attributes, ...enchant.Attributes };
-    if (enchant.HasAbilities) {
-      attributes.Abilities = { ...attributes.Abilities, ...enchant.Abilities };
-      attributes.AbilityIds = [
-        ...attributes.AbilityIds,
-        ...Object.keys(enchant.Abilities)
-      ];
-    }
-    if (enchant.HasAuras) {
-      attributes.Auras = { ...attributes.Auras, ...enchant.Auras };
-      attributes.AuraIds = [
-        ...attributes.AuraIds,
-        ...Object.keys(enchant.Auras)
-      ];
-    }
-    attributes.Tags = [...(attributes.Tags ?? []), ...enchant.Tags];
-    attributes.HiddenTags = [
-      ...(attributes.HiddenTags ?? []),
-      ...enchant.HiddenTags
-    ];
-    attributes.Localization.Tooltips = [
-      ...attributes.Localization.Tooltips,
-      ...enchant.Localization.Tooltips
-    ];
-    attributes.TooltipIds = [
-      ...attributes.TooltipIds,
-      ...enchant.Localization.Tooltips.map((tooltip) =>
-        attributes.Localization.Tooltips.indexOf(tooltip)
-      )
-    ];
-    attributes.Localization.Title.Text = `${enchantment} ${attributes.Localization.Title.Text}`;
-  }
-
-  // Create the result object with default simulation fields.
-  const result = {
-    card: card,
-    ...attributes,
-    tick: 0,
-    Slow: 0,
-    Freeze: 0,
-    Haste: 0,
-    CritChance: 0,
-    DamageCrit: 0,
-    tier: tier
-  };
-
-  if ("AmmoMax" in attributes) {
-    result.Ammo = attributes.AmmoMax;
-  }
-
-  return result;
-}
-
-function getBoardCard(
-  name: string,
-  tier: Tier,
-  enchantment: keyof Enchantments | null = null
-): BoardCard {
-  // Find the card by its localized title text.
-  const card = CardsValues.find((c) => c.Localization?.Title?.Text === name);
-  if (!card) {
-    throw new Error(`Card ${name} not found`);
-  }
-  return _createBoardCardFromCard(card, tier, enchantment);
-}
-
-function getBoardCardFromId(
-  cardId: string,
-  tier: Tier,
-  enchantment: keyof Enchantments | null = null
-): BoardCard {
-  const card = Cards[cardId];
-  if (!card) {
-    throw new Error(`Card from id ${cardId} not found`);
-  }
-  return _createBoardCardFromCard(card, tier, enchantment);
-}
-
-function getBoardSkill(
-  name: string,
-  tier: Tier,
-  modifiers: any = {}
-): BoardSkill {
-  const card = CardsValues.find(
-    (card) => card.Localization.Title.Text === name
-  );
-  if (!card) {
-    throw new Error(`Card for Skill ${name} not found`);
-  }
-  let attributes: Partial<BoardSkill> = {
-    Abilities: card.Abilities,
-    Auras: card.Auras,
-    Localization: {
-      Tooltips: card.Localization.Tooltips,
-      Title: {
-        Text: card.Localization.Title.Text
-      }
-    }
-  };
-  if (!card.Tiers || !card.Tiers[tier]) {
-    throw new Error(
-      name +
-        " doesn't have tier " +
-        tier +
-        ", the first one is " +
-        Object.keys(card.Tiers || {})[0]
-    );
-  }
-  const tierNames = Object.keys(card.Tiers) as Tier[];
-  for (let i = 0; i < tierNames.length; ++i) {
-    const tierName = tierNames[i];
-    const tierValues = card.Tiers[tierName];
-    attributes = {
-      ...attributes,
-      ...tierValues?.Attributes,
-      AbilityIds: tierValues?.AbilityIds,
-      AuraIds: tierValues?.AuraIds,
-      TooltipIds: tierValues?.TooltipIds
-    };
-    if (tierName === tier) {
-      break;
-    }
-  }
-  const result = {
-    card,
-    ...attributes,
-    tier
-  };
-  return result;
-}
-
-function getBoardPlayer(
-  stats: Omit<Partial<Player>, "board"> & { HealthMax: number },
-  boardCards: BoardCard[],
-  boardSkills: BoardSkill[]
-): Player {
   return {
-    HealthMax: stats.HealthMax,
-    Health: stats.HealthMax,
-    HealthRegen: stats.HealthRegen ?? 0,
-    Shield: 0,
-    Burn: 0,
-    Poison: 0,
-    Gold: 0,
-    Income: 0,
-    board: [...boardCards, ...boardSkills]
+    tick: 0,
+    isPlaying: true,
+    players: [
+      getBoardMonster("Lord of the Wastes"),
+      // getBoardPlayer({ HealthMax: 3500 }, [], []),
+      getBoardPlayer(
+        { HealthMax: 3500, HealthRegen: 0 },
+        [
+          // getBoardCard("Powder Flask", "Silver")
+          // getBoardCard("Abacus", "Silver"),
+          // getBoardCard("Crusher Claw", "Silver"),
+          // getBoardCard("Colossal Popsicle", "Diamond"),
+          // getBoardCard("Blue Piggles A", "Silver"),
+          // getBoardCard("Octopus", "Diamond")
+          // getBoardCard("Weather Glass", "Diamond")
+          // getBoardCard("Agility Boots", "Silver")
+          // getBoardCard("Crusher Claw", "Silver"),
+          // getBoardCard("Alpha Ray", "Gold"),
+          // getBoardCard("Fang", "Gold")
+        ],
+        [
+          // getBoardSkill("Foreboding Winds", "Gold") //
+        ]
+      )
+    ],
+    multicast: [],
+    getRand: sfc32(0, 10000, 10000000, 100000000000)
   };
-}
 
-function getBoardPlayerFromMonsterCard(monsterCard: Group) {
-  return getBoardPlayer(
-    { HealthMax: monsterCard.health },
-    monsterCard.items.map((item) =>
-      getBoardCardFromId(item.card.id, item.tierType, item.enchantmentType)
-    ),
-    monsterCard.skills.map(
-      (item) => getBoardCardFromId(item.card.id, item.tierType, null) // No enchantments for skills
-    )
-  );
-}
+  /**
+   * Creates a BoardCard from the given card by merging tier attributes and applying an optional enchantment.
+   *
+   * If the provided tier does not exist, the function falls back to the first available tier and logs an error.
+   */
+  function _createBoardCardFromCard(
+    card: V2Card,
+    tier: Tier,
+    enchantment: keyof Enchantments | null = null
+  ): BoardCard {
+    let attributes: Partial<BoardCard> = {
+      Abilities: card.Abilities,
+      Auras: card.Auras,
+      Localization: {
+        Tooltips: card.Localization.Tooltips,
+        Title: {
+          Text: card.Localization.Title.Text
+        }
+      }
+    };
 
-function getBoardMonster(name: string) {
-  for (let i = 0; i < Encounters.data.length; ++i) {
-    const day = Encounters.data[i];
-    for (let j = 0; j < day.groups.length; ++j) {
-      const group = day.groups[j];
-      for (let k = 0; k < group.length; ++k) {
-        const monsterCard = group[k];
-        if (monsterCard.cardName === name) {
-          return getBoardPlayerFromMonsterCard(monsterCard);
+    // If the provided tier is not available, default to the first tier available.
+    if (!card.Tiers || !(tier in card.Tiers)) {
+      console.error(
+        `Tier ${tier} not found for card ${card.Localization.Title.Text}`
+      );
+      // Get tier key
+      const tierKeys = Object.keys(card.Tiers || {});
+      if (tierKeys.length === 0) {
+        throw new Error(`Card ${card.Localization.Title.Text} has no tiers`);
+      }
+      tier = tierKeys[0] as Tier;
+    }
+
+    // Iterate over the tiers in order and merge their attributes until the desired tier is reached.
+    for (const [tn, tierValues] of Object.entries(card.Tiers || {})) {
+      attributes = {
+        ...attributes,
+        ...(tierValues?.Attributes ?? {}),
+        AbilityIds: tierValues?.AbilityIds || attributes.AbilityIds,
+        AuraIds: tierValues?.AuraIds || attributes.AuraIds,
+        TooltipIds: tierValues?.TooltipIds || attributes.TooltipIds
+      };
+
+      if (tn === tier) {
+        break;
+      }
+    }
+
+    if (enchantment) {
+      if (!card.Enchantments) {
+        throw new Error(
+          `No enchantments available for card ${card.Localization.Title.Text}`
+        );
+      }
+      const enchant = card.Enchantments[enchantment];
+      if (!enchant) {
+        throw new Error(
+          `Enchantment ${enchantment} not found for card ${card.Localization.Title.Text}`
+        );
+      }
+      attributes = { ...attributes, ...enchant.Attributes };
+      if (enchant.HasAbilities) {
+        attributes.Abilities = {
+          ...attributes.Abilities,
+          ...enchant.Abilities
+        };
+        attributes.AbilityIds = [
+          ...attributes.AbilityIds,
+          ...Object.keys(enchant.Abilities)
+        ];
+      }
+      if (enchant.HasAuras) {
+        attributes.Auras = { ...attributes.Auras, ...enchant.Auras };
+        attributes.AuraIds = [
+          ...attributes.AuraIds,
+          ...Object.keys(enchant.Auras)
+        ];
+      }
+      attributes.Tags = [...(attributes.Tags ?? []), ...enchant.Tags];
+      attributes.HiddenTags = [
+        ...(attributes.HiddenTags ?? []),
+        ...enchant.HiddenTags
+      ];
+      attributes.Localization.Tooltips = [
+        ...attributes.Localization.Tooltips,
+        ...enchant.Localization.Tooltips
+      ];
+      attributes.TooltipIds = [
+        ...attributes.TooltipIds,
+        ...enchant.Localization.Tooltips.map((tooltip) =>
+          attributes.Localization.Tooltips.indexOf(tooltip)
+        )
+      ];
+      attributes.Localization.Title.Text = `${enchantment} ${attributes.Localization.Title.Text}`;
+    }
+
+    // Create the result object with default simulation fields.
+    const result = {
+      card: card,
+      ...attributes,
+      tick: 0,
+      Slow: 0,
+      Freeze: 0,
+      Haste: 0,
+      CritChance: 0,
+      DamageCrit: 0,
+      tier: tier
+    };
+
+    if ("AmmoMax" in attributes) {
+      result.Ammo = attributes.AmmoMax;
+    }
+
+    return result;
+  }
+
+  function getBoardCard(
+    name: string,
+    tier: Tier,
+    enchantment: keyof Enchantments | null = null
+  ): BoardCard {
+    // Find the card by its localized title text.
+    const card = CardsValues.find((c) => c.Localization?.Title?.Text === name);
+    if (!card) {
+      throw new Error(`Card ${name} not found`);
+    }
+    return _createBoardCardFromCard(card, tier, enchantment);
+  }
+
+  function getBoardCardFromId(
+    cardId: string,
+    tier: Tier,
+    enchantment: keyof Enchantments | null = null
+  ): BoardCard {
+    const card = Cards[cardId];
+    if (!card) {
+      throw new Error(`Card from id ${cardId} not found`);
+    }
+    return _createBoardCardFromCard(card, tier, enchantment);
+  }
+
+  function getBoardSkill(
+    name: string,
+    tier: Tier,
+    modifiers: any = {}
+  ): BoardSkill {
+    const card = CardsValues.find(
+      (card) => card.Localization.Title.Text === name
+    );
+    if (!card) {
+      throw new Error(`Card for Skill ${name} not found`);
+    }
+    let attributes: Partial<BoardSkill> = {
+      Abilities: card.Abilities,
+      Auras: card.Auras,
+      Localization: {
+        Tooltips: card.Localization.Tooltips,
+        Title: {
+          Text: card.Localization.Title.Text
+        }
+      }
+    };
+    if (!card.Tiers || !card.Tiers[tier]) {
+      throw new Error(
+        name +
+          " doesn't have tier " +
+          tier +
+          ", the first one is " +
+          Object.keys(card.Tiers || {})[0]
+      );
+    }
+    const tierNames = Object.keys(card.Tiers) as Tier[];
+    for (let i = 0; i < tierNames.length; ++i) {
+      const tierName = tierNames[i];
+      const tierValues = card.Tiers[tierName];
+      attributes = {
+        ...attributes,
+        ...tierValues?.Attributes,
+        AbilityIds: tierValues?.AbilityIds,
+        AuraIds: tierValues?.AuraIds,
+        TooltipIds: tierValues?.TooltipIds
+      };
+      if (tierName === tier) {
+        break;
+      }
+    }
+    const result = {
+      card,
+      ...attributes,
+      tier
+    };
+    return result;
+  }
+
+  function getBoardPlayer(
+    stats: Omit<Partial<Player>, "board"> & { HealthMax: number },
+    boardCards: BoardCard[],
+    boardSkills: BoardSkill[]
+  ): Player {
+    return {
+      HealthMax: stats.HealthMax,
+      Health: stats.HealthMax,
+      HealthRegen: stats.HealthRegen ?? 0,
+      Shield: 0,
+      Burn: 0,
+      Poison: 0,
+      Gold: 0,
+      Income: 0,
+      board: [...boardCards, ...boardSkills]
+    };
+  }
+
+  function getBoardPlayerFromMonsterCard(monsterCard: Group) {
+    return getBoardPlayer(
+      { HealthMax: monsterCard.health },
+      monsterCard.items.map((item) =>
+        getBoardCardFromId(item.card.id, item.tierType, item.enchantmentType)
+      ),
+      monsterCard.skills.map(
+        (item) => getBoardCardFromId(item.card.id, item.tierType, null) // No enchantments for skills
+      )
+    );
+  }
+
+  function getBoardMonster(name: string) {
+    for (let i = 0; i < Encounters.data.length; ++i) {
+      const day = Encounters.data[i];
+      for (let j = 0; j < day.groups.length; ++j) {
+        const group = day.groups[j];
+        for (let k = 0; k < group.length; ++k) {
+          const monsterCard = group[k];
+          if (monsterCard.cardName === name) {
+            return getBoardPlayerFromMonsterCard(monsterCard);
+          }
         }
       }
     }
+    throw new Error(`Can't find a monster with name ${name}`);
   }
-  throw new Error(`Can't find a monster with name ${name}`);
-}
 
-function sfc32(a: number, b: number, c: number, d: number) {
-  return function () {
-    a |= 0;
-    b |= 0;
-    c |= 0;
-    d |= 0;
-    let t = (((a + b) | 0) + d) | 0;
-    d = (d + 1) | 0;
-    a = b ^ (b >>> 9);
-    b = (c + (c << 3)) | 0;
-    c = (c << 21) | (c >>> 11);
-    c = (c + t) | 0;
-    return (t >>> 0) / 4294967296;
-  };
+  function sfc32(a: number, b: number, c: number, d: number) {
+    return function () {
+      a |= 0;
+      b |= 0;
+      c |= 0;
+      d |= 0;
+      let t = (((a + b) | 0) + d) | 0;
+      d = (d + 1) | 0;
+      a = b ^ (b >>> 9);
+      b = (c + (c << 3)) | 0;
+      c = (c << 21) | (c >>> 11);
+      c = (c + t) | 0;
+      return (t >>> 0) / 4294967296;
+    };
+  }
 }
 
 const CARD_HEIGHT = 150;
@@ -764,7 +741,7 @@ function BoardSkillElement({
   );
 }
 
-function Game({ gameState }: { gameState: GameState }) {
+function GameStep({ gameState }: { gameState: GameState }) {
   return (
     <div>
       {gameState.players.map((player: Player, playerID: number) => {
@@ -935,9 +912,7 @@ function stepCountToSeconds(stepCount: number) {
   return (stepCount * TICK_RATE) / 1000;
 }
 
-const steps = run(initialGameState, 1000);
-
-export default function App() {
+function Game({ steps }: { steps: GameState[] }) {
   const [stepCount, setStepCount] = useState(0);
   const [autoScroll, setAutoScroll] = useState(false);
   const [autoReset, setAutoReset] = useState(false);
@@ -959,7 +934,7 @@ export default function App() {
 
   return (
     <div className="App">
-      <Game gameState={steps[boundedStepCount]} />
+      <GameStep gameState={steps[boundedStepCount]} />
       <input
         style={{ width: "100%", marginTop: 20 }}
         type="range"
@@ -993,4 +968,17 @@ export default function App() {
       </p>
     </div>
   );
+}
+
+export default function App({
+  Cards,
+  Encounters
+}: {
+  Cards: V2Cards;
+  Encounters: EncounterDays;
+}) {
+  const initialGameState = getInitialGameState(Cards, Encounters);
+  const steps = run(initialGameState, 1000);
+
+  return <Game steps={steps} />;
 }
