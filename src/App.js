@@ -41,16 +41,14 @@ getBoardMonster("Volkas Enforcer"),
 
 // Sandstorm ticks are not correct, there should be a bunch of -1 at
 // the beginning: https://youtu.be/IurqE_Egvr0?si=_x2pflCNfuxdUGvQ&t=64
-
-// Arms Race isn't working properly nor its tooltip.
 */
 
 const initialGameState = {
   tick: 0,
   isPlaying: true,
   players: [
-    // getBoardMonster("Veteran Octopus"),
-    getBoardPlayer({ HealthMax: 3500 }, [], []),
+    getBoardMonster("Hulking Experiment"),
+    // getBoardPlayer({ HealthMax: 3500 }, [], []),
     getBoardPlayer(
       { HealthMax: 3500, HealthRegen: 0 },
       [
@@ -59,14 +57,14 @@ const initialGameState = {
         // getBoardCard("Crusher Claw", "Silver"),
         // getBoardCard("Colossal Popsicle", "Diamond"),
         // getBoardCard("Blue Piggles A", "Silver"),
-        getBoardCard("Octopus", "Diamond")
+        // getBoardCard("Octopus", "Diamond")
         // getBoardCard("Weather Glass", "Diamond")
         // getBoardCard("Agility Boots", "Silver"),
         // getBoardCard("Crusher Claw", "Silver"),
         // getBoardCard("Abacus", "Gold"),
       ],
       [
-        getBoardSkill("Hyper Focus", "Diamond") //
+        getBoardSkill("Adaptive Ordinance", "Silver") //
       ]
     )
   ],
@@ -848,7 +846,7 @@ function stepCountToSeconds(stepCount) {
   return (stepCount * TICK_RATE) / 1000;
 }
 
-const steps = run(initialGameState, 10);
+const steps = run(initialGameState, 1000);
 
 export default function App() {
   const [stepCount, setStepCount] = useState(0);

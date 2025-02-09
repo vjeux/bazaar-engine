@@ -722,7 +722,10 @@ function runAction(
           /* triggerActions */ action.$type === "TActionCardModifyAttribute"
         );
       });
-  } else if (action.$type === "TActionPlayerModifyAttribute") {
+  } else if (
+    action.$type === "TActionPlayerModifyAttribute" ||
+    action.$type === "TAuraActionPlayerModifyAttribute"
+  ) {
     const actionValue = getActionValue(
       gameState,
       nextGameState,
@@ -1363,17 +1366,15 @@ export function getTooltips(gameState, playerID, boardCardID) {
         }
         if (action.$type === "TActionPlayerDamage") {
           return boardCard.DamageAmount;
-        }
-        if (action.$type === "TActionCardReload") {
+        } else if (action.$type === "TActionCardReload") {
           return boardCard.ReloadAmount;
-        }
-        if (action.$type === "TActionCardFreeze") {
+        } else if (action.$type === "TActionCardFreeze") {
           return boardCard.FreezeAmount / 1000;
-        }
-        if (action.$type === "TActionCardSlow") {
+        } else if (action.$type === "TActionCardHaste") {
+          return boardCard.HasteAmount / 1000;
+        } else if (action.$type === "TActionCardSlow") {
           return boardCard.SlowAmount / 1000;
-        }
-        if (action.$type === "TActionCardCharge") {
+        } else if (action.$type === "TActionCardCharge") {
           return boardCard.ChargeAmount / 1000;
         }
         const match = action.$type.match(/^TActionPlayer([A-Za-z]+)Apply$/);
