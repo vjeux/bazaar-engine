@@ -1,3 +1,5 @@
+import { EnchantmentType, Tag, Tier } from "./shared";
+
 export interface EncounterDays {
   data: Datum[];
   version: string;
@@ -20,14 +22,14 @@ export interface Group {
 
 export interface Item {
   card: Card;
-  tierType: TierType;
-  enchantmentType?: Type;
+  tierType: Tier;
+  enchantmentType?: EnchantmentType;
 }
 
 export interface Card {
   id: string;
   name: string;
-  startingTier: TierType;
+  startingTier: Tier;
   tiers: Tiers;
   tags: Tag[];
   hiddenTags: string[];
@@ -41,23 +43,8 @@ export interface Card {
 }
 
 export interface Enchantment {
-  type: Type;
+  type: EnchantmentType;
   tooltips: string[];
-}
-
-export enum Type {
-  Deadly = "Deadly",
-  Fiery = "Fiery",
-  Golden = "Golden",
-  Heavy = "Heavy",
-  Icy = "Icy",
-  Obsidian = "Obsidian",
-  Radiant = "Radiant",
-  Restorative = "Restorative",
-  Shielded = "Shielded",
-  Shiny = "Shiny",
-  Toxic = "Toxic",
-  Turbo = "Turbo"
 }
 
 export enum Hero {
@@ -76,31 +63,6 @@ export enum Size {
   Small = "Small"
 }
 
-export enum TierType {
-  Bronze = "Bronze",
-  Diamond = "Diamond",
-  Gold = "Gold",
-  Legendary = "Legendary",
-  Silver = "Silver"
-}
-
-export enum Tag {
-  Apparel = "Apparel",
-  Aquatic = "Aquatic",
-  Dragon = "Dragon",
-  Food = "Food",
-  Friend = "Friend",
-  Loot = "Loot",
-  Potion = "Potion",
-  Property = "Property",
-  Ray = "Ray",
-  Tech = "Tech",
-  Tool = "Tool",
-  Toy = "Toy",
-  Vehicle = "Vehicle",
-  Weapon = "Weapon"
-}
-
 export interface Tiers {
   Bronze: Bronze;
   Silver: Bronze;
@@ -115,5 +77,5 @@ export interface Bronze {
 
 export interface Skill {
   card: Card;
-  tierType: TierType;
+  tierType: Tier;
 }

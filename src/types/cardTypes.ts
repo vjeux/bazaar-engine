@@ -1,3 +1,5 @@
+import { Tag, Tier } from "./shared";
+
 export interface V2Cards {
   [key: string]: V2Card;
 }
@@ -321,36 +323,6 @@ export enum Operator {
   None = "None"
 }
 
-export enum Tag {
-  Apparel = "Apparel",
-  Aquatic = "Aquatic",
-  Burn = "Burn",
-  Core = "Core",
-  Damage = "Damage",
-  Dinosaur = "Dinosaur",
-  Dragon = "Dragon",
-  Food = "Food",
-  Freeze = "Freeze",
-  Friend = "Friend",
-  Haste = "Haste",
-  Heal = "Heal",
-  Joy = "Joy",
-  Loot = "Loot",
-  Merchant = "Merchant",
-  Poison = "Poison",
-  Potion = "Potion",
-  Property = "Property",
-  Ray = "Ray",
-  Shield = "Shield",
-  Slow = "Slow",
-  Tech = "Tech",
-  Tool = "Tool",
-  Toy = "Toy",
-  Unsellable = "Unsellable",
-  Vehicle = "Vehicle",
-  Weapon = "Weapon"
-}
-
 export enum TargetSection {
   AbsolutePlayerHand = "AbsolutePlayerHand",
   AbsolutePlayerHandAndStash = "AbsolutePlayerHandAndStash",
@@ -412,14 +384,6 @@ export interface FluffyConditions {
   ComparisonValue?: TargetCount;
   Tiers?: Tier[];
   IsNot?: boolean;
-}
-
-export enum Tier {
-  Bronze = "Bronze",
-  Silver = "Silver",
-  Gold = "Gold",
-  Diamond = "Diamond",
-  Legendary = "Legendary"
 }
 
 export interface PurpleTarget {
@@ -2697,9 +2661,13 @@ export interface Condition6 {
   Enchantment: string;
 }
 
-export type Tiers = {
-  [key in Tier]?: TierInfo;
-};
+export interface Tiers {
+  Gold?: TierInfo;
+  Diamond: TierInfo;
+  Bronze?: TierInfo;
+  Silver?: TierInfo;
+  Legendary?: TierInfo;
+}
 
 export interface TierInfo {
   Attributes: { [key: string]: number };
