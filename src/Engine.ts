@@ -1,11 +1,12 @@
 import {
-  Tier,
   V2Card,
   Ability,
   AbilityPrerequisite,
   FluffyValue,
   AbilityAction
 } from "./types/cardTypes";
+
+import { Tier } from "./types/shared";
 
 export interface GameState {
   tick: number;
