@@ -3,23 +3,37 @@ import pako from "pako";
 import { useState, useEffect } from "react";
 import { run, getTooltips, TICK_RATE } from "./Engine.ts";
 
-// import Cards from "./json/v2_Cards.json";
-// const compressed = JSON.stringify([...pako.deflate(JSON.stringify(Cards))]);
-// localStorage.setItem("Cards", compressed);
-const compressed = new Uint8Array(JSON.parse(localStorage.getItem("Cards")));
-const Cards = JSON.parse(pako.inflate(compressed, { to: "string" }));
+// Import JSON files
+import cardsData from "./json/v2_Cards.json";
+import encountersData from "./json/encounterDays.json";
 
-// import Encounters from "./json/encounterDays.json"; // from https://www.howbazaar.gg/api/monsterEncounterDays
-// const compressed_encounters = JSON.stringify([
-//   ...pako.deflate(JSON.stringify(Encounters))
-// ]);
-// localStorage.setItem("Encounters", compressed_encounters);
-const compressed_encounters = new Uint8Array(
-  JSON.parse(localStorage.getItem("Encounters"))
-);
-const Encounters = JSON.parse(
-  pako.inflate(compressed_encounters, { to: "string" })
-);
+let Cards, Encounters;
+
+const storedCards = localStorage.getItem("Cards");
+if (storedCards) {
+  const compressed = new Uint8Array(JSON.parse(storedCards));
+  Cards = JSON.parse(pako.inflate(compressed, { to: "string" }));
+} else {
+  // Compress and store the Cards data if not in localStorage.
+  const compressed = pako.deflate(JSON.stringify(cardsData));
+  const compressedArray = Array.from(new Uint8Array(compressed));
+  localStorage.setItem("Cards", JSON.stringify(compressedArray));
+  Cards = cardsData;
+}
+
+const storedEncounters = localStorage.getItem("Encounters");
+if (storedEncounters) {
+  const compressed_encounters = new Uint8Array(JSON.parse(storedEncounters));
+  Encounters = JSON.parse(
+    pako.inflate(compressed_encounters, { to: "string" })
+  );
+} else {
+  // Compress and store the Encounters data if not in localStorage.
+  const compressed = pako.deflate(JSON.stringify(encountersData));
+  const compressedArray = Array.from(new Uint8Array(compressed));
+  localStorage.setItem("Encounters", JSON.stringify(compressedArray));
+  Encounters = encountersData;
+}
 
 console.log(Encounters);
 
