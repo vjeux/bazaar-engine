@@ -1,7 +1,7 @@
 import "./styles.css";
 import pako from "pako";
 import { useState, useEffect } from "react";
-import { run, getTooltips, TICK_RATE } from "./Engine";
+import { run, getTooltips, TICK_RATE } from "./Engine.ts";
 
 // import Cards from "./json/v2_Cards.json";
 // const compressed = JSON.stringify([...pako.deflate(JSON.stringify(Cards))]);
