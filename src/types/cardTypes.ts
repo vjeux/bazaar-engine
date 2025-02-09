@@ -2697,13 +2697,9 @@ export interface Condition6 {
   Enchantment: string;
 }
 
-export interface Tiers {
-  Gold?: TierInfo;
-  Diamond: TierInfo;
-  Bronze?: TierInfo;
-  Silver?: TierInfo;
-  Legendary?: TierInfo;
-}
+export type Tiers = {
+  [key in Tier]?: TierInfo;
+};
 
 export interface TierInfo {
   Attributes: { [key: string]: number };

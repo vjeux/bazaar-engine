@@ -1,4 +1,4 @@
-import { Tier, V2Card } from "./types/cardTypes";
+import { Tier, V2Card, Ability } from "./types/cardTypes";
 
 export interface GameState {
   tick: number;
@@ -44,7 +44,15 @@ interface BoardSkill {
   [key: string]: any;
 }
 
-function forEachCard(gameState, callback) {
+function forEachCard(
+  gameState: GameState,
+  callback: (
+    player: Player,
+    playerIndex: number,
+    boardCard: BoardCard,
+    boardCardIndex: number
+  ) => void
+): void {
   for (let i = 0; i < gameState.players.length; ++i) {
     const player = gameState.players[i];
     for (let j = 0; j < player.board.length; ++j) {
@@ -54,21 +62,27 @@ function forEachCard(gameState, callback) {
   }
 }
 
-function forEachAbility(boardCard, callback) {
+function forEachAbility(
+  boardCard: BoardCard,
+  callback: (ability: Ability) => void
+): void {
   for (let i = 0; i < boardCard.AbilityIds.length; ++i) {
     const abilityId = boardCard.AbilityIds[i];
     callback(boardCard.Abilities[abilityId]);
   }
 }
 
-function forEachAura(boardCard, callback) {
+function forEachAura(
+  boardCard: BoardCard,
+  callback: (aura: Ability) => void
+): void {
   for (let i = 0; i < boardCard.AuraIds.length; ++i) {
     const auraId = boardCard.AuraIds[i];
     callback(boardCard.Auras[auraId]);
   }
 }
 
-function hasCooldown(boardCard) {
+function hasCooldown(boardCard: BoardCard): boolean {
   return "CooldownMax" in boardCard;
 }
 
@@ -96,14 +110,14 @@ while (true) {
 }
 
 function updateCardAttribute(
-  gameState,
-  nextGameState,
-  playerID,
-  boardCardID,
-  attribute,
-  value,
-  triggerActions = true
-) {
+  gameState: GameState,
+  nextGameState: GameState,
+  playerID: number,
+  boardCardID: number,
+  attribute: string,
+  value: number,
+  triggerActions: boolean = true
+): void {
   const existingValue =
     nextGameState.players[playerID].board[boardCardID][attribute];
   nextGameState.players[playerID].board[boardCardID][attribute] = value;
@@ -160,12 +174,12 @@ function updateCardAttribute(
 }
 
 function updatePlayerAttribute(
-  gameState,
-  nextGameState,
-  playerID,
-  attribute,
-  value
-) {
+  gameState: GameState,
+  nextGameState: GameState,
+  playerID: number,
+  attribute: string,
+  value: number
+): void {
   const existingValue = nextGameState.players[playerID][attribute];
   nextGameState.players[playerID][attribute] = value;
 
@@ -208,14 +222,14 @@ function updatePlayerAttribute(
 }
 
 function testPrerequisite(
-  gameState,
-  nextGameState,
-  prerequisite,
-  triggerPlayerID,
-  triggerBoardCardID,
-  targetPlayerID,
-  targetBoardCardID
-) {
+  gameState: GameState,
+  nextGameState: GameState,
+  prerequisite: any,
+  triggerPlayerID: number,
+  triggerBoardCardID: number,
+  targetPlayerID: number,
+  targetBoardCardID: number
+): boolean {
   if (prerequisite.$type === "TPrerequisiteCardCount") {
     const subjects = getTargetCards(
       gameState,
@@ -240,17 +254,19 @@ function testPrerequisite(
       return value <= comparisonValue;
     }
   }
+  // Return true if no prerequisites
+  return true;
 }
 
 function testConditions(
-  gameState,
-  nextGameState,
-  conditions,
-  triggerPlayerID,
-  triggerBoardCardID,
-  targetPlayerID,
-  targetBoardCardID
-) {
+  gameState: GameState,
+  nextGameState: GameState,
+  conditions: any,
+  triggerPlayerID: number,
+  triggerBoardCardID: number,
+  targetPlayerID: number,
+  targetBoardCardID: number
+): boolean {
   if (conditions == null) {
     return true;
   } else if (conditions.$type === "TCardConditionalAttribute") {
@@ -337,15 +353,15 @@ function testConditions(
 }
 
 function runAction(
-  gameState,
-  nextGameState,
-  action,
-  prerequisites,
-  triggerPlayerID,
-  triggerBoardCardID,
-  targetPlayerID,
-  targetBoardCardID
-) {
+  gameState: GameState,
+  nextGameState: GameState,
+  action: any,
+  prerequisites: any,
+  triggerPlayerID: number,
+  triggerBoardCardID: number,
+  targetPlayerID: number,
+  targetBoardCardID: number
+): void {
   let hasCritted = false;
   if (prerequisites != null) {
     for (let i = 0; i < prerequisites.length; ++i) {
@@ -805,14 +821,14 @@ function runAction(
 }
 
 function getActionValue(
-  gameState,
-  nextGameState,
-  value,
-  triggerPlayerID,
-  triggerBoardCardID,
-  targetPlayerID,
-  targetBoardCardID
-) {
+  gameState: GameState,
+  nextGameState: GameState,
+  value: any,
+  triggerPlayerID: number,
+  triggerBoardCardID: number,
+  targetPlayerID: number,
+  targetBoardCardID: number
+): number {
   let amount;
   if (value.$type === "TFixedValue") {
     amount = value.Value;
@@ -898,14 +914,14 @@ function getActionValue(
 }
 
 function getTargetCards(
-  gameState,
-  nextGameState,
-  target,
-  triggerPlayerID,
-  triggerBoardCardID,
-  targetPlayerID,
-  targetBoardCardID
-) {
+  gameState: GameState,
+  nextGameState: GameState,
+  target: any,
+  triggerPlayerID: number,
+  triggerBoardCardID: number,
+  targetPlayerID: number,
+  targetBoardCardID: number
+): Array<[number, number]> {
   const results = [];
   if (target.$type === "TTargetCardSelf") {
     results.push([targetPlayerID, targetBoardCardID]);
@@ -1066,12 +1082,12 @@ function getTargetCards(
 }
 
 function getTargetPlayer(
-  gameState,
-  nextGameState,
-  target,
-  triggerPlayerID,
-  targetPlayerID
-) {
+  gameState: GameState,
+  nextGameState: GameState,
+  target: any,
+  triggerPlayerID: number,
+  targetPlayerID: number
+): number {
   if (target.$type === "TTargetPlayerRelative") {
     if (target.TargetMode === "Opponent") {
       return (targetPlayerID + 1) % 2;
@@ -1089,7 +1105,7 @@ function getTargetPlayer(
 
 export const TICK_RATE = 100;
 
-function runGameTick(initialGameState) {
+function runGameTick(initialGameState: GameState): [GameState, GameState] {
   const nextGameState = {
     ...initialGameState,
     players: initialGameState.players.map((player) => ({
@@ -1409,9 +1425,13 @@ function runGameTick(initialGameState) {
   return [gameState, nextGameState];
 }
 
-export function getTooltips(gameState, playerID, boardCardID) {
+export function getTooltips(
+  gameState: GameState,
+  playerID: number,
+  boardCardID: number
+): string[] {
   const boardCard = gameState.players[playerID].board[boardCardID];
-  return boardCard.TooltipIds.map((tooltipId) => {
+  return boardCard.TooltipIds.map((tooltipId: string) => {
     const tooltip = boardCard.Localization.Tooltips[
       tooltipId
     ].Content.Text.replace(
@@ -1493,7 +1513,10 @@ export function getTooltips(gameState, playerID, boardCardID) {
   });
 }
 
-export function run(initialGameState, maxTicks = Infinity) {
+export function run(
+  initialGameState: GameState,
+  maxTicks: number = Infinity
+): GameState[] {
   const steps = [];
   console.log(initialGameState);
 
