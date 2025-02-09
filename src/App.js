@@ -849,7 +849,7 @@ function stepCountToSeconds(stepCount) {
   return (stepCount * TICK_RATE) / 1000;
 }
 
-const steps = run(initialGameState, 41);
+const steps = run(initialGameState, 1000);
 
 export default function App() {
   const [stepCount, setStepCount] = useState(0);

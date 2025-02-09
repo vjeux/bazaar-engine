@@ -300,6 +300,7 @@ function runAction(
   targetPlayerID,
   targetBoardCardID
 ) {
+  let hasCritted = false;
   if (prerequisites != null) {
     for (let i = 0; i < prerequisites.length; ++i) {
       if (
@@ -337,6 +338,7 @@ function runAction(
         const damageCrit = targetBoardCard.DamageCrit;
         if (damageCrit !== undefined) {
           amount *= 1 + damageCrit / 100;
+          hasCritted = true;
         }
       }
     }
@@ -365,6 +367,7 @@ function runAction(
     if (critChance > 0) {
       if (gameState.getRand() * 100 < critChance) {
         amount *= 2;
+        hasCritted = true;
       }
     }
     nextGameState.players[playerID].Health = Math.min(
@@ -393,6 +396,7 @@ function runAction(
     if (critChance > 0) {
       if (gameState.getRand() * 100 < critChance) {
         amount *= 2;
+        hasCritted = true;
       }
     }
 
@@ -439,6 +443,7 @@ function runAction(
     if (critChance > 0) {
       if (gameState.getRand() * 100 < critChance) {
         amount *= 2;
+        hasCritted = true;
       }
     }
 
@@ -485,6 +490,7 @@ function runAction(
     if (critChance > 0) {
       if (gameState.getRand() * 100 < critChance) {
         amount *= 2;
+        hasCritted = true;
       }
     }
 
@@ -748,6 +754,8 @@ function runAction(
       action.Operation === "Add" ? oldValue + actionValue : oldValue;
     nextGameState.players[playerID][action.AttributeType] = newValue;
   }
+
+  return hasCritted;
 }
 
 function getActionValue(
@@ -1202,6 +1210,8 @@ function runGameTick(initialGameState) {
     }
   });
 
+  const cardCrittedList = [];
+
   // Trigger Cards
   cardTriggerList.forEach(([playerID, boardCardID, isMulticast]) => {
     const boardCard = gameState.players[playerID].board[boardCardID];
@@ -1212,13 +1222,15 @@ function runGameTick(initialGameState) {
     forEachCard(
       gameState,
       (targetPlayer, targetPlayerID, targetBoardCard, targetBoardCardID) => {
+        let hasCritted = false;
+
         forEachAbility(targetBoardCard, (ability) => {
           if (
             ability.Trigger.$type === "TTriggerOnCardFired" &&
             playerID === targetPlayerID &&
             boardCardID === targetBoardCardID
           ) {
-            runAction(
+            hasCritted ||= runAction(
               gameState,
               nextGameState,
               ability.Action,
@@ -1257,12 +1269,38 @@ function runGameTick(initialGameState) {
             });
           }
         });
+
+        if (hasCritted) {
+          cardCrittedList.push([targetPlayerID, targetBoardCardID]);
+        }
       }
     );
 
     if (!isMulticast) {
       nextGameState.players[playerID].board[boardCardID].tick = 0;
     }
+  });
+
+  cardCrittedList.forEach(([playerID, boardCardID]) => {
+    forEachCard(
+      gameState,
+      (targetPlayer, targetPlayerID, targetBoardCard, targetBoardCardID) => {
+        forEachAbility(targetBoardCard, (ability) => {
+          if (ability.Trigger.$type === "TTriggerOnCardCritted") {
+            runAction(
+              gameState,
+              nextGameState,
+              ability.Action,
+              ability.Prerequisites,
+              playerID,
+              boardCardID,
+              targetPlayerID,
+              targetBoardCardID
+            );
+          }
+        });
+      }
+    );
   });
 
   // Sandstorm
