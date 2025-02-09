@@ -1,4 +1,68 @@
-function forEachCard(gameState, callback) {
+import {
+  V2Card,
+  Ability,
+  AbilityPrerequisite,
+  FluffyValue,
+  AbilityAction
+} from "./types/cardTypes";
+
+import { Tier } from "./types/shared";
+
+export interface GameState {
+  tick: number;
+  isPlaying: boolean;
+  players: Player[];
+  multicast: any[];
+  getRand: () => number;
+}
+
+export interface Player {
+  HealthMax: number;
+  Health: number;
+  HealthRegen: number;
+  Shield: number;
+  Burn: number;
+  Poison: number;
+  Gold: number;
+  Income: number;
+  board: (BoardCard | BoardSkill)[];
+}
+
+export interface BoardCard {
+  card: V2Card;
+  tick: number;
+  Slow: number;
+  Freeze: number;
+  Haste: number;
+  CritChance: number;
+  DamageCrit: number;
+  tier: Tier;
+  Ammo?: number;
+  DamageAmount?: number;
+  HealAmount?: number;
+  BurnApplyAmount?: number;
+  PoisonApplyAmount?: number;
+  ShieldApplyAmount?: number;
+  [key: string]: any;
+}
+
+export interface BoardSkill {
+  card: V2Card;
+  tier: Tier;
+  [key: string]: any;
+}
+
+export type BoardCardOrSkill = BoardCard | BoardSkill;
+
+function forEachCard(
+  gameState: GameState,
+  callback: (
+    player: Player,
+    playerIndex: number,
+    boardCard: BoardCardOrSkill,
+    boardCardIndex: number
+  ) => void
+): void {
   for (let i = 0; i < gameState.players.length; ++i) {
     const player = gameState.players[i];
     for (let j = 0; j < player.board.length; ++j) {
@@ -8,21 +72,27 @@ function forEachCard(gameState, callback) {
   }
 }
 
-function forEachAbility(boardCard, callback) {
+function forEachAbility(
+  boardCard: BoardCardOrSkill,
+  callback: (ability: Ability) => void
+): void {
   for (let i = 0; i < boardCard.AbilityIds.length; ++i) {
     const abilityId = boardCard.AbilityIds[i];
     callback(boardCard.Abilities[abilityId]);
   }
 }
 
-function forEachAura(boardCard, callback) {
+function forEachAura(
+  boardCard: BoardCard,
+  callback: (aura: Ability) => void
+): void {
   for (let i = 0; i < boardCard.AuraIds.length; ++i) {
     const auraId = boardCard.AuraIds[i];
     callback(boardCard.Auras[auraId]);
   }
 }
 
-function hasCooldown(boardCard) {
+function hasCooldown(boardCard: BoardCardOrSkill): boolean {
   return "CooldownMax" in boardCard;
 }
 
@@ -37,7 +107,7 @@ function hasCooldown(boardCard) {
 const sandstormInitialTick = 30000;
 const sandstormTickRate = 200;
 
-const sandstormDamagePerTick = {};
+const sandstormDamagePerTick: Record<number, number> = {};
 let sandstormDamage = 1;
 let sandstormTick = sandstormInitialTick;
 while (true) {
@@ -50,14 +120,14 @@ while (true) {
 }
 
 function updateCardAttribute(
-  gameState,
-  nextGameState,
-  playerID,
-  boardCardID,
-  attribute,
-  value,
-  triggerActions = true
-) {
+  gameState: GameState,
+  nextGameState: GameState,
+  playerID: number,
+  boardCardID: number,
+  attribute: string,
+  value: number,
+  triggerActions: boolean = true
+): void {
   const existingValue =
     nextGameState.players[playerID].board[boardCardID][attribute];
   nextGameState.players[playerID].board[boardCardID][attribute] = value;
@@ -113,13 +183,13 @@ function updateCardAttribute(
   }
 }
 
-function updatePlayerAttribute(
-  gameState,
-  nextGameState,
-  playerID,
-  attribute,
-  value
-) {
+function updatePlayerAttribute<K extends keyof Player>(
+  gameState: GameState,
+  nextGameState: GameState,
+  playerID: number,
+  attribute: K,
+  value: Player[K]
+): void {
   const existingValue = nextGameState.players[playerID][attribute];
   nextGameState.players[playerID][attribute] = value;
 
@@ -162,14 +232,14 @@ function updatePlayerAttribute(
 }
 
 function testPrerequisite(
-  gameState,
-  nextGameState,
-  prerequisite,
-  triggerPlayerID,
-  triggerBoardCardID,
-  targetPlayerID,
-  targetBoardCardID
-) {
+  gameState: GameState,
+  nextGameState: GameState,
+  prerequisite: any,
+  triggerPlayerID: number,
+  triggerBoardCardID: number | null, // Unsure wether we shoud allow null here,
+  targetPlayerID: number,
+  targetBoardCardID: number
+): boolean {
   if (prerequisite.$type === "TPrerequisiteCardCount") {
     const subjects = getTargetCards(
       gameState,
@@ -194,17 +264,19 @@ function testPrerequisite(
       return value <= comparisonValue;
     }
   }
+  // Return true if no prerequisites count
+  return true;
 }
 
 function testConditions(
-  gameState,
-  nextGameState,
-  conditions,
-  triggerPlayerID,
-  triggerBoardCardID,
-  targetPlayerID,
-  targetBoardCardID
-) {
+  gameState: GameState,
+  nextGameState: GameState,
+  conditions: any,
+  triggerPlayerID: number,
+  triggerBoardCardID: number,
+  targetPlayerID: number,
+  targetBoardCardID: number
+): boolean {
   if (conditions == null) {
     return true;
   } else if (conditions.$type === "TCardConditionalAttribute") {
@@ -288,18 +360,21 @@ function testConditions(
     }
     return true;
   }
+  // Return false for any unhandled conditions
+  return false;
 }
 
+// Returns true if the action critted
 function runAction(
-  gameState,
-  nextGameState,
-  action,
-  prerequisites,
-  triggerPlayerID,
-  triggerBoardCardID,
-  targetPlayerID,
-  targetBoardCardID
-) {
+  gameState: GameState,
+  nextGameState: GameState,
+  action: AbilityAction,
+  prerequisites: AbilityPrerequisite[] | null, // null means no prerequisites
+  triggerPlayerID: number,
+  triggerBoardCardID: number | null, // Equal to null on events like death, where no card triggered it
+  targetPlayerID: number,
+  targetBoardCardID: number
+): boolean {
   let hasCritted = false;
   if (prerequisites != null) {
     for (let i = 0; i < prerequisites.length; ++i) {
@@ -314,7 +389,7 @@ function runAction(
           targetBoardCardID
         )
       ) {
-        return;
+        return false;
       }
     }
   }
@@ -590,6 +665,15 @@ function runAction(
           : action.$type === "TActionCardHaste"
             ? ["HasteAmount", "HasteTargets", "Haste"]
             : [];
+    if (amountKey == null || targetsKey == null || tickKey == null) {
+      throw new Error(
+        "Card:" +
+          gameState.players[targetPlayerID].board[targetBoardCardID].card
+            .InternalName +
+          "is missing an amount, target or tick key for " +
+          action.$type
+      );
+    }
     const amount =
       gameState.players[targetPlayerID].board[targetBoardCardID][amountKey];
     const targetCount =
@@ -759,15 +843,15 @@ function runAction(
 }
 
 function getActionValue(
-  gameState,
-  nextGameState,
-  value,
-  triggerPlayerID,
-  triggerBoardCardID,
-  targetPlayerID,
-  targetBoardCardID
-) {
-  let amount;
+  gameState: GameState,
+  nextGameState: GameState,
+  value: FluffyValue,
+  triggerPlayerID: number,
+  triggerBoardCardID: number | null, // Equal to null on events like death, where no card triggered it
+  targetPlayerID: number,
+  targetBoardCardID: number
+): number {
+  let amount: number | undefined = undefined;
   if (value.$type === "TFixedValue") {
     amount = value.Value;
   } else if (
@@ -791,6 +875,7 @@ function getActionValue(
         ][value.AttributeType] ?? 0;
     });
   } else if (
+    // This check will never be reached because we already check it previously
     value.$type === "TReferenceValueCardAttribute" ||
     value.$type === "TReferenceValueCardAttributeAggregate"
   ) {
@@ -833,7 +918,6 @@ function getActionValue(
     );
     amount = targetCards.length;
   }
-
   if (value.Modifier != null) {
     const modifierValue = getActionValue(
       gameState,
@@ -852,15 +936,15 @@ function getActionValue(
 }
 
 function getTargetCards(
-  gameState,
-  nextGameState,
-  target,
-  triggerPlayerID,
-  triggerBoardCardID,
-  targetPlayerID,
-  targetBoardCardID
-) {
-  const results = [];
+  gameState: GameState,
+  nextGameState: GameState,
+  target: any,
+  triggerPlayerID: number,
+  triggerBoardCardID: number | null, // Unsure wether we shoud allow null here,
+  targetPlayerID: number,
+  targetBoardCardID: number
+): Array<[number, number]> {
+  const results: [number, number | null][] = [];
   if (target.$type === "TTargetCardSelf") {
     results.push([targetPlayerID, targetBoardCardID]);
   } else if (target.$type === "TTargetCardTriggerSource") {
@@ -1020,12 +1104,12 @@ function getTargetCards(
 }
 
 function getTargetPlayer(
-  gameState,
-  nextGameState,
-  target,
-  triggerPlayerID,
-  targetPlayerID
-) {
+  gameState: GameState,
+  nextGameState: GameState,
+  target: any, // Unsure which is correct here
+  triggerPlayerID: number,
+  targetPlayerID: number
+): number {
   if (target.$type === "TTargetPlayerRelative") {
     if (target.TargetMode === "Opponent") {
       return (targetPlayerID + 1) % 2;
@@ -1039,11 +1123,12 @@ function getTargetPlayer(
       return (targetPlayerID + 1) % 2;
     }
   }
+  throw new Error("Unhandled target type: " + target.$type);
 }
 
 export const TICK_RATE = 100;
 
-function runGameTick(initialGameState) {
+function runGameTick(initialGameState: GameState): [GameState, GameState] {
   const nextGameState = {
     ...initialGameState,
     players: initialGameState.players.map((player) => ({
@@ -1140,7 +1225,7 @@ function runGameTick(initialGameState) {
   }
 
   // Ticks
-  const cardTriggerList = [];
+  const cardTriggerList: [number, number, boolean][] = [];
   forEachCard(gameState, (player, playerID, boardCard, boardCardID) => {
     const nextBoardCard = nextGameState.players[playerID].board[boardCardID];
     if (nextBoardCard.card.$type === "TCardSkill") {
@@ -1210,7 +1295,7 @@ function runGameTick(initialGameState) {
     }
   });
 
-  const cardCrittedList = [];
+  const cardCrittedList: number[][] = [];
 
   // Trigger Cards
   cardTriggerList.forEach(([playerID, boardCardID, isMulticast]) => {
@@ -1363,14 +1448,18 @@ function runGameTick(initialGameState) {
   return [gameState, nextGameState];
 }
 
-export function getTooltips(gameState, playerID, boardCardID) {
+export function getTooltips(
+  gameState: GameState,
+  playerID: number,
+  boardCardID: number
+): string[] {
   const boardCard = gameState.players[playerID].board[boardCardID];
-  return boardCard.TooltipIds.map((tooltipId) => {
-    const tooltip = boardCard.Localization.Tooltips[
+  return boardCard.TooltipIds.map((tooltipId: string) => {
+    const tooltip: string | number = boardCard.Localization.Tooltips[
       tooltipId
     ].Content.Text.replace(
       /\{([a-z]+)\.([a-z0-9]+)\.targets\}/g,
-      (_, type, id) => {
+      (_: any, type: string, id: string | number) => {
         const action =
           boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
         const target = action.Target;
@@ -1380,74 +1469,83 @@ export function getTooltips(gameState, playerID, boardCardID) {
         return `{?${type}.${id}.targets}`;
       }
     )
-      .replace(/\{([a-z]+)\.([a-z0-9]+)\.mod\}/g, (_, type, id) => {
-        const action =
-          boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
-        return getActionValue(
-          gameState,
-          gameState,
-          action.Value.Modifier.Value,
-          playerID,
-          boardCardID,
-          playerID,
-          boardCardID
-        );
-      })
-      .replace(/\{([a-z]+)\.([a-z0-9]+)\}/g, (_, type, id, targets) => {
-        const action =
-          boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
-        if (action.Value) {
+      .replace(
+        /\{([a-z]+)\.([a-z0-9]+)\.mod\}/g,
+        (_: any, type: string, id: string | number) => {
+          const action =
+            boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
           return getActionValue(
             gameState,
             gameState,
-            action.Value,
+            action.Value.Modifier.Value,
             playerID,
             boardCardID,
             playerID,
             boardCardID
           );
         }
-        if (action.$type === "TActionGameSpawnCards") {
-          return getActionValue(
-            gameState,
-            gameState,
-            action.SpawnContext.Limit,
-            playerID,
-            boardCardID,
-            playerID,
-            boardCardID
-          );
+      )
+      .replace(
+        /\{([a-z]+)\.([a-z0-9]+)\}/g,
+        (_: any, type: string, id: string | number, targets: any) => {
+          const action =
+            boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
+          if (action.Value) {
+            return getActionValue(
+              gameState,
+              gameState,
+              action.Value,
+              playerID,
+              boardCardID,
+              playerID,
+              boardCardID
+            );
+          }
+          if (action.$type === "TActionGameSpawnCards") {
+            return getActionValue(
+              gameState,
+              gameState,
+              action.SpawnContext.Limit,
+              playerID,
+              boardCardID,
+              playerID,
+              boardCardID
+            );
+          }
+          if (action.$type === "TActionPlayerDamage") {
+            return boardCard.DamageAmount;
+          } else if (action.$type === "TActionCardReload") {
+            return boardCard.ReloadAmount;
+          } else if (action.$type === "TActionPlayerHeal") {
+            return boardCard.HealAmount;
+          } else if (action.$type === "TActionPlayerShield") {
+            return boardCard.ShieldApplyAmount;
+          } else if (action.$type === "TActionPlayerPoison") {
+            return boardCard.PoisonApplyAmount;
+          } else if (action.$type === "TActionCardFreeze") {
+            return boardCard.FreezeAmount / 1000;
+          } else if (action.$type === "TActionCardHaste") {
+            return boardCard.HasteAmount / 1000;
+          } else if (action.$type === "TActionCardSlow") {
+            return boardCard.SlowAmount / 1000;
+          } else if (action.$type === "TActionCardCharge") {
+            return boardCard.ChargeAmount / 1000;
+          }
+          const match = action.$type.match(/^TActionPlayer([A-Za-z]+)Apply$/);
+          if (match) {
+            return boardCard[`${match[1]}ApplyAmount`];
+          }
+          return `{?${type}.${id}}`;
         }
-        if (action.$type === "TActionPlayerDamage") {
-          return boardCard.DamageAmount;
-        } else if (action.$type === "TActionCardReload") {
-          return boardCard.ReloadAmount;
-        } else if (action.$type === "TActionPlayerHeal") {
-          return boardCard.HealAmount;
-        } else if (action.$type === "TActionPlayerShield") {
-          return boardCard.ShieldApplyAmount;
-        } else if (action.$type === "TActionPlayerPoison") {
-          return boardCard.PoisonApplyAmount;
-        } else if (action.$type === "TActionCardFreeze") {
-          return boardCard.FreezeAmount / 1000;
-        } else if (action.$type === "TActionCardHaste") {
-          return boardCard.HasteAmount / 1000;
-        } else if (action.$type === "TActionCardSlow") {
-          return boardCard.SlowAmount / 1000;
-        } else if (action.$type === "TActionCardCharge") {
-          return boardCard.ChargeAmount / 1000;
-        }
-        const match = action.$type.match(/^TActionPlayer([A-Za-z]+)Apply$/);
-        if (match) {
-          return boardCard[`${match[1]}ApplyAmount`];
-        }
-        return `{?${type}.${id}}`;
-      });
+      );
     return tooltip;
   });
 }
 
-export function run(initialGameState, maxTicks = Infinity) {
+export function run(
+  initialGameState: GameState,
+  maxTicks: number = Infinity
+): GameState[] {
   const steps = [];
   console.log(initialGameState);
 
