@@ -46,14 +46,18 @@ function getInitialGameState(
     tick: 0,
     isPlaying: true,
     players: [
-      getBoardMonster(encounterName || "Lord of the Wastes"),
+      getBoardMonster(encounterName || "Techno Virus"),
       // getBoardPlayer({ HealthMax: 3500 }, [], []),
       getBoardPlayer(
         { HealthMax: 3500, HealthRegen: 0 },
         [
-          // getBoardCard("Powder Flask", "Silver")
-          // getBoardCard("Abacus", "Silver"),
-          // getBoardCard("Crusher Claw", "Silver"),
+          // getBoardCard("Sharpening Stone", "Silver"),
+          // getBoardCard("Orbital Polisher", "Gold"),
+          // getBoardCard("Goggles", "Silver"),
+          // getBoardCard("Toolbox", "Bronze"),
+          // getBoardCard("Multitool", "Silver")
+          // getBoardCard("Energy Potion", "Silver")
+          // getBoardCard("Eagle Talisman", "Bronze")
           // getBoardCard("Colossal Popsicle", "Diamond"),
           // getBoardCard("Blue Piggles A", "Silver"),
           // getBoardCard("Octopus", "Diamond")
@@ -64,7 +68,8 @@ function getInitialGameState(
           // getBoardCard("Fang", "Gold")
         ],
         [
-          // getBoardSkill("Foreboding Winds", "Gold") //
+          // getBoardSkill("Time to Tinker", "Bronze") //
+          // getBoardSkill("Flashy Mechanic", "Silver") //
         ]
       )
     ],
@@ -398,7 +403,7 @@ function BoardCardElement({
     return null;
   }
   const imgUrl = `https://www.howbazaar.gg/images/items/${localeText.replace(
-    /[ '-]/g,
+    /[ '\-&]/g,
     ""
   )}.avif`;
 
@@ -693,7 +698,7 @@ function BoardSkillElement({
     return null;
   }
   const imgUrl = `https://www.howbazaar.gg/images/skills/${localeText.replace(
-    /[ '-]/g,
+    /[ '\-&]/g,
     ""
   )}.avif`;
 
@@ -977,7 +982,7 @@ export default function App({
   const [initialGameState, setInitialGameState] = useState(
     getInitialGameState(Cards, Encounters, undefined)
   );
-  const steps = run(initialGameState, 1000);
+  const steps = run(initialGameState, 10000);
 
   const encounters = Encounters.data
     .map((data) => {
