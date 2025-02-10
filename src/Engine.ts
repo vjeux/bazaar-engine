@@ -26,6 +26,7 @@ export interface Player {
   Gold: number;
   Income: number;
   board: (BoardCard | BoardSkill)[];
+  [key: string]: any;
 }
 
 export interface BoardCard {
@@ -83,7 +84,7 @@ function forEachAbility(
 }
 
 function forEachAura(
-  boardCard: BoardCard,
+  boardCard: BoardCardOrSkill,
   callback: (aura: Ability) => void
 ): void {
   for (let i = 0; i < boardCard.AuraIds.length; ++i) {
@@ -221,7 +222,7 @@ function updatePlayerAttribute<K extends keyof Player>(
             ability.Action,
             ability.Prerequisites,
             subjectPlayerID,
-            null,
+            -1,
             targetPlayerID,
             targetBoardCardID
           );
@@ -236,7 +237,7 @@ function testPrerequisite(
   nextGameState: GameState,
   prerequisite: any,
   triggerPlayerID: number,
-  triggerBoardCardID: number | null, // Unsure wether we shoud allow null here,
+  triggerBoardCardID: number,
   targetPlayerID: number,
   targetBoardCardID: number
 ): boolean {
@@ -371,7 +372,7 @@ function runAction(
   action: AbilityAction,
   prerequisites: AbilityPrerequisite[] | null, // null means no prerequisites
   triggerPlayerID: number,
-  triggerBoardCardID: number | null, // Equal to null on events like death, where no card triggered it
+  triggerBoardCardID: number,
   targetPlayerID: number,
   targetBoardCardID: number
 ): boolean {
@@ -751,6 +752,9 @@ function runAction(
     action.$type === "TActionCardModifyAttribute" ||
     action.$type === "TAuraActionCardModifyAttribute"
   ) {
+    if (!action.Value || !action.AttributeType) {
+      throw new Error("Missing Value");
+    }
     const actionValue = getActionValue(
       gameState,
       nextGameState,
@@ -790,7 +794,7 @@ function runAction(
         const oldValue =
           nextGameState.players[actionTargetPlayerID].board[
             actionTargetBoardCardID
-          ][action.AttributeType];
+          ][action.AttributeType as string];
         if (oldValue === undefined) {
           return;
         }
@@ -807,7 +811,7 @@ function runAction(
           nextGameState,
           actionTargetPlayerID,
           actionTargetBoardCardID,
-          action.AttributeType,
+          action.AttributeType as string,
           newValue,
           /* triggerActions */ action.$type === "TActionCardModifyAttribute"
         );
@@ -819,7 +823,7 @@ function runAction(
     const actionValue = getActionValue(
       gameState,
       nextGameState,
-      action.Value,
+      action.Value as FluffyValue,
       triggerPlayerID,
       triggerBoardCardID,
       targetPlayerID,
@@ -833,10 +837,11 @@ function runAction(
       targetPlayerID
     );
 
-    const oldValue = nextGameState.players[playerID][action.AttributeType];
+    const oldValue =
+      nextGameState.players[playerID][action.AttributeType as string];
     const newValue =
       action.Operation === "Add" ? oldValue + actionValue : oldValue;
-    nextGameState.players[playerID][action.AttributeType] = newValue;
+    nextGameState.players[playerID][action.AttributeType as string] = newValue;
   }
 
   return hasCritted;
@@ -847,7 +852,7 @@ function getActionValue(
   nextGameState: GameState,
   value: FluffyValue,
   triggerPlayerID: number,
-  triggerBoardCardID: number | null, // Equal to null on events like death, where no card triggered it
+  triggerBoardCardID: number,
   targetPlayerID: number,
   targetBoardCardID: number
 ): number {
@@ -872,28 +877,7 @@ function getActionValue(
       amount +=
         nextGameState.players[valueTargetPlayerID].board[
           valueTargetBoardCardID
-        ][value.AttributeType] ?? 0;
-    });
-  } else if (
-    // This check will never be reached because we already check it previously
-    value.$type === "TReferenceValueCardAttribute" ||
-    value.$type === "TReferenceValueCardAttributeAggregate"
-  ) {
-    const targetCards = getTargetCards(
-      gameState,
-      nextGameState,
-      value.Target,
-      triggerPlayerID,
-      triggerBoardCardID,
-      targetPlayerID,
-      targetBoardCardID
-    );
-    amount = value.DefaultValue;
-    targetCards.forEach(([valueTargetPlayerID, valueTargetBoardCardID]) => {
-      amount +=
-        nextGameState.players[valueTargetPlayerID].board[
-          valueTargetBoardCardID
-        ][value.AttributeType] ?? 0;
+        ][value.AttributeType as string] ?? 0;
     });
   } else if (value.$type === "TReferenceValuePlayerAttribute") {
     const valueTargetPlayerID = getTargetPlayer(
@@ -905,7 +889,9 @@ function getActionValue(
     );
     amount = value.DefaultValue;
     amount +=
-      nextGameState.players[valueTargetPlayerID][value.AttributeType] ?? 0;
+      nextGameState.players[valueTargetPlayerID][
+        value.AttributeType as string
+      ] ?? 0;
   } else if (value.$type === "TReferenceValueCardCount") {
     const targetCards = getTargetCards(
       gameState,
@@ -918,7 +904,7 @@ function getActionValue(
     );
     amount = targetCards.length;
   }
-  if (value.Modifier != null) {
+  if (amount != null && value.Modifier != null) {
     const modifierValue = getActionValue(
       gameState,
       nextGameState,
@@ -932,7 +918,7 @@ function getActionValue(
       amount *= modifierValue;
     }
   }
-  return amount;
+  return amount ?? 0;
 }
 
 function getTargetCards(
@@ -940,11 +926,11 @@ function getTargetCards(
   nextGameState: GameState,
   target: any,
   triggerPlayerID: number,
-  triggerBoardCardID: number | null, // Unsure wether we shoud allow null here,
+  triggerBoardCardID: number,
   targetPlayerID: number,
   targetBoardCardID: number
 ): Array<[number, number]> {
-  const results: [number, number | null][] = [];
+  const results: [number, number][] = [];
   if (target.$type === "TTargetCardSelf") {
     results.push([targetPlayerID, targetBoardCardID]);
   } else if (target.$type === "TTargetCardTriggerSource") {
@@ -1084,7 +1070,7 @@ function getTargetCards(
         highestBoardCardID = testBoardCardID;
       }
     });
-    if (highestPlayerID !== null) {
+    if (highestPlayerID !== null && highestBoardCardID !== null) {
       return [[highestPlayerID, highestBoardCardID]];
     } else {
       return [];
@@ -1176,7 +1162,7 @@ function runGameTick(initialGameState: GameState): [GameState, GameState] {
               ability.Action,
               ability.Prerequisites,
               targetPlayerID,
-              null,
+              -1,
               targetPlayerID,
               targetBoardCardID
             );
@@ -1426,7 +1412,7 @@ function runGameTick(initialGameState: GameState): [GameState, GameState] {
                   ability.Action,
                   ability.Prerequisites,
                   abilityPlayerID,
-                  null,
+                  -1,
                   targetPlayerID,
                   targetBoardCardID
                 );

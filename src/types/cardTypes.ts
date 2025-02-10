@@ -106,7 +106,8 @@ export enum PurpleType {
   TActionPlayerReviveHeal = "TActionPlayerReviveHeal",
   TActionPlayerShieldApply = "TActionPlayerShieldApply",
   TActionPlayerShieldRemove = "TActionPlayerShieldRemove",
-  TAuraActionCardModifyAttribute = "TAuraActionCardModifyAttribute"
+  TAuraActionCardModifyAttribute = "TAuraActionCardModifyAttribute",
+  TAuraActionPlayerModifyAttribute = "TAuraActionPlayerModifyAttribute"
 }
 
 export enum AttributeType {
