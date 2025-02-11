@@ -358,7 +358,8 @@ function Tooltip({
         border: "1px solid black",
         borderRadius: 5,
         padding: "5px 10px",
-        zIndex: 1
+        zIndex: 1,
+        minWidth: 200
       }}
       className="tooltip"
     >
@@ -434,7 +435,9 @@ function BoardCardElement({
                   ? "gray"
                   : tier === "Gold"
                     ? "yellow"
-                    : "blue"
+                    : tier === "Diamond"
+                      ? "blue"
+                      : "orange"
           }}
           height={CARD_HEIGHT}
           width={cardWidth}
