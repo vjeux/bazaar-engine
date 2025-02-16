@@ -287,7 +287,6 @@ function testConditions(
   if (conditions == null) {
     return true;
   } else if (conditions.$type === "TCardConditionalAttribute") {
-    // console.log(conditions, targetPlayerID, targetBoardCardID);
     const value =
       gameState.players[targetPlayerID].board[targetBoardCardID][
         conditions.Attribute
@@ -1107,7 +1106,6 @@ function getTargetPlayers(
   triggerPlayerID: number,
   targetPlayerID: number
 ): number[] {
-  console.log(nextGameState, target, triggerPlayerID, targetPlayerID);
   if (target.$type === "TTargetPlayerRelative") {
     if (target.TargetMode === "Opponent") {
       return [(targetPlayerID + 1) % 2];

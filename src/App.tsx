@@ -1013,7 +1013,7 @@ export default function App({
         <option value="">Select an encounter</option>
         {encounters.map((encounter) => {
           return (
-            <option value={encounter.card.cardName}>
+            <option value={encounter.card.cardName} key={encounter.card.cardId}>
               Day {encounter.day} - {encounter.card.cardName}
             </option>
           );

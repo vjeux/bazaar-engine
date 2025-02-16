@@ -2,7 +2,6 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 
 import App from "./App.tsx";
-import React from "react";
 import pako from "pako";
 import { V2Cards } from "./types/cardTypes.ts";
 import { EncounterDays } from "./types/encounterTypes.ts";
@@ -20,7 +19,8 @@ function genDataFromLocalStorage(
   return new Promise((success) => {
     const storage = localStorage.getItem(localStorageKey);
     if (storage == null) {
-      importCall.then((data) => {
+      importCall.then((module) => {
+        const data = module.default;
         const compressed = JSON.stringify([
           ...pako.deflate(JSON.stringify(data))
         ]);
