@@ -648,7 +648,7 @@ function Game({ steps }: { steps: GameState[] }) {
   }, [autoScroll, autoReset]);
 
   return (
-    <div className="App">
+    <div>
       <GameStep gameState={steps[boundedStepCount]} />
       <input
         style={{ width: "100%", marginTop: 20 }}
@@ -711,12 +711,22 @@ function TooltipWithoutGameState({
   ]);
 
   return (
-    <Tooltip
-      boardCard={gameState.players[0].board[0]}
-      gameState={gameState}
-      playerID={0}
-      boardCardID={0}
-    />
+    <div
+      style={{
+        position: "absolute",
+        bottom: 0,
+        pointerEvents: "none",
+        left: 80,
+        width: 200
+      }}
+    >
+      <Tooltip
+        boardCard={gameState.players[0].board[0]}
+        gameState={gameState}
+        playerID={0}
+        boardCardID={0}
+      />
+    </div>
   );
 }
 
@@ -750,27 +760,24 @@ function CardSearch({ Cards }: { Cards: V2Cards }) {
   const items = filteredCards
     .filter((card) => card.$type === "TCardItem")
     .sort((a, b) =>
-      (a.Localization.Title.Text ?? "").localeCompare(
-        b.Localization.Title.Text ?? ""
-      )
+      a.Localization.Title.Text.localeCompare(b.Localization.Title.Text)
     );
   const skills = filteredCards
     .filter((card) => card.$type === "TCardSkill")
     .sort((a, b) =>
-      (a.Localization.Title.Text ?? "").localeCompare(
-        b.Localization.Title.Text ?? ""
-      )
+      a.Localization.Title.Text.localeCompare(b.Localization.Title.Text)
     );
 
-  const CONTAINER_SIZE = 50;
+  const CONTAINER_SIZE = 70;
 
   return (
     <div
       style={{
+        display: "flex",
+        flexDirection: "column",
         width: 300,
         padding: 10,
         borderLeft: "1px solid #444",
-        height: "100vh",
         overflowY: "auto",
         position: "relative"
       }}
@@ -781,7 +788,7 @@ function CardSearch({ Cards }: { Cards: V2Cards }) {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         style={{
-          width: "100%",
+          width: "90%",
           padding: "8px",
           marginBottom: "10px"
         }}
@@ -798,18 +805,29 @@ function CardSearch({ Cards }: { Cards: V2Cards }) {
                     ? CONTAINER_SIZE * 1.5
                     : CONTAINER_SIZE;
 
+              const paddingTop = 0.06;
+              const paddingLeft = 0.03;
+              const paddingBottom = 0.08;
+              const paddingRight = 0.02;
+
+              const sizesOneLetter = {
+                Large: "L",
+                Medium: "M",
+                Small: "S"
+              };
+              const frameUrl = `https://www.bazaarplanner.com/images/fromBT/CardFrame_${card.StartingTier}_${sizesOneLetter[card.Size]}_TUI.png`;
+
               return (
                 <div
                   key={card.Id}
                   style={{
-                    marginBottom: 10,
+                    marginBottom: 2,
                     display: "flex",
                     alignItems: "center",
                     position: "relative"
                   }}
                   className="tooltipContainer"
                   onMouseEnter={(e) => {
-                    const rect = e.currentTarget.getBoundingClientRect();
                     setHoveredCard({
                       card,
                       tier: card.StartingTier
@@ -826,15 +844,36 @@ function CardSearch({ Cards }: { Cards: V2Cards }) {
                       justifyContent: "center"
                     }}
                   >
-                    <img
-                      src={`https://www.howbazaar.gg/images/items/${card.Localization.Title.Text?.replace(/[ '\-&]/g, "") ?? ""}.avif`}
+                    <div
                       style={{
                         width: imgWidth,
                         height: CONTAINER_SIZE,
-                        borderRadius: "5px"
+                        position: "relative",
+                        display: "inline-block"
                       }}
-                      alt={card.Localization.Title.Text}
-                    />
+                    >
+                      <img
+                        src={`https://www.howbazaar.gg/images/items/${card.Localization.Title.Text?.replace(/[ '\-&]/g, "") ?? ""}.avif`}
+                        style={{
+                          position: "absolute",
+                          left: paddingLeft * CONTAINER_SIZE,
+                          right: paddingRight * CONTAINER_SIZE,
+                          top: paddingTop * CONTAINER_SIZE,
+                          bottom: paddingBottom * CONTAINER_SIZE
+                        }}
+                        width={imgWidth * (1 - paddingLeft - paddingRight)}
+                        height={
+                          CONTAINER_SIZE * (1 - paddingTop - paddingBottom)
+                        }
+                        alt={card.Localization.Title.Text}
+                      />
+                      <img
+                        src={frameUrl}
+                        style={{ position: "absolute", top: 0, left: 0 }}
+                        width="100%"
+                        height="100%"
+                      />
+                    </div>
                   </div>
                   <span style={{ marginLeft: 10 }}>
                     {card.Localization.Title.Text}
@@ -855,44 +894,70 @@ function CardSearch({ Cards }: { Cards: V2Cards }) {
         {skills.length > 0 && (
           <>
             <h3 style={{ marginTop: 20, marginBottom: 10 }}>Skills</h3>
-            {skills.map((card) => (
-              <div
-                key={card.Id}
-                style={{
-                  marginBottom: 10,
-                  display: "flex",
-                  alignItems: "center"
-                }}
-                className="tooltipContainer"
-                onMouseEnter={(e) => {
-                  setHoveredCard({
-                    card,
-                    tier: card.StartingTier
-                  });
-                }}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
-                <img
-                  src={`https://www.howbazaar.gg/images/skills/${card.Localization.Title.Text?.replace(/[ '\-&]/g, "") ?? ""}.avif`}
+            {skills.map((card) => {
+              const borderSize = 0.1;
+
+              const frameUrl = `https://www.bazaarplanner.com/images/fromBT/skill_tier_${card.StartingTier.toLowerCase()}.png`;
+              return (
+                <div
+                  key={card.Id}
                   style={{
-                    width: 50,
-                    height: 50,
-                    borderRadius: "50%"
+                    marginBottom: 10,
+                    display: "flex",
+                    alignItems: "center",
+                    position: "relative"
                   }}
-                  alt={card.Localization.Title.Text}
-                />
-                <span style={{ marginLeft: 10 }}>
-                  {card.Localization.Title.Text}
-                </span>
-                {hoveredCard && hoveredCard.card === card && (
-                  <TooltipWithoutGameState
-                    Cards={Cards}
-                    card={card}
-                    tier={hoveredCard.tier}
-                  />
-                )}
-              </div>
-            ))}
+                  className="tooltipContainer"
+                  onMouseEnter={(e) => {
+                    setHoveredCard({
+                      card,
+                      tier: card.StartingTier
+                    });
+                  }}
+                  onMouseLeave={() => setHoveredCard(null)}
+                >
+                  <div
+                    style={{
+                      width: CONTAINER_SIZE,
+                      height: CONTAINER_SIZE,
+                      position: "relative",
+                      display: "inline-block"
+                    }}
+                  >
+                    <img
+                      src={`https://www.howbazaar.gg/images/skills/${card.Localization.Title.Text?.replace(/[ '\-&]/g, "") ?? ""}.avif`}
+                      style={{
+                        position: "absolute",
+                        left: borderSize * CONTAINER_SIZE,
+                        right: borderSize * CONTAINER_SIZE,
+                        top: borderSize * CONTAINER_SIZE,
+                        bottom: borderSize * CONTAINER_SIZE,
+                        borderRadius: "100%"
+                      }}
+                      width={CONTAINER_SIZE * (1 - 2 * borderSize)}
+                      height={CONTAINER_SIZE * (1 - 2 * borderSize)}
+                      alt={card.Localization.Title.Text}
+                    />
+                    <img
+                      src={frameUrl}
+                      style={{ position: "absolute", top: 0, left: 0 }}
+                      width="100%"
+                      height="100%"
+                    />
+                  </div>
+                  <span style={{ marginLeft: 10 }}>
+                    {card.Localization.Title.Text}
+                  </span>
+                  {hoveredCard && hoveredCard.card === card && (
+                    <TooltipWithoutGameState
+                      Cards={Cards}
+                      card={card}
+                      tier={hoveredCard.tier}
+                    />
+                  )}
+                </div>
+              );
+            })}
           </>
         )}
       </div>
@@ -938,8 +1003,11 @@ export default function App({
     .flat();
 
   return (
-    <div style={{ display: "flex" }}>
-      <div style={{ flex: 1 }}>
+    <div
+      style={{ display: "flex", height: "calc(100vh - 20px)" }}
+      className="App"
+    >
+      <div style={{ flex: 1, marginRight: 10 }}>
         <select
           onChange={(e) => {
             setInitialGameState(
