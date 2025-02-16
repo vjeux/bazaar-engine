@@ -293,15 +293,17 @@ export interface MonsterConfig {
   name: string;
 }
 
+export interface PlayerCardConfig {
+  name: string;
+  tier: Tier;
+  enchantment?: keyof Enchantments | null;
+}
+
 export interface PlayerConfig {
   type: "player";
   health?: number;
   healthRegen?: number;
-  cards?: Array<{
-    name: string;
-    tier: Tier;
-    enchantment?: keyof Enchantments | null;
-  }>;
+  cards?: PlayerCardConfig[];
   skills?: Array<{
     name: string;
     tier: Tier;

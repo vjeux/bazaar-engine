@@ -14,7 +14,12 @@ import {
 import { V2Card, V2Cards } from "./types/cardTypes";
 import { EncounterDays } from "./types/encounterTypes";
 import React from "react";
-import { getInitialGameState, PlayerConfig } from "./GameState.ts";
+import {
+  getInitialGameState,
+  MonsterConfig,
+  PlayerCardConfig,
+  PlayerConfig
+} from "./GameState.ts";
 import { Tier } from "./types/shared.ts";
 
 import ValidSkillNames from "./json/ValidSkillNames.json";
@@ -730,7 +735,13 @@ function TooltipWithoutGameState({
   );
 }
 
-function CardSearch({ Cards }: { Cards: V2Cards }) {
+function CardSearch({
+  Cards,
+  onSelectCard
+}: {
+  Cards: V2Cards;
+  onSelectCard: (card: V2Card) => void;
+}) {
   const [search, setSearch] = useState("");
   const [hoveredCard, setHoveredCard] = useState<{
     card: V2Card;
@@ -824,9 +835,11 @@ function CardSearch({ Cards }: { Cards: V2Cards }) {
                     marginBottom: 2,
                     display: "flex",
                     alignItems: "center",
-                    position: "relative"
+                    position: "relative",
+                    cursor: "pointer"
                   }}
                   className="tooltipContainer"
+                  onClick={() => onSelectCard(card)}
                   onMouseEnter={(e) => {
                     setHoveredCard({
                       card,
@@ -972,20 +985,26 @@ export default function App({
   Cards: V2Cards;
   Encounters: EncounterDays;
 }) {
+  const [monsterConfig, setMonsterConfig] = useState<MonsterConfig>({
+    name: "Techno Virus",
+    type: "monster"
+  });
+  const [playerCards, setPlayerCards] = useState<PlayerCardConfig[]>([
+    { name: "Fang", tier: Tier.Bronze }
+  ]);
+
   const playerConfig = {
     type: "player",
     health: 3500,
     healthRegen: 0,
-    cards: [{ name: "Fang", tier: Tier.Bronze }],
+    cards: playerCards,
     skills: []
   } as PlayerConfig;
 
-  const [initialGameState, setInitialGameState] = useState(
-    getInitialGameState(Cards, Encounters, [
-      { type: "monster", name: "Techno Virus" },
-      playerConfig
-    ])
-  );
+  const initialGameState = getInitialGameState(Cards, Encounters, [
+    monsterConfig,
+    playerConfig
+  ]);
   const steps = run(initialGameState, 10000);
 
   const encounters = Encounters.data
@@ -1010,12 +1029,7 @@ export default function App({
       <div style={{ flex: 1, marginRight: 10 }}>
         <select
           onChange={(e) => {
-            setInitialGameState(
-              getInitialGameState(Cards, Encounters, [
-                { type: "monster", name: e.target.value },
-                playerConfig
-              ])
-            );
+            setMonsterConfig({ type: "monster", name: e.target.value });
           }}
         >
           <option value="">Select an encounter</option>
@@ -1032,7 +1046,15 @@ export default function App({
         </select>
         <Game steps={steps} />
       </div>
-      <CardSearch Cards={Cards} />
+      <CardSearch
+        Cards={Cards}
+        onSelectCard={(card) =>
+          setPlayerCards([
+            ...playerCards,
+            { name: card.Localization.Title.Text, tier: card.StartingTier }
+          ])
+        }
+      />
     </div>
   );
 }
