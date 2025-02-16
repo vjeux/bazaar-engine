@@ -1372,7 +1372,7 @@ export interface Tooltip {
 
 export interface Title {
   Key: string;
-  Text: null | string;
+  Text: string;
 }
 
 export interface Fiery {

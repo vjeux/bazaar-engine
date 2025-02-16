@@ -20,7 +20,7 @@ import { Tier } from "./types/shared.ts";
 import ValidSkillNames from "./json/ValidSkillNames.json";
 import ValidObjectNames from "./json/ValidObjectNames.json";
 
-const CARD_HEIGHT = 150;
+const CARD_HEIGHT = 180;
 
 function Tooltip({
   boardCard,
@@ -80,18 +80,23 @@ function BoardCardElement({
         ? CARD_HEIGHT / 1
         : CARD_HEIGHT * 1.5;
 
-  const paddingTop = 12;
-  const borderSize = 4;
-
   const localeText = card.Localization.Title.Text;
-  if (!localeText || localeText === "null") {
-    console.error("Card has no localization", boardCard);
-    return null;
-  }
   const imgUrl = `https://www.howbazaar.gg/images/items/${localeText.replace(
     /[ '\-&]/g,
     ""
   )}.avif`;
+
+  const paddingTop = 0.06;
+  const paddingLeft = 0.03;
+  const paddingBottom = 0.1;
+  const paddingRight = 0.04;
+
+  const sizesOneLetter = {
+    Large: "L",
+    Medium: "M",
+    Small: "S"
+  };
+  const frameUrl = `https://www.bazaarplanner.com/images/fromBT/CardFrame_${tier}_${sizesOneLetter[card.Size]}_TUI.png`;
 
   return (
     <div className="tooltipContainer">
@@ -99,41 +104,51 @@ function BoardCardElement({
         style={{
           margin: 5,
           position: "relative",
-          height: CARD_HEIGHT + paddingTop + 2 * borderSize,
-          width: cardWidth + 2 * borderSize,
-          overflow: "hidden"
+          height: CARD_HEIGHT,
+          width: cardWidth,
+          marginTop: 5
         }}
       >
-        <img
-          src={imgUrl}
+        <div
           style={{
-            filter: boardCard.Freeze > 0 ? "grayscale(1)" : "",
-            opacity: boardCard.Freeze > 0 ? 0.5 : 1,
-            borderRadius: 5,
-            position: "relative",
-            top: paddingTop,
-            border: borderSize + "px solid",
-            borderColor:
-              tier === "Bronze"
-                ? "brown"
-                : tier === "Silver"
-                  ? "gray"
-                  : tier === "Gold"
-                    ? "yellow"
-                    : tier === "Diamond"
-                      ? "blue"
-                      : "orange"
+            position: "absolute",
+            top: CARD_HEIGHT * paddingTop,
+            left: CARD_HEIGHT * paddingLeft,
+            bottom: CARD_HEIGHT * paddingBottom,
+            right: CARD_HEIGHT * paddingRight
           }}
-          height={CARD_HEIGHT}
-          width={cardWidth}
+        >
+          <img
+            src={imgUrl}
+            style={{
+              filter: boardCard.Freeze > 0 ? "grayscale(1)" : "",
+              opacity: boardCard.Freeze > 0 ? 0.5 : 1,
+              borderRadius: 5
+            }}
+            width="100%"
+            height="100%"
+          />
+        </div>
+        <img
+          src={frameUrl}
+          style={{
+            position: "absolute"
+          }}
+          width="100%"
+          height="100%"
         />
         {"CooldownMax" in boardCard ? (
           <div
             style={{
               position: "absolute",
-              left: 0,
-              right: 0,
-              bottom: (boardCard.tick / boardCard.CooldownMax) * CARD_HEIGHT,
+              left: CARD_HEIGHT * paddingLeft,
+              right: CARD_HEIGHT * paddingRight,
+              bottom:
+                CARD_HEIGHT * paddingBottom +
+                (boardCard.tick / boardCard.CooldownMax) *
+                  (CARD_HEIGHT -
+                    CARD_HEIGHT * (paddingTop + paddingBottom) -
+                    2),
               borderTop: "2px solid white",
               color: "white",
               textAlign: "right",
@@ -142,8 +157,19 @@ function BoardCardElement({
               height: 2
             }}
           >
-            {(boardCard.tick / 1000).toFixed(1)} /{" "}
-            {(boardCard.CooldownMax / 1000).toFixed(1)}&nbsp;&nbsp;
+            <span
+              style={{
+                position: "absolute",
+                ...(boardCard.tick / boardCard.CooldownMax > 0.5
+                  ? { top: 1 }
+                  : { bottom: 3 }),
+                right: 2,
+                display: "inline-block"
+              }}
+            >
+              {(boardCard.tick / 1000).toFixed(1)} /{" "}
+              {(boardCard.CooldownMax / 1000).toFixed(1)}
+            </span>
           </div>
         ) : null}
         <div
@@ -201,7 +227,7 @@ function BoardCardElement({
             left: "50%",
             transform: "translate(-50%, -50%)",
             display: "flex",
-            top: paddingTop
+            top: (CARD_HEIGHT * paddingTop) / 2
           }}
         >
           {boardCard.DamageAmount !== undefined && (
@@ -273,11 +299,10 @@ function BoardCardElement({
           <div
             style={{
               position: "absolute",
-              bottom: 29,
-              left: 5,
+              top: 24,
+              left: 0,
               backgroundColor: "red",
               padding: "1px 3px",
-              margin: "0 2px",
               borderRadius: 5,
               fontSize: "9pt",
               color: "white"
@@ -290,11 +315,10 @@ function BoardCardElement({
           <div
             style={{
               position: "absolute",
-              bottom: 6.5,
-              left: 5,
+              bottom: 4,
+              left: 0,
               backgroundColor: "orange",
               padding: "1px 3px",
-              margin: "0 2px",
               borderRadius: 5,
               fontSize: "9pt",
               color: "white"
@@ -309,7 +333,7 @@ function BoardCardElement({
               position: "absolute",
               left: "50%",
               transform: "translateX(-50%)",
-              top: 25,
+              top: 20,
               backgroundColor: "rgba(0, 0, 0, 0.4)",
               padding: "1px 3px",
               borderRadius: 5,
@@ -326,11 +350,10 @@ function BoardCardElement({
               position: "absolute",
               left: "50%",
               transform: "translateX(-50%)",
-              bottom: 0,
+              bottom: 22,
               display: "flex",
               backgroundColor: "gray",
               padding: "2px 5px",
-              marginBottom: 5,
               borderRadius: 5
             }}
           >
@@ -339,9 +362,9 @@ function BoardCardElement({
                 <div
                   key={"ammo" + i}
                   style={{
-                    width: 10,
-                    height: 10,
-                    borderRadius: 10,
+                    width: 4,
+                    height: 4,
+                    borderRadius: 4,
                     backgroundColor:
                       (boardCard.Ammo ?? 0) > i ? "orange" : "transparent",
                     margin: "1px 1px",
@@ -377,18 +400,16 @@ function BoardSkillElement({
   const card = boardSkill.card;
   const tier = boardSkill.tier;
 
-  const borderSize = 4;
-  const IMAGE_SIZE = 30;
+  const IMAGE_SIZE = 60;
+  const borderSize = 0.1;
 
   const localeText = card.Localization.Title.Text;
-  if (!localeText || localeText === "null") {
-    console.error("Card has no localization", boardSkill);
-    return null;
-  }
   const imgUrl = `https://www.howbazaar.gg/images/skills/${localeText.replace(
     /[ '\-&]/g,
     ""
   )}.avif`;
+
+  const frameUrl = `https://www.bazaarplanner.com/images/fromBT/skill_tier_${tier.toLowerCase()}.png`;
 
   return (
     <div className="tooltipContainer">
@@ -396,29 +417,33 @@ function BoardSkillElement({
         style={{
           margin: 5,
           position: "relative",
-          height: IMAGE_SIZE + borderSize * 2,
-          width: IMAGE_SIZE + borderSize * 2,
-          overflow: "hidden"
+          height: IMAGE_SIZE,
+          width: IMAGE_SIZE
         }}
       >
-        <img
-          src={imgUrl}
+        <div
           style={{
-            borderRadius: "100%",
-            position: "relative",
-            top: 0,
-            border: borderSize + "px solid",
-            borderColor:
-              tier === "Bronze"
-                ? "brown"
-                : tier === "Silver"
-                  ? "gray"
-                  : tier === "Gold"
-                    ? "yellow"
-                    : "blue"
+            position: "absolute",
+            top: IMAGE_SIZE * borderSize,
+            left: IMAGE_SIZE * borderSize,
+            right: IMAGE_SIZE * borderSize,
+            bottom: IMAGE_SIZE * borderSize
           }}
-          height={IMAGE_SIZE}
-          width={IMAGE_SIZE}
+        >
+          <img
+            src={imgUrl}
+            style={{
+              borderRadius: "100%"
+            }}
+            height="100%"
+            width="100%"
+          />
+        </div>
+        <img
+          src={frameUrl}
+          style={{ position: "absolute", top: 0, left: 0 }}
+          width="100%"
+          height="100%"
         />
       </div>
       <Tooltip
@@ -676,7 +701,7 @@ function TooltipWithoutGameState({
       cards: card
         ? [
             {
-              name: card.Localization.Title.Text ?? "",
+              name: card.Localization.Title.Text,
               tier
             }
           ]
@@ -704,7 +729,7 @@ function CardSearch({ Cards }: { Cards: V2Cards }) {
 
   const searchLower = search.toLowerCase();
   const filteredCards = Object.values(Cards).filter((card) => {
-    const cardName = card.Localization.Title.Text || "";
+    const cardName = card.Localization.Title.Text;
 
     // Filter by valid names based on card type
     if (card.$type === "TCardSkill") {
@@ -808,7 +833,7 @@ function CardSearch({ Cards }: { Cards: V2Cards }) {
                         height: CONTAINER_SIZE,
                         borderRadius: "5px"
                       }}
-                      alt={card.Localization.Title.Text ?? ""}
+                      alt={card.Localization.Title.Text}
                     />
                   </div>
                   <span style={{ marginLeft: 10 }}>
@@ -818,7 +843,7 @@ function CardSearch({ Cards }: { Cards: V2Cards }) {
                     <TooltipWithoutGameState
                       Cards={Cards}
                       card={card}
-                      tier={Tier.Diamond}
+                      tier={hoveredCard.tier}
                     />
                   )}
                 </div>
@@ -840,7 +865,6 @@ function CardSearch({ Cards }: { Cards: V2Cards }) {
                 }}
                 className="tooltipContainer"
                 onMouseEnter={(e) => {
-                  const rect = e.currentTarget.getBoundingClientRect();
                   setHoveredCard({
                     card,
                     tier: card.StartingTier
@@ -855,10 +879,7 @@ function CardSearch({ Cards }: { Cards: V2Cards }) {
                     height: 50,
                     borderRadius: "50%"
                   }}
-                  alt={card.Localization.Title.Text ?? ""}
-                  onClick={() => {
-                    console.log(card);
-                  }}
+                  alt={card.Localization.Title.Text}
                 />
                 <span style={{ marginLeft: 10 }}>
                   {card.Localization.Title.Text}
@@ -867,7 +888,7 @@ function CardSearch({ Cards }: { Cards: V2Cards }) {
                   <TooltipWithoutGameState
                     Cards={Cards}
                     card={card}
-                    tier={Tier.Diamond}
+                    tier={hoveredCard.tier}
                   />
                 )}
               </div>
