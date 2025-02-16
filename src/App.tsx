@@ -11,11 +11,14 @@ import {
   BoardCardOrSkill
 } from "./Engine.ts";
 
-import { V2Cards } from "./types/cardTypes";
+import { V2Card, V2Cards } from "./types/cardTypes";
 import { EncounterDays } from "./types/encounterTypes";
 import React from "react";
 import { getInitialGameState, PlayerConfig } from "./GameState.ts";
 import { Tier } from "./types/shared.ts";
+
+import ValidSkillNames from "./json/ValidSkillNames.json";
+import ValidObjectNames from "./json/ValidObjectNames.json";
 
 const CARD_HEIGHT = 150;
 
@@ -657,6 +660,225 @@ function Game({ steps }: { steps: GameState[] }) {
   );
 }
 
+function TooltipWithoutGameState({
+  Cards,
+  card,
+  tier
+}: {
+  Cards: V2Cards;
+  card: V2Card;
+  tier: Tier;
+}) {
+  const gameState = getInitialGameState(Cards, {} as EncounterDays, [
+    {
+      type: "player",
+      health: 1000,
+      cards: card
+        ? [
+            {
+              name: card.Localization.Title.Text ?? "",
+              tier
+            }
+          ]
+        : []
+    },
+    { type: "player", health: 1000 }
+  ]);
+
+  return (
+    <Tooltip
+      boardCard={gameState.players[0].board[0]}
+      gameState={gameState}
+      playerID={0}
+      boardCardID={0}
+    />
+  );
+}
+
+function CardSearch({ Cards }: { Cards: V2Cards }) {
+  const [search, setSearch] = useState("");
+  const [hoveredCard, setHoveredCard] = useState<{
+    card: V2Card;
+    tier: Tier;
+  } | null>(null);
+
+  const searchLower = search.toLowerCase();
+  const filteredCards = Object.values(Cards).filter((card) => {
+    const cardName = card.Localization.Title.Text || "";
+
+    // Filter by valid names based on card type
+    if (card.$type === "TCardSkill") {
+      return (
+        ValidSkillNames.includes(cardName) &&
+        cardName.toLowerCase().includes(searchLower)
+      );
+    } else if (card.$type === "TCardItem") {
+      return (
+        ValidObjectNames.includes(cardName) &&
+        cardName.toLowerCase().includes(searchLower)
+      );
+    }
+    return false;
+  });
+
+  // Separate cards into items and skills and sort them by name
+  const items = filteredCards
+    .filter((card) => card.$type === "TCardItem")
+    .sort((a, b) =>
+      (a.Localization.Title.Text ?? "").localeCompare(
+        b.Localization.Title.Text ?? ""
+      )
+    );
+  const skills = filteredCards
+    .filter((card) => card.$type === "TCardSkill")
+    .sort((a, b) =>
+      (a.Localization.Title.Text ?? "").localeCompare(
+        b.Localization.Title.Text ?? ""
+      )
+    );
+
+  const CONTAINER_SIZE = 50;
+
+  return (
+    <div
+      style={{
+        width: 300,
+        padding: 10,
+        borderLeft: "1px solid #444",
+        height: "100vh",
+        overflowY: "auto",
+        position: "relative"
+      }}
+    >
+      <input
+        type="text"
+        placeholder="Search cards..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        style={{
+          width: "100%",
+          padding: "8px",
+          marginBottom: "10px"
+        }}
+      />
+      <div>
+        {items.length > 0 && (
+          <>
+            <h3 style={{ marginBottom: 10 }}>Items</h3>
+            {items.map((card) => {
+              const imgWidth =
+                card.Size === "Small"
+                  ? CONTAINER_SIZE / 2
+                  : card.Size === "Large"
+                    ? CONTAINER_SIZE * 1.5
+                    : CONTAINER_SIZE;
+
+              return (
+                <div
+                  key={card.Id}
+                  style={{
+                    marginBottom: 10,
+                    display: "flex",
+                    alignItems: "center",
+                    position: "relative"
+                  }}
+                  className="tooltipContainer"
+                  onMouseEnter={(e) => {
+                    const rect = e.currentTarget.getBoundingClientRect();
+                    setHoveredCard({
+                      card,
+                      tier: card.StartingTier
+                    });
+                  }}
+                  onMouseLeave={() => setHoveredCard(null)}
+                >
+                  <div
+                    style={{
+                      width: CONTAINER_SIZE * 1.5,
+                      height: CONTAINER_SIZE,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center"
+                    }}
+                  >
+                    <img
+                      src={`https://www.howbazaar.gg/images/items/${card.Localization.Title.Text?.replace(/[ '\-&]/g, "") ?? ""}.avif`}
+                      style={{
+                        width: imgWidth,
+                        height: CONTAINER_SIZE,
+                        borderRadius: "5px"
+                      }}
+                      alt={card.Localization.Title.Text ?? ""}
+                    />
+                  </div>
+                  <span style={{ marginLeft: 10 }}>
+                    {card.Localization.Title.Text}
+                  </span>
+                  {hoveredCard && hoveredCard.card === card && (
+                    <TooltipWithoutGameState
+                      Cards={Cards}
+                      card={card}
+                      tier={Tier.Diamond}
+                    />
+                  )}
+                </div>
+              );
+            })}
+          </>
+        )}
+
+        {skills.length > 0 && (
+          <>
+            <h3 style={{ marginTop: 20, marginBottom: 10 }}>Skills</h3>
+            {skills.map((card) => (
+              <div
+                key={card.Id}
+                style={{
+                  marginBottom: 10,
+                  display: "flex",
+                  alignItems: "center"
+                }}
+                className="tooltipContainer"
+                onMouseEnter={(e) => {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  setHoveredCard({
+                    card,
+                    tier: card.StartingTier
+                  });
+                }}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
+                <img
+                  src={`https://www.howbazaar.gg/images/skills/${card.Localization.Title.Text?.replace(/[ '\-&]/g, "") ?? ""}.avif`}
+                  style={{
+                    width: 50,
+                    height: 50,
+                    borderRadius: "50%"
+                  }}
+                  alt={card.Localization.Title.Text ?? ""}
+                  onClick={() => {
+                    console.log(card);
+                  }}
+                />
+                <span style={{ marginLeft: 10 }}>
+                  {card.Localization.Title.Text}
+                </span>
+                {hoveredCard && hoveredCard.card === card && (
+                  <TooltipWithoutGameState
+                    Cards={Cards}
+                    card={card}
+                    tier={Tier.Diamond}
+                  />
+                )}
+              </div>
+            ))}
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function App({
   Cards,
   Encounters
@@ -671,10 +893,10 @@ export default function App({
     cards: [{ name: "Fang", tier: Tier.Bronze }],
     skills: []
   } as PlayerConfig;
-  
+
   const [initialGameState, setInitialGameState] = useState(
     getInitialGameState(Cards, Encounters, [
-      {type: "monster", name: "Techno Virus"},
+      { type: "monster", name: "Techno Virus" },
       playerConfig
     ])
   );
@@ -695,27 +917,33 @@ export default function App({
     .flat();
 
   return (
-    <div>
-      <select
-        onChange={(e) => {
-          setInitialGameState(
-            getInitialGameState(Cards, Encounters, [
-              {type: "monster", name: e.target.value},
-              playerConfig
-            ])
-          );
-        }}
-      >
-        <option value="">Select an encounter</option>
-        {encounters.map((encounter) => {
-          return (
-            <option value={encounter.card.cardName} key={encounter.card.cardId}>
-              Day {encounter.day} - {encounter.card.cardName}
-            </option>
-          );
-        })}
-      </select>
-      <Game steps={steps} />
+    <div style={{ display: "flex" }}>
+      <div style={{ flex: 1 }}>
+        <select
+          onChange={(e) => {
+            setInitialGameState(
+              getInitialGameState(Cards, Encounters, [
+                { type: "monster", name: e.target.value },
+                playerConfig
+              ])
+            );
+          }}
+        >
+          <option value="">Select an encounter</option>
+          {encounters.map((encounter) => {
+            return (
+              <option
+                value={encounter.card.cardName}
+                key={encounter.card.cardId}
+              >
+                Day {encounter.day} - {encounter.card.cardName}
+              </option>
+            );
+          })}
+        </select>
+        <Game steps={steps} />
+      </div>
+      <CardSearch Cards={Cards} />
     </div>
   );
 }
