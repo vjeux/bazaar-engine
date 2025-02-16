@@ -8,6 +8,7 @@ export default defineConfig({
     port: 3000
   },
   build: {
-    target: "esnext"
+    target: "esnext",
+    chunkSizeWarningLimit: 1000000000
   }
 });
