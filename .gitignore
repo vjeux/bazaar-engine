@@ -1,6 +1,4 @@
 node_modules
-
-# Yarn gitignore files according to https://yarnpkg.com/getting-started/qa
 .pnp.*
 .yarn/*
 !.yarn/patches
@@ -8,4 +6,4 @@ node_modules
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
-dist/*
+build
