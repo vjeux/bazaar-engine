@@ -479,7 +479,7 @@ function runAction(
     ).forEach((playerID) => {
       const shield = nextGameState.players[playerID].Shield;
       const targetBoardCard =
-        gameState.players[triggerPlayerID].board[targetBoardCardID];
+        gameState.players[targetPlayerID].board[targetBoardCardID];
       let amount = targetBoardCard.DamageAmount;
       const critChance = targetBoardCard.CritChance;
       if (critChance > 0) {
@@ -511,7 +511,7 @@ function runAction(
       targetPlayerID
     ).forEach((playerID) => {
       const targetBoardCard =
-        gameState.players[triggerPlayerID].board[targetBoardCardID];
+        gameState.players[targetPlayerID].board[targetBoardCardID];
       let amount = targetBoardCard.HealAmount;
       const critChance = targetBoardCard.CritChance;
       if (critChance > 0) {
@@ -565,7 +565,7 @@ function runAction(
       targetPlayerID
     ).forEach((playerID) => {
       const targetBoardCard =
-        gameState.players[triggerPlayerID].board[targetBoardCardID];
+        gameState.players[targetPlayerID].board[targetBoardCardID];
       let amount = targetBoardCard.PoisonApplyAmount;
       const critChance = targetBoardCard.CritChance;
       if (critChance > 0) {
@@ -601,7 +601,7 @@ function runAction(
       targetPlayerID
     ).forEach((playerID) => {
       const targetBoardCard =
-        gameState.players[triggerPlayerID].board[targetBoardCardID];
+        gameState.players[targetPlayerID].board[targetBoardCardID];
       let amount = targetBoardCard.PoisonRemoveAmount;
       updatePlayerAttribute(
         gameState,
@@ -620,7 +620,7 @@ function runAction(
       targetPlayerID
     ).forEach((playerID) => {
       const targetBoardCard =
-        gameState.players[triggerPlayerID].board[targetBoardCardID];
+        gameState.players[targetPlayerID].board[targetBoardCardID];
       let amount = targetBoardCard.BurnApplyAmount;
       const critChance = targetBoardCard.CritChance;
       if (critChance > 0) {
@@ -655,7 +655,7 @@ function runAction(
       targetPlayerID
     ).forEach((playerID) => {
       const targetBoardCard =
-        gameState.players[triggerPlayerID].board[targetBoardCardID];
+        gameState.players[targetPlayerID].board[targetBoardCardID];
       let amount = targetBoardCard.BurnRemoveAmount;
 
       updatePlayerAttribute(
@@ -675,7 +675,7 @@ function runAction(
       targetPlayerID
     ).forEach((playerID) => {
       const targetBoardCard =
-        gameState.players[triggerPlayerID].board[targetBoardCardID];
+        gameState.players[targetPlayerID].board[targetBoardCardID];
       let amount = targetBoardCard.ShieldApplyAmount;
       const critChance = targetBoardCard.CritChance;
       if (critChance > 0) {
@@ -711,7 +711,7 @@ function runAction(
       targetPlayerID
     ).forEach((playerID) => {
       const targetBoardCard =
-        gameState.players[triggerPlayerID].board[targetBoardCardID];
+        gameState.players[targetPlayerID].board[targetBoardCardID];
       let amount = targetBoardCard.ShieldRemoveAmount;
 
       updatePlayerAttribute(
