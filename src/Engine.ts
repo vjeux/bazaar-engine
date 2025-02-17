@@ -3,7 +3,9 @@ import {
   Ability,
   AbilityPrerequisite,
   FluffyValue,
-  AbilityAction
+  AbilityAction,
+  Enchantments,
+  TriggerType
 } from "./types/cardTypes";
 
 import { Tier } from "./types/shared";
@@ -44,6 +46,8 @@ export interface BoardCard {
   BurnApplyAmount?: number;
   PoisonApplyAmount?: number;
   ShieldApplyAmount?: number;
+  Enchantment?: keyof Enchantments | null;
+  isDisabled?: boolean;
   [key: string]: any;
 }
 
@@ -68,7 +72,9 @@ function forEachCard(
     const player = gameState.players[i];
     for (let j = 0; j < player.board.length; ++j) {
       const boardCard = player.board[j];
-      callback(player, i, boardCard, j);
+      if (!boardCard.isDisabled) {
+        callback(player, i, boardCard, j);
+      }
     }
   }
 }
@@ -320,6 +326,15 @@ function testConditions(
     } else {
       return is;
     }
+  } else if (conditions.$type === "TCardConditionalHasEnchantment") {
+    const is =
+      gameState.players[targetPlayerID].board[targetBoardCardID].Enchantment ===
+      conditions.Enchantment;
+    if (conditions.IsNot) {
+      return !is;
+    } else {
+      return is;
+    }
   } else if (
     conditions.$type === "TCardConditionalHiddenTag" ||
     conditions.$type === "TCardConditionalTag"
@@ -369,6 +384,53 @@ function testConditions(
   }
   // Return false for any unhandled conditions
   return false;
+}
+
+function triggerActions(
+  gameState: GameState,
+  nextGameState: GameState,
+  triggerType: TriggerType,
+  triggerPlayerID: number,
+  triggerBoardCardID: number,
+  targetPlayerID: number,
+  targetBoardCardID: number
+) {
+  forEachCard(
+    nextGameState,
+    (abilityPlayer, abilityPlayerID, abilityBoardCard, abilityBoardCardID) => {
+      forEachAbility(abilityBoardCard, (ability) => {
+        if (ability.Trigger.$type !== triggerType) {
+          return;
+        }
+        const subjects = getTargetCards(
+          gameState,
+          nextGameState,
+          ability.Trigger.Subject,
+          targetPlayerID,
+          targetBoardCardID,
+          abilityPlayerID,
+          abilityBoardCardID
+        );
+        subjects.forEach(([subjectPlayerID, subjectBoardCardID]) => {
+          if (
+            subjectPlayerID === targetPlayerID &&
+            subjectBoardCardID === targetBoardCardID
+          ) {
+            runAction(
+              gameState,
+              nextGameState,
+              ability.Action,
+              ability.Prerequisites,
+              triggerPlayerID,
+              triggerBoardCardID,
+              abilityPlayerID,
+              abilityBoardCardID
+            );
+          }
+        });
+      });
+    }
+  );
 }
 
 // Returns true if the action critted
@@ -529,13 +591,24 @@ function runAction(
         }
       }
 
-      updatePlayerAttribute(
+      nextGameState.players[playerID].Burn += amount;
+      triggerActions(
         gameState,
         nextGameState,
+        TriggerType.TTriggerOnCardPerformedBurn,
         playerID,
-        "Burn",
-        nextGameState.players[playerID].Burn + amount
+        -1,
+        targetPlayerID,
+        targetBoardCardID
       );
+
+      // updatePlayerAttribute(
+      //   gameState,
+      //   nextGameState,
+      //   playerID,
+      //   "Burn",
+      //   nextGameState.players[playerID].Burn + amount
+      // );
     });
   } else if (action.$type === "TActionPlayerBurnRemove") {
     getTargetPlayers(
@@ -614,6 +687,34 @@ function runAction(
     ).forEach((playerID) => {
       nextGameState.players[playerID].Health = 0;
     });
+  } else if (action.$type === "TActionCardDisable") {
+    const targetCards = getTargetCards(
+      gameState,
+      nextGameState,
+      action.Target,
+      triggerPlayerID,
+      triggerBoardCardID,
+      targetPlayerID,
+      targetBoardCardID
+    );
+    targetCards
+      .slice(0, 1)
+      .forEach(([actionTargetPlayerID, actionTargetBoardCardID]) => {
+        const nextBoardCard =
+          nextGameState.players[actionTargetPlayerID].board[
+            actionTargetBoardCardID
+          ];
+        nextBoardCard.isDisabled = true;
+        triggerActions(
+          gameState,
+          nextGameState,
+          TriggerType.TTriggerOnCardPerformedDestruction,
+          actionTargetPlayerID,
+          actionTargetBoardCardID,
+          targetPlayerID,
+          targetBoardCardID
+        );
+      });
   } else if (action.$type === "TActionCardReload") {
     const targetCards = getTargetCards(
       gameState,
@@ -1074,7 +1175,11 @@ function getTargetCards(
     results.forEach(([testPlayerID, testBoardCardID]) => {
       const boardCard = gameState.players[testPlayerID].board[testBoardCardID];
       const value = boardCard[target.Conditions.AttributeType];
-      if (value !== undefined && value > highestValue) {
+      if (
+        !boardCard.isDisabled &&
+        value !== undefined &&
+        value > highestValue
+      ) {
         highestValue = value;
         highestPlayerID = testPlayerID;
         highestBoardCardID = testBoardCardID;
@@ -1086,15 +1191,19 @@ function getTargetCards(
       return [];
     }
   }
+
   return results.filter(([testPlayerID, testBoardCardID]) => {
-    return testConditions(
-      gameState,
-      nextGameState,
-      target.Conditions,
-      triggerPlayerID,
-      triggerBoardCardID,
-      testPlayerID,
-      testBoardCardID
+    return (
+      !gameState.players[testPlayerID].board[testBoardCardID].isDisabled &&
+      testConditions(
+        gameState,
+        nextGameState,
+        target.Conditions,
+        triggerPlayerID,
+        triggerBoardCardID,
+        testPlayerID,
+        testBoardCardID
+      )
     );
   });
 }
@@ -1102,7 +1211,7 @@ function getTargetCards(
 function getTargetPlayers(
   gameState: GameState,
   nextGameState: GameState,
-  target: any, // Unsure which is correct here
+  target: any,
   triggerPlayerID: number,
   targetPlayerID: number
 ): number[] {
@@ -1227,6 +1336,9 @@ function runGameTick(initialGameState: GameState): [GameState, GameState] {
   forEachCard(gameState, (player, playerID, boardCard, boardCardID) => {
     const nextBoardCard = nextGameState.players[playerID].board[boardCardID];
     if (nextBoardCard.card.$type === "TCardSkill") {
+      return;
+    }
+    if (nextBoardCard.isDisabled) {
       return;
     }
     if (!hasCooldown(nextBoardCard)) {

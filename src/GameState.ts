@@ -115,7 +115,6 @@ function _createBoardCardFromCard(
     attributes.Localization.Title.Text = `${enchantment} ${attributes.Localization.Title.Text}`;
   }
 
-  // Create the result object with default simulation fields.
   const result = {
     card: card,
     ...attributes,
@@ -125,7 +124,9 @@ function _createBoardCardFromCard(
     Haste: 0,
     CritChance: 0,
     DamageCrit: 0,
-    tier: tier
+    tier: tier,
+    Enchantment: enchantment,
+    isDisabled: false
   };
 
   if ("AmmoMax" in attributes) {

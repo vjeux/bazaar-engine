@@ -111,7 +111,8 @@ function BoardCardElement({
           position: "relative",
           height: CARD_HEIGHT,
           width: cardWidth,
-          marginTop: 5
+          marginTop: 5,
+          opacity: boardCard.isDisabled ? 0.1 : 1
         }}
       >
         <div
