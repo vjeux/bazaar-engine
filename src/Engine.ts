@@ -208,7 +208,7 @@ function updatePlayerAttribute<K extends keyof Player>(
         forEachAbility(targetBoardCard, (ability) => {
           if (
             ability.Trigger.$type === "TTriggerOnPlayerAttributeChanged" &&
-            ability.Trigger.AttributeChanged === attribute &&
+            ability.Trigger.AttributeType === attribute &&
             ((ability.Trigger.ChangeType === "Gain" && value > existingValue) ||
               (ability.Trigger.ChangeType === "Loss" && value < existingValue))
           ) {
@@ -269,8 +269,21 @@ function testPrerequisite(
     } else if (prerequisite.Comparison === "LessThanOrEqual") {
       return value <= comparisonValue;
     }
+  } else if (prerequisite.$type === "TPrerequisitePlayer") {
+    const subjects = getTargetPlayers(
+      gameState,
+      nextGameState,
+      prerequisite.Subject,
+      triggerPlayerID,
+      targetPlayerID
+    );
+    return subjects.length > 0;
+  } else if (prerequisite.$type === "TPrerequisiteRun") {
+    return true;
+  } else {
+    throw new Error("Unhandled prerequisite type: " + prerequisite.$type);
   }
-  // Return true if no prerequisites count
+
   return true;
 }
 
@@ -1294,22 +1307,55 @@ function getTargetPlayers(
   triggerPlayerID: number,
   targetPlayerID: number
 ): number[] {
+  let results: number[] = [];
   if (target.$type === "TTargetPlayerRelative") {
     if (target.TargetMode === "Opponent") {
-      return [(targetPlayerID + 1) % 2];
+      results = [(targetPlayerID + 1) % 2];
     } else if (target.TargetMode === "Self") {
-      return [targetPlayerID];
+      results = [targetPlayerID];
     }
   } else if (target.$type === "TTargetCardSection") {
     if (target.TargetSection === "SelfBoard") {
-      return [targetPlayerID];
+      results = [targetPlayerID];
     } else {
-      return [(targetPlayerID + 1) % 2];
+      results = [(targetPlayerID + 1) % 2];
     }
   } else if (target.$type === "TTargetPlayer" && target.TargetMode === "Both") {
-    return [targetPlayerID, (targetPlayerID + 1) % 2];
+    results = [targetPlayerID, (targetPlayerID + 1) % 2];
+  } else {
+    throw new Error("Unhandled target type: " + target.$type);
   }
-  throw new Error("Unhandled target type: " + target.$type);
+
+  if (target.Conditions) {
+    results = results.filter((playerID) => {
+      if (target.Conditions.$type === "TPlayerConditionalAttribute") {
+        const value = gameState.players[playerID][target.Conditions.Attribute];
+        const comparisonValue = getActionValue(
+          gameState,
+          nextGameState,
+          target.Conditions.ComparisonValue,
+          triggerPlayerID,
+          -1,
+          playerID,
+          -1
+        );
+        if (target.Conditions.ComparisonOperator === "Equal") {
+          return value === comparisonValue;
+        } else if (target.Conditions.ComparisonOperator === "GreaterThan") {
+          return value > comparisonValue;
+        } else if (
+          target.Conditions.ComparisonOperator === "GreaterThanOrEqual"
+        ) {
+          return value >= comparisonValue;
+        } else if (target.Conditions.ComparisonOperator === "LessThan") {
+          return value < comparisonValue;
+        } else if (target.Conditions.ComparisonOperator === "LessThanOrEqual") {
+          return value <= comparisonValue;
+        }
+      }
+    });
+  }
+  return results;
 }
 
 export const TICK_RATE = 100;
@@ -1580,15 +1626,27 @@ function runGameTick(initialGameState: GameState): [GameState, GameState] {
   // Sandstorm
   const sandstormDamage = sandstormDamagePerTick[nextGameState.tick];
   if (sandstormDamage > 0) {
-    nextGameState.players.forEach((player) => {
+    nextGameState.players.forEach((player, playerID) => {
       const shield = player.Shield;
       const nextShield = Math.max(0, shield - sandstormDamage);
       if (nextShield > 0) {
-        player.Shield = nextShield;
+        updatePlayerAttribute(
+          gameState,
+          nextGameState,
+          playerID,
+          "Shield",
+          nextShield
+        );
       } else {
         const nextHealthDamage = sandstormDamage - shield;
-        player.Shield = 0;
-        player.Health -= nextHealthDamage;
+        updatePlayerAttribute(gameState, nextGameState, playerID, "Shield", 0);
+        updatePlayerAttribute(
+          gameState,
+          nextGameState,
+          playerID,
+          "Health",
+          player.Health - nextHealthDamage
+        );
       }
     });
   }

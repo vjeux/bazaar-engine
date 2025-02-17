@@ -1011,7 +1011,7 @@ export default function App({
   } as PlayerConfig;
 
   const initialGameState = getInitialGameState(Cards, Encounters, [
-    monsterConfig ?? { type: "player", health: 5 },
+    monsterConfig ?? { type: "player", health: 3500 },
     playerConfig
   ]);
   const steps = run(initialGameState, 10000);
