@@ -300,15 +300,17 @@ export interface PlayerCardConfig {
   enchantment?: keyof Enchantments | null;
 }
 
+export interface PlayerSkillConfig {
+  name: string;
+  tier: Tier;
+}
+
 export interface PlayerConfig {
   type: "player";
   health?: number;
   healthRegen?: number;
   cards?: PlayerCardConfig[];
-  skills?: Array<{
-    name: string;
-    tier: Tier;
-  }>;
+  skills?: PlayerSkillConfig[];
 }
 
 export function getInitialGameState(

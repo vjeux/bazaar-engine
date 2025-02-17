@@ -18,7 +18,8 @@ import {
   getInitialGameState,
   MonsterConfig,
   PlayerCardConfig,
-  PlayerConfig
+  PlayerConfig,
+  PlayerSkillConfig
 } from "./GameState.ts";
 import { Tier } from "./types/shared.ts";
 
@@ -104,7 +105,13 @@ function BoardCardElement({
   const frameUrl = `https://www.bazaarplanner.com/images/fromBT/CardFrame_${tier}_${sizesOneLetter[card.Size]}_TUI.png`;
 
   return (
-    <div className="tooltipContainer">
+    <div className="tooltipContainer" style={{ position: "relative" }}>
+      <div
+        style={{ position: "absolute", top: 2, right: 2, zIndex: 1 }}
+        className="tooltip"
+      >
+        <button>⚙️</button>
+      </div>
       <div
         style={{
           margin: 5,
@@ -738,10 +745,12 @@ function TooltipWithoutGameState({
 
 function CardSearch({
   Cards,
-  onSelectCard
+  onSelectCard,
+  onSelectSkill
 }: {
   Cards: V2Cards;
   onSelectCard: (card: V2Card) => void;
+  onSelectSkill: (card: V2Card) => void;
 }) {
   const [search, setSearch] = useState("");
   const [hoveredCard, setHoveredCard] = useState<{
@@ -919,9 +928,11 @@ function CardSearch({
                     marginBottom: 10,
                     display: "flex",
                     alignItems: "center",
-                    position: "relative"
+                    position: "relative",
+                    cursor: "pointer"
                   }}
                   className="tooltipContainer"
+                  onClick={() => onSelectSkill(card)}
                   onMouseEnter={(e) => {
                     setHoveredCard({
                       card,
@@ -986,24 +997,21 @@ export default function App({
   Cards: V2Cards;
   Encounters: EncounterDays;
 }) {
-  const [monsterConfig, setMonsterConfig] = useState<MonsterConfig>({
-    name: "Techno Virus",
-    type: "monster"
-  });
-  const [playerCards, setPlayerCards] = useState<PlayerCardConfig[]>([
-    { name: "Fang", tier: Tier.Bronze }
-  ]);
-
+  const [monsterConfig, setMonsterConfig] = useState<MonsterConfig | null>(
+    null
+  );
+  const [playerCards, setPlayerCards] = useState<PlayerCardConfig[]>([]);
+  const [playerSkills, setPlayerSkills] = useState<PlayerSkillConfig[]>([]);
   const playerConfig = {
     type: "player",
     health: 3500,
     healthRegen: 0,
     cards: playerCards,
-    skills: []
+    skills: playerSkills
   } as PlayerConfig;
 
   const initialGameState = getInitialGameState(Cards, Encounters, [
-    monsterConfig,
+    monsterConfig ?? { type: "player", health: 5 },
     playerConfig
   ]);
   const steps = run(initialGameState, 10000);
@@ -1030,7 +1038,9 @@ export default function App({
       <div style={{ flex: 1, marginRight: 10 }}>
         <select
           onChange={(e) => {
-            setMonsterConfig({ type: "monster", name: e.target.value });
+            setMonsterConfig(
+              e.target.value ? { type: "monster", name: e.target.value } : null
+            );
           }}
         >
           <option value="">Select an encounter</option>
@@ -1052,6 +1062,12 @@ export default function App({
         onSelectCard={(card) =>
           setPlayerCards([
             ...playerCards,
+            { name: card.Localization.Title.Text, tier: card.StartingTier }
+          ])
+        }
+        onSelectSkill={(card) =>
+          setPlayerSkills([
+            ...playerSkills,
             { name: card.Localization.Title.Text, tier: card.StartingTier }
           ])
         }

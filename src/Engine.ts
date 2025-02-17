@@ -151,16 +151,10 @@ function updateCardAttribute(
       (targetPlayer, targetPlayerID, targetBoardCard, targetBoardCardID) => {
         forEachAbility(targetBoardCard, (ability) => {
           if (
-            (ability.Trigger.$type === "TTriggerOnCardPerformedHaste" &&
-              attribute === "Haste") ||
-            (ability.Trigger.$type === "TTriggerOnCardPerformedSlow" &&
-              attribute === "Slow") ||
-            (ability.Trigger.$type === "TTriggerOnCardPerformedFreeze" &&
-              attribute === "Freeze") ||
-            (ability.Trigger.$type === "TTriggerOnCardAttributeChanged" &&
-              ability.Trigger.AttributeChanged === attribute &&
-              ability.Trigger.ChangeType === "Gain" &&
-              value > existingValue)
+            ability.Trigger.$type === "TTriggerOnCardAttributeChanged" &&
+            ability.Trigger.AttributeChanged === attribute &&
+            ((ability.Trigger.ChangeType === "Gain" && value > existingValue) ||
+              (ability.Trigger.ChangeType === "Loss" && value < existingValue))
           ) {
             const subjects = getTargetCards(
               gameState,
@@ -201,47 +195,46 @@ function updatePlayerAttribute<K extends keyof Player>(
   nextGameState: GameState,
   playerID: number,
   attribute: K,
-  value: Player[K]
+  value: Player[K],
+  triggerActions: boolean = true
 ): void {
   const existingValue = nextGameState.players[playerID][attribute];
   nextGameState.players[playerID][attribute] = value;
 
-  forEachCard(
-    nextGameState,
-    (targetPlayer, targetPlayerID, targetBoardCard, targetBoardCardID) => {
-      forEachAbility(targetBoardCard, (ability) => {
-        if (
-          (ability.Trigger.$type === "TTriggerOnCardPerformedPoison" &&
-            attribute === "Poison") ||
-          (ability.Trigger.$type === "TTriggerOnCardPerformedBurn" &&
-            attribute === "Burn") ||
-          (ability.Trigger.$type === "TTriggerOnPlayerAttributeChanged" &&
+  if (triggerActions) {
+    forEachCard(
+      nextGameState,
+      (targetPlayer, targetPlayerID, targetBoardCard, targetBoardCardID) => {
+        forEachAbility(targetBoardCard, (ability) => {
+          if (
+            ability.Trigger.$type === "TTriggerOnPlayerAttributeChanged" &&
             ability.Trigger.AttributeChanged === attribute &&
-            ability.Trigger.ChangeType === "Gain" &&
-            value > existingValue)
-        ) {
-          getTargetPlayers(
-            gameState,
-            nextGameState,
-            ability.Trigger.Subject,
-            playerID,
-            targetPlayerID
-          ).forEach((subjectPlayerID) => {
-            runAction(
+            ((ability.Trigger.ChangeType === "Gain" && value > existingValue) ||
+              (ability.Trigger.ChangeType === "Loss" && value < existingValue))
+          ) {
+            getTargetPlayers(
               gameState,
               nextGameState,
-              ability.Action,
-              ability.Prerequisites,
-              subjectPlayerID,
-              -1,
-              targetPlayerID,
-              targetBoardCardID
-            );
-          });
-        }
-      });
-    }
-  );
+              ability.Trigger.Subject,
+              playerID,
+              targetPlayerID
+            ).forEach((subjectPlayerID) => {
+              runAction(
+                gameState,
+                nextGameState,
+                ability.Action,
+                ability.Prerequisites,
+                subjectPlayerID,
+                -1,
+                targetPlayerID,
+                targetBoardCardID
+              );
+            });
+          }
+        });
+      }
+    );
+  }
 }
 
 function testPrerequisite(
@@ -514,15 +507,40 @@ function runAction(
           hasCritted = true;
         }
       }
-      nextGameState.players[playerID].Health = Math.min(
-        nextGameState.players[playerID].HealthMax,
-        nextGameState.players[playerID].Health + amount
-      );
+
+      if (
+        nextGameState.players[playerID].HealthMax !==
+        nextGameState.players[playerID].Health
+      ) {
+        updatePlayerAttribute(
+          gameState,
+          nextGameState,
+          playerID,
+          "Health",
+          Math.min(
+            nextGameState.players[playerID].HealthMax,
+            nextGameState.players[playerID].Health + amount
+          )
+        );
+      }
+
       if (nextGameState.players[playerID].Poison > 0) {
-        nextGameState.players[playerID].Poison--;
+        updatePlayerAttribute(
+          gameState,
+          nextGameState,
+          playerID,
+          "Poison",
+          nextGameState.players[playerID].Poison - 1
+        );
       }
       if (nextGameState.players[playerID].Burn > 0) {
-        nextGameState.players[playerID].Burn--;
+        updatePlayerAttribute(
+          gameState,
+          nextGameState,
+          playerID,
+          "Burn",
+          nextGameState.players[playerID].Burn - 1
+        );
       }
     });
   } else if (action.$type === "TActionPlayerPoisonApply") {
@@ -544,6 +562,15 @@ function runAction(
         }
       }
 
+      triggerActions(
+        gameState,
+        nextGameState,
+        TriggerType.TTriggerOnCardPerformedPoison,
+        playerID,
+        -1,
+        targetPlayerID,
+        targetBoardCardID
+      );
       updatePlayerAttribute(
         gameState,
         nextGameState,
@@ -563,7 +590,6 @@ function runAction(
       const targetBoardCard =
         gameState.players[triggerPlayerID].board[targetBoardCardID];
       let amount = targetBoardCard.PoisonRemoveAmount;
-
       updatePlayerAttribute(
         gameState,
         nextGameState,
@@ -590,8 +616,6 @@ function runAction(
           hasCritted = true;
         }
       }
-
-      nextGameState.players[playerID].Burn += amount;
       triggerActions(
         gameState,
         nextGameState,
@@ -601,14 +625,13 @@ function runAction(
         targetPlayerID,
         targetBoardCardID
       );
-
-      // updatePlayerAttribute(
-      //   gameState,
-      //   nextGameState,
-      //   playerID,
-      //   "Burn",
-      //   nextGameState.players[playerID].Burn + amount
-      // );
+      updatePlayerAttribute(
+        gameState,
+        nextGameState,
+        playerID,
+        "Burn",
+        nextGameState.players[playerID].Burn + amount
+      );
     });
   } else if (action.$type === "TActionPlayerBurnRemove") {
     getTargetPlayers(
@@ -649,6 +672,15 @@ function runAction(
         }
       }
 
+      triggerActions(
+        gameState,
+        nextGameState,
+        TriggerType.TTriggerOnCardPerformedShield,
+        playerID,
+        -1,
+        targetPlayerID,
+        targetBoardCardID
+      );
       updatePlayerAttribute(
         gameState,
         nextGameState,
@@ -685,7 +717,7 @@ function runAction(
       triggerPlayerID,
       targetPlayerID
     ).forEach((playerID) => {
-      nextGameState.players[playerID].Health = 0;
+      updatePlayerAttribute(gameState, nextGameState, playerID, "Health", 0);
     });
   } else if (action.$type === "TActionCardDisable") {
     const targetCards = getTargetCards(
@@ -767,15 +799,35 @@ function runAction(
       targetPlayerID,
       targetBoardCardID
     );
-    const [amountKey, targetsKey, tickKey] =
+    const [amountKey, targetsKey, tickKey, triggerType] =
       action.$type === "TActionCardFreeze"
-        ? ["FreezeAmount", "FreezeTargets", "Freeze"]
+        ? [
+            "FreezeAmount",
+            "FreezeTargets",
+            "Freeze",
+            TriggerType.TTriggerOnCardPerformedFreeze
+          ]
         : action.$type === "TActionCardSlow"
-          ? ["SlowAmount", "SlowTargets", "Slow"]
+          ? [
+              "SlowAmount",
+              "SlowTargets",
+              "Slow",
+              TriggerType.TTriggerOnCardPerformedSlow
+            ]
           : action.$type === "TActionCardHaste"
-            ? ["HasteAmount", "HasteTargets", "Haste"]
+            ? [
+                "HasteAmount",
+                "HasteTargets",
+                "Haste",
+                TriggerType.TTriggerOnCardPerformedHaste
+              ]
             : [];
-    if (amountKey == null || targetsKey == null || tickKey == null) {
+    if (
+      amountKey == null ||
+      targetsKey == null ||
+      tickKey == null ||
+      triggerType == null
+    ) {
       throw new Error(
         "Card:" +
           gameState.players[targetPlayerID].board[targetBoardCardID].card
@@ -809,6 +861,15 @@ function runAction(
       })
       .slice(0, targetCount)
       .forEach(([actionTargetPlayerID, actionTargetBoardCardID]) => {
+        triggerActions(
+          gameState,
+          nextGameState,
+          triggerType,
+          actionTargetPlayerID,
+          actionTargetBoardCardID,
+          targetPlayerID,
+          targetBoardCardID
+        );
         updateCardAttribute(
           gameState,
           nextGameState,
@@ -948,9 +1009,22 @@ function runAction(
       const oldValue =
         nextGameState.players[playerID][action.AttributeType as string];
       const newValue =
-        action.Operation === "Add" ? oldValue + actionValue : oldValue;
-      nextGameState.players[playerID][action.AttributeType as string] =
-        newValue;
+        action.Operation === "Add"
+          ? oldValue + actionValue
+          : action.Operation === "Subtract"
+            ? oldValue - actionValue
+            : action.Operation === "Multiply"
+              ? oldValue * actionValue
+              : oldValue;
+
+      updatePlayerAttribute(
+        gameState,
+        nextGameState,
+        playerID,
+        action.AttributeType as string,
+        newValue,
+        /* triggerActions */ action.$type === "TActionPlayerModifyAttribute"
+      );
     });
   }
 
@@ -1047,39 +1121,44 @@ function getTargetCards(
   } else if (target.$type === "TTargetCardTriggerSource") {
     results.push([triggerPlayerID, triggerBoardCardID]);
   } else if (target.$type === "TTargetCardPositional") {
+    const [originPlayerID, originBoardCardID] =
+      target.Origin === "TriggerSource"
+        ? [triggerPlayerID, triggerBoardCardID]
+        : [targetPlayerID, targetBoardCardID];
+
     if (target.TargetMode === "AllRightCards") {
       const lengthCardItems =
-        gameState.players[targetPlayerID].board.findLastIndex(
+        gameState.players[originPlayerID].board.findLastIndex(
           (boardCard) => boardCard.card.$type === "TCardItem"
         ) + 1;
       for (
-        let i = targetBoardCardID + (target.IncludeOrigin ? 0 : 1);
+        let i = originBoardCardID + (target.IncludeOrigin ? 0 : 1);
         i < lengthCardItems;
         ++i
       ) {
-        results.push([targetPlayerID, i]);
+        results.push([originPlayerID, i]);
       }
     } else if (target.TargetMode === "AllLeftCards") {
       for (
         let i = 0;
-        i < targetBoardCardID - (target.IncludeOrigin ? 0 : 1);
+        i < originBoardCardID - (target.IncludeOrigin ? 0 : 1);
         ++i
       ) {
-        results.push([targetPlayerID, i]);
+        results.push([originPlayerID, i]);
       }
     } else if (target.TargetMode === "Neighbor") {
       if (target.IncludeOrigin) {
-        results.push([targetPlayerID, targetBoardCardID]);
+        results.push([originPlayerID, originBoardCardID]);
       }
-      if (targetBoardCardID !== 0) {
-        results.push([targetPlayerID, targetBoardCardID - 1]);
+      if (originBoardCardID !== 0) {
+        results.push([originPlayerID, originBoardCardID - 1]);
       }
       const lengthCardItems =
-        gameState.players[targetPlayerID].board.findLastIndex(
+        gameState.players[originPlayerID].board.findLastIndex(
           (boardCard) => boardCard.card.$type === "TCardItem"
         ) + 1;
-      if (targetBoardCardID < lengthCardItems - 1) {
-        results.push([targetPlayerID, targetBoardCardID + 1]);
+      if (originBoardCardID < lengthCardItems - 1) {
+        results.push([originPlayerID, originBoardCardID + 1]);
       }
     } else if (target.TargetMode === "RightCard") {
       if (target.IncludeOrigin) {
@@ -1455,8 +1534,8 @@ function runGameTick(initialGameState: GameState): [GameState, GameState] {
                   nextGameState,
                   ability.Action,
                   ability.Prerequisites,
-                  subjectPlayerID,
-                  subjectBoardCardID,
+                  playerID,
+                  boardCardID,
                   targetPlayerID,
                   targetBoardCardID
                 );
