@@ -592,6 +592,14 @@ function GameStep({ gameState }: { gameState: GameState }) {
                 </span>
               ) : null}
             </div>
+            <div style={{ position: "absolute", right: 4, color: "yellow" }}>
+              {[
+                player.Gold > 0 ? `Gold: ${player.Gold}` : null,
+                player.Income > 0 ? `Income: ${player.Income}` : null
+              ]
+                .filter((x) => x)
+                .join(", ")}
+            </div>
           </div>
         );
         const board = (

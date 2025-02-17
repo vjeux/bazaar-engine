@@ -1255,6 +1255,19 @@ function getTargetCards(
     }
   } else if (target.$type === "TTargetCardSelf") {
     results.push([targetPlayerID, targetBoardCardID]);
+  } else if (target.$type === "TTargetCardXMost") {
+    const lengthCardItems =
+      gameState.players[targetPlayerID].board.findLastIndex(
+        (boardCard) => boardCard.card.$type === "TCardItem"
+      ) + 1;
+    for (let i = 0; i < lengthCardItems; ++i) {
+      if (
+        i !== targetBoardCardID ||
+        (i === targetBoardCardID && !target.ExcludeSelf)
+      ) {
+        results.push([targetPlayerID, i]);
+      }
+    }
   }
 
   if (
@@ -1284,7 +1297,7 @@ function getTargetCards(
     }
   }
 
-  return results.filter(([testPlayerID, testBoardCardID]) => {
+  const filteredResults = results.filter(([testPlayerID, testBoardCardID]) => {
     return (
       !gameState.players[testPlayerID].board[testBoardCardID].isDisabled &&
       testConditions(
@@ -1298,6 +1311,16 @@ function getTargetCards(
       )
     );
   });
+
+  if (target.$type === "TTargetCardXMost") {
+    if (target.TargetMode === "LeftMostCard") {
+      return filteredResults.slice(0, 1);
+    } else {
+      return filteredResults.slice(-1);
+    }
+  }
+
+  return filteredResults;
 }
 
 function getTargetPlayers(
