@@ -1104,54 +1104,66 @@ function getActionValue(
   targetBoardCardID: number
 ): number {
   let amount: number | undefined = undefined;
-  if (value.$type === "TFixedValue") {
-    amount = value.Value;
-  } else if (
-    value.$type === "TReferenceValueCardAttribute" ||
-    value.$type === "TReferenceValueCardAttributeAggregate"
-  ) {
-    const targetCards = getTargetCards(
-      gameState,
-      nextGameState,
-      value.Target,
-      triggerPlayerID,
-      triggerBoardCardID,
-      targetPlayerID,
-      targetBoardCardID
-    );
-    amount = value.DefaultValue;
-    targetCards.forEach(([valueTargetPlayerID, valueTargetBoardCardID]) => {
-      amount +=
-        nextGameState.players[valueTargetPlayerID].board[
-          valueTargetBoardCardID
-        ][value.AttributeType as string] ?? 0;
-    });
-  } else if (value.$type === "TReferenceValuePlayerAttribute") {
-    getTargetPlayers(
-      gameState,
-      nextGameState,
-      value.Target,
-      triggerPlayerID,
-      targetPlayerID
-    ).forEach((valueTargetPlayerID) => {
+
+  switch (value.$type) {
+    case "TFixedValue":
+      amount = value.Value;
+      break;
+    case "TReferenceValueCardAttribute":
+    case "TReferenceValueCardAttributeAggregate": {
+      const targetCards = getTargetCards(
+        gameState,
+        nextGameState,
+        value.Target,
+        triggerPlayerID,
+        triggerBoardCardID,
+        targetPlayerID,
+        targetBoardCardID
+      );
       amount = value.DefaultValue;
-      amount +=
-        nextGameState.players[valueTargetPlayerID][
-          value.AttributeType as string
-        ] ?? 0;
-    });
-  } else if (value.$type === "TReferenceValueCardCount") {
-    const targetCards = getTargetCards(
-      gameState,
-      nextGameState,
-      value.Target,
-      triggerPlayerID,
-      triggerBoardCardID,
-      targetPlayerID,
-      targetBoardCardID
-    );
-    amount = targetCards.length;
+      targetCards.forEach(([valueTargetPlayerID, valueTargetBoardCardID]) => {
+        amount +=
+          nextGameState.players[valueTargetPlayerID].board[
+            valueTargetBoardCardID
+          ][value.AttributeType as string] ?? 0;
+      });
+      break;
+    }
+    case "TReferenceValuePlayerAttribute":
+      {
+        const targetPlayers = getTargetPlayers(
+          gameState,
+          nextGameState,
+          value.Target,
+          triggerPlayerID,
+          targetPlayerID
+        );
+        amount = value.DefaultValue;
+        targetPlayers.forEach((valueTargetPlayerID) => {
+          amount! +=
+            nextGameState.players[valueTargetPlayerID][
+              value.AttributeType as string
+            ] ?? 0;
+        });
+      }
+      break;
+    case "TReferenceValueCardCount": {
+      const targetCards = getTargetCards(
+        gameState,
+        nextGameState,
+        value.Target,
+        triggerPlayerID,
+        triggerBoardCardID,
+        targetPlayerID,
+        targetBoardCardID
+      );
+      amount = targetCards.length;
+      break;
+    }
+    default:
+      throw new Error("Unhandled value type: " + value.$type);
   }
+
   if (amount != null && value.Modifier != null) {
     const modifierValue = getActionValue(
       gameState,
