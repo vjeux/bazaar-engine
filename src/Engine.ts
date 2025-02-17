@@ -411,97 +411,107 @@ function testConditions(
   targetPlayerID: number,
   targetBoardCardID: number
 ): boolean {
-  if (conditions == null) {
-    return true;
-  } else if (conditions.$type === "TCardConditionalAttribute") {
-    const value =
-      gameState.players[targetPlayerID].board[targetBoardCardID][
-        conditions.Attribute
-      ];
-    const comparisonValue = getActionValue(
-      gameState,
-      conditions.ComparisonValue,
-      triggerPlayerID,
-      triggerBoardCardID,
-      targetPlayerID,
-      targetBoardCardID
-    );
-    if (conditions.ComparisonOperator === "Equal") {
-      return value === comparisonValue;
-    } else if (conditions.ComparisonOperator === "GreaterThan") {
-      return value > comparisonValue;
-    } else if (conditions.ComparisonOperator === "GreaterThanOrEqual") {
-      return value >= comparisonValue;
-    } else if (conditions.ComparisonOperator === "LessThan") {
-      return value < comparisonValue;
-    } else if (conditions.ComparisonOperator === "LessThanOrEqual") {
-      return value <= comparisonValue;
-    }
-  } else if (conditions.$type === "TCardConditionalSize") {
-    const is = conditions.Sizes.includes(
-      gameState.players[targetPlayerID].board[targetBoardCardID].card.Size
-    );
-    if (conditions.IsNot) {
-      return !is;
-    } else {
-      return is;
-    }
-  } else if (conditions.$type === "TCardConditionalHasEnchantment") {
-    const is =
-      gameState.players[targetPlayerID].board[targetBoardCardID].Enchantment ===
-      conditions.Enchantment;
-    if (conditions.IsNot) {
-      return !is;
-    } else {
-      return is;
-    }
-  } else if (
-    conditions.$type === "TCardConditionalHiddenTag" ||
-    conditions.$type === "TCardConditionalTag"
-  ) {
-    const tags =
-      gameState.players[targetPlayerID].board[targetBoardCardID].card[
-        conditions.$type === "TCardConditionalHiddenTag" ? "HiddenTags" : "Tags"
-      ];
-
-    if (conditions.Operator === "Any") {
-      return tags.filter((tag) => conditions.Tags.includes(tag)).length > 0;
-    } else if (conditions.Operator === "None") {
-      return tags.filter((tag) => conditions.Tags.includes(tag)).length === 0;
-    }
-  } else if (conditions.$type === "TCardConditionalOr") {
-    for (let i = 0; i < conditions.Conditions.length; ++i) {
-      const value = testConditions(
-        gameState,
-        conditions.Conditions[i],
-        triggerPlayerID,
-        triggerBoardCardID,
-        targetPlayerID,
-        targetBoardCardID
-      );
-      if (value) {
+    if (conditions == null) {
         return true;
-      }
     }
-    return false;
-  } else if (conditions.$type === "TCardConditionalAnd") {
-    for (let i = 0; i < conditions.Conditions.length; ++i) {
-      const value = testConditions(
-        gameState,
-        conditions.Conditions[i],
-        triggerPlayerID,
-        triggerBoardCardID,
-        targetPlayerID,
-        targetBoardCardID
-      );
-      if (!value) {
-        return false;
-      }
+
+    switch (conditions.$type) {
+        case "TCardConditionalAttribute": {
+            const value =
+                gameState.players[targetPlayerID].board[targetBoardCardID][
+                    conditions.Attribute
+                ];
+            const comparisonValue = getActionValue(
+                gameState,
+                conditions.ComparisonValue,
+                triggerPlayerID,
+                triggerBoardCardID,
+                targetPlayerID,
+                targetBoardCardID
+            );
+            switch (conditions.ComparisonOperator) {
+                case "Equal":
+                    return value === comparisonValue;
+                case "GreaterThan":
+                    return value > comparisonValue;
+                case "GreaterThanOrEqual":
+                    return value >= comparisonValue;
+                case "LessThan":
+                    return value < comparisonValue;
+                case "LessThanOrEqual":
+                    return value <= comparisonValue;
+                default:
+                    throw new Error(
+                        "ComparisonOperator not implemented: " +
+                            conditions.ComparisonOperator
+                    );
+            }
+        }
+        case "TCardConditionalSize": {
+            const is = conditions.Sizes.includes(
+                gameState.players[targetPlayerID].board[targetBoardCardID].card.Size
+            );
+            return conditions.IsNot ? !is : is;
+        }
+        case "TCardConditionalHasEnchantment": {
+            const is =
+                gameState.players[targetPlayerID].board[targetBoardCardID].Enchantment ===
+                conditions.Enchantment;
+            return conditions.IsNot ? !is : is;
+        }
+        case "TCardConditionalHiddenTag":
+        case "TCardConditionalTag": {
+            const tags =
+                gameState.players[targetPlayerID].board[targetBoardCardID].card[
+                    conditions.$type === "TCardConditionalHiddenTag" ? "HiddenTags" : "Tags"
+                ];
+
+            switch (conditions.Operator) {
+                case "Any":
+                    return tags.filter((tag) => conditions.Tags.includes(tag)).length > 0;
+                case "None":
+                    return tags.filter((tag) => conditions.Tags.includes(tag)).length === 0;
+                default:
+                    throw new Error("Operator not implemented: " + conditions.Operator);
+            }
+        }
+        case "TCardConditionalOr": {
+            for (let i = 0; i < conditions.Conditions.length; ++i) {
+                if (
+                    testConditions(
+                        gameState,
+                        conditions.Conditions[i],
+                        triggerPlayerID,
+                        triggerBoardCardID,
+                        targetPlayerID,
+                        targetBoardCardID
+                    )
+                ) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        case "TCardConditionalAnd": {
+            for (let i = 0; i < conditions.Conditions.length; ++i) {
+                if (
+                    !testConditions(
+                        gameState,
+                        conditions.Conditions[i],
+                        triggerPlayerID,
+                        triggerBoardCardID,
+                        targetPlayerID,
+                        targetBoardCardID
+                    )
+                ) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        default:
+            throw new Error("Unhandled condition type: " + conditions.$type);
     }
-    return true;
-  }
-  // Return false for any unhandled conditions
-  return false;
 }
 
 function triggerActions(
