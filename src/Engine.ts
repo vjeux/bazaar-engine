@@ -570,76 +570,79 @@ function runAction(
     }
   }
 
-  if (action.$type === "TActionPlayerDamage") {
-    getTargetPlayers(
-      gameState,
-      action.Target,
-      triggerPlayerID,
-      targetPlayerID
-    ).forEach((playerID) => {
-      const shield = gameState.players[playerID].Shield;
-      let amount = getCardAttribute(
+  switch (action.$type) {
+    case "TActionPlayerDamage": {
+      getTargetPlayers(
         gameState,
+          action.Target,
+        triggerPlayerID,
+        targetPlayerID
+      ).forEach((playerID) => {
+        const shield = gameState.players[playerID].Shield;
+        let amount = getCardAttribute(
+          gameState,
         targetPlayerID,
         targetBoardCardID,
-        "DamageAmount"
+          "DamageAmount"
       );
-      const critChance = getCardAttribute(
+        const critChance = getCardAttribute(
         gameState,
         targetPlayerID,
         targetBoardCardID,
         "CritChange"
       );
-      if (critChance > 0) {
-        if (gameState.getRand() * 100 < critChance) {
-          amount *= 2;
-          const damageCrit = getCardAttribute(
+        if (critChance > 0) {
+          if (gameState.getRand() * 100 < critChance) {
+            amount *= 2;
+            const damageCrit = getCardAttribute(
             gameState,
             targetPlayerID,
             targetBoardCardID,
             "DamageCrit"
           );
-          if (damageCrit !== undefined) {
-            amount *= 1 + damageCrit / 100;
-            hasCritted = true;
+            if (damageCrit !== undefined) {
+              amount *= 1 + damageCrit / 100;
+              hasCritted = true;
+            }
           }
         }
-      }
 
-      const nextShield = Math.max(0, shield - amount);
-      if (nextShield > 0) {
-        gameState.players[playerID].Shield = nextShield;
-      } else {
-        const nextAmount = amount - shield;
-        gameState.players[playerID].Shield = 0;
-        gameState.players[playerID].Health -= nextAmount;
-      }
-    });
-  } else if (action.$type === "TActionPlayerHeal") {
-    getTargetPlayers(
-      gameState,
-      action.Target,
-      triggerPlayerID,
-      targetPlayerID
-    ).forEach((playerID) => {
-      let amount = getCardAttribute(
+        const nextShield = Math.max(0, shield - amount);
+        if (nextShield > 0) {
+          gameState.players[playerID].Shield = nextShield;
+        } else {
+          const nextAmount = amount - shield;
+          gameState.players[playerID].Shield = 0;
+          gameState.players[playerID].Health -= nextAmount;
+        }
+      });
+      break;
+    }
+    case "TActionPlayerHeal": {
+      getTargetPlayers(
         gameState,
+          action.Target,
+        triggerPlayerID,
+        targetPlayerID
+      ).forEach((playerID) => {
+        let amount = getCardAttribute(
+          gameState,
         targetPlayerID,
         targetBoardCardID,
-        "HealAmount"
+          "HealAmount"
       );
-      const critChance = getCardAttribute(
+        const critChance = getCardAttribute(
         gameState,
         targetPlayerID,
         targetBoardCardID,
         "CritChance"
       );
-      if (critChance > 0) {
-        if (gameState.getRand() * 100 < critChance) {
-          amount *= 2;
-          hasCritted = true;
+        if (critChance > 0) {
+          if (gameState.getRand() * 100 < critChance) {
+            amount *= 2;
+            hasCritted = true;
+          }
         }
-      }
 
       if (gameState.players[playerID].Poison > 0) {
         updatePlayerAttribute(
@@ -690,7 +693,9 @@ function runAction(
         targetBoardCardID
       );
     });
-  } else if (action.$type === "TActionPlayerPoisonApply") {
+    break;
+  } 
+  case "TActionPlayerPoisonApply": {
     let amount = getCardAttribute(
       gameState,
       targetPlayerID,
@@ -731,7 +736,9 @@ function runAction(
         gameState.players[playerID].Poison + amount
       );
     });
-  } else if (action.$type === "TActionPlayerPoisonRemove") {
+    break;
+  } 
+  case "TActionPlayerPoisonRemove": {
     let amount = getCardAttribute(
       gameState,
       targetPlayerID,
@@ -751,7 +758,9 @@ function runAction(
         Math.max(0, gameState.players[playerID].Poison - amount)
       );
     });
-  } else if (action.$type === "TActionPlayerBurnApply") {
+    break;
+  }
+  case "TActionPlayerBurnApply": {
     let amount = getCardAttribute(
       gameState,
       targetPlayerID,
@@ -791,7 +800,9 @@ function runAction(
         gameState.players[playerID].Burn + amount
       );
     });
-  } else if (action.$type === "TActionPlayerBurnRemove") {
+    break;
+  }
+  case "TActionPlayerBurnRemove": {
     getTargetPlayers(
       gameState,
       action.Target,
@@ -812,7 +823,9 @@ function runAction(
         Math.max(0, gameState.players[playerID].Burn - amount)
       );
     });
-  } else if (action.$type === "TActionPlayerShieldApply") {
+    break;
+  } 
+  case "TActionPlayerShieldApply": {
     let amount = getCardAttribute(
       gameState,
       targetPlayerID,
@@ -854,7 +867,9 @@ function runAction(
         targetBoardCardID
       );
     });
-  } else if (action.$type === "TActionPlayerShieldRemove") {
+    break;
+  } 
+  case "TActionPlayerShieldRemove": {
     getTargetPlayers(
       gameState,
       action.Target,
@@ -875,7 +890,9 @@ function runAction(
         Math.max(0, gameState.players[playerID].Shield - amount)
       );
     });
-  } else if (action.$type === "TActionPlayerReviveHeal") {
+    break;
+  } 
+  case "TActionPlayerReviveHeal": {
     getTargetPlayers(
       gameState,
       action.Target,
@@ -884,7 +901,9 @@ function runAction(
     ).forEach((playerID) => {
       updatePlayerAttribute(gameState, playerID, "Health", 0);
     });
-  } else if (action.$type === "TActionCardDisable") {
+    break;
+  } 
+  case "TActionCardDisable": {
     const targetCards = getTargetCards(
       gameState,
       action.Target,
@@ -959,11 +978,9 @@ function runAction(
           );
         }
       });
-  } else if (
-    action.$type === "TActionCardFreeze" ||
-    action.$type === "TActionCardSlow" ||
-    action.$type === "TActionCardHaste"
-  ) {
+  } case "TActionCardFreeze":
+    case "TActionCardSlow":
+    case "TActionCardHaste": {
     const [amountKey, targetsKey, tickKey, triggerType] =
       action.$type === "TActionCardFreeze"
         ? [
@@ -1061,7 +1078,9 @@ function runAction(
           targetBoardCardID
         );
       });
-  } else if (action.$type === "TActionCardCharge") {
+      break;
+  } 
+  case "TActionCardCharge": {
     const [amountKey, targetsKey] = ["ChargeAmount", "ChargeTargets"];
     const amount = getCardAttribute(
       gameState,
@@ -1114,7 +1133,9 @@ function runAction(
           );
         }
       });
-  } else if (action.$type === "TActionCardModifyAttribute") {
+      break;
+  } 
+  case "TActionCardModifyAttribute": {
     if (!action.Value || !action.AttributeType) {
       throw new Error("Missing Value");
     }
@@ -1159,12 +1180,12 @@ function runAction(
           return;
         }
 
-        const newValue =
-          action.Operation === "Add"
-            ? oldValue + actionValue
-            : action.Operation === "Multiply"
-              ? oldValue * actionValue
-              : oldValue;
+          const newValue =
+            action.Operation === "Add"
+              ? oldValue + actionValue
+              : action.Operation === "Multiply"
+                ? oldValue * actionValue
+                : oldValue;
 
         updateCardAttribute(
           gameState,
@@ -1174,7 +1195,9 @@ function runAction(
           newValue
         );
       });
-  } else if (action.$type === "TActionPlayerModifyAttribute") {
+      break;
+  } 
+  case "TActionPlayerModifyAttribute": {
     const actionValue = getActionValue(
       gameState,
       action.Value as FluffyValue,
@@ -1207,6 +1230,7 @@ function runAction(
         newValue
       );
     });
+    break;
   }
 
   return hasCritted;
