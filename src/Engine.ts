@@ -1740,8 +1740,9 @@ export function getTooltips(
         (_: any, type: string, id: string | number, targets: any) => {
           const action =
             boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
+
           if (action.Value) {
-            return getActionValue(
+            const actionValue = getActionValue(
               gameState,
               gameState,
               action.Value,
@@ -1750,7 +1751,19 @@ export function getTooltips(
               playerID,
               boardCardID
             );
+            if (
+              action.$type === "TAuraActionCardModifyAttribute" &&
+              (action.AttributeType === "SlowAmount" ||
+                action.AttributeType === "FreezeAmount" ||
+                action.AttributeType === "HasteAmount" ||
+                action.AttributeType === "ChargeAmount")
+            ) {
+              return actionValue / 1000;
+            } else {
+              return actionValue;
+            }
           }
+
           if (action.$type === "TActionGameSpawnCards") {
             return getActionValue(
               gameState,
@@ -1761,8 +1774,7 @@ export function getTooltips(
               playerID,
               boardCardID
             );
-          }
-          if (action.$type === "TActionPlayerDamage") {
+          } else if (action.$type === "TActionPlayerDamage") {
             return boardCard.DamageAmount;
           } else if (action.$type === "TActionCardReload") {
             return boardCard.ReloadAmount;
@@ -1781,6 +1793,7 @@ export function getTooltips(
           } else if (action.$type === "TActionCardCharge") {
             return boardCard.ChargeAmount / 1000;
           }
+
           const match = action.$type.match(/^TActionPlayer([A-Za-z]+)Apply$/);
           if (match) {
             return boardCard[`${match[1]}ApplyAmount`];

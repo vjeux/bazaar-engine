@@ -8,14 +8,14 @@ import { EncounterDays, Group } from "./types/encounterTypes";
 /* Bugs
  
 // Day 1 - Viper
-// Toxic Fang's poison is 10% of 5 = 0.5. In combat it does 1 damage but outside it shows 0. Not
-// sure how to fix this.
+// Toxic Fang's poison is 10% of 5 = 0.5. In combat it does 1 damage but outside it shows 0.
+// Not sure how to fix this.
 // https://www.youtube.com/watch?v=nPYXguaNr8I
 
-// Aura for crusher claw applies before aura for abacus
-getBoardCard("Crusher Claw", "Silver"),
-getBoardCard("Abacus", "Gold"),
- 
+// Day 2 - Coconut Crab
+// Crusher Claw's aura is applied before Sea Shell aura and doesn't apply damage properly.
+// Not sure how to fix this.
+
 // Sparring Partner heals to half life because Aura is not triggered at the right time
 getBoardMonster("Sparring Partner"),
  
