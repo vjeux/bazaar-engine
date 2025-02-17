@@ -1914,34 +1914,37 @@ export function getTooltips(
             }
           }
 
-          if (action.$type === "TActionGameSpawnCards") {
-            return getActionValue(
-              gameState,
-              gameState,
-              action.SpawnContext.Limit,
-              playerID,
-              boardCardID,
-              playerID,
-              boardCardID
-            );
-          } else if (action.$type === "TActionPlayerDamage") {
-            return boardCard.DamageAmount;
-          } else if (action.$type === "TActionCardReload") {
-            return boardCard.ReloadAmount;
-          } else if (action.$type === "TActionPlayerHeal") {
-            return boardCard.HealAmount;
-          } else if (action.$type === "TActionPlayerShield") {
-            return boardCard.ShieldApplyAmount;
-          } else if (action.$type === "TActionPlayerPoison") {
-            return boardCard.PoisonApplyAmount;
-          } else if (action.$type === "TActionCardFreeze") {
-            return boardCard.FreezeAmount / 1000;
-          } else if (action.$type === "TActionCardHaste") {
-            return boardCard.HasteAmount / 1000;
-          } else if (action.$type === "TActionCardSlow") {
-            return boardCard.SlowAmount / 1000;
-          } else if (action.$type === "TActionCardCharge") {
-            return boardCard.ChargeAmount / 1000;
+          switch (action.$type) {
+            case "TActionGameSpawnCards":
+              return getActionValue(
+                gameState,
+                gameState,
+                action.SpawnContext.Limit,
+                playerID,
+                boardCardID,
+                playerID,
+                boardCardID
+              );
+            case "TActionPlayerDamage":
+              return boardCard.DamageAmount;
+            case "TActionCardReload":
+              return boardCard.ReloadAmount;
+            case "TActionPlayerHeal":
+              return boardCard.HealAmount;
+            case "TActionPlayerShield":
+              return boardCard.ShieldApplyAmount;
+            case "TActionPlayerPoison":
+              return boardCard.PoisonApplyAmount;
+            case "TActionCardFreeze":
+              return boardCard.FreezeAmount / 1000;
+            case "TActionCardHaste":
+              return boardCard.HasteAmount / 1000;
+            case "TActionCardSlow":
+              return boardCard.SlowAmount / 1000;
+            case "TActionCardCharge":
+              return boardCard.ChargeAmount / 1000;
+            default:
+              throw new Error("Action type not implemented: " + action.$type);
           }
 
           const match = action.$type.match(/^TActionPlayer([A-Za-z]+)Apply$/);
