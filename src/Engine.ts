@@ -1424,50 +1424,81 @@ function getTargetPlayers(
   targetPlayerID: number
 ): number[] {
   let results: number[] = [];
-  if (target.$type === "TTargetPlayerRelative") {
-    if (target.TargetMode === "Opponent") {
-      results = [(targetPlayerID + 1) % 2];
-    } else if (target.TargetMode === "Self") {
-      results = [targetPlayerID];
-    }
-  } else if (target.$type === "TTargetCardSection") {
-    if (target.TargetSection === "SelfBoard") {
-      results = [targetPlayerID];
-    } else {
-      results = [(targetPlayerID + 1) % 2];
-    }
-  } else if (target.$type === "TTargetPlayer" && target.TargetMode === "Both") {
-    results = [targetPlayerID, (targetPlayerID + 1) % 2];
-  } else {
-    throw new Error("Unhandled target type: " + target.$type);
+
+  switch (target.$type) {
+    case "TTargetPlayerRelative":
+      switch (target.TargetMode) {
+        case "Opponent":
+          results = [(targetPlayerID + 1) % 2];
+          break;
+        case "Self":
+          results = [targetPlayerID];
+          break;
+        default:
+          throw new Error(
+            "Not implemented TargetMode: " + target.TargetMode
+          );
+      }
+      break;
+    case "TTargetCardSection":
+      switch (target.TargetSection) {
+        case "SelfBoard":
+          results = [targetPlayerID];
+          break;
+        default:
+          results = [(targetPlayerID + 1) % 2];
+          break;
+      }
+      break;
+    case "TTargetPlayer":
+      if (target.TargetMode === "Both") {
+        results = [targetPlayerID, (targetPlayerID + 1) % 2];
+      } else {
+        throw new Error(
+          "Not implemented TargetMode: " + target.TargetMode
+        );
+      }
+      break;
+    default:
+      throw new Error("Unhandled target type: " + target.$type);
   }
 
   if (target.Conditions) {
     results = results.filter((playerID) => {
-      if (target.Conditions.$type === "TPlayerConditionalAttribute") {
-        const value = gameState.players[playerID][target.Conditions.Attribute];
-        const comparisonValue = getActionValue(
-          gameState,
-          nextGameState,
-          target.Conditions.ComparisonValue,
-          triggerPlayerID,
-          -1,
-          playerID,
-          -1
-        );
-        if (target.Conditions.ComparisonOperator === "Equal") {
-          return value === comparisonValue;
-        } else if (target.Conditions.ComparisonOperator === "GreaterThan") {
-          return value > comparisonValue;
-        } else if (
-          target.Conditions.ComparisonOperator === "GreaterThanOrEqual"
-        ) {
-          return value >= comparisonValue;
-        } else if (target.Conditions.ComparisonOperator === "LessThan") {
-          return value < comparisonValue;
-        } else if (target.Conditions.ComparisonOperator === "LessThanOrEqual") {
-          return value <= comparisonValue;
-        }
+      switch (target.Conditions.$type) {
+        case "TPlayerConditionalAttribute":
+          const value =
+            gameState.players[playerID][target.Conditions.Attribute];
+          const comparisonValue = getActionValue(
+            gameState,
+            nextGameState,
+            target.Conditions.ComparisonValue,
+            triggerPlayerID,
+            -1,
+            playerID,
+            -1
+          );
+          switch (target.Conditions.ComparisonOperator) {
+            case "Equal":
+              return value === comparisonValue;
+            case "GreaterThan":
+              return value > comparisonValue;
+            case "GreaterThanOrEqual":
+              return value >= comparisonValue;
+            case "LessThan":
+              return value < comparisonValue;
+            case "LessThanOrEqual":
+              return value <= comparisonValue;
+            default:
+              throw new Error(
+                "Not implemented ComparisonOperator: " +
+                  target.Conditions.ComparisonOperator
+              );
+          }
+        default:
+          throw new Error(
+            "Not implemented Conditions.$type: " + target.Conditions.$type
+          );
       }
     });
   }
