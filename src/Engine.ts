@@ -1739,6 +1739,9 @@ export function getTooltips(
         if (target.$type === "TTargetCardRandom") {
           return 1;
         }
+        if (action.$type === "TActionCardReload") {
+          return 1;
+        }
         return `{?${type}.${id}.targets}`;
       }
     )
