@@ -246,45 +246,51 @@ function testPrerequisite(
   targetPlayerID: number,
   targetBoardCardID: number
 ): boolean {
-  if (prerequisite.$type === "TPrerequisiteCardCount") {
-    const subjects = getTargetCards(
-      gameState,
-      nextGameState,
-      prerequisite.Subject,
-      triggerPlayerID,
-      triggerBoardCardID,
-      targetPlayerID,
-      targetBoardCardID
-    );
-    const value = subjects.length;
-    const comparisonValue = prerequisite.Amount;
-    if (prerequisite.Comparison === "Equal") {
-      return value === comparisonValue;
-    } else if (prerequisite.Comparison === "GreaterThan") {
-      return value > comparisonValue;
-    } else if (prerequisite.Comparison === "GreaterThanOrEqual") {
-      return value >= comparisonValue;
-    } else if (prerequisite.Comparison === "LessThan") {
-      return value < comparisonValue;
-    } else if (prerequisite.Comparison === "LessThanOrEqual") {
-      return value <= comparisonValue;
+  switch (prerequisite.$type) {
+    case "TPrerequisiteCardCount": {
+      const subjects = getTargetCards(
+        gameState,
+        nextGameState,
+        prerequisite.Subject,
+        triggerPlayerID,
+        triggerBoardCardID,
+        targetPlayerID,
+        targetBoardCardID
+      );
+      const value = subjects.length;
+      const comparisonValue = prerequisite.Amount;
+      switch (prerequisite.Comparison) {
+        case "Equal":
+          return value === comparisonValue;
+        case "GreaterThan":
+          return value > comparisonValue;
+        case "GreaterThanOrEqual":
+          return value >= comparisonValue;
+        case "LessThan":
+          return value < comparisonValue;
+        case "LessThanOrEqual":
+          return value <= comparisonValue;
+        default:
+          throw new Error(
+            "Comparison type not implemented: " + prerequisite.Comparison
+          );
+      }
     }
-  } else if (prerequisite.$type === "TPrerequisitePlayer") {
-    const subjects = getTargetPlayers(
-      gameState,
-      nextGameState,
-      prerequisite.Subject,
-      triggerPlayerID,
-      targetPlayerID
-    );
-    return subjects.length > 0;
-  } else if (prerequisite.$type === "TPrerequisiteRun") {
-    return true;
-  } else {
-    throw new Error("Unhandled prerequisite type: " + prerequisite.$type);
+    case "TPrerequisitePlayer": {
+      const subjects = getTargetPlayers(
+        gameState,
+        nextGameState,
+        prerequisite.Subject,
+        triggerPlayerID,
+        targetPlayerID
+      );
+      return subjects.length > 0;
+    }
+    case "TPrerequisiteRun":
+      return true;
+    default:
+      throw new Error("Unhandled prerequisite type: " + prerequisite.$type);
   }
-
-  return true;
 }
 
 function testConditions(
