@@ -125,6 +125,7 @@ function _createBoardCardFromCard(
     Haste: 0,
     CritChance: 0,
     DamageCrit: 0,
+    Lifesteal: 0,
     tier: tier,
     Enchantment: enchantment,
     isDisabled: false

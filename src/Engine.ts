@@ -594,78 +594,111 @@ function runAction(
 
   switch (action.$type) {
     case "TActionPlayerDamage": {
+      let amount = getCardAttribute(
+        gameState,
+        targetPlayerID,
+        targetBoardCardID,
+        "DamageAmount"
+      );
+      const critChance = getCardAttribute(
+        gameState,
+        targetPlayerID,
+        targetBoardCardID,
+        "CritChange"
+      );
+      if (critChance > 0) {
+        if (gameState.getRand() * 100 < critChance) {
+          amount *= 2;
+          const damageCrit = getCardAttribute(
+            gameState,
+            targetPlayerID,
+            targetBoardCardID,
+            "DamageCrit"
+          );
+          if (damageCrit !== undefined) {
+            amount *= 1 + damageCrit / 100;
+            hasCritted = true;
+          }
+        }
+      }
+
+      const lifesteal = getCardAttribute(
+        gameState,
+        targetPlayerID,
+        targetBoardCardID,
+        "Lifesteal"
+      );
+
       getTargetPlayers(
         gameState,
         action.Target,
         triggerPlayerID,
         targetPlayerID
       ).forEach((playerID) => {
-        const shield = gameState.players[playerID].Shield;
-        let amount = getCardAttribute(
-          gameState,
-          targetPlayerID,
-          targetBoardCardID,
-          "DamageAmount"
-        );
-        const critChance = getCardAttribute(
-          gameState,
-          targetPlayerID,
-          targetBoardCardID,
-          "CritChange"
-        );
-        if (critChance > 0) {
-          if (gameState.getRand() * 100 < critChance) {
-            amount *= 2;
-            const damageCrit = getCardAttribute(
-              gameState,
-              targetPlayerID,
-              targetBoardCardID,
-              "DamageCrit"
-            );
-            if (damageCrit !== undefined) {
-              amount *= 1 + damageCrit / 100;
-              hasCritted = true;
-            }
-          }
-        }
+        const shield = getPlayerAttribute(gameState, playerID, "Shield");
 
         const nextShield = Math.max(0, shield - amount);
         if (nextShield > 0) {
-          gameState.players[playerID].Shield = nextShield;
+          updatePlayerAttribute(gameState, playerID, "Shield", nextShield);
         } else {
+          const health = getPlayerAttribute(gameState, playerID, "Health");
           const nextAmount = amount - shield;
-          gameState.players[playerID].Shield = 0;
-          gameState.players[playerID].Health -= nextAmount;
+          updatePlayerAttribute(gameState, playerID, "Shield", 0);
+          updatePlayerAttribute(
+            gameState,
+            playerID,
+            "Health",
+            health - nextAmount
+          );
+        }
+
+        if (lifesteal > 0) {
+          const otherPlayerID = (playerID + 1) % 2;
+          const health = getPlayerAttribute(gameState, otherPlayerID, "Health");
+          const healthMax = getPlayerAttribute(
+            gameState,
+            otherPlayerID,
+            "HealthMax"
+          );
+          const nextHealth = Math.min(health + amount, healthMax);
+          if (nextHealth !== health) {
+            updatePlayerAttribute(
+              gameState,
+              otherPlayerID,
+              "Health",
+              nextHealth
+            );
+          }
         }
       });
       break;
     }
     case "TActionPlayerHeal": {
+      let amount = getCardAttribute(
+        gameState,
+        targetPlayerID,
+        targetBoardCardID,
+        "HealAmount"
+      );
+      const critChance = getCardAttribute(
+        gameState,
+        targetPlayerID,
+        targetBoardCardID,
+        "CritChance"
+      );
+      if (critChance > 0) {
+        if (gameState.getRand() * 100 < critChance) {
+          amount *= 2;
+          hasCritted = true;
+        }
+      }
+
       getTargetPlayers(
         gameState,
         action.Target,
         triggerPlayerID,
         targetPlayerID
       ).forEach((playerID) => {
-        let amount = getCardAttribute(
-          gameState,
-          targetPlayerID,
-          targetBoardCardID,
-          "HealAmount"
-        );
-        const critChance = getCardAttribute(
-          gameState,
-          targetPlayerID,
-          targetBoardCardID,
-          "CritChance"
-        );
-        if (critChance > 0) {
-          if (gameState.getRand() * 100 < critChance) {
-            amount *= 2;
-            hasCritted = true;
-          }
-        }
-
         if (gameState.players[playerID].Poison > 0) {
           updatePlayerAttribute(
             gameState,

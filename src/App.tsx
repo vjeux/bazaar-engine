@@ -166,6 +166,12 @@ function BoardCardElement({
     boardCardID,
     "CooldownMax"
   );
+  const Lifesteal = getCardAttribute(
+    gameState,
+    playerID,
+    boardCardID,
+    "Lifesteal"
+  );
 
   return (
     // Tooltip container
@@ -317,7 +323,10 @@ function BoardCardElement({
           {DamageAmount !== undefined && (
             <div
               style={{
-                backgroundColor: "red",
+                background:
+                  Lifesteal > 0
+                    ? "linear-gradient(to bottom right, purple, red)"
+                    : "red",
                 padding: "2px 5px",
                 margin: "0 2px",
                 borderRadius: 5,
