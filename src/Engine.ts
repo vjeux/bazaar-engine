@@ -2089,6 +2089,10 @@ export function getTooltips(
               return boardCard.SlowAmount / 1000;
             case "TActionCardCharge":
               return boardCard.ChargeAmount / 1000;
+            case "TActionPlayerBurnApply":
+              return boardCard.BurnApplyAmount;
+            case "TActionPlayerShieldApply":
+              return boardCard.ShieldApplyAmount;
             default:
               throw new Error("Action type not implemented: " + action.$type);
           }
