@@ -169,9 +169,7 @@ function BoardCardElement({
 
   return (
     // Tooltip container
-    // Tooltip container
     <div className="tooltipContainer" style={{ position: "relative" }}>
-      {/* Settings button */}
       {/* Settings button */}
       <div
         style={{ position: "absolute", top: 2, right: 2, zIndex: 1 }}
@@ -179,7 +177,6 @@ function BoardCardElement({
       >
         <button>⚙️</button>
       </div>
-      {/* Card container */}
       {/* Card container */}
       <div
         style={{
@@ -191,7 +188,6 @@ function BoardCardElement({
           opacity: boardCard.isDisabled ? 0.1 : 1
         }}
       >
-        {/* Image container */}
         {/* Image container */}
         <div
           style={{
@@ -213,7 +209,6 @@ function BoardCardElement({
             height="100%"
           />
         </div>
-        {/* Frame image */}
         {/* Frame image */}
         <img
           src={frameUrl}
@@ -259,7 +254,6 @@ function BoardCardElement({
             </span>
           </div>
         ) : null}
-        {/* Status effects container */}
         {/* Status effects container */}
         <div
           style={{
@@ -310,7 +304,6 @@ function BoardCardElement({
             </div>
           ) : null}
         </div>
-        {/* Amount container */}
         {/* Amount container */}
         <div
           style={{
@@ -451,7 +444,6 @@ function BoardCardElement({
             {[...new Array(AmmoMax)].map((_, i) => {
               return (
                 // Ammo indicator
-                // Ammo indicator
                 <div
                   key={"ammo" + i}
                   style={{
@@ -509,7 +501,6 @@ function BoardSkillElement({
   return (
     <div className="tooltipContainer">
       {/* Skill container */}
-      {/* Skill container */}
       <div
         style={{
           margin: 5,
@@ -518,7 +509,6 @@ function BoardSkillElement({
           width: IMAGE_SIZE
         }}
       >
-        {/* Image container */}
         {/* Image container */}
         <div
           style={{
@@ -538,7 +528,6 @@ function BoardSkillElement({
             width="100%"
           />
         </div>
-        {/* Frame image */}
         {/* Frame image */}
         <img
           src={frameUrl}
@@ -577,7 +566,6 @@ function GameStep({ gameState }: { gameState: GameState }) {
         const ticks = Math.floor(player.HealthMax / 50);
         const healthBar = (
           // Health bar container
-          // Health bar container
           <div
             key="healthbar"
             style={{
@@ -593,7 +581,6 @@ function GameStep({ gameState }: { gameState: GameState }) {
             }}
           >
             {/* Health bar */}
-            {/* Health bar */}
             <div
               style={{
                 backgroundColor: Poison > 0 ? "#076044" : "#1da81c",
@@ -604,7 +591,6 @@ function GameStep({ gameState }: { gameState: GameState }) {
                 width: Math.max(0, Health / HealthMax) * 100 + "%"
               }}
             />
-            {/* Shield bar */}
             {/* Shield bar */}
             <div
               style={{
@@ -622,7 +608,6 @@ function GameStep({ gameState }: { gameState: GameState }) {
               }
               return (
                 // Health tick
-                // Health tick
                 <div
                   key={"tick" + i}
                   style={{
@@ -637,7 +622,6 @@ function GameStep({ gameState }: { gameState: GameState }) {
                 />
               );
             })}
-            {/* Text container */}
             {/* Text container */}
             <div
               style={{
@@ -703,7 +687,6 @@ function GameStep({ gameState }: { gameState: GameState }) {
               ) : null}
             </div>
             {/* Gold/Income container */}
-            {/* Gold/Income container */}
             <div style={{ position: "absolute", right: 4, color: "yellow" }}>
               {[
                 Gold > 0 ? `Gold: ${Gold}` : null,
@@ -715,7 +698,6 @@ function GameStep({ gameState }: { gameState: GameState }) {
           </div>
         );
         const board = (
-          // Board container
           // Board container
           <div key="board" style={{ display: "flex" }}>
             {player.board
@@ -732,7 +714,6 @@ function GameStep({ gameState }: { gameState: GameState }) {
           </div>
         );
         const boardSkills = (
-          // Skills container
           // Skills container
           <div key="skills" style={{ display: "flex" }}>
             {player.board
@@ -849,7 +830,6 @@ function TooltipWithoutGameState({
 
   return (
     // Tooltip container
-    // Tooltip container
     <div
       style={{
         position: "absolute",
@@ -919,7 +899,6 @@ function CardSearch({
 
   return (
     // Card search container
-    // Card search container
     <div
       style={{
         display: "flex",
@@ -968,7 +947,6 @@ function CardSearch({
 
               return (
                 // Card container
-                // Card container
                 <div
                   key={card.Id}
                   style={{
@@ -989,7 +967,6 @@ function CardSearch({
                   onMouseLeave={() => setHoveredCard(null)}
                 >
                   {/* Image container */}
-                  {/* Image container */}
                   <div
                     style={{
                       width: CONTAINER_SIZE * 1.5,
@@ -999,7 +976,6 @@ function CardSearch({
                       justifyContent: "center"
                     }}
                   >
-                    {/* Card image */}
                     {/* Card image */}
                     <div
                       style={{
@@ -1057,7 +1033,6 @@ function CardSearch({
               const frameUrl = `https://www.bazaarplanner.com/images/fromBT/skill_tier_${card.StartingTier.toLowerCase()}.png`;
               return (
                 // Skill container
-                // Skill container
                 <div
                   key={card.Id}
                   style={{
@@ -1077,7 +1052,6 @@ function CardSearch({
                   }}
                   onMouseLeave={() => setHoveredCard(null)}
                 >
-                  {/* Skill image */}
                   {/* Skill image */}
                   <div
                     style={{
@@ -1170,12 +1144,10 @@ export default function App({
 
   return (
     // Main app container
-    // Main app container
     <div
       style={{ display: "flex", height: "calc(100vh - 20px)" }}
       className="App"
     >
-      {/* Game container */}
       {/* Game container */}
       <div style={{ flex: 1, marginRight: 10 }}>
         <select
