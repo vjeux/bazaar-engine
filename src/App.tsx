@@ -8,7 +8,9 @@ import {
   BoardCard,
   BoardSkill,
   Player,
-  BoardCardOrSkill
+  BoardCardOrSkill,
+  getCardAttribute,
+  getPlayerAttribute
 } from "./Engine.ts";
 
 import { V2Card, V2Cards } from "./types/cardTypes";
@@ -104,6 +106,66 @@ function BoardCardElement({
   };
   const frameUrl = `https://www.bazaarplanner.com/images/fromBT/CardFrame_${tier}_${sizesOneLetter[card.Size]}_TUI.png`;
 
+  const DamageAmount = getCardAttribute(
+    gameState,
+    playerID,
+    boardCardID,
+    "DamageAmount"
+  );
+  const HealAmount = getCardAttribute(
+    gameState,
+    playerID,
+    boardCardID,
+    "HealAmount"
+  );
+  const BurnApplyAmount = getCardAttribute(
+    gameState,
+    playerID,
+    boardCardID,
+    "BurnApplyAmount"
+  );
+  const PoisonApplyAmount = getCardAttribute(
+    gameState,
+    playerID,
+    boardCardID,
+    "PoisonApplyAmount"
+  );
+  const ShieldApplyAmount = getCardAttribute(
+    gameState,
+    playerID,
+    boardCardID,
+    "ShieldApplyAmount"
+  );
+  const Freeze = getCardAttribute(gameState, playerID, boardCardID, "Freeze");
+  const Slow = getCardAttribute(gameState, playerID, boardCardID, "Slow");
+  const Haste = getCardAttribute(gameState, playerID, boardCardID, "Haste");
+  const CritChance = getCardAttribute(
+    gameState,
+    playerID,
+    boardCardID,
+    "CritChance"
+  );
+  const SellPrice = getCardAttribute(
+    gameState,
+    playerID,
+    boardCardID,
+    "SellPrice"
+  );
+  const Multicast = getCardAttribute(
+    gameState,
+    playerID,
+    boardCardID,
+    "Multicast"
+  );
+  const AmmoMax = getCardAttribute(gameState, playerID, boardCardID, "AmmoMax");
+  const Ammo = getCardAttribute(gameState, playerID, boardCardID, "Ammo");
+  const CooldownMax = getCardAttribute(
+    gameState,
+    playerID,
+    boardCardID,
+    "CooldownMax"
+  );
+
   return (
     <div className="tooltipContainer" style={{ position: "relative" }}>
       <div
@@ -150,7 +212,7 @@ function BoardCardElement({
           width="100%"
           height="100%"
         />
-        {"CooldownMax" in boardCard ? (
+        {CooldownMax > 0 ? (
           <div
             style={{
               position: "absolute",
@@ -181,7 +243,7 @@ function BoardCardElement({
               }}
             >
               {(boardCard.tick / 1000).toFixed(1)} /{" "}
-              {(boardCard.CooldownMax / 1000).toFixed(1)}
+              {(CooldownMax / 1000).toFixed(1)}
             </span>
           </div>
         ) : null}
@@ -197,7 +259,7 @@ function BoardCardElement({
             whiteSpace: "preserve nowrap"
           }}
         >
-          {boardCard.Freeze > 0 ? (
+          {Freeze > 0 ? (
             <div
               style={{
                 background: "rgba(0.2, 0.2, 0.2, 0.5)",
@@ -206,10 +268,10 @@ function BoardCardElement({
                 margin: 2
               }}
             >
-              ❄️ {(boardCard.Freeze / 1000).toFixed(1)}
+              ❄️ {(Freeze / 1000).toFixed(1)}
             </div>
           ) : null}
-          {boardCard.Slow > 0 ? (
+          {Slow > 0 ? (
             <div
               style={{
                 background: "rgba(0.2, 0.2, 0.2, 0.5)",
@@ -218,10 +280,10 @@ function BoardCardElement({
                 margin: 2
               }}
             >
-              🐌 {(boardCard.Slow / 1000).toFixed(1)}
+              🐌 {(Slow / 1000).toFixed(1)}
             </div>
           ) : null}
-          {boardCard.Haste > 0 ? (
+          {Haste > 0 ? (
             <div
               style={{
                 background: "rgba(0.2, 0.2, 0.2, 0.5)",
@@ -230,7 +292,7 @@ function BoardCardElement({
                 margin: 2
               }}
             >
-              ⏱️ {(boardCard.Haste / 1000).toFixed(1)}
+              ⏱️ {(Haste / 1000).toFixed(1)}
             </div>
           ) : null}
         </div>
@@ -243,7 +305,7 @@ function BoardCardElement({
             top: (CARD_HEIGHT * paddingTop) / 2
           }}
         >
-          {boardCard.DamageAmount !== undefined && (
+          {DamageAmount !== undefined && (
             <div
               style={{
                 backgroundColor: "red",
@@ -253,10 +315,10 @@ function BoardCardElement({
                 color: "white"
               }}
             >
-              {boardCard.DamageAmount}
+              {DamageAmount}
             </div>
           )}
-          {boardCard.HealAmount !== undefined && (
+          {HealAmount !== undefined && (
             <div
               style={{
                 backgroundColor: "limegreen",
@@ -266,10 +328,10 @@ function BoardCardElement({
                 color: "white"
               }}
             >
-              {boardCard.HealAmount}
+              {HealAmount}
             </div>
           )}
-          {boardCard.BurnApplyAmount !== undefined && (
+          {BurnApplyAmount !== undefined && (
             <div
               style={{
                 backgroundColor: "orange",
@@ -279,10 +341,10 @@ function BoardCardElement({
                 color: "white"
               }}
             >
-              {boardCard.BurnApplyAmount}
+              {BurnApplyAmount}
             </div>
           )}
-          {boardCard.PoisonApplyAmount !== undefined && (
+          {PoisonApplyAmount !== undefined && (
             <div
               style={{
                 backgroundColor: "purple",
@@ -292,10 +354,10 @@ function BoardCardElement({
                 color: "white"
               }}
             >
-              {boardCard.PoisonApplyAmount}
+              {PoisonApplyAmount}
             </div>
           )}
-          {boardCard.ShieldApplyAmount !== undefined && (
+          {ShieldApplyAmount !== undefined && (
             <div
               style={{
                 backgroundColor: "yellow",
@@ -304,11 +366,11 @@ function BoardCardElement({
                 margin: "0 2px"
               }}
             >
-              {boardCard.ShieldApplyAmount}
+              {ShieldApplyAmount}
             </div>
           )}
         </div>
-        {boardCard.CritChance > 0 && (
+        {CritChance > 0 && (
           <div
             style={{
               position: "absolute",
@@ -321,10 +383,10 @@ function BoardCardElement({
               color: "white"
             }}
           >
-            🎯 {boardCard.CritChance + "%"}
+            🎯 {CritChance + "%"}
           </div>
         )}
-        {boardCard.SellPrice !== undefined && (
+        {SellPrice !== undefined && (
           <div
             style={{
               position: "absolute",
@@ -337,10 +399,10 @@ function BoardCardElement({
               color: "white"
             }}
           >
-            💰 {boardCard.SellPrice}
+            💰 {SellPrice}
           </div>
         )}
-        {boardCard.Multicast !== undefined && boardCard.Multicast > 1 && (
+        {Multicast !== undefined && Multicast > 1 && (
           <div
             style={{
               position: "absolute",
@@ -357,7 +419,7 @@ function BoardCardElement({
             x{boardCard.Multicast}
           </div>
         )}
-        {boardCard.AmmoMax && (
+        {AmmoMax && (
           <div
             style={{
               position: "absolute",
@@ -370,7 +432,7 @@ function BoardCardElement({
               borderRadius: 5
             }}
           >
-            {[...new Array(boardCard.AmmoMax)].map((_, i) => {
+            {[...new Array(AmmoMax)].map((_, i) => {
               return (
                 <div
                   key={"ammo" + i}
@@ -378,8 +440,7 @@ function BoardCardElement({
                     width: 4,
                     height: 4,
                     borderRadius: 4,
-                    backgroundColor:
-                      (boardCard.Ammo ?? 0) > i ? "orange" : "transparent",
+                    backgroundColor: (Ammo ?? 0) > i ? "orange" : "transparent",
                     margin: "1px 1px",
                     border: "1px solid orange"
                   }}
@@ -473,6 +534,19 @@ function GameStep({ gameState }: { gameState: GameState }) {
   return (
     <div>
       {gameState.players.map((player: Player, playerID: number) => {
+        const Poison = getPlayerAttribute(gameState, playerID, "Poison");
+        const Burn = getPlayerAttribute(gameState, playerID, "Burn");
+        const HealthRegen = getPlayerAttribute(
+          gameState,
+          playerID,
+          "HealthRegen"
+        );
+        const Health = getPlayerAttribute(gameState, playerID, "Health");
+        const HealthMax = getPlayerAttribute(gameState, playerID, "HealthMax");
+        const Shield = getPlayerAttribute(gameState, playerID, "Shield");
+        const Gold = getPlayerAttribute(gameState, playerID, "Gold");
+        const Income = getPlayerAttribute(gameState, playerID, "Income");
+
         const ticks = Math.floor(player.HealthMax / 50);
         const healthBar = (
           <div
@@ -491,13 +565,12 @@ function GameStep({ gameState }: { gameState: GameState }) {
           >
             <div
               style={{
-                backgroundColor:
-                  Number(player.Poison) > 0 ? "#076044" : "#1da81c",
+                backgroundColor: Poison > 0 ? "#076044" : "#1da81c",
                 position: "absolute",
                 top: 0,
                 bottom: 0,
                 left: 0,
-                width: Math.max(0, player.Health / player.HealthMax) * 100 + "%"
+                width: Math.max(0, Health / HealthMax) * 100 + "%"
               }}
             />
             <div
@@ -507,7 +580,7 @@ function GameStep({ gameState }: { gameState: GameState }) {
                 top: 0,
                 bottom: "50%",
                 left: 0,
-                width: Math.min(1, player.Shield / player.HealthMax) * 100 + "%"
+                width: Math.min(1, Shield / HealthMax) * 100 + "%"
               }}
             />
             {[...new Array(ticks)].map((_, i) => {
@@ -547,7 +620,7 @@ function GameStep({ gameState }: { gameState: GameState }) {
               >
                 {Math.floor(player.Health)}
               </span>
-              {player.Shield >= 1 ? (
+              {Shield > 0 ? (
                 <span
                   style={{
                     color: "#ffd62e",
@@ -555,10 +628,10 @@ function GameStep({ gameState }: { gameState: GameState }) {
                     margin: "0 5px"
                   }}
                 >
-                  {Math.floor(player.Shield)}
+                  {Shield}
                 </span>
               ) : null}
-              {Number(player.Poison) > 0 ? (
+              {Poison > 0 ? (
                 <span
                   style={{
                     color: "#1e976d",
@@ -566,10 +639,10 @@ function GameStep({ gameState }: { gameState: GameState }) {
                     margin: "0 5px"
                   }}
                 >
-                  {player.Poison}
+                  {Poison}
                 </span>
               ) : null}
-              {Number(player.Burn) > 0 ? (
+              {Burn > 0 ? (
                 <span
                   style={{
                     color: "#d99c3e",
@@ -577,10 +650,10 @@ function GameStep({ gameState }: { gameState: GameState }) {
                     margin: "0 5px"
                   }}
                 >
-                  {player.Burn}
+                  {Burn}
                 </span>
               ) : null}
-              {Number(player.HealthRegen) > 0 ? (
+              {HealthRegen > 0 ? (
                 <span
                   style={{
                     color: "#96dd4b",
@@ -588,14 +661,14 @@ function GameStep({ gameState }: { gameState: GameState }) {
                     margin: "0 5px"
                   }}
                 >
-                  {player.HealthRegen}
+                  {HealthRegen}
                 </span>
               ) : null}
             </div>
             <div style={{ position: "absolute", right: 4, color: "yellow" }}>
               {[
-                player.Gold > 0 ? `Gold: ${player.Gold}` : null,
-                player.Income > 0 ? `Income: ${player.Income}` : null
+                Gold > 0 ? `Gold: ${Gold}` : null,
+                Income > 0 ? `Income: ${Income}` : null
               ]
                 .filter((x) => x)
                 .join(", ")}
@@ -1012,7 +1085,7 @@ export default function App({
   const [playerSkills, setPlayerSkills] = useState<PlayerSkillConfig[]>([]);
   const playerConfig = {
     type: "player",
-    health: 315,
+    health: 3150,
     healthRegen: 5,
     cards: playerCards,
     skills: playerSkills
