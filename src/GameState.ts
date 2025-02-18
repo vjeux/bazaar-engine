@@ -147,6 +147,20 @@ function getBoardCard(
   return _createBoardCardFromCard(card, tier, enchantment);
 }
 
+export function getDefaultTierBoardCard(Cards: V2Cards, name: string) {
+  const CardsValues = Object.values(Cards);
+  const card = CardsValues.find((c) => c.Localization?.Title?.Text === name);
+  if (!card) {
+    throw new Error(`Card ${name} not found`);
+  }
+  const tierKeys = Object.keys(card.Tiers || {});
+  if (tierKeys.length === 0) {
+    throw new Error(`Card ${card.Localization.Title.Text} has no tiers`);
+  }
+  const tier = tierKeys[0] as Tier;
+  return getBoardCard(Cards, name, tier);
+}
+
 function getBoardCardFromId(
   Cards: V2Cards,
   cardId: string,
