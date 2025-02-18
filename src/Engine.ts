@@ -760,7 +760,7 @@ function runAction(
       break;
     }
     case "TActionPlayerPoisonRemove": {
-      let amount = getCardAttribute(
+      const amount = getCardAttribute(
         gameState,
         targetPlayerID,
         targetBoardCardID,
@@ -830,7 +830,7 @@ function runAction(
         triggerPlayerID,
         targetPlayerID
       ).forEach((playerID) => {
-        let amount = getCardAttribute(
+        const amount = getCardAttribute(
           gameState,
           targetPlayerID,
           targetBoardCardID,
@@ -897,7 +897,7 @@ function runAction(
         triggerPlayerID,
         targetPlayerID
       ).forEach((playerID) => {
-        let amount = getCardAttribute(
+        const amount = getCardAttribute(
           gameState,
           targetPlayerID,
           targetBoardCardID,
@@ -1505,7 +1505,7 @@ function getTargetCards(
         // Shuffle
         let currentIndex = results.length;
         while (currentIndex != 0) {
-          let randomIndex = Math.floor(gameState.getRand() * currentIndex);
+          const randomIndex = Math.floor(gameState.getRand() * currentIndex);
           currentIndex--;
           [results[currentIndex], results[randomIndex]] = [
             results[randomIndex],
@@ -1641,7 +1641,7 @@ function getTargetPlayers(
   if (target.Conditions) {
     results = results.filter((playerID) => {
       switch (target.Conditions.$type) {
-        case "TPlayerConditionalAttribute":
+        case "TPlayerConditionalAttribute": {
           const value =
             gameState.players[playerID][target.Conditions.Attribute];
           const comparisonValue = getActionValue(
@@ -1669,6 +1669,7 @@ function getTargetPlayers(
                   target.Conditions.ComparisonOperator
               );
           }
+        }
         default:
           throw new Error(
             "Not implemented Conditions.$type: " + target.Conditions.$type
@@ -1715,7 +1716,7 @@ function runGameTick(initialGameState: GameState): GameState {
 
   // Poison + Regen
   if (gameState.tick % 1000 === 0) {
-    gameState.players.forEach((player, playerID) => {
+    gameState.players.forEach((player) => {
       if (player.Poison > 0) {
         player.Health -= player.Poison;
       }
@@ -1730,7 +1731,7 @@ function runGameTick(initialGameState: GameState): GameState {
 
   // Burn
   if (gameState.tick % 500 === 0) {
-    gameState.players.forEach((player, playerID) => {
+    gameState.players.forEach((player) => {
       if (player.Burn > 0) {
         const shield = player.Shield;
         const amount = player.Burn;
@@ -1829,7 +1830,6 @@ function runGameTick(initialGameState: GameState): GameState {
 
   // Trigger Cards
   cardTriggerList.forEach(([playerID, boardCardID, isMulticast]) => {
-    const boardCard = gameState.players[playerID].board[boardCardID];
     const AmmoMax = getCardAttribute(
       gameState,
       playerID,
