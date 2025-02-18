@@ -5,7 +5,8 @@ import {
   FluffyValue,
   AbilityAction,
   Enchantments,
-  TriggerType
+  TriggerType,
+  ActionType
 } from "./types/cardTypes";
 
 import { Tier } from "./types/shared";
@@ -459,12 +460,6 @@ function testConditions(
           .Enchantment === conditions.Enchantment;
       return conditions.IsNot ? !is : is;
     }
-    case "TCardConditionalHasEnchantment": {
-      const is =
-        gameState.players[targetPlayerID].board[targetBoardCardID]
-          .Enchantment === conditions.Enchantment;
-      return conditions.IsNot ? !is : is;
-    }
     case "TCardConditionalHiddenTag":
     case "TCardConditionalTag": {
       const tags =
@@ -765,7 +760,7 @@ function runAction(
       break;
     }
     case "TActionPlayerPoisonRemove": {
-      let amount = getCardAttribute(
+      const amount = getCardAttribute(
         gameState,
         targetPlayerID,
         targetBoardCardID,
@@ -835,7 +830,7 @@ function runAction(
         triggerPlayerID,
         targetPlayerID
       ).forEach((playerID) => {
-        let amount = getCardAttribute(
+        const amount = getCardAttribute(
           gameState,
           targetPlayerID,
           targetBoardCardID,
@@ -902,7 +897,7 @@ function runAction(
         triggerPlayerID,
         targetPlayerID
       ).forEach((playerID) => {
-        let amount = getCardAttribute(
+        const amount = getCardAttribute(
           gameState,
           targetPlayerID,
           targetBoardCardID,
@@ -1213,6 +1208,7 @@ function runAction(
           if (oldValue === undefined) {
             return;
           }
+
           const newValue =
             action.Operation === "Add"
               ? oldValue + actionValue
@@ -1509,7 +1505,7 @@ function getTargetCards(
         // Shuffle
         let currentIndex = results.length;
         while (currentIndex != 0) {
-          let randomIndex = Math.floor(gameState.getRand() * currentIndex);
+          const randomIndex = Math.floor(gameState.getRand() * currentIndex);
           currentIndex--;
           [results[currentIndex], results[randomIndex]] = [
             results[randomIndex],
@@ -1641,7 +1637,7 @@ function getTargetPlayers(
   if (target.Conditions) {
     results = results.filter((playerID) => {
       switch (target.Conditions.$type) {
-        case "TPlayerConditionalAttribute":
+        case "TPlayerConditionalAttribute": {
           const value =
             gameState.players[playerID][target.Conditions.Attribute];
           const comparisonValue = getActionValue(
@@ -1669,6 +1665,7 @@ function getTargetPlayers(
                   target.Conditions.ComparisonOperator
               );
           }
+        }
         default:
           throw new Error(
             "Not implemented Conditions.$type: " + target.Conditions.$type
@@ -1715,7 +1712,7 @@ function runGameTick(initialGameState: GameState): GameState {
 
   // Poison + Regen
   if (gameState.tick % 1000 === 0) {
-    gameState.players.forEach((player, playerID) => {
+    gameState.players.forEach((player) => {
       if (player.Poison > 0) {
         player.Health -= player.Poison;
       }
@@ -1730,7 +1727,7 @@ function runGameTick(initialGameState: GameState): GameState {
 
   // Burn
   if (gameState.tick % 500 === 0) {
-    gameState.players.forEach((player, playerID) => {
+    gameState.players.forEach((player) => {
       if (player.Burn > 0) {
         const shield = player.Shield;
         const amount = player.Burn;
@@ -1829,7 +1826,6 @@ function runGameTick(initialGameState: GameState): GameState {
 
   // Trigger Cards
   cardTriggerList.forEach(([playerID, boardCardID, isMulticast]) => {
-    const boardCard = gameState.players[playerID].board[boardCardID];
     const AmmoMax = getCardAttribute(
       gameState,
       playerID,
@@ -2062,7 +2058,7 @@ export function getTooltips(
             }
           }
 
-          switch (action.$type) {
+          switch (action.$type as ActionType) {
             case "TActionGameSpawnCards":
               return getActionValue(
                 gameState,
@@ -2078,10 +2074,12 @@ export function getTooltips(
               return boardCard.ReloadAmount;
             case "TActionPlayerHeal":
               return boardCard.HealAmount;
-            case "TActionPlayerShield":
+            case "TActionPlayerShieldApply":
               return boardCard.ShieldApplyAmount;
-            case "TActionPlayerPoison":
+            case "TActionPlayerPoisonApply":
               return boardCard.PoisonApplyAmount;
+            case "TActionPlayerBurnApply":
+              return boardCard.BurnApplyAmount;
             case "TActionCardFreeze":
               return boardCard.FreezeAmount / 1000;
             case "TActionCardHaste":
@@ -2090,6 +2088,7 @@ export function getTooltips(
               return boardCard.SlowAmount / 1000;
             case "TActionCardCharge":
               return boardCard.ChargeAmount / 1000;
+
             default:
               throw new Error("Action type not implemented: " + action.$type);
           }

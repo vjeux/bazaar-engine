@@ -751,7 +751,7 @@ function Game({ steps }: { steps: GameState[] }) {
   const [autoReset, setAutoReset] = useState(false);
 
   // If you live reload with a step higher than the length, it would throw.
-  let boundedStepCount = Math.min(steps.length - 1, stepCount);
+  const boundedStepCount = Math.min(steps.length - 1, stepCount);
 
   useEffect(() => {
     if (!autoScroll) return;
@@ -958,7 +958,7 @@ function CardSearch({
                   }}
                   className="tooltipContainer"
                   onClick={() => onSelectCard(card)}
-                  onMouseEnter={(e) => {
+                  onMouseEnter={() => {
                     setHoveredCard({
                       card,
                       tier: card.StartingTier
@@ -1044,7 +1044,7 @@ function CardSearch({
                   }}
                   className="tooltipContainer"
                   onClick={() => onSelectSkill(card)}
-                  onMouseEnter={(e) => {
+                  onMouseEnter={() => {
                     setHoveredCard({
                       card,
                       tier: card.StartingTier
