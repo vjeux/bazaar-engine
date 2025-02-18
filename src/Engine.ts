@@ -1643,6 +1643,12 @@ function runGameTick(initialGameState: GameState): GameState {
       tickRate *= 2;
     }
     let tick = TICK_RATE;
+    const CooldownMax = getCardAttribute(
+      gameState,
+      playerID,
+      boardCardID,
+      "CooldownMax"
+    );
     boardCard.Slow = Math.max(0, boardCard.Slow - tick);
     boardCard.Haste = Math.max(0, boardCard.Haste - tick);
     if (boardCard.Freeze > 0) {
@@ -1655,13 +1661,10 @@ function runGameTick(initialGameState: GameState): GameState {
         boardCard.Freeze = 0;
       }
     } else {
-      boardCard.tick = Math.min(
-        boardCard.tick + tickRate,
-        boardCard.CooldownMax
-      );
+      boardCard.tick = Math.min(boardCard.tick + tickRate, CooldownMax);
     }
 
-    if (boardCard.tick === boardCard.CooldownMax) {
+    if (boardCard.tick === CooldownMax) {
       const AmmoMax = getCardAttribute(
         gameState,
         playerID,
