@@ -641,21 +641,6 @@ function runAction(
         }
       }
 
-      if (
-        gameState.players[playerID].HealthMax !==
-        gameState.players[playerID].Health
-      ) {
-        updatePlayerAttribute(
-          gameState,
-          playerID,
-          "Health",
-          Math.min(
-            gameState.players[playerID].HealthMax,
-            gameState.players[playerID].Health + amount
-          )
-        );
-      }
-
       if (gameState.players[playerID].Poison > 0) {
         updatePlayerAttribute(
           gameState,
@@ -672,6 +657,38 @@ function runAction(
           gameState.players[playerID].Burn - 1
         );
       }
+
+      if (
+        gameState.players[playerID].HealthMax !==
+        gameState.players[playerID].Health
+      ) {
+        updatePlayerAttribute(
+          gameState,
+          playerID,
+          "Health",
+          Math.min(
+            gameState.players[playerID].HealthMax,
+            gameState.players[playerID].Health + amount
+          )
+        );
+      } else {
+        triggerActions(
+          gameState,
+          TriggerType.TTriggerOnCardPerformedOverHeal,
+          playerID,
+          -1,
+          targetPlayerID,
+          targetBoardCardID
+        );
+      }
+      triggerActions(
+        gameState,
+        TriggerType.TTriggerOnCardPerformedHeal,
+        playerID,
+        -1,
+        targetPlayerID,
+        targetBoardCardID
+      );
     });
   } else if (action.$type === "TActionPlayerPoisonApply") {
     let amount = getCardAttribute(
@@ -1547,21 +1564,6 @@ function runGameTick(initialGameState: GameState): GameState {
     multicast: [...initialGameState.multicast]
   };
 
-  // Run Auras
-  // forEachCard(initialGameState, (player, playerID, boardCard, boardCardID) => {
-  //   forEachAura(boardCard, (ability) => {
-  //     runAction(
-  //       gameState,
-  //       ability.Action,
-  //       ability.Prerequisites,
-  //       playerID,
-  //       boardCardID,
-  //       playerID,
-  //       boardCardID
-  //     );
-  //   });
-  // });
-
   // Start fight
   if (gameState.tick === 0) {
     forEachCard(
@@ -1583,9 +1585,6 @@ function runGameTick(initialGameState: GameState): GameState {
       }
     );
   }
-
-  // Run Tick
-  gameState.tick += TICK_RATE;
 
   // Poison + Regen
   if (gameState.tick % 1000 === 0) {
@@ -1857,6 +1856,9 @@ function runGameTick(initialGameState: GameState): GameState {
     }
   });
   gameState.isPlaying = isPlaying;
+
+  gameState.tick += TICK_RATE;
+
   return gameState;
 }
 
