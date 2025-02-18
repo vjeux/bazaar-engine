@@ -699,35 +699,25 @@ function runAction(
         triggerPlayerID,
         targetPlayerID
       ).forEach((playerID) => {
-        if (gameState.players[playerID].Poison > 0) {
-          updatePlayerAttribute(
-            gameState,
-            playerID,
-            "Poison",
-            gameState.players[playerID].Poison - 1
-          );
-        }
-        if (gameState.players[playerID].Burn > 0) {
-          updatePlayerAttribute(
-            gameState,
-            playerID,
-            "Burn",
-            gameState.players[playerID].Burn - 1
-          );
+        const poison = getPlayerAttribute(gameState, playerID, "Poison");
+        if (poison > 0) {
+          updatePlayerAttribute(gameState, playerID, "Poison", poison - 1);
         }
 
-        if (
-          gameState.players[playerID].HealthMax !==
-          gameState.players[playerID].Health
-        ) {
+        const burn = getPlayerAttribute(gameState, playerID, "Burn");
+        if (burn > 0) {
+          updatePlayerAttribute(gameState, playerID, "Burn", burn - 1);
+        }
+
+        const health = getPlayerAttribute(gameState, playerID, "Health");
+        const healthMax = getPlayerAttribute(gameState, playerID, "HealthMax");
+
+        if (health !== healthMax) {
           updatePlayerAttribute(
             gameState,
             playerID,
             "Health",
-            Math.min(
-              gameState.players[playerID].HealthMax,
-              gameState.players[playerID].Health + amount
-            )
+            Math.min(healthMax, health + amount)
           );
         } else {
           triggerActions(
@@ -776,6 +766,8 @@ function runAction(
         triggerPlayerID,
         targetPlayerID
       ).forEach((playerID) => {
+        const poison = getPlayerAttribute(gameState, playerID, "Poison");
+        updatePlayerAttribute(gameState, playerID, "Poison", poison + amount);
         triggerActions(
           gameState,
           TriggerType.TTriggerOnCardPerformedPoison,
@@ -783,12 +775,6 @@ function runAction(
           -1,
           targetPlayerID,
           targetBoardCardID
-        );
-        updatePlayerAttribute(
-          gameState,
-          playerID,
-          "Poison",
-          gameState.players[playerID].Poison + amount
         );
       });
       break;
@@ -806,11 +792,12 @@ function runAction(
         triggerPlayerID,
         targetPlayerID
       ).forEach((playerID) => {
+        const poison = getPlayerAttribute(gameState, playerID, "Poison");
         updatePlayerAttribute(
           gameState,
           playerID,
           "Poison",
-          Math.max(0, gameState.players[playerID].Poison - amount)
+          Math.max(0, poison - amount)
         );
       });
       break;
@@ -840,6 +827,8 @@ function runAction(
         triggerPlayerID,
         targetPlayerID
       ).forEach((playerID) => {
+        const burn = getPlayerAttribute(gameState, playerID, "Burn");
+        updatePlayerAttribute(gameState, playerID, "Burn", burn + amount);
         triggerActions(
           gameState,
           TriggerType.TTriggerOnCardPerformedBurn,
@@ -847,12 +836,6 @@ function runAction(
           -1,
           targetPlayerID,
           targetBoardCardID
-        );
-        updatePlayerAttribute(
-          gameState,
-          playerID,
-          "Burn",
-          gameState.players[playerID].Burn + amount
         );
       });
       break;
@@ -871,11 +854,12 @@ function runAction(
           "BurnRemoveAmount"
         );
 
+        const burn = getPlayerAttribute(gameState, playerID, "Burn");
         updatePlayerAttribute(
           gameState,
           playerID,
           "Burn",
-          Math.max(0, gameState.players[playerID].Burn - amount)
+          Math.max(0, burn - amount)
         );
       });
       break;
@@ -906,12 +890,8 @@ function runAction(
         triggerPlayerID,
         targetPlayerID
       ).forEach((playerID) => {
-        updatePlayerAttribute(
-          gameState,
-          playerID,
-          "Shield",
-          gameState.players[playerID].Shield + amount
-        );
+        const shield = getPlayerAttribute(gameState, playerID, "Shield");
+        updatePlayerAttribute(gameState, playerID, "Shield", shield + amount);
 
         triggerActions(
           gameState,
@@ -937,12 +917,12 @@ function runAction(
           targetBoardCardID,
           "ShieldRemoveAmount"
         );
-
+        const shield = getPlayerAttribute(gameState, playerID, "Shield");
         updatePlayerAttribute(
           gameState,
           playerID,
           "Shield",
-          Math.max(0, gameState.players[playerID].Shield - amount)
+          Math.max(0, shield - amount)
         );
       });
       break;
@@ -1120,16 +1100,19 @@ function runAction(
         })
         .slice(0, targetCount)
         .forEach(([actionTargetPlayerID, actionTargetBoardCardID]) => {
+          const existingAmount = getCardAttribute(
+            gameState,
+            actionTargetPlayerID,
+            actionTargetBoardCardID,
+            tickKey
+          );
           updateCardAttribute(
             gameState,
             actionTargetPlayerID,
             actionTargetBoardCardID,
             tickKey,
-            gameState.players[actionTargetPlayerID].board[
-              actionTargetBoardCardID
-            ][tickKey] + amount
+            existingAmount + amount
           );
-
           triggerActions(
             gameState,
             triggerType,
@@ -1761,20 +1744,26 @@ function runGameTick(initialGameState: GameState): GameState {
 
   // Burn
   if (gameState.tick % 500 === 0) {
-    gameState.players.forEach((player) => {
-      if (player.Burn > 0) {
-        const shield = player.Shield;
-        const amount = player.Burn;
+    gameState.players.forEach((player, playerID) => {
+      const burn = getPlayerAttribute(gameState, playerID, "Burn");
+      if (burn > 0) {
+        const shield = getPlayerAttribute(gameState, playerID, "Shield");
 
-        const nextShield = Math.max(0, shield - amount / 2);
+        const nextShield = Math.max(0, shield - burn / 2);
         if (nextShield > 0) {
-          player.Shield = nextShield;
+          updatePlayerAttribute(gameState, playerID, "Shield", nextShield);
         } else {
-          const nextAmount = amount - shield * 2;
-          player.Shield = 0;
-          player.Health -= nextAmount;
+          const nextAmount = burn - shield * 2;
+          const health = getPlayerAttribute(gameState, playerID, "Health");
+          updatePlayerAttribute(gameState, playerID, "Shield", 0);
+          updatePlayerAttribute(
+            gameState,
+            playerID,
+            "Health",
+            health - nextAmount
+          );
         }
-        player.Burn--;
+        updatePlayerAttribute(gameState, playerID, "Burn", burn - 1);
       }
     });
   }
