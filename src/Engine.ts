@@ -1729,15 +1729,24 @@ function runGameTick(initialGameState: GameState): GameState {
 
   // Poison + Regen
   if (gameState.tick % 1000 === 0) {
-    gameState.players.forEach((player) => {
-      if (player.Poison > 0) {
-        player.Health -= player.Poison;
+    gameState.players.forEach((player, playerID) => {
+      const healthRegen = getPlayerAttribute(
+        gameState,
+        playerID,
+        "HealthRegen"
+      );
+      if (healthRegen > 0) {
+        const health = getPlayerAttribute(gameState, playerID, "Health");
+        const healthMax = getPlayerAttribute(gameState, playerID, "HealthMax");
+        const nextHealth = Math.min(healthMax, health + healthRegen);
+        if (health !== nextHealth) {
+          updatePlayerAttribute(gameState, playerID, "Health", nextHealth);
+        }
       }
-      if (player.HealthRegen > 0) {
-        player.Health = Math.min(
-          player.Health + player.HealthRegen,
-          player.HealthMax
-        );
+      const poison = getPlayerAttribute(gameState, playerID, "Poison");
+      if (player.Poison > 0) {
+        const health = getPlayerAttribute(gameState, playerID, "Health");
+        updatePlayerAttribute(gameState, playerID, "Health", health - poison);
       }
     });
   }
@@ -1795,19 +1804,32 @@ function runGameTick(initialGameState: GameState): GameState {
       boardCardID,
       "CooldownMax"
     );
-    boardCard.Slow = Math.max(0, boardCard.Slow - tick);
-    boardCard.Haste = Math.max(0, boardCard.Haste - tick);
-    if (boardCard.Freeze > 0) {
-      boardCard.Freeze -= tick;
-      tick = boardCard.Freeze;
-      if (boardCard.Freeze > 0) {
-        tick = 0;
-      } else {
-        tick = -boardCard.Freeze;
-        boardCard.Freeze = 0;
-      }
-    } else {
+    const slow = getCardAttribute(gameState, playerID, boardCardID, "Slow");
+    const nextSlow = Math.max(0, slow - tick);
+    if (nextSlow !== slow) {
+      updateCardAttribute(gameState, playerID, boardCardID, "Slow", nextSlow);
+    }
+
+    const haste = getCardAttribute(gameState, playerID, boardCardID, "Haste");
+    const nextHaste = Math.max(0, haste - tick);
+    if (nextHaste !== haste) {
+      updateCardAttribute(gameState, playerID, boardCardID, "Haste", nextHaste);
+    }
+
+    const freeze = getCardAttribute(gameState, playerID, boardCardID, "Freeze");
+    if (freeze === 0) {
       boardCard.tick = Math.min(boardCard.tick + tickRate, CooldownMax);
+    }
+
+    const nextFreeze = Math.max(0, freeze - tick);
+    if (nextFreeze !== freeze) {
+      updateCardAttribute(
+        gameState,
+        playerID,
+        boardCardID,
+        "Freeze",
+        nextFreeze
+      );
     }
 
     if (boardCard.tick === CooldownMax) {
@@ -1857,8 +1879,13 @@ function runGameTick(initialGameState: GameState): GameState {
     );
     if (!isMulticast && AmmoMax) {
       const Ammo = getCardAttribute(gameState, playerID, boardCardID, "Ammo");
-      gameState.players[playerID].board[boardCardID].Ammo =
-        Ammo === undefined ? AmmoMax - 1 : Ammo - 1;
+      updateCardAttribute(
+        gameState,
+        playerID,
+        boardCardID,
+        "Ammo",
+        Ammo === undefined ? AmmoMax - 1 : Ammo - 1
+      );
     }
 
     forEachCard(
