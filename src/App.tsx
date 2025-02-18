@@ -419,7 +419,7 @@ function BoardCardElement({
             x{boardCard.Multicast}
           </div>
         )}
-        {AmmoMax && (
+        {AmmoMax !== undefined && (
           <div
             style={{
               position: "absolute",
@@ -440,7 +440,10 @@ function BoardCardElement({
                     width: 4,
                     height: 4,
                     borderRadius: 4,
-                    backgroundColor: (Ammo ?? 0) > i ? "orange" : "transparent",
+                    backgroundColor:
+                      (Ammo === undefined ? AmmoMax : Ammo) > i
+                        ? "orange"
+                        : "transparent",
                     margin: "1px 1px",
                     border: "1px solid orange"
                   }}
@@ -1095,7 +1098,7 @@ export default function App({
     monsterConfig ?? { type: "player", health: 3500 },
     playerConfig
   ]);
-  const steps = run(initialGameState, 1);
+  const steps = run(initialGameState, 10000);
 
   const encounters = Encounters.data
     .map((data) => {

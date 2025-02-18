@@ -124,18 +124,6 @@ export function getCardAttribute(
         ) {
           return;
         }
-        if (!action.Value) {
-          throw new Error("Missing Value");
-        }
-        const actionValue = getActionValue(
-          gameState,
-          action.Value,
-          playerID,
-          boardCardID,
-          targetPlayerID,
-          targetBoardCardID
-        );
-
         const targetCards = getTargetCards(
           gameState,
           action.Target,
@@ -166,6 +154,15 @@ export function getCardAttribute(
             ) {
               return;
             }
+
+            const actionValue = getActionValue(
+              gameState,
+              action.Value as FluffyValue,
+              playerID,
+              boardCardID,
+              targetPlayerID,
+              targetBoardCardID
+            );
 
             value =
               action.Operation === "Add"
@@ -200,15 +197,6 @@ export function getPlayerAttribute(
           return;
         }
 
-        const actionValue = getActionValue(
-          gameState,
-          action.Value as FluffyValue,
-          playerID,
-          -1,
-          targetPlayerID,
-          targetBoardCardID
-        );
-
         getTargetPlayers(
           gameState,
           action.Target,
@@ -218,6 +206,15 @@ export function getPlayerAttribute(
           if (actionTargetPlayerID !== playerID) {
             return;
           }
+
+          const actionValue = getActionValue(
+            gameState,
+            action.Value as FluffyValue,
+            playerID,
+            -1,
+            targetPlayerID,
+            targetBoardCardID
+          );
 
           value =
             action.Operation === "Add"
@@ -1433,10 +1430,15 @@ function getTargetCards(
     let highestPlayerID = null;
     let highestBoardCardID = null;
     results.forEach(([testPlayerID, testBoardCardID]) => {
-      const boardCard = gameState.players[testPlayerID].board[testBoardCardID];
-      const value = boardCard[target.Conditions.AttributeType];
+      const value = getCardAttribute(
+        gameState,
+        testPlayerID,
+        testBoardCardID,
+        target.Conditions.AttributeType
+      );
+
       if (
-        !boardCard.isDisabled &&
+        !gameState.players[testPlayerID].board[testBoardCardID].isDisabled &&
         value !== undefined &&
         value > highestValue
       ) {
@@ -1623,14 +1625,13 @@ function runGameTick(initialGameState: GameState): GameState {
   // Ticks
   const cardTriggerList: [number, number, boolean][] = [];
   forEachCard(gameState, (player, playerID, boardCard, boardCardID) => {
-    const nextBoardCard = gameState.players[playerID].board[boardCardID];
-    if (nextBoardCard.card.$type === "TCardSkill") {
+    if (boardCard.card.$type === "TCardSkill") {
       return;
     }
-    if (nextBoardCard.isDisabled) {
+    if (boardCard.isDisabled) {
       return;
     }
-    if (!hasCooldown(nextBoardCard)) {
+    if (!hasCooldown(boardCard)) {
       return;
     }
 
@@ -1642,29 +1643,33 @@ function runGameTick(initialGameState: GameState): GameState {
       tickRate *= 2;
     }
     let tick = TICK_RATE;
-    nextBoardCard.Slow = Math.max(0, boardCard.Slow - tick);
-    nextBoardCard.Haste = Math.max(0, boardCard.Haste - tick);
+    boardCard.Slow = Math.max(0, boardCard.Slow - tick);
+    boardCard.Haste = Math.max(0, boardCard.Haste - tick);
     if (boardCard.Freeze > 0) {
-      nextBoardCard.Freeze -= tick;
+      boardCard.Freeze -= tick;
       tick = boardCard.Freeze;
       if (boardCard.Freeze > 0) {
         tick = 0;
       } else {
         tick = -boardCard.Freeze;
-        nextBoardCard.Freeze = 0;
+        boardCard.Freeze = 0;
       }
     } else {
-      nextBoardCard.tick = Math.min(
+      boardCard.tick = Math.min(
         boardCard.tick + tickRate,
         boardCard.CooldownMax
       );
     }
 
-    if (nextBoardCard.tick === boardCard.CooldownMax) {
-      if (
-        !nextBoardCard.AmmoMax ||
-        (nextBoardCard.AmmoMax && nextBoardCard.Ammo > 0)
-      ) {
+    if (boardCard.tick === boardCard.CooldownMax) {
+      const AmmoMax = getCardAttribute(
+        gameState,
+        playerID,
+        boardCardID,
+        "AmmoMax"
+      );
+      const Ammo = getCardAttribute(gameState, playerID, boardCardID, "Ammo");
+      if (!AmmoMax || (AmmoMax && Ammo === undefined) || Ammo > 0) {
         cardTriggerList.push([playerID, boardCardID, /* isMulticast */ false]);
         if ("Multicast" in boardCard) {
           const MULTICAST_DELAY = 300;
@@ -1696,8 +1701,16 @@ function runGameTick(initialGameState: GameState): GameState {
   // Trigger Cards
   cardTriggerList.forEach(([playerID, boardCardID, isMulticast]) => {
     const boardCard = gameState.players[playerID].board[boardCardID];
-    if (!isMulticast && boardCard.AmmoMax) {
-      gameState.players[playerID].board[boardCardID].Ammo--;
+    const AmmoMax = getCardAttribute(
+      gameState,
+      playerID,
+      boardCardID,
+      "AmmoMax"
+    );
+    if (!isMulticast && AmmoMax) {
+      const Ammo = getCardAttribute(gameState, playerID, boardCardID, "Ammo");
+      gameState.players[playerID].board[boardCardID].Ammo =
+        Ammo === undefined ? AmmoMax - 1 : Ammo - 1;
     }
 
     forEachCard(
