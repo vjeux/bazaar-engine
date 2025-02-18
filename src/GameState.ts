@@ -12,17 +12,12 @@ import { EncounterDays, Group } from "./types/encounterTypes";
 // Not sure how to fix this.
 // https://www.youtube.com/watch?v=nPYXguaNr8I
 
-// Sparring Partner heals to half life because Aura is not triggered at the right time
-getBoardMonster("Sparring Partner"),
- 
+// Day 4 - Flame Juggler
+// The skill Burst of Flame seems to trigger when the oppononent reaches 1/3 of life rather than 1/2.
+
 // Freeze skills aren't working properly
 getBoardMonster("Volkas Enforcer"),
- 
-// Need to implement lifesteal
- 
-// Sandstorm ticks are not correct, there should be a bunch of -1 at
-// the beginning: https://youtu.be/IurqE_Egvr0?si=_x2pflCNfuxdUGvQ&t=64
-*/
+ */
 
 function _createBoardCardFromCard(
   card: V2Card,
