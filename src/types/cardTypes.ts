@@ -60,7 +60,7 @@ export interface Ability {
 }
 
 export interface AbilityAction {
-  $type: PurpleType;
+  $type: ActionType;
   AttributeType?: AttributeType;
   Value?: FluffyValue;
   Operation?: Operation;
@@ -76,7 +76,7 @@ export interface AbilityAction {
   Tags?: Tag[];
 }
 
-export enum PurpleType {
+export enum ActionType {
   TActionCardAddTagsBySource = "TActionCardAddTagsBySource",
   TActionCardAddTagsList = "TActionCardAddTagsList",
   TActionCardBeginSandstorm = "TActionCardBeginSandstorm",
@@ -1000,7 +1000,7 @@ export interface PurpleE1 {
 }
 
 export interface PurpleAction {
-  $type: PurpleType;
+  $type: ActionType;
   Value?: Limit;
   AttributeType?: AttributeType;
   Operation?: Operation;
@@ -1107,7 +1107,7 @@ export interface PurpleE2 {
 }
 
 export interface FluffyAction {
-  $type: PurpleType;
+  $type: ActionType;
   Value: TargetCount;
   AttributeType: AttributeType;
   Operation: Operation;
@@ -1177,7 +1177,7 @@ export interface E {
 }
 
 export interface EAction {
-  $type: PurpleType;
+  $type: ActionType;
   AttributeType: AttributeType;
   Operation: Operation;
   Value: TargetCount;
@@ -1242,7 +1242,7 @@ export interface FluffyE1 {
 }
 
 export interface TentacledAction {
-  $type: PurpleType;
+  $type: ActionType;
   AttributeType: AttributeType;
   Operation: Operation;
   Value: IndigoValue;
@@ -1310,7 +1310,7 @@ export interface FluffyE2 {
 }
 
 export interface StickyAction {
-  $type: PurpleType;
+  $type: ActionType;
   AttributeType: AttributeType;
   Operation: Operation;
   Value: TargetCount;
@@ -1407,7 +1407,7 @@ export interface E1 {
 }
 
 export interface E1Action {
-  $type: PurpleType;
+  $type: ActionType;
   ReferenceValue: null;
   Target: AmbitiousTarget;
 }
@@ -1431,7 +1431,7 @@ export interface TentacledE1 {
 }
 
 export interface IndigoAction {
-  $type: PurpleType;
+  $type: ActionType;
   ReferenceValue?: null;
   Target: CunningTarget;
   Value?: IndecentValue;
@@ -1534,7 +1534,7 @@ export interface TentacledE2 {
 }
 
 export interface IndecentAction {
-  $type: PurpleType;
+  $type: ActionType;
   Value?: Limit;
   AttributeType?: AttributeType;
   Operation?: Operation;
@@ -1618,7 +1618,7 @@ export interface E2Class {
 }
 
 export interface E2Action {
-  $type: PurpleType;
+  $type: ActionType;
   AttributeType: AttributeType;
   Operation: Operation;
   Value: Limit;
@@ -1663,7 +1663,7 @@ export interface StickyE2 {
 }
 
 export interface AmbitiousAction {
-  $type: PurpleType;
+  $type: ActionType;
   AttributeType: AttributeType;
   Operation: Operation;
   Value: HilariousValue;
@@ -1742,7 +1742,7 @@ export interface IndigoE1 {
 }
 
 export interface CunningAction {
-  $type: PurpleType;
+  $type: ActionType;
   Value?: StickyValue;
   AttributeType?: AttributeType;
   Operation?: Operation;
@@ -1790,7 +1790,7 @@ export interface IndigoE2 {
 }
 
 export interface MagentaAction {
-  $type: PurpleType;
+  $type: ActionType;
   TargetPlayer: TargetPlayerClass;
   SpawnContext: FluffySpawnContext;
 }
@@ -1863,7 +1863,7 @@ export interface E1Class {
 }
 
 export interface MischievousAction {
-  $type: PurpleType;
+  $type: ActionType;
   AttributeType: AttributeType;
   Operation: Operation;
   Value: TargetCount;
@@ -1902,7 +1902,7 @@ export interface The3 {
 }
 
 export interface The3_Action {
-  $type: PurpleType;
+  $type: ActionType;
   Value: TargetCount;
   AttributeType: AttributeType;
   Operation: Operation;
@@ -1933,7 +1933,7 @@ export interface HilariousE1 {
 }
 
 export interface BraggadociousAction {
-  $type: PurpleType;
+  $type: ActionType;
   Target: HilariousTarget;
   Enchantment?: string;
 }
@@ -1959,7 +1959,7 @@ export interface IndecentE2 {
 }
 
 export interface Action1 {
-  $type: PurpleType;
+  $type: ActionType;
   Value?: TargetCount;
   AttributeType?: AttributeType;
   Operation?: Operation;
@@ -2010,7 +2010,7 @@ export interface AmbitiousE1 {
 }
 
 export interface Action2 {
-  $type: PurpleType;
+  $type: ActionType;
   Target: AmbitiousTarget;
   Enchantment?: IndigoInternalDescription;
 }
@@ -2139,7 +2139,7 @@ export interface MagentaE1 {
 }
 
 export interface Action3 {
-  $type: PurpleType;
+  $type: ActionType;
   Value?: TargetCount;
   AttributeType?: AttributeType;
   Operation?: Operation;
@@ -2234,7 +2234,7 @@ export interface PurpleE3 {
 }
 
 export interface Action4 {
-  $type: PurpleType;
+  $type: ActionType;
   Value: TargetCount;
   AttributeType: AttributeType;
   Operation: Operation;
@@ -2268,7 +2268,7 @@ export interface FluffyE3 {
 }
 
 export interface Action5 {
-  $type: PurpleType;
+  $type: ActionType;
   AttributeType: AttributeType;
   Operation: Operation;
   Value: Limit;
@@ -2307,7 +2307,7 @@ export interface TentacledE3 {
 }
 
 export interface Action6 {
-  $type: PurpleType;
+  $type: ActionType;
   Value: TargetCount;
   AttributeType: AttributeType;
   Operation: Operation;
@@ -2341,7 +2341,7 @@ export interface StickyE3 {
 }
 
 export interface Action7 {
-  $type: PurpleType;
+  $type: ActionType;
   AttributeType: AttributeType;
   Operation: Operation;
   Value: Limit;
@@ -2391,7 +2391,7 @@ export interface FriskyE1 {
 }
 
 export interface Action8 {
-  $type: PurpleType;
+  $type: ActionType;
   Enchantment?: TentacledInternalDescription;
   Target?: AmbitiousTarget;
   TargetPlayer?: TargetPlayerClass;
@@ -2467,7 +2467,7 @@ export interface E4Class {
 }
 
 export interface E4Action {
-  $type: PurpleType;
+  $type: ActionType;
   AttributeType: AttributeType;
   Operation: Operation;
   Value: AmbitiousValue;
@@ -2515,7 +2515,7 @@ export interface AmbitiousE2 {
 }
 
 export interface Action10 {
-  $type: PurpleType;
+  $type: ActionType;
   Value?: TargetCount;
   AttributeType?: AttributeType;
   Operation?: Operation;
@@ -2562,7 +2562,7 @@ export interface BraggadociousE1 {
 }
 
 export interface Action11 {
-  $type: PurpleType;
+  $type: ActionType;
   Target: IndigoTarget;
   Enchantment?: AmbitiousInternalDescription;
 }

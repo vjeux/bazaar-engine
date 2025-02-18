@@ -6,7 +6,7 @@ import {
   AbilityAction,
   Enchantments,
   TriggerType,
-  PurpleType
+  ActionType
 } from "./types/cardTypes";
 
 import { Tier } from "./types/shared";
@@ -2062,7 +2062,7 @@ export function getTooltips(
             }
           }
 
-          switch (action.$type as PurpleType) {
+          switch (action.$type as ActionType) {
             case "TActionGameSpawnCards":
               return getActionValue(
                 gameState,
