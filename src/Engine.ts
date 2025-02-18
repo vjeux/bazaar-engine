@@ -1198,16 +1198,16 @@ function runAction(
               targetBoardCardID
             );
 
-    targetCards
-      .slice(0, targetCount)
-      .forEach(([actionTargetPlayerID, actionTargetBoardCardID]) => {
-        const oldValue =
-          gameState.players[actionTargetPlayerID].board[
-            actionTargetBoardCardID
-          ][action.AttributeType as string];
-        if (oldValue === undefined) {
-          return;
-        }
+      targetCards
+        .slice(0, targetCount)
+        .forEach(([actionTargetPlayerID, actionTargetBoardCardID]) => {
+          const oldValue =
+            gameState.players[actionTargetPlayerID].board[
+              actionTargetBoardCardID
+            ][action.AttributeType as string];
+          if (oldValue === undefined) {
+            return;
+          }
 
           const newValue =
             action.Operation === "Add"
@@ -1610,9 +1610,7 @@ function getTargetPlayers(
           results = [targetPlayerID];
           break;
         default:
-          throw new Error(
-            "Not implemented TargetMode: " + target.TargetMode
-          );
+          throw new Error("Not implemented TargetMode: " + target.TargetMode);
       }
       break;
     case "TTargetCardSection":
@@ -1629,9 +1627,7 @@ function getTargetPlayers(
       if (target.TargetMode === "Both") {
         results = [targetPlayerID, (targetPlayerID + 1) % 2];
       } else {
-        throw new Error(
-          "Not implemented TargetMode: " + target.TargetMode
-        );
+        throw new Error("Not implemented TargetMode: " + target.TargetMode);
       }
       break;
     default:
