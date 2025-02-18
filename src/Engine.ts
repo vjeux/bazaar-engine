@@ -458,7 +458,20 @@ function testConditions(
         gameState.players[targetPlayerID].board[targetBoardCardID]
           .Enchantment === conditions.Enchantment;
       return conditions.IsNot ? !is : is;
+    case "TCardConditionalHasEnchantment": {
+      const is =
+        gameState.players[targetPlayerID].board[targetBoardCardID]
+          .Enchantment === conditions.Enchantment;
+      return conditions.IsNot ? !is : is;
     }
+    case "TCardConditionalHiddenTag":
+    case "TCardConditionalTag": {
+      const tags =
+        gameState.players[targetPlayerID].board[targetBoardCardID].card[
+          conditions.$type === "TCardConditionalHiddenTag"
+            ? "HiddenTags"
+            : "Tags"
+        ];
     case "TCardConditionalHiddenTag":
     case "TCardConditionalTag": {
       const tags =
@@ -1208,6 +1221,12 @@ function runAction(
               : action.Operation === "Multiply"
                 ? oldValue * actionValue
                 : oldValue;
+          const newValue =
+            action.Operation === "Add"
+              ? oldValue + actionValue
+              : action.Operation === "Multiply"
+                ? oldValue * actionValue
+                : oldValue;
 
         updateCardAttribute(
           gameState,
@@ -1369,6 +1388,142 @@ function getTargetCards(
           ? [triggerPlayerID, triggerBoardCardID]
           : [targetPlayerID, targetBoardCardID];
 
+  switch (target.$type) {
+    case "TTargetCardSelf":
+      results.push([targetPlayerID, targetBoardCardID]);
+      break;
+    case "TTargetCardTriggerSource":
+      results.push([triggerPlayerID, triggerBoardCardID]);
+      break;
+    case "TTargetCardPositional": {
+      const [originPlayerID, originBoardCardID] =
+        target.Origin === "TriggerSource"
+          ? [triggerPlayerID, triggerBoardCardID]
+          : [targetPlayerID, targetBoardCardID];
+
+      switch (target.TargetMode) {
+        case "AllRightCards": {
+          const lengthCardItems =
+            gameState.players[originPlayerID].board.findLastIndex(
+              (boardCard) => boardCard.card.$type === "TCardItem"
+            ) + 1;
+          for (
+            let i = originBoardCardID + (target.IncludeOrigin ? 0 : 1);
+            i < lengthCardItems;
+            ++i
+          ) {
+            results.push([originPlayerID, i]);
+          }
+          break;
+        }
+        case "AllLeftCards": {
+          for (
+            let i = 0;
+            i < originBoardCardID - (target.IncludeOrigin ? 0 : 1);
+            ++i
+          ) {
+            results.push([originPlayerID, i]);
+          }
+          break;
+        }
+        case "Neighbor": {
+          if (target.IncludeOrigin) {
+            results.push([originPlayerID, originBoardCardID]);
+          }
+          if (originBoardCardID !== 0) {
+            results.push([originPlayerID, originBoardCardID - 1]);
+          }
+          const lengthCardItems =
+            gameState.players[originPlayerID].board.findLastIndex(
+              (boardCard) => boardCard.card.$type === "TCardItem"
+            ) + 1;
+          if (originBoardCardID < lengthCardItems - 1) {
+            results.push([originPlayerID, originBoardCardID + 1]);
+          }
+          break;
+        }
+        case "RightCard": {
+          if (target.IncludeOrigin) {
+            results.push([targetPlayerID, targetBoardCardID]);
+          }
+          const lengthCardItems =
+            gameState.players[targetPlayerID].board.findLastIndex(
+              (boardCard) => boardCard.card.$type === "TCardItem"
+            ) + 1;
+          if (targetBoardCardID < lengthCardItems - 1) {
+            results.push([targetPlayerID, targetBoardCardID + 1]);
+          }
+          break;
+        }
+        case "LeftCard": {
+          if (target.IncludeOrigin) {
+            results.push([targetPlayerID, targetBoardCardID]);
+          }
+          if (targetBoardCardID !== 0) {
+            results.push([targetPlayerID, targetBoardCardID - 1]);
+          }
+          break;
+        }
+        default:
+          throw new Error(
+            "Not implemented Target.TargetMode: " + target.TargetMode
+          );
+      }
+      break;
+    }
+    case "TTargetCardSection":
+    case "TTargetCardRandom": {
+      switch (target.TargetSection) {
+        case "SelfHand":
+        case "SelfBoard": {
+          const lengthCardItems =
+            gameState.players[targetPlayerID].board.findLastIndex(
+              (boardCard) => boardCard.card.$type === "TCardItem"
+            ) + 1;
+          for (let i = 0; i < lengthCardItems; ++i) {
+            if (
+              i !== targetBoardCardID ||
+              (i === targetBoardCardID && !target.ExcludeSelf)
+            ) {
+              results.push([targetPlayerID, i]);
+            }
+          }
+          break;
+        }
+        case "OpponentHand":
+        case "OpponentBoard": {
+          const lengthCardItems =
+            gameState.players[(targetPlayerID + 1) % 2].board.findLastIndex(
+              (boardCard) => boardCard.card.$type === "TCardItem"
+            ) + 1;
+          for (let i = 0; i < lengthCardItems; ++i) {
+            results.push([(targetPlayerID + 1) % 2, i]);
+          }
+          break;
+        }
+        case "AllHands": {
+          gameState.players.forEach((player, playerID) => {
+            const lengthCardItems =
+              gameState.players[playerID].board.findLastIndex(
+                (boardCard) => boardCard.card.$type === "TCardItem"
+              ) + 1;
+            for (let i = 0; i < lengthCardItems; ++i) {
+              if (
+                playerID !== targetPlayerID ||
+                i !== targetBoardCardID ||
+                (i === targetBoardCardID && !target.ExcludeSelf)
+              ) {
+                results.push([playerID, i]);
+              }
+            }
+          });
+          break;
+        }
+        default:
+          throw new Error(
+            "Not implemented Target.TargetSection: " + target.TargetSection
+          );
+      }
       switch (target.TargetMode) {
         case "AllRightCards": {
           const lengthCardItems =
@@ -1524,6 +1679,37 @@ function getTargetCards(
     }
     default:
       throw new Error("Not implemented Target.$type: " + target.$type);
+      if (target.$type === "TTargetCardRandom") {
+        // Shuffle
+        let currentIndex = results.length;
+        while (currentIndex != 0) {
+          let randomIndex = Math.floor(gameState.getRand() * currentIndex);
+          currentIndex--;
+          [results[currentIndex], results[randomIndex]] = [
+            results[randomIndex],
+            results[currentIndex]
+          ];
+        }
+      }
+      break;
+    }
+    case "TTargetCardXMost": {
+      const lengthCardItems =
+        gameState.players[targetPlayerID].board.findLastIndex(
+          (boardCard) => boardCard.card.$type === "TCardItem"
+        ) + 1;
+      for (let i = 0; i < lengthCardItems; ++i) {
+        if (
+          i !== targetBoardCardID ||
+          (i === targetBoardCardID && !target.ExcludeSelf)
+        ) {
+          results.push([targetPlayerID, i]);
+        }
+      }
+      break;
+    }
+    default:
+      throw new Error("Not implemented Target.$type: " + target.$type);
   }
 
   if (
@@ -1578,6 +1764,11 @@ function getTargetCards(
         return filteredResults.slice(0, 1);
       default:
         return filteredResults.slice(-1);
+    switch (target.TargetMode) {
+      case "LeftMostCard":
+        return filteredResults.slice(0, 1);
+      default:
+        return filteredResults.slice(-1);
     }
   }
 
@@ -1591,6 +1782,43 @@ function getTargetPlayers(
   targetPlayerID: number
 ): number[] {
   let results: number[] = [];
+
+  switch (target.$type) {
+    case "TTargetPlayerRelative":
+      switch (target.TargetMode) {
+        case "Opponent":
+          results = [(targetPlayerID + 1) % 2];
+          break;
+        case "Self":
+          results = [targetPlayerID];
+          break;
+        default:
+          throw new Error(
+            "Not implemented TargetMode: " + target.TargetMode
+          );
+      }
+      break;
+    case "TTargetCardSection":
+      switch (target.TargetSection) {
+        case "SelfBoard":
+          results = [targetPlayerID];
+          break;
+        default:
+          results = [(targetPlayerID + 1) % 2];
+          break;
+      }
+      break;
+    case "TTargetPlayer":
+      if (target.TargetMode === "Both") {
+        results = [targetPlayerID, (targetPlayerID + 1) % 2];
+      } else {
+        throw new Error(
+          "Not implemented TargetMode: " + target.TargetMode
+        );
+      }
+      break;
+    default:
+      throw new Error("Unhandled target type: " + target.$type);
 
   switch (target.$type) {
     case "TTargetPlayerRelative":
