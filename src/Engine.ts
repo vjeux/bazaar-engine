@@ -5,7 +5,8 @@ import {
   FluffyValue,
   AbilityAction,
   Enchantments,
-  TriggerType
+  TriggerType,
+  PurpleType
 } from "./types/cardTypes";
 
 import { Tier } from "./types/shared";
@@ -2061,7 +2062,7 @@ export function getTooltips(
             }
           }
 
-          switch (action.$type) {
+          switch (action.$type as PurpleType) {
             case "TActionGameSpawnCards":
               return getActionValue(
                 gameState,
@@ -2077,10 +2078,12 @@ export function getTooltips(
               return boardCard.ReloadAmount;
             case "TActionPlayerHeal":
               return boardCard.HealAmount;
-            case "TActionPlayerShield":
+            case "TActionPlayerShieldApply":
               return boardCard.ShieldApplyAmount;
-            case "TActionPlayerPoison":
+            case "TActionPlayerPoisonApply":
               return boardCard.PoisonApplyAmount;
+            case "TActionPlayerBurnApply":
+              return boardCard.BurnApplyAmount;
             case "TActionCardFreeze":
               return boardCard.FreezeAmount / 1000;
             case "TActionCardHaste":
@@ -2089,10 +2092,7 @@ export function getTooltips(
               return boardCard.SlowAmount / 1000;
             case "TActionCardCharge":
               return boardCard.ChargeAmount / 1000;
-            case "TActionPlayerBurnApply":
-              return boardCard.BurnApplyAmount;
-            case "TActionPlayerShieldApply":
-              return boardCard.ShieldApplyAmount;
+
             default:
               throw new Error("Action type not implemented: " + action.$type);
           }
