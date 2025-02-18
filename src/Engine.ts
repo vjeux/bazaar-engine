@@ -239,23 +239,24 @@ function hasCooldown(boardCard: BoardCardOrSkill): boolean {
  * Sandstorm
  *
  * Starts at 30 seconds, at 1 dmg
- * Tickrate is every 0.2 seconds
- * Increase by 1 every tick
- * End Game when reaches 600 damage per tick
+ * Tickrate is every 0.1 seconds
+ * Increase by 2 every tick after the first 10 ticks
+ * End Game at ca 100 seconds (this is hard to get exact from a video)
  */
 const sandstormInitialTick = 30000;
-const sandstormTickRate = 200;
+const sandstormTickRate = 100;
 
 const sandstormDamagePerTick: Record<number, number> = {};
 let sandstormDamage = 1;
 let sandstormTick = sandstormInitialTick;
-while (true) {
+let dmgTicks = 0;
+while (dmgTicks < 1000) {
   sandstormDamagePerTick[sandstormTick] = sandstormDamage;
-  sandstormDamage++;
-  sandstormTick += sandstormTickRate;
-  if (sandstormDamage > 600) {
-    break;
+  if (dmgTicks >= 9) {
+    sandstormDamage += 2;
   }
+  sandstormTick += sandstormTickRate;
+  dmgTicks++;
 }
 
 function updateCardAttribute(
