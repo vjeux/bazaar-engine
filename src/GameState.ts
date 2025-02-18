@@ -16,6 +16,13 @@ import { EncounterDays, Group } from "./types/encounterTypes";
 // Crusher Claw's aura is applied before Sea Shell aura and doesn't apply damage properly.
 // Not sure how to fix this.
 
+// Day 3 - Dabbling Apprentice
+// The Tazidian Dagger "Adjacent Potions have +1 Ammo" doesn't update Ammo properly, only Max Ammo.
+// Day 3 - Scout Trooper
+// The skill Gunner that gives +1 Ammo has the same issue.
+// Not sure how to fix this.
+
+
 // Sparring Partner heals to half life because Aura is not triggered at the right time
 getBoardMonster("Sparring Partner"),
  

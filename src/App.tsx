@@ -1022,7 +1022,7 @@ export default function App({
     monsterConfig ?? { type: "player", health: 3500 },
     playerConfig
   ]);
-  const steps = run(initialGameState, 10000);
+  const steps = run(initialGameState, 1);
 
   const encounters = Encounters.data
     .map((data) => {
