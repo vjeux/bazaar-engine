@@ -1604,6 +1604,19 @@ function getTargetCards(
           });
           break;
         }
+        case "SelfNeighbors": {
+          if (targetBoardCardID !== 0) {
+            results.push([targetPlayerID, targetBoardCardID - 1]);
+          }
+          const lengthCardItems =
+            gameState.players[targetPlayerID].board.findLastIndex(
+              (boardCard) => boardCard.card.$type === "TCardItem"
+            ) + 1;
+          if (targetBoardCardID < lengthCardItems - 1) {
+            results.push([targetPlayerID, targetBoardCardID + 1]);
+          }
+          break;
+        }
         default:
           throw new Error(
             "Not implemented Target.TargetSection: " + target.TargetSection

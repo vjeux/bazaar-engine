@@ -18,13 +18,8 @@ import { EncounterDays, Group } from "./types/encounterTypes";
 // Day 5 - Preening Duelist
 // Received NaN for the `children` attribute. If this is expected, cast the value to a string.
 
-// Day 9 - Ferros Khan
-// Unhandled condition type: TCardConditionalPlayerHero
-
 // Day 6 - Foreman
-// Day 8 - Dr. Vortex
-// Day 9 - Weapons Platform
-// Not implemented Target.TargetSection: SelfNeighbors
+// Need to figure out Crane's damage rounding.
 
 // Day 7 - Treasure Turtle
 // Day 8 - Car Conductor
