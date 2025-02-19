@@ -1540,6 +1540,7 @@ function getTargetCards(
     case "TTargetCardSection":
     case "TTargetCardRandom": {
       switch (target.TargetSection) {
+        case "SelfHandAndStash":
         case "SelfHand":
         case "SelfBoard": {
           const lengthCardItems =
