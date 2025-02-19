@@ -450,25 +450,42 @@ function BoardCardElement({
               borderRadius: 5
             }}
           >
-            {[...new Array(AmmoMax)].map((_, i) => {
-              return (
-                // Ammo indicator
+            {AmmoMax > 5 ? (
+              <div style={{ color: "orange", fontSize: "8pt" }}>
+                {Ammo === undefined ? AmmoMax : Ammo}/{AmmoMax}&nbsp;
                 <div
-                  key={"ammo" + i}
                   style={{
                     width: 4,
                     height: 4,
                     borderRadius: 4,
-                    backgroundColor:
-                      (Ammo === undefined ? AmmoMax : Ammo) > i
-                        ? "orange"
-                        : "transparent",
+                    display: "inline-block",
+                    backgroundColor: "orange",
                     margin: "1px 1px",
                     border: "1px solid orange"
                   }}
                 />
-              );
-            })}
+              </div>
+            ) : (
+              [...new Array(AmmoMax)].map((_, i) => {
+                return (
+                  // Ammo indicator
+                  <div
+                    key={"ammo" + i}
+                    style={{
+                      width: 4,
+                      height: 4,
+                      borderRadius: 4,
+                      backgroundColor:
+                        (Ammo === undefined ? AmmoMax : Ammo) > i
+                          ? "orange"
+                          : "transparent",
+                      margin: "1px 1px",
+                      border: "1px solid orange"
+                    }}
+                  />
+                );
+              })
+            )}
           </div>
         )}
       </div>
@@ -1125,7 +1142,7 @@ export default function App({
   const [playerSkills, setPlayerSkills] = useState<PlayerSkillConfig[]>([]);
   const playerConfig = {
     type: "player",
-    health: 1500,
+    health: 3500,
     healthRegen: 0,
     cards: playerCards,
     skills: playerSkills
@@ -1135,7 +1152,7 @@ export default function App({
     monsterConfig ?? { type: "player", health: 3500 },
     playerConfig
   ]);
-  const steps = run(initialGameState, 1000);
+  const steps = run(initialGameState, 100000);
 
   const encounters = Encounters.data
     .map((data) => {
