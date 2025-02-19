@@ -1327,7 +1327,7 @@ function runAction(
             actionTargetPlayerID,
             actionTargetBoardCardID,
             action.AttributeType as string,
-            newValue
+            Math.floor(newValue)
           );
         });
       break;
@@ -1362,7 +1362,7 @@ function runAction(
           gameState,
           playerID,
           action.AttributeType as string,
-          newValue
+          Math.floor(newValue)
         );
       });
       break;
