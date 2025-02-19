@@ -15,9 +15,32 @@ import { EncounterDays, Group } from "./types/encounterTypes";
 // Day 4 - Flame Juggler
 // The skill Burst of Flame seems to trigger when the oppononent reaches 1/3 of life rather than 1/2.
 
-// Freeze skills aren't working properly
-getBoardMonster("Volkas Enforcer"),
- */
+// Day 5 - Preening Duelist
+// Received NaN for the `children` attribute. If this is expected, cast the value to a string.
+
+// Day 5 - Sabretooth
+// Uncaught Error: Unhandled condition type: TCardConditionalTier
+
+// Day 5 - Infernal Envoy
+// Day 6 - Infernal
+// Uncaught Error: Unhandled condition type: TCardConditionalId
+
+// Day 9 - Ferros Khan
+// Unhandled condition type: TCardConditionalPlayerHero
+
+// Day 6 - Foreman
+// Day 8 - Dr. Vortex
+// Day 9 - Weapons Platform
+// Not implemented Target.TargetSection: SelfNeighbors
+
+// Day 7 - Treasure Turtle
+// Day 8 - Car Conductor
+// Day 9 - Roaming Isle
+// Day 10 - Lord Arken
+// Day 10 - Property Baron
+// Uncaught Error: Unhandled action type: TActionCardForceUse
+
+*/
 
 function _createBoardCardFromCard(
   card: V2Card,
