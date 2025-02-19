@@ -113,17 +113,16 @@ function _createBoardCardFromCard(
 
   const result = {
     card: card,
-    ...attributes,
     tick: 0,
     Slow: 0,
     Freeze: 0,
     Haste: 0,
     CritChance: 0,
     DamageCrit: 0,
-    Lifesteal: 0,
     tier: tier,
     Enchantment: enchantment,
-    isDisabled: false
+    isDisabled: false,
+    ...attributes
   };
 
   return result;

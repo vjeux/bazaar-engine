@@ -434,7 +434,7 @@ function BoardCardElement({
               color: "white"
             }}
           >
-            x{boardCard.Multicast}
+            x{Multicast}
           </div>
         )}
         {AmmoMax !== undefined && (
