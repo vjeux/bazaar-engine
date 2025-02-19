@@ -576,6 +576,12 @@ function testConditions(
       }
       return true;
     }
+    case "TCardConditionalTriggerSource": {
+      const is =
+        triggerPlayerID === targetPlayerID &&
+        triggerBoardCardID === targetBoardCardID;
+      return conditions.IsNot ? !is : is;
+    }
     default:
       throw new Error("Unhandled condition type: " + conditions.$type);
   }
@@ -1343,6 +1349,8 @@ function runAction(
       });
       break;
     }
+    default:
+      throw new Error("Unhandled action type: " + action.$type);
   }
   return hasCritted;
 }
