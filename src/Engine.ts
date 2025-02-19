@@ -158,6 +158,9 @@ export function getCardAttribute(
   attribute: string
 ): number {
   let value = gameState.players[playerID].board[boardCardID][attribute];
+  if (value === undefined) {
+    return value;
+  }
 
   forEachAura(
     gameState,

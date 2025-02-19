@@ -15,9 +15,6 @@ import { EncounterDays, Group } from "./types/encounterTypes";
 // Day 4 - Flame Juggler
 // The skill Burst of Flame seems to trigger when the oppononent reaches 1/3 of life rather than 1/2.
 
-// Day 5 - Preening Duelist
-// Received NaN for the `children` attribute. If this is expected, cast the value to a string.
-
 // Day 7 - Treasure Turtle
 // Day 8 - Car Conductor
 // Day 9 - Roaming Isle
