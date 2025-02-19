@@ -56,7 +56,6 @@ function Tooltip({
       }}
       className="tooltip"
     >
-      <div style={{ textAlign: "right" }}>{boardCard.card.Tags.join(", ")}</div>
       <div style={{ margin: "5px 0px 5px 0", fontWeight: "bold" }}>
         {boardCard.Localization.Title.Text}
       </div>
@@ -65,6 +64,13 @@ function Tooltip({
           {tooltip}
         </div>
       ))}
+      <div>
+        {[
+          ...boardCard.card.Heroes,
+          ...boardCard.card.Tags,
+          ...boardCard.card.HiddenTags
+        ].join(", ")}
+      </div>
     </div>
   );
 }

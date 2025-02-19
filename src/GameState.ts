@@ -254,6 +254,7 @@ function getBoardPlayer(
     Poison: 0,
     Gold: 0,
     Income: 0,
+    Hero: "<Hero Name>",
     board: [...boardCards, ...boardSkills]
   };
 }

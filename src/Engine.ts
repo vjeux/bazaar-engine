@@ -528,6 +528,12 @@ function testConditions(
       );
       return conditions.IsNot ? !is : is;
     }
+    case "TCardConditionalPlayerHero": {
+      const targetHeroes =
+        gameState.players[targetPlayerID].board[targetBoardCardID].card.Heroes;
+      const is = targetHeroes.includes(gameState.players[targetPlayerID].Hero);
+      return conditions.IsSameAsPlayerHero ? is : !is;
+    }
     case "TCardConditionalHasEnchantment": {
       const is =
         gameState.players[targetPlayerID].board[targetBoardCardID]
