@@ -1626,9 +1626,12 @@ function getTargetCards(
 
   if (
     target.Conditions &&
-    target.Conditions.$type === "TCardConditionalAttributeHighest"
+    (target.Conditions.$type === "TCardConditionalAttributeHighest" ||
+      target.Conditions.$type === "TCardConditionalAttributeLowest")
   ) {
-    let highestValue = -Infinity;
+    const isHighest =
+      target.Conditions.$type === "TCardConditionalAttributeHighest";
+    let highestValue = isHighest ? -Infinity : Infinity;
     let highestPlayerID = null;
     let highestBoardCardID = null;
     results.forEach(([testPlayerID, testBoardCardID]) => {
@@ -1642,7 +1645,7 @@ function getTargetCards(
       if (
         !gameState.players[testPlayerID].board[testBoardCardID].isDisabled &&
         value !== undefined &&
-        value > highestValue
+        (isHighest ? value > highestValue : value < highestValue)
       ) {
         highestValue = value;
         highestPlayerID = testPlayerID;
