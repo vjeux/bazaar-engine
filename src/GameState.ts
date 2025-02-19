@@ -18,9 +18,6 @@ import { EncounterDays, Group } from "./types/encounterTypes";
 // Day 5 - Preening Duelist
 // Received NaN for the `children` attribute. If this is expected, cast the value to a string.
 
-// Day 5 - Sabretooth
-// Uncaught Error: Unhandled condition type: TCardConditionalTier
-
 // Day 9 - Ferros Khan
 // Unhandled condition type: TCardConditionalPlayerHero
 

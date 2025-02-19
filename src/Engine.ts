@@ -522,6 +522,12 @@ function testConditions(
         conditions.Id;
       return conditions.IsNot ? !is : is;
     }
+    case "TCardConditionalTier": {
+      const is = conditions.Tiers.includes(
+        gameState.players[targetPlayerID].board[targetBoardCardID].tier
+      );
+      return conditions.IsNot ? !is : is;
+    }
     case "TCardConditionalHasEnchantment": {
       const is =
         gameState.players[targetPlayerID].board[targetBoardCardID]
