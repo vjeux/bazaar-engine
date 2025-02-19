@@ -516,6 +516,12 @@ function testConditions(
       );
       return conditions.IsNot ? !is : is;
     }
+    case "TCardConditionalId": {
+      const is =
+        gameState.players[targetPlayerID].board[targetBoardCardID].card.Id ===
+        conditions.Id;
+      return conditions.IsNot ? !is : is;
+    }
     case "TCardConditionalHasEnchantment": {
       const is =
         gameState.players[targetPlayerID].board[targetBoardCardID]

@@ -21,10 +21,6 @@ import { EncounterDays, Group } from "./types/encounterTypes";
 // Day 5 - Sabretooth
 // Uncaught Error: Unhandled condition type: TCardConditionalTier
 
-// Day 5 - Infernal Envoy
-// Day 6 - Infernal
-// Uncaught Error: Unhandled condition type: TCardConditionalId
-
 // Day 9 - Ferros Khan
 // Unhandled condition type: TCardConditionalPlayerHero
 
