@@ -1148,7 +1148,7 @@ export default function App({
   const [playerSkills, setPlayerSkills] = useState<PlayerSkillConfig[]>([]);
   const playerConfig = {
     type: "player",
-    health: 3500,
+    health: 2000,
     healthRegen: 0,
     cards: playerCards,
     skills: playerSkills

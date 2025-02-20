@@ -22,6 +22,8 @@ import { EncounterDays, Group } from "./types/encounterTypes";
 // Day 10 - Property Baron
 // Uncaught Error: Unhandled action type: TActionCardForceUse
 
+// Need to fix crit trigger
+
 */
 
 function _createBoardCardFromCard(

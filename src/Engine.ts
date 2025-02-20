@@ -97,35 +97,69 @@ function forEachAbility(
     playerIndex: number,
     boardCard: BoardCardOrSkill,
     boardCardIndex: number,
-    ability: Ability
+    ability: Ability,
+    addAction: (
+      triggerPlayerID: number,
+      triggerBoardCardID: number,
+      targetPlayerID: number,
+      targetBoardCardID: number
+    ) => void
   ) => void
 ): void {
-  const abilities: [Player, number, BoardCardOrSkill, number, Ability][] = [];
+  const actions: [Ability, number, number, number, number][] = [];
   forEachCard(gameState, (player, playerIndex, boardCard, boardCardIndex) => {
     for (let i = 0; i < boardCard.AbilityIds.length; ++i) {
       const abilityId = boardCard.AbilityIds[i];
       const ability = boardCard.Abilities[abilityId];
       if (ability) {
-        abilities.push([
+        callback(
           player,
           playerIndex,
           boardCard,
           boardCardIndex,
-          ability
-        ]);
+          ability,
+          function addAction(
+            triggerPlayerID: number,
+            triggerBoardCardID: number,
+            targetPlayerID: number,
+            targetBoardCardID: number
+          ) {
+            actions.push([
+              ability,
+              triggerPlayerID,
+              triggerBoardCardID,
+              targetPlayerID,
+              targetBoardCardID
+            ]);
+          }
+        );
       }
     }
   });
 
-  abilities.sort((a, b) => {
-    const priorityA = priorityOrder[a[4].Priority || "Low"];
-    const priorityB = priorityOrder[b[4].Priority || "Low"];
+  actions.sort((a, b) => {
+    const priorityA = priorityOrder[a[0].Priority || "Low"];
+    const priorityB = priorityOrder[b[0].Priority || "Low"];
     return priorityA - priorityB;
   });
 
-  abilities.forEach(
-    ([player, playerIndex, boardCard, boardCardIndex, ability]) => {
-      callback(player, playerIndex, boardCard, boardCardIndex, ability);
+  actions.forEach(
+    ([
+      ability,
+      triggerPlayerID,
+      triggerBoardCardID,
+      targetPlayerID,
+      targetBoardCardID
+    ]) => {
+      runAction(
+        gameState,
+        ability.Action,
+        ability.Prerequisites,
+        triggerPlayerID,
+        triggerBoardCardID,
+        targetPlayerID,
+        targetBoardCardID
+      );
     }
   );
 }
@@ -333,7 +367,8 @@ function updateCardAttribute(
       targetPlayerID,
       targetBoardCard,
       targetBoardCardID,
-      ability
+      ability,
+      addAction
     ) => {
       if (
         ability.Trigger.$type === "TTriggerOnCardAttributeChanged" &&
@@ -355,15 +390,7 @@ function updateCardAttribute(
             subjectPlayerID === playerID &&
             subjectBoardCardID === boardCardID
           ) {
-            runAction(
-              gameState,
-              ability.Action,
-              ability.Prerequisites,
-              playerID,
-              boardCardID,
-              targetPlayerID,
-              targetBoardCardID
-            );
+            addAction(playerID, boardCardID, targetPlayerID, targetBoardCardID);
           }
         });
       }
@@ -387,7 +414,8 @@ function updatePlayerAttribute<K extends keyof Player>(
       targetPlayerID,
       targetBoardCard,
       targetBoardCardID,
-      ability
+      ability,
+      addAction
     ) => {
       if (
         ability.Trigger.$type === "TTriggerOnPlayerAttributeChanged" &&
@@ -401,15 +429,7 @@ function updatePlayerAttribute<K extends keyof Player>(
           playerID,
           targetPlayerID
         ).forEach((subjectPlayerID) => {
-          runAction(
-            gameState,
-            ability.Action,
-            ability.Prerequisites,
-            subjectPlayerID,
-            -1,
-            targetPlayerID,
-            targetBoardCardID
-          );
+          addAction(subjectPlayerID, -1, targetPlayerID, targetBoardCardID);
         });
       }
     }
@@ -469,7 +489,51 @@ function testPrerequisite(
   }
 }
 
-function testConditions(
+function testPlayerConditions(
+  gameState: GameState,
+  conditions: any,
+  triggerPlayerID: number,
+  targetPlayerID: number
+) {
+  if (conditions == null) {
+    return true;
+  }
+
+  switch (conditions.$type) {
+    case "TPlayerConditionalAttribute": {
+      const value = gameState.players[targetPlayerID][conditions.Attribute];
+      const comparisonValue = getActionValue(
+        gameState,
+        conditions.ComparisonValue,
+        triggerPlayerID,
+        -1,
+        targetPlayerID,
+        -1
+      );
+      switch (conditions.ComparisonOperator) {
+        case "Equal":
+          return value === comparisonValue;
+        case "GreaterThan":
+          return value > comparisonValue;
+        case "GreaterThanOrEqual":
+          return value >= comparisonValue;
+        case "LessThan":
+          return value < comparisonValue;
+        case "LessThanOrEqual":
+          return value <= comparisonValue;
+        default:
+          throw new Error(
+            "Not implemented ComparisonOperator: " +
+              conditions.ComparisonOperator
+          );
+      }
+    }
+    default:
+      throw new Error("Not implemented Conditions.$type: " + conditions.$type);
+  }
+}
+
+function testCardConditions(
   gameState: GameState,
   conditions: any,
   triggerPlayerID: number,
@@ -566,7 +630,7 @@ function testConditions(
     case "TCardConditionalOr": {
       for (let i = 0; i < conditions.Conditions.length; ++i) {
         if (
-          testConditions(
+          testCardConditions(
             gameState,
             conditions.Conditions[i],
             triggerPlayerID,
@@ -583,7 +647,7 @@ function testConditions(
     case "TCardConditionalAnd": {
       for (let i = 0; i < conditions.Conditions.length; ++i) {
         if (
-          !testConditions(
+          !testCardConditions(
             gameState,
             conditions.Conditions[i],
             triggerPlayerID,
@@ -623,7 +687,8 @@ function triggerActions(
       abilityPlayerID,
       abilityBoardCard,
       abilityBoardCardID,
-      ability
+      ability,
+      addAction
     ) => {
       if (ability.Trigger.$type !== triggerType) {
         return;
@@ -641,10 +706,7 @@ function triggerActions(
           subjectPlayerID === targetPlayerID &&
           subjectBoardCardID === targetBoardCardID
         ) {
-          runAction(
-            gameState,
-            ability.Action,
-            ability.Prerequisites,
+          addAction(
             triggerPlayerID,
             triggerBoardCardID,
             abilityPlayerID,
@@ -1697,7 +1759,7 @@ function getTargetCards(
   const filteredResults = results.filter(([testPlayerID, testBoardCardID]) => {
     return (
       !gameState.players[testPlayerID].board[testBoardCardID].isDisabled &&
-      testConditions(
+      testCardConditions(
         gameState,
         target.Conditions,
         triggerPlayerID,
@@ -1763,42 +1825,13 @@ function getTargetPlayers(
   }
 
   if (target.Conditions) {
-    results = results.filter((playerID) => {
-      switch (target.Conditions.$type) {
-        case "TPlayerConditionalAttribute": {
-          const value =
-            gameState.players[playerID][target.Conditions.Attribute];
-          const comparisonValue = getActionValue(
-            gameState,
-            target.Conditions.ComparisonValue,
-            triggerPlayerID,
-            -1,
-            playerID,
-            -1
-          );
-          switch (target.Conditions.ComparisonOperator) {
-            case "Equal":
-              return value === comparisonValue;
-            case "GreaterThan":
-              return value > comparisonValue;
-            case "GreaterThanOrEqual":
-              return value >= comparisonValue;
-            case "LessThan":
-              return value < comparisonValue;
-            case "LessThanOrEqual":
-              return value <= comparisonValue;
-            default:
-              throw new Error(
-                "Not implemented ComparisonOperator: " +
-                  target.Conditions.ComparisonOperator
-              );
-          }
-        }
-        default:
-          throw new Error(
-            "Not implemented Conditions.$type: " + target.Conditions.$type
-          );
-      }
+    results = results.filter((testPlayerID) => {
+      return testPlayerConditions(
+        gameState,
+        target.Conditions,
+        triggerPlayerID,
+        targetPlayerID
+      );
     });
   }
   return results;
@@ -1825,18 +1858,11 @@ function runGameTick(initialGameState: GameState): GameState {
         targetPlayerID,
         targetBoardCard,
         targetBoardCardID,
-        ability
+        ability,
+        addAction
       ) => {
         if (ability.Trigger.$type === "TTriggerOnFightStarted") {
-          runAction(
-            gameState,
-            ability.Action,
-            ability.Prerequisites,
-            targetPlayerID,
-            -1,
-            targetPlayerID,
-            targetBoardCardID
-          );
+          addAction(targetPlayerID, -1, targetPlayerID, targetBoardCardID);
         }
       }
     );
@@ -2010,31 +2036,15 @@ function runGameTick(initialGameState: GameState): GameState {
         targetPlayerID,
         targetBoardCard,
         targetBoardCardID,
-        ability
+        ability,
+        addAction
       ) => {
         if (
           ability.Trigger.$type === "TTriggerOnCardFired" &&
           playerID === targetPlayerID &&
           boardCardID === targetBoardCardID
         ) {
-          const hasCritted = runAction(
-            gameState,
-            ability.Action,
-            ability.Prerequisites,
-            playerID,
-            boardCardID,
-            targetPlayerID,
-            targetBoardCardID
-          );
-          if (
-            hasCritted &&
-            !cardCrittedList.find(
-              ([playerID, boardCardID]) =>
-                playerID === targetPlayerID && boardCardID === targetBoardCardID
-            )
-          ) {
-            cardCrittedList.push([targetPlayerID, targetBoardCardID]);
-          }
+          addAction(playerID, boardCardID, targetPlayerID, targetBoardCardID);
         } else if (ability.Trigger.$type === "TTriggerOnItemUsed") {
           const subjects = getTargetCards(
             gameState,
@@ -2049,10 +2059,7 @@ function runGameTick(initialGameState: GameState): GameState {
               subjectPlayerID === playerID &&
               subjectBoardCardID === boardCardID
             ) {
-              runAction(
-                gameState,
-                ability.Action,
-                ability.Prerequisites,
+              addAction(
                 playerID,
                 boardCardID,
                 targetPlayerID,
@@ -2069,6 +2076,7 @@ function runGameTick(initialGameState: GameState): GameState {
     }
   });
 
+  // TODO: Rework the way crit triggers works
   cardCrittedList.forEach(([playerID, boardCardID]) => {
     forEachAbility(
       gameState,
@@ -2077,18 +2085,11 @@ function runGameTick(initialGameState: GameState): GameState {
         targetPlayerID,
         targetBoardCard,
         targetBoardCardID,
-        ability
+        ability,
+        addAction
       ) => {
         if (ability.Trigger.$type === "TTriggerOnCardCritted") {
-          runAction(
-            gameState,
-            ability.Action,
-            ability.Prerequisites,
-            playerID,
-            boardCardID,
-            targetPlayerID,
-            targetBoardCardID
-          );
+          addAction(playerID, boardCardID, targetPlayerID, targetBoardCardID);
         }
       }
     );
@@ -2125,7 +2126,8 @@ function runGameTick(initialGameState: GameState): GameState {
           targetPlayerID,
           targetBoardCard,
           targetBoardCardID,
-          ability
+          ability,
+          addAction
         ) => {
           if (ability.Trigger.$type === "TTriggerOnPlayerDied") {
             getTargetPlayers(
@@ -2135,10 +2137,7 @@ function runGameTick(initialGameState: GameState): GameState {
               targetPlayerID
             ).forEach((abilityPlayerID) => {
               if (abilityPlayerID === playerID) {
-                runAction(
-                  gameState,
-                  ability.Action,
-                  ability.Prerequisites,
+                addAction(
                   abilityPlayerID,
                   -1,
                   targetPlayerID,
