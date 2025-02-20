@@ -137,31 +137,58 @@ function forEachAbility(
     }
   });
 
-  actions.sort((a, b) => {
-    const priorityA = priorityOrder[a[0].Priority || "Low"];
-    const priorityB = priorityOrder[b[0].Priority || "Low"];
-    return priorityA - priorityB;
-  });
-
-  actions.forEach(
-    ([
-      ability,
-      triggerPlayerID,
-      triggerBoardCardID,
-      targetPlayerID,
-      targetBoardCardID
-    ]) => {
-      runAction(
-        gameState,
-        ability.Action,
-        ability.Prerequisites,
+  actions
+    .filter(
+      ([
+        ability,
         triggerPlayerID,
         triggerBoardCardID,
         targetPlayerID,
         targetBoardCardID
-      );
-    }
-  );
+      ]) => {
+        if (ability.Prerequisites == null) {
+          return true;
+        }
+        for (let i = 0; i < ability.Prerequisites.length; ++i) {
+          if (
+            !testPrerequisite(
+              gameState,
+              ability.Prerequisites[i],
+              triggerPlayerID,
+              triggerBoardCardID,
+              targetPlayerID,
+              targetBoardCardID
+            )
+          ) {
+            return false;
+          }
+        }
+        return true;
+      }
+    )
+    .sort((a, b) => {
+      const priorityA = priorityOrder[a[0].Priority || "Low"];
+      const priorityB = priorityOrder[b[0].Priority || "Low"];
+      return priorityA - priorityB;
+    })
+    .forEach(
+      ([
+        ability,
+        triggerPlayerID,
+        triggerBoardCardID,
+        targetPlayerID,
+        targetBoardCardID
+      ]) => {
+        runAction(
+          gameState,
+          ability.Action,
+          triggerPlayerID,
+          triggerBoardCardID,
+          targetPlayerID,
+          targetBoardCardID
+        );
+      }
+    );
 }
 
 function forEachAura(
@@ -722,29 +749,12 @@ function triggerActions(
 function runAction(
   gameState: GameState,
   action: AbilityAction,
-  prerequisites: AbilityPrerequisite[] | null, // null means no prerequisites
   triggerPlayerID: number,
   triggerBoardCardID: number,
   targetPlayerID: number,
   targetBoardCardID: number
 ): boolean {
   let hasCritted = false;
-  if (prerequisites != null) {
-    for (let i = 0; i < prerequisites.length; ++i) {
-      if (
-        !testPrerequisite(
-          gameState,
-          prerequisites[i],
-          triggerPlayerID,
-          triggerBoardCardID,
-          targetPlayerID,
-          targetBoardCardID
-        )
-      ) {
-        return false;
-      }
-    }
-  }
 
   switch (action.$type) {
     case "TActionPlayerDamage": {
@@ -957,6 +967,7 @@ function runAction(
       break;
     }
     case "TActionPlayerBurnApply": {
+      console.log("TActionPlayerBurnApply");
       let amount = getCardAttribute(
         gameState,
         targetPlayerID,
