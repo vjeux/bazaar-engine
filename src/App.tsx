@@ -21,7 +21,8 @@ import {
   MonsterConfig,
   PlayerCardConfig,
   PlayerConfig,
-  PlayerSkillConfig
+  PlayerSkillConfig,
+  getFlattenedEncounters
 } from "./GameState.ts";
 import { Tier } from "./types/shared.ts";
 
@@ -1171,19 +1172,7 @@ export default function App({
   ]);
   const steps = run(initialGameState, 100000);
 
-  const encounters = Encounters.data
-    .map((data) => {
-      return data.groups
-        .map((day) => {
-          return day
-            .map((card) => {
-              return { card, day: data.day };
-            })
-            .flat();
-        })
-        .flat();
-    })
-    .flat();
+  const encounters = getFlattenedEncounters(Encounters);
 
   return (
     // Main app container

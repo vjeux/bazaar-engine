@@ -967,7 +967,6 @@ function runAction(
       break;
     }
     case "TActionPlayerBurnApply": {
-      console.log("TActionPlayerBurnApply");
       let amount = getCardAttribute(
         gameState,
         targetPlayerID,
@@ -2299,7 +2298,6 @@ export function run(
   maxTicks: number = Infinity
 ): GameState[] {
   const steps = [initialGameState];
-  console.log(initialGameState);
 
   let gameState = initialGameState;
   for (let i = 0; i < maxTicks; ++i) {
