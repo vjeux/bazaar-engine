@@ -181,7 +181,13 @@ function BoardCardElement({
 
   return (
     // Tooltip container
-    <div className="tooltipContainer" style={{ position: "relative" }}>
+    <div
+      className="tooltipContainer"
+      style={{ position: "relative" }}
+      onClick={() => {
+        console.log(boardCard);
+      }}
+    >
       {/* Settings button */}
       <div
         style={{ position: "absolute", top: 2, right: 2, zIndex: 1 }}
@@ -531,7 +537,12 @@ function BoardSkillElement({
   const frameUrl = `https://www.bazaarplanner.com/images/fromBT/skill_tier_${tier.toLowerCase()}.png`;
 
   return (
-    <div className="tooltipContainer">
+    <div
+      className="tooltipContainer"
+      onClick={() => {
+        console.log(boardSkill);
+      }}
+    >
       {/* Skill container */}
       <div
         style={{
