@@ -16375,8 +16375,451 @@ exports[`Runs encounter "Day 7 - Thug" against empty board 1`] = `
 exports[`Runs encounter "Day 7 - Treasure Turtle" against empty board 1`] = `
 [
   {
-    "error": "Unhandled action type: TActionCardForceUse",
+    "players.0.board.1.HealAmount": 30,
     "step": 1,
+  },
+  {
+    "players.0.Shield": 50,
+    "players.0.board.1.HealAmount": 40,
+    "step": 30,
+  },
+  {
+    "players.0.Shield": 105,
+    "players.0.board.1.HealAmount": 50,
+    "players.0.board.2.ShieldApplyAmount": 10,
+    "players.0.board.3.ShieldApplyAmount": 35,
+    "players.0.board.5.ShieldApplyAmount": 40,
+    "step": 40,
+  },
+  {
+    "players.0.Shield": 195,
+    "players.0.board.1.HealAmount": 60,
+    "step": 50,
+  },
+  {
+    "players.0.Shield": 255,
+    "players.0.board.1.HealAmount": 70,
+    "step": 51,
+  },
+  {
+    "players.0.board.1.HealAmount": 90,
+    "players.1.Poison": 4,
+    "step": 60,
+  },
+  {
+    "players.0.Shield": 320,
+    "players.0.board.1.HealAmount": 100,
+    "players.0.board.2.ShieldApplyAmount": 20,
+    "players.0.board.3.ShieldApplyAmount": 45,
+    "players.0.board.5.ShieldApplyAmount": 50,
+    "players.1.Health": 996,
+    "step": 61,
+  },
+  {
+    "players.0.Shield": 390,
+    "players.0.board.1.HealAmount": 110,
+    "step": 62,
+  },
+  {
+    "players.1.Health": 992,
+    "step": 71,
+  },
+  {
+    "players.1.Health": 988,
+    "step": 81,
+  },
+  {
+    "players.0.board.1.HealAmount": 120,
+    "step": 90,
+  },
+  {
+    "players.1.Health": 984,
+    "step": 91,
+  },
+  {
+    "players.0.Shield": 460,
+    "players.0.board.1.HealAmount": 130,
+    "step": 92,
+  },
+  {
+    "players.0.Shield": 535,
+    "players.0.board.1.HealAmount": 140,
+    "players.0.board.2.ShieldApplyAmount": 30,
+    "players.0.board.3.ShieldApplyAmount": 55,
+    "players.0.board.5.ShieldApplyAmount": 60,
+    "step": 93,
+  },
+  {
+    "players.0.Shield": 645,
+    "players.0.board.1.HealAmount": 150,
+    "step": 100,
+  },
+  {
+    "players.1.Health": 980,
+    "step": 101,
+  },
+  {
+    "players.1.Health": 976,
+    "step": 111,
+  },
+  {
+    "players.0.Shield": 725,
+    "players.0.board.1.HealAmount": 160,
+    "step": 112,
+  },
+  {
+    "players.0.board.1.HealAmount": 180,
+    "players.1.Poison": 8,
+    "step": 120,
+  },
+  {
+    "players.0.Shield": 810,
+    "players.0.board.1.HealAmount": 190,
+    "players.0.board.2.ShieldApplyAmount": 40,
+    "players.0.board.3.ShieldApplyAmount": 65,
+    "players.0.board.5.ShieldApplyAmount": 70,
+    "players.1.Health": 968,
+    "step": 121,
+  },
+  {
+    "players.0.Shield": 900,
+    "players.0.board.1.HealAmount": 200,
+    "step": 122,
+  },
+  {
+    "players.1.Health": 960,
+    "step": 131,
+  },
+  {
+    "players.1.Health": 952,
+    "step": 141,
+  },
+  {
+    "players.0.Shield": 1020,
+    "players.0.board.1.HealAmount": 210,
+    "step": 150,
+  },
+  {
+    "players.1.Health": 944,
+    "step": 151,
+  },
+  {
+    "players.0.Shield": 1110,
+    "players.0.board.1.HealAmount": 220,
+    "step": 152,
+  },
+  {
+    "players.0.Shield": 1205,
+    "players.0.board.1.HealAmount": 230,
+    "players.0.board.2.ShieldApplyAmount": 50,
+    "players.0.board.3.ShieldApplyAmount": 75,
+    "players.0.board.5.ShieldApplyAmount": 80,
+    "step": 153,
+  },
+  {
+    "players.1.Health": 936,
+    "step": 161,
+  },
+  {
+    "players.1.Health": 928,
+    "step": 171,
+  },
+  {
+    "players.0.board.1.HealAmount": 260,
+    "players.1.Poison": 12,
+    "step": 180,
+  },
+  {
+    "players.0.Shield": 1305,
+    "players.0.board.1.HealAmount": 270,
+    "players.1.Health": 916,
+    "step": 181,
+  },
+  {
+    "players.0.Shield": 1410,
+    "players.0.board.1.HealAmount": 280,
+    "players.0.board.2.ShieldApplyAmount": 60,
+    "players.0.board.3.ShieldApplyAmount": 85,
+    "players.0.board.5.ShieldApplyAmount": 90,
+    "step": 182,
+  },
+  {
+    "players.1.Health": 904,
+    "step": 191,
+  },
+  {
+    "players.0.Shield": 1550,
+    "players.0.board.1.HealAmount": 290,
+    "step": 200,
+  },
+  {
+    "players.0.Shield": 1660,
+    "players.0.board.1.HealAmount": 300,
+    "players.1.Health": 892,
+    "step": 201,
+  },
+  {
+    "players.1.Health": 880,
+    "step": 211,
+  },
+  {
+    "players.1.Health": 868,
+    "step": 221,
+  },
+  {
+    "players.0.Shield": 1775,
+    "players.0.board.1.HealAmount": 310,
+    "players.0.board.2.ShieldApplyAmount": 70,
+    "players.0.board.3.ShieldApplyAmount": 95,
+    "players.0.board.5.ShieldApplyAmount": 100,
+    "step": 222,
+  },
+  {
+    "players.0.Shield": 1895,
+    "players.0.board.1.HealAmount": 320,
+    "players.1.Health": 856,
+    "step": 231,
+  },
+  {
+    "players.0.board.1.HealAmount": 340,
+    "players.1.Poison": 16,
+    "step": 240,
+  },
+  {
+    "players.1.Health": 840,
+    "step": 241,
+  },
+  {
+    "players.0.Shield": 2045,
+    "players.0.board.1.HealAmount": 350,
+    "step": 250,
+  },
+  {
+    "players.0.Shield": 2300,
+    "players.0.board.1.HealAmount": 370,
+    "players.0.board.2.ShieldApplyAmount": 80,
+    "players.0.board.3.ShieldApplyAmount": 105,
+    "players.0.board.5.ShieldApplyAmount": 110,
+    "players.1.Health": 824,
+    "step": 251,
+  },
+  {
+    "players.1.Health": 808,
+    "step": 261,
+  },
+  {
+    "players.0.board.1.HealAmount": 380,
+    "step": 270,
+  },
+  {
+    "players.1.Health": 792,
+    "step": 271,
+  },
+  {
+    "players.0.Shield": 2430,
+    "players.0.board.1.HealAmount": 390,
+    "players.1.Health": 776,
+    "step": 281,
+  },
+  {
+    "players.0.Shield": 2565,
+    "players.0.board.1.HealAmount": 400,
+    "players.0.board.2.ShieldApplyAmount": 90,
+    "players.0.board.3.ShieldApplyAmount": 115,
+    "players.0.board.5.ShieldApplyAmount": 120,
+    "step": 282,
+  },
+  {
+    "players.1.Health": 760,
+    "step": 291,
+  },
+  {
+    "players.0.Shield": 2735,
+    "players.0.board.1.HealAmount": 430,
+    "players.1.Poison": 20,
+    "step": 300,
+  },
+  {
+    "players.0.Shield": 2874,
+    "players.0.board.1.HealAmount": 440,
+    "players.1.Health": 739,
+    "step": 301,
+  },
+  {
+    "players.0.Shield": 3018,
+    "players.0.board.1.HealAmount": 450,
+    "players.0.board.2.ShieldApplyAmount": 100,
+    "players.0.board.3.ShieldApplyAmount": 125,
+    "players.0.board.5.ShieldApplyAmount": 130,
+    "players.1.Health": 738,
+    "step": 302,
+  },
+  {
+    "players.0.Shield": 3017,
+    "players.1.Health": 737,
+    "step": 303,
+  },
+  {
+    "players.0.Shield": 3016,
+    "players.1.Health": 736,
+    "step": 304,
+  },
+  {
+    "players.0.Shield": 3015,
+    "players.1.Health": 735,
+    "step": 305,
+  },
+  {
+    "players.0.Shield": 3014,
+    "players.1.Health": 734,
+    "step": 306,
+  },
+  {
+    "players.0.Shield": 3013,
+    "players.1.Health": 733,
+    "step": 307,
+  },
+  {
+    "players.0.Shield": 3012,
+    "players.1.Health": 732,
+    "step": 308,
+  },
+  {
+    "players.0.Shield": 3011,
+    "players.1.Health": 731,
+    "step": 309,
+  },
+  {
+    "players.0.Shield": 3010,
+    "players.1.Health": 730,
+    "step": 310,
+  },
+  {
+    "players.0.Shield": 3007,
+    "players.1.Health": 707,
+    "step": 311,
+  },
+  {
+    "players.0.Shield": 3002,
+    "players.1.Health": 702,
+    "step": 312,
+  },
+  {
+    "players.0.Shield": 2995,
+    "players.1.Health": 695,
+    "step": 313,
+  },
+  {
+    "players.0.Shield": 2986,
+    "players.1.Health": 686,
+    "step": 314,
+  },
+  {
+    "players.0.Shield": 2975,
+    "players.1.Health": 675,
+    "step": 315,
+  },
+  {
+    "players.0.Shield": 2962,
+    "players.1.Health": 662,
+    "step": 316,
+  },
+  {
+    "players.0.Shield": 2947,
+    "players.1.Health": 647,
+    "step": 317,
+  },
+  {
+    "players.0.Shield": 2930,
+    "players.1.Health": 630,
+    "step": 318,
+  },
+  {
+    "players.0.Shield": 2911,
+    "players.1.Health": 611,
+    "step": 319,
+  },
+  {
+    "players.0.Shield": 2890,
+    "players.1.Health": 590,
+    "step": 320,
+  },
+  {
+    "players.0.Shield": 2867,
+    "players.1.Health": 547,
+    "step": 321,
+  },
+  {
+    "players.0.Shield": 2842,
+    "players.1.Health": 522,
+    "step": 322,
+  },
+  {
+    "players.0.Shield": 2815,
+    "players.1.Health": 495,
+    "step": 323,
+  },
+  {
+    "players.0.Shield": 2786,
+    "players.1.Health": 466,
+    "step": 324,
+  },
+  {
+    "players.0.Shield": 2755,
+    "players.1.Health": 435,
+    "step": 325,
+  },
+  {
+    "players.0.Shield": 2722,
+    "players.1.Health": 402,
+    "step": 326,
+  },
+  {
+    "players.0.Shield": 2687,
+    "players.1.Health": 367,
+    "step": 327,
+  },
+  {
+    "players.0.Shield": 2650,
+    "players.1.Health": 330,
+    "step": 328,
+  },
+  {
+    "players.0.Shield": 2611,
+    "players.1.Health": 291,
+    "step": 329,
+  },
+  {
+    "players.0.Shield": 2570,
+    "players.1.Health": 250,
+    "step": 330,
+  },
+  {
+    "players.0.Shield": 2677,
+    "players.0.board.1.HealAmount": 460,
+    "players.1.Health": 187,
+    "step": 331,
+  },
+  {
+    "players.0.Shield": 2632,
+    "players.1.Health": 142,
+    "step": 332,
+  },
+  {
+    "players.0.Shield": 2585,
+    "players.1.Health": 95,
+    "step": 333,
+  },
+  {
+    "players.0.Shield": 2536,
+    "players.1.Health": 46,
+    "step": 334,
+  },
+  {
+    "isPlaying": false,
+    "players.0.Shield": 2485,
+    "players.1.Health": -5,
+    "step": 335,
   },
 ]
 `;
@@ -16888,8 +17331,627 @@ exports[`Runs encounter "Day 8 - Burninator Bot" against empty board 1`] = `
 exports[`Runs encounter "Day 8 - Car Conductor" against empty board 1`] = `
 [
   {
-    "error": "Unhandled action type: TActionCardForceUse",
+    "players.0.Burn": 3,
+    "players.0.Health": 1921,
+    "players.0.board.2.Haste": 2900,
+    "players.1.Burn": 3,
+    "players.1.Health": 996,
     "step": 1,
+  },
+  {
+    "players.0.board.2.Haste": 2800,
+    "step": 2,
+  },
+  {
+    "players.0.board.2.Haste": 2700,
+    "step": 3,
+  },
+  {
+    "players.0.board.2.Haste": 2600,
+    "step": 4,
+  },
+  {
+    "players.0.board.2.Haste": 2500,
+    "step": 5,
+  },
+  {
+    "players.0.Burn": 2,
+    "players.0.Health": 1918,
+    "players.0.board.2.Haste": 2400,
+    "players.1.Burn": 2,
+    "players.1.Health": 993,
+    "step": 6,
+  },
+  {
+    "players.0.board.2.Haste": 2300,
+    "step": 7,
+  },
+  {
+    "players.0.board.2.Haste": 2200,
+    "step": 8,
+  },
+  {
+    "players.0.board.2.Haste": 2100,
+    "step": 9,
+  },
+  {
+    "players.0.board.2.Haste": 2000,
+    "step": 10,
+  },
+  {
+    "players.0.Burn": 1,
+    "players.0.Health": 1916,
+    "players.0.board.2.Haste": 1900,
+    "players.1.Burn": 1,
+    "players.1.Health": 991,
+    "step": 11,
+  },
+  {
+    "players.0.board.2.Haste": 1800,
+    "step": 12,
+  },
+  {
+    "players.0.board.2.Haste": 1700,
+    "step": 13,
+  },
+  {
+    "players.0.board.2.Haste": 1600,
+    "step": 14,
+  },
+  {
+    "players.0.board.2.Haste": 1500,
+    "step": 15,
+  },
+  {
+    "players.0.Burn": 0,
+    "players.0.Health": 1915,
+    "players.0.board.2.Haste": 1400,
+    "players.1.Burn": 0,
+    "players.1.Health": 990,
+    "step": 16,
+  },
+  {
+    "players.0.board.2.Haste": 3300,
+    "players.0.board.4.Haste": 2000,
+    "step": 17,
+  },
+  {
+    "players.0.board.2.Haste": 3200,
+    "players.0.board.4.Haste": 1900,
+    "players.1.Health": 834,
+    "step": 18,
+  },
+  {
+    "players.0.board.2.Haste": 3100,
+    "players.0.board.4.Haste": 1800,
+    "step": 19,
+  },
+  {
+    "players.0.board.2.Haste": 3000,
+    "players.0.board.4.Haste": 1700,
+    "step": 20,
+  },
+  {
+    "players.0.board.2.Haste": 2900,
+    "players.0.board.4.Haste": 1600,
+    "step": 21,
+  },
+  {
+    "players.0.board.2.Haste": 2800,
+    "players.0.board.4.Haste": 1500,
+    "step": 22,
+  },
+  {
+    "players.0.board.2.Haste": 2700,
+    "players.0.board.4.Haste": 1400,
+    "step": 23,
+  },
+  {
+    "players.0.board.2.Haste": 2600,
+    "players.0.board.4.Haste": 1300,
+    "step": 24,
+  },
+  {
+    "players.0.board.2.Haste": 2500,
+    "players.0.board.4.Haste": 1200,
+    "step": 25,
+  },
+  {
+    "players.0.board.2.Haste": 2400,
+    "players.0.board.4.Haste": 1100,
+    "step": 26,
+  },
+  {
+    "players.0.board.2.Haste": 2300,
+    "players.0.board.4.Haste": 1000,
+    "step": 27,
+  },
+  {
+    "players.0.board.2.Haste": 2200,
+    "players.0.board.4.Haste": 900,
+    "step": 28,
+  },
+  {
+    "players.0.board.2.Haste": 2100,
+    "players.0.board.4.Haste": 800,
+    "step": 29,
+  },
+  {
+    "players.0.board.2.Haste": 2000,
+    "players.0.board.4.Haste": 700,
+    "step": 30,
+  },
+  {
+    "players.0.board.2.Haste": 1900,
+    "players.0.board.4.Haste": 600,
+    "step": 31,
+  },
+  {
+    "players.0.board.2.Haste": 1800,
+    "players.0.board.4.Haste": 500,
+    "step": 32,
+  },
+  {
+    "players.0.board.2.Haste": 1700,
+    "players.0.board.4.Haste": 400,
+    "step": 33,
+  },
+  {
+    "players.0.Burn": 4,
+    "players.0.board.2.Haste": 6600,
+    "players.0.board.4.Haste": 3300,
+    "players.1.Burn": 4,
+    "step": 34,
+  },
+  {
+    "players.0.board.2.Haste": 6500,
+    "players.0.board.4.Haste": 3200,
+    "players.1.Health": 678,
+    "step": 35,
+  },
+  {
+    "players.0.Burn": 3,
+    "players.0.Health": 1911,
+    "players.0.board.2.Haste": 6400,
+    "players.0.board.4.Haste": 3100,
+    "players.1.Burn": 3,
+    "players.1.Health": 674,
+    "step": 36,
+  },
+  {
+    "players.0.board.2.Haste": 6300,
+    "players.0.board.4.Haste": 3000,
+    "step": 37,
+  },
+  {
+    "players.0.board.2.Haste": 6200,
+    "players.0.board.4.Haste": 2900,
+    "step": 38,
+  },
+  {
+    "players.0.board.2.Haste": 6100,
+    "players.0.board.4.Haste": 2800,
+    "step": 39,
+  },
+  {
+    "players.0.board.2.Haste": 6000,
+    "players.0.board.4.Haste": 2700,
+    "step": 40,
+  },
+  {
+    "players.0.Burn": 2,
+    "players.0.Health": 1908,
+    "players.0.board.2.Haste": 5900,
+    "players.0.board.4.Haste": 2600,
+    "players.1.Burn": 2,
+    "players.1.Health": 671,
+    "step": 41,
+  },
+  {
+    "players.0.board.2.Haste": 5800,
+    "players.0.board.4.Haste": 2500,
+    "step": 42,
+  },
+  {
+    "players.0.board.2.Haste": 5700,
+    "players.0.board.4.Haste": 2400,
+    "step": 43,
+  },
+  {
+    "players.0.board.2.Haste": 5600,
+    "players.0.board.4.Haste": 2300,
+    "step": 44,
+  },
+  {
+    "players.0.board.2.Haste": 5500,
+    "players.0.board.4.Haste": 2200,
+    "step": 45,
+  },
+  {
+    "players.0.Burn": 1,
+    "players.0.Health": 1906,
+    "players.0.board.2.Haste": 5400,
+    "players.0.board.4.Haste": 2100,
+    "players.1.Burn": 1,
+    "players.1.Health": 669,
+    "step": 46,
+  },
+  {
+    "players.0.board.2.Haste": 5300,
+    "players.0.board.4.Haste": 2000,
+    "step": 47,
+  },
+  {
+    "players.0.board.2.Haste": 5200,
+    "players.0.board.4.Haste": 1900,
+    "step": 48,
+  },
+  {
+    "players.0.board.2.Haste": 5100,
+    "players.0.board.4.Haste": 1800,
+    "step": 49,
+  },
+  {
+    "players.0.board.2.Haste": 5000,
+    "players.0.board.4.Haste": 1700,
+    "step": 50,
+  },
+  {
+    "players.0.Burn": 0,
+    "players.0.Health": 1905,
+    "players.0.board.2.Haste": 6900,
+    "players.0.board.4.Haste": 3600,
+    "players.1.Burn": 0,
+    "players.1.Health": 668,
+    "step": 51,
+  },
+  {
+    "players.0.board.2.Haste": 6800,
+    "players.0.board.4.Haste": 3500,
+    "step": 52,
+  },
+  {
+    "players.0.board.2.Haste": 6700,
+    "players.0.board.4.Haste": 3400,
+    "step": 53,
+  },
+  {
+    "players.0.board.2.Haste": 6600,
+    "players.0.board.4.Haste": 3300,
+    "step": 54,
+  },
+  {
+    "players.0.board.2.Haste": 6500,
+    "players.0.board.4.Haste": 3200,
+    "players.1.Health": 512,
+    "step": 55,
+  },
+  {
+    "players.0.board.2.Haste": 6400,
+    "players.0.board.4.Haste": 3100,
+    "step": 56,
+  },
+  {
+    "players.0.board.2.Haste": 6300,
+    "players.0.board.4.Haste": 3000,
+    "step": 57,
+  },
+  {
+    "players.0.board.2.Haste": 6200,
+    "players.0.board.4.Haste": 2900,
+    "step": 58,
+  },
+  {
+    "players.0.board.2.Haste": 6100,
+    "players.0.board.4.Haste": 2800,
+    "step": 59,
+  },
+  {
+    "players.0.Burn": 4,
+    "players.0.Shield": 30,
+    "players.0.board.2.Haste": 9000,
+    "players.0.board.3.Haste": 1000,
+    "players.0.board.4.Haste": 2700,
+    "players.1.Burn": 4,
+    "step": 60,
+  },
+  {
+    "players.0.Burn": 3,
+    "players.0.Shield": 28,
+    "players.0.board.2.Haste": 8900,
+    "players.0.board.3.Haste": 900,
+    "players.0.board.4.Haste": 2600,
+    "players.1.Burn": 3,
+    "players.1.Health": 508,
+    "step": 61,
+  },
+  {
+    "players.0.board.2.Haste": 8800,
+    "players.0.board.3.Haste": 800,
+    "players.0.board.4.Haste": 2500,
+    "step": 62,
+  },
+  {
+    "players.0.board.2.Haste": 8700,
+    "players.0.board.3.Haste": 700,
+    "players.0.board.4.Haste": 2400,
+    "step": 63,
+  },
+  {
+    "players.0.board.2.Haste": 10600,
+    "players.0.board.3.Haste": 600,
+    "players.0.board.4.Haste": 4300,
+    "step": 64,
+  },
+  {
+    "players.0.board.2.Haste": 10500,
+    "players.0.board.3.Haste": 500,
+    "players.0.board.4.Haste": 4200,
+    "players.1.Health": 352,
+    "step": 65,
+  },
+  {
+    "players.0.Burn": 2,
+    "players.0.Shield": 26.5,
+    "players.0.board.2.Haste": 10400,
+    "players.0.board.3.Haste": 400,
+    "players.0.board.4.Haste": 4100,
+    "players.1.Burn": 2,
+    "players.1.Health": 349,
+    "step": 66,
+  },
+  {
+    "players.0.board.2.Haste": 10300,
+    "players.0.board.3.Haste": 300,
+    "players.0.board.4.Haste": 4000,
+    "step": 67,
+  },
+  {
+    "players.0.board.2.Haste": 10200,
+    "players.0.board.3.Haste": 200,
+    "players.0.board.4.Haste": 4900,
+    "step": 68,
+  },
+  {
+    "players.0.board.2.Haste": 10100,
+    "players.0.board.3.Haste": 100,
+    "players.0.board.4.Haste": 4800,
+    "step": 69,
+  },
+  {
+    "players.0.board.2.Haste": 10000,
+    "players.0.board.3.Haste": 0,
+    "players.0.board.4.Haste": 4700,
+    "step": 70,
+  },
+  {
+    "players.0.Burn": 1,
+    "players.0.Shield": 25.5,
+    "players.0.board.2.Haste": 9900,
+    "players.0.board.4.Haste": 4600,
+    "players.1.Burn": 1,
+    "players.1.Health": 347,
+    "step": 71,
+  },
+  {
+    "players.0.board.2.Haste": 9800,
+    "players.0.board.4.Haste": 4500,
+    "step": 72,
+  },
+  {
+    "players.0.board.2.Haste": 9700,
+    "players.0.board.4.Haste": 4400,
+    "step": 73,
+  },
+  {
+    "players.0.board.2.Haste": 9600,
+    "players.0.board.4.Haste": 4300,
+    "step": 74,
+  },
+  {
+    "players.0.board.2.Haste": 11500,
+    "players.0.board.4.Haste": 6200,
+    "step": 75,
+  },
+  {
+    "players.0.Burn": 0,
+    "players.0.Shield": 25,
+    "players.0.board.2.Haste": 11400,
+    "players.0.board.4.Haste": 6100,
+    "players.1.Burn": 0,
+    "players.1.Health": 190,
+    "step": 76,
+  },
+  {
+    "players.0.board.2.Haste": 11300,
+    "players.0.board.4.Haste": 6000,
+    "step": 77,
+  },
+  {
+    "players.0.board.2.Haste": 11200,
+    "players.0.board.4.Haste": 5900,
+    "step": 78,
+  },
+  {
+    "players.0.board.2.Haste": 11100,
+    "players.0.board.4.Haste": 5800,
+    "step": 79,
+  },
+  {
+    "players.0.board.2.Haste": 11000,
+    "players.0.board.4.Haste": 5700,
+    "step": 80,
+  },
+  {
+    "players.0.board.2.Haste": 10900,
+    "players.0.board.4.Haste": 5600,
+    "step": 81,
+  },
+  {
+    "players.0.board.2.Haste": 10800,
+    "players.0.board.4.Haste": 5500,
+    "step": 82,
+  },
+  {
+    "players.0.board.2.Haste": 10700,
+    "players.0.board.4.Haste": 5400,
+    "step": 83,
+  },
+  {
+    "players.0.board.2.Haste": 10600,
+    "players.0.board.4.Haste": 5300,
+    "step": 84,
+  },
+  {
+    "players.0.board.2.Haste": 10500,
+    "players.0.board.4.Haste": 5200,
+    "step": 85,
+  },
+  {
+    "players.0.Burn": 4,
+    "players.0.board.2.Haste": 13400,
+    "players.0.board.4.Haste": 5100,
+    "players.1.Burn": 4,
+    "step": 86,
+  },
+  {
+    "players.0.board.2.Haste": 13300,
+    "players.0.board.4.Haste": 5000,
+    "step": 87,
+  },
+  {
+    "players.0.board.2.Haste": 13200,
+    "players.0.board.4.Haste": 4900,
+    "step": 88,
+  },
+  {
+    "players.0.board.2.Haste": 13100,
+    "players.0.board.4.Haste": 4800,
+    "step": 89,
+  },
+  {
+    "players.0.board.2.Haste": 13000,
+    "players.0.board.4.Haste": 4700,
+    "step": 90,
+  },
+  {
+    "players.0.Burn": 3,
+    "players.0.Shield": 23,
+    "players.0.board.2.Haste": 12900,
+    "players.0.board.4.Haste": 4600,
+    "players.1.Burn": 3,
+    "players.1.Health": 186,
+    "step": 91,
+  },
+  {
+    "players.0.board.2.Haste": 14800,
+    "players.0.board.4.Haste": 6500,
+    "step": 92,
+  },
+  {
+    "players.0.board.2.Haste": 14700,
+    "players.0.board.4.Haste": 6400,
+    "players.1.Health": 30,
+    "step": 93,
+  },
+  {
+    "players.0.board.2.Haste": 14600,
+    "players.0.board.4.Haste": 6300,
+    "step": 94,
+  },
+  {
+    "players.0.board.2.Haste": 14500,
+    "players.0.board.4.Haste": 6200,
+    "step": 95,
+  },
+  {
+    "players.0.Burn": 2,
+    "players.0.Shield": 21.5,
+    "players.0.board.2.Haste": 14400,
+    "players.0.board.4.Haste": 6100,
+    "players.1.Burn": 2,
+    "players.1.Health": 27,
+    "step": 96,
+  },
+  {
+    "players.0.board.2.Haste": 14300,
+    "players.0.board.4.Haste": 6000,
+    "step": 97,
+  },
+  {
+    "players.0.board.2.Haste": 14200,
+    "players.0.board.4.Haste": 5900,
+    "step": 98,
+  },
+  {
+    "players.0.board.2.Haste": 14100,
+    "players.0.board.4.Haste": 5800,
+    "step": 99,
+  },
+  {
+    "players.0.board.2.Haste": 14000,
+    "players.0.board.4.Haste": 5700,
+    "step": 100,
+  },
+  {
+    "players.0.Burn": 1,
+    "players.0.Shield": 20.5,
+    "players.0.board.2.Haste": 13900,
+    "players.0.board.4.Haste": 5600,
+    "players.1.Burn": 1,
+    "players.1.Health": 25,
+    "step": 101,
+  },
+  {
+    "players.0.board.2.Haste": 13800,
+    "players.0.board.4.Haste": 6500,
+    "step": 102,
+  },
+  {
+    "players.0.board.2.Haste": 13700,
+    "players.0.board.4.Haste": 6400,
+    "step": 103,
+  },
+  {
+    "players.0.board.2.Haste": 13600,
+    "players.0.board.4.Haste": 6300,
+    "step": 104,
+  },
+  {
+    "players.0.board.2.Haste": 13500,
+    "players.0.board.4.Haste": 6200,
+    "step": 105,
+  },
+  {
+    "players.0.Burn": 0,
+    "players.0.Shield": 20,
+    "players.0.board.2.Haste": 13400,
+    "players.0.board.4.Haste": 6100,
+    "players.1.Burn": 0,
+    "players.1.Health": 24,
+    "step": 106,
+  },
+  {
+    "players.0.board.2.Haste": 13300,
+    "players.0.board.4.Haste": 6000,
+    "step": 107,
+  },
+  {
+    "players.0.board.2.Haste": 13200,
+    "players.0.board.4.Haste": 5900,
+    "step": 108,
+  },
+  {
+    "players.0.board.2.Haste": 15100,
+    "players.0.board.4.Haste": 7800,
+    "step": 109,
+  },
+  {
+    "isPlaying": false,
+    "players.0.board.2.Haste": 15000,
+    "players.0.board.4.Haste": 7700,
+    "players.1.Health": -132,
+    "step": 110,
   },
 ]
 `;
@@ -21178,8 +22240,1218 @@ exports[`Runs encounter "Day 9 - Oasis Guardian" against empty board 1`] = `
 exports[`Runs encounter "Day 9 - Roaming Isle" against empty board 1`] = `
 [
   {
-    "error": "Unhandled action type: TActionCardForceUse",
+    "players.0.board.5.HealAmount": 30,
+    "players.0.board.6.HealAmount": 30,
     "step": 1,
+  },
+  {
+    "players.0.Shield": 140,
+    "players.0.board.5.HealAmount": 40,
+    "players.0.board.6.HealAmount": 40,
+    "players.1.Health": 976,
+    "step": 50,
+  },
+  {
+    "players.0.board.4.Haste": 6000,
+    "players.0.board.5.HealAmount": 70,
+    "players.0.board.6.HealAmount": 70,
+    "players.1.Poison": 4,
+    "step": 60,
+  },
+  {
+    "players.0.board.4.Haste": 5900,
+    "players.1.Health": 972,
+    "step": 61,
+  },
+  {
+    "players.0.board.4.Haste": 5800,
+    "step": 62,
+  },
+  {
+    "players.0.board.4.Haste": 5700,
+    "step": 63,
+  },
+  {
+    "players.0.board.4.Haste": 5600,
+    "step": 64,
+  },
+  {
+    "players.0.board.4.Haste": 5500,
+    "step": 65,
+  },
+  {
+    "players.0.board.4.Haste": 5400,
+    "step": 66,
+  },
+  {
+    "players.0.board.4.Haste": 5300,
+    "step": 67,
+  },
+  {
+    "players.0.board.4.Haste": 5200,
+    "step": 68,
+  },
+  {
+    "players.0.board.4.Haste": 5100,
+    "step": 69,
+  },
+  {
+    "players.0.board.4.Haste": 5000,
+    "players.0.board.5.HealAmount": 80,
+    "players.0.board.6.HealAmount": 80,
+    "players.1.Poison": 7,
+    "step": 70,
+  },
+  {
+    "players.0.board.4.Haste": 4900,
+    "players.1.Health": 965,
+    "step": 71,
+  },
+  {
+    "players.0.board.4.Haste": 4800,
+    "step": 72,
+  },
+  {
+    "players.0.board.4.Haste": 4700,
+    "step": 73,
+  },
+  {
+    "players.0.board.4.Haste": 4600,
+    "step": 74,
+  },
+  {
+    "players.0.board.4.Haste": 4500,
+    "step": 75,
+  },
+  {
+    "players.0.board.4.Haste": 4400,
+    "step": 76,
+  },
+  {
+    "players.0.board.4.Haste": 4300,
+    "step": 77,
+  },
+  {
+    "players.0.board.4.Haste": 4200,
+    "step": 78,
+  },
+  {
+    "players.0.board.4.Haste": 4100,
+    "step": 79,
+  },
+  {
+    "players.0.Shield": 280,
+    "players.0.board.4.Haste": 4000,
+    "players.0.board.5.HealAmount": 90,
+    "players.0.board.6.HealAmount": 90,
+    "step": 80,
+  },
+  {
+    "players.0.board.4.Haste": 3900,
+    "players.1.Health": 958,
+    "step": 81,
+  },
+  {
+    "players.0.board.4.Haste": 3800,
+    "step": 82,
+  },
+  {
+    "players.0.board.4.Haste": 3700,
+    "step": 83,
+  },
+  {
+    "players.0.board.4.Haste": 3600,
+    "step": 84,
+  },
+  {
+    "players.0.board.4.Haste": 3500,
+    "step": 85,
+  },
+  {
+    "players.0.board.4.Haste": 3400,
+    "step": 86,
+  },
+  {
+    "players.0.board.4.Haste": 3300,
+    "step": 87,
+  },
+  {
+    "players.0.board.4.Haste": 3200,
+    "step": 88,
+  },
+  {
+    "players.0.board.4.Haste": 3100,
+    "step": 89,
+  },
+  {
+    "players.0.board.4.Haste": 3000,
+    "players.0.board.5.HealAmount": 100,
+    "players.0.board.6.HealAmount": 100,
+    "step": 90,
+  },
+  {
+    "players.0.board.4.Haste": 2900,
+    "players.1.Health": 951,
+    "step": 91,
+  },
+  {
+    "players.0.board.4.Haste": 2800,
+    "step": 92,
+  },
+  {
+    "players.0.board.4.Haste": 2700,
+    "step": 93,
+  },
+  {
+    "players.0.board.4.Haste": 2600,
+    "step": 94,
+  },
+  {
+    "players.0.board.4.Haste": 2500,
+    "step": 95,
+  },
+  {
+    "players.0.board.4.Haste": 2400,
+    "step": 96,
+  },
+  {
+    "players.0.board.4.Haste": 2300,
+    "step": 97,
+  },
+  {
+    "players.0.board.4.Haste": 2200,
+    "step": 98,
+  },
+  {
+    "players.0.board.4.Haste": 2100,
+    "step": 99,
+  },
+  {
+    "players.0.board.4.Haste": 2000,
+    "players.1.Health": 927,
+    "step": 100,
+  },
+  {
+    "players.0.board.4.Haste": 1900,
+    "players.1.Health": 920,
+    "step": 101,
+  },
+  {
+    "players.0.board.4.Haste": 1800,
+    "step": 102,
+  },
+  {
+    "players.0.board.4.Haste": 1700,
+    "step": 103,
+  },
+  {
+    "players.0.board.4.Haste": 1600,
+    "step": 104,
+  },
+  {
+    "players.0.board.4.Haste": 1500,
+    "step": 105,
+  },
+  {
+    "players.0.board.4.Haste": 1400,
+    "step": 106,
+  },
+  {
+    "players.0.board.4.Haste": 1300,
+    "step": 107,
+  },
+  {
+    "players.0.board.4.Haste": 1200,
+    "step": 108,
+  },
+  {
+    "players.0.board.4.Haste": 1100,
+    "step": 109,
+  },
+  {
+    "players.0.board.4.Haste": 1000,
+    "players.0.board.5.HealAmount": 110,
+    "players.0.board.6.HealAmount": 110,
+    "players.1.Poison": 10,
+    "step": 110,
+  },
+  {
+    "players.0.board.4.Haste": 900,
+    "players.1.Health": 910,
+    "step": 111,
+  },
+  {
+    "players.0.board.4.Haste": 800,
+    "step": 112,
+  },
+  {
+    "players.0.board.4.Haste": 700,
+    "step": 113,
+  },
+  {
+    "players.0.board.4.Haste": 600,
+    "step": 114,
+  },
+  {
+    "players.0.board.4.Haste": 500,
+    "step": 115,
+  },
+  {
+    "players.0.board.4.Haste": 400,
+    "step": 116,
+  },
+  {
+    "players.0.board.4.Haste": 300,
+    "step": 117,
+  },
+  {
+    "players.0.board.4.Haste": 200,
+    "step": 118,
+  },
+  {
+    "players.0.board.4.Haste": 100,
+    "step": 119,
+  },
+  {
+    "players.0.board.4.Haste": 6000,
+    "players.0.board.5.HealAmount": 140,
+    "players.0.board.6.HealAmount": 140,
+    "players.1.Poison": 14,
+    "step": 120,
+  },
+  {
+    "players.0.Shield": 420,
+    "players.0.board.4.Haste": 5900,
+    "players.0.board.5.HealAmount": 150,
+    "players.0.board.6.HealAmount": 150,
+    "players.1.Health": 896,
+    "step": 121,
+  },
+  {
+    "players.0.board.4.Haste": 5800,
+    "step": 122,
+  },
+  {
+    "players.0.board.4.Haste": 5700,
+    "step": 123,
+  },
+  {
+    "players.0.board.4.Haste": 5600,
+    "step": 124,
+  },
+  {
+    "players.0.board.4.Haste": 5500,
+    "step": 125,
+  },
+  {
+    "players.0.board.4.Haste": 5400,
+    "step": 126,
+  },
+  {
+    "players.0.board.4.Haste": 5300,
+    "step": 127,
+  },
+  {
+    "players.0.board.4.Haste": 5200,
+    "step": 128,
+  },
+  {
+    "players.0.board.4.Haste": 5100,
+    "step": 129,
+  },
+  {
+    "players.0.board.4.Haste": 5000,
+    "step": 130,
+  },
+  {
+    "players.0.board.4.Haste": 4900,
+    "players.1.Health": 882,
+    "step": 131,
+  },
+  {
+    "players.0.board.4.Haste": 4800,
+    "step": 132,
+  },
+  {
+    "players.0.board.4.Haste": 4700,
+    "step": 133,
+  },
+  {
+    "players.0.board.4.Haste": 4600,
+    "step": 134,
+  },
+  {
+    "players.0.board.4.Haste": 4500,
+    "step": 135,
+  },
+  {
+    "players.0.board.4.Haste": 4400,
+    "step": 136,
+  },
+  {
+    "players.0.board.4.Haste": 4300,
+    "step": 137,
+  },
+  {
+    "players.0.board.4.Haste": 4200,
+    "step": 138,
+  },
+  {
+    "players.0.board.4.Haste": 4100,
+    "step": 139,
+  },
+  {
+    "players.0.board.4.Haste": 4000,
+    "step": 140,
+  },
+  {
+    "players.0.board.4.Haste": 3900,
+    "players.1.Health": 868,
+    "step": 141,
+  },
+  {
+    "players.0.board.4.Haste": 3800,
+    "step": 142,
+  },
+  {
+    "players.0.board.4.Haste": 3700,
+    "step": 143,
+  },
+  {
+    "players.0.board.4.Haste": 3600,
+    "step": 144,
+  },
+  {
+    "players.0.board.4.Haste": 3500,
+    "step": 145,
+  },
+  {
+    "players.0.board.4.Haste": 3400,
+    "step": 146,
+  },
+  {
+    "players.0.board.4.Haste": 3300,
+    "step": 147,
+  },
+  {
+    "players.0.board.4.Haste": 3200,
+    "step": 148,
+  },
+  {
+    "players.0.board.4.Haste": 3100,
+    "step": 149,
+  },
+  {
+    "players.0.board.4.Haste": 3000,
+    "players.0.board.5.HealAmount": 160,
+    "players.0.board.6.HealAmount": 160,
+    "players.1.Health": 844,
+    "players.1.Poison": 17,
+    "step": 150,
+  },
+  {
+    "players.0.board.4.Haste": 2900,
+    "players.1.Health": 827,
+    "step": 151,
+  },
+  {
+    "players.0.board.4.Haste": 2800,
+    "step": 152,
+  },
+  {
+    "players.0.board.4.Haste": 2700,
+    "step": 153,
+  },
+  {
+    "players.0.board.4.Haste": 2600,
+    "step": 154,
+  },
+  {
+    "players.0.board.4.Haste": 2500,
+    "step": 155,
+  },
+  {
+    "players.0.board.4.Haste": 2400,
+    "step": 156,
+  },
+  {
+    "players.0.board.4.Haste": 2300,
+    "step": 157,
+  },
+  {
+    "players.0.board.4.Haste": 2200,
+    "step": 158,
+  },
+  {
+    "players.0.board.4.Haste": 2100,
+    "step": 159,
+  },
+  {
+    "players.0.board.4.Haste": 2000,
+    "step": 160,
+  },
+  {
+    "players.0.board.4.Haste": 1900,
+    "players.1.Health": 810,
+    "step": 161,
+  },
+  {
+    "players.0.board.4.Haste": 1800,
+    "step": 162,
+  },
+  {
+    "players.0.board.4.Haste": 1700,
+    "step": 163,
+  },
+  {
+    "players.0.board.4.Haste": 1600,
+    "step": 164,
+  },
+  {
+    "players.0.board.4.Haste": 1500,
+    "step": 165,
+  },
+  {
+    "players.0.board.4.Haste": 1400,
+    "step": 166,
+  },
+  {
+    "players.0.board.4.Haste": 1300,
+    "step": 167,
+  },
+  {
+    "players.0.board.4.Haste": 1200,
+    "step": 168,
+  },
+  {
+    "players.0.board.4.Haste": 1100,
+    "step": 169,
+  },
+  {
+    "players.0.board.4.Haste": 1000,
+    "step": 170,
+  },
+  {
+    "players.0.Shield": 560,
+    "players.0.board.4.Haste": 900,
+    "players.0.board.5.HealAmount": 170,
+    "players.0.board.6.HealAmount": 170,
+    "players.1.Health": 793,
+    "step": 171,
+  },
+  {
+    "players.0.board.4.Haste": 800,
+    "step": 172,
+  },
+  {
+    "players.0.board.4.Haste": 700,
+    "step": 173,
+  },
+  {
+    "players.0.board.4.Haste": 600,
+    "step": 174,
+  },
+  {
+    "players.0.board.4.Haste": 500,
+    "step": 175,
+  },
+  {
+    "players.0.board.4.Haste": 400,
+    "step": 176,
+  },
+  {
+    "players.0.board.4.Haste": 300,
+    "step": 177,
+  },
+  {
+    "players.0.board.4.Haste": 200,
+    "step": 178,
+  },
+  {
+    "players.0.board.4.Haste": 100,
+    "step": 179,
+  },
+  {
+    "players.0.board.4.Haste": 6000,
+    "players.0.board.5.HealAmount": 210,
+    "players.0.board.6.HealAmount": 210,
+    "players.1.Poison": 21,
+    "step": 180,
+  },
+  {
+    "players.0.board.4.Haste": 5900,
+    "players.1.Health": 772,
+    "step": 181,
+  },
+  {
+    "players.0.board.4.Haste": 5800,
+    "step": 182,
+  },
+  {
+    "players.0.board.4.Haste": 5700,
+    "step": 183,
+  },
+  {
+    "players.0.board.4.Haste": 5600,
+    "step": 184,
+  },
+  {
+    "players.0.board.4.Haste": 5500,
+    "step": 185,
+  },
+  {
+    "players.0.board.4.Haste": 5400,
+    "step": 186,
+  },
+  {
+    "players.0.board.4.Haste": 5300,
+    "step": 187,
+  },
+  {
+    "players.0.board.4.Haste": 5200,
+    "step": 188,
+  },
+  {
+    "players.0.board.4.Haste": 5100,
+    "step": 189,
+  },
+  {
+    "players.0.board.4.Haste": 5000,
+    "players.0.board.5.HealAmount": 220,
+    "players.0.board.6.HealAmount": 220,
+    "players.1.Poison": 24,
+    "step": 190,
+  },
+  {
+    "players.0.board.4.Haste": 4900,
+    "players.1.Health": 748,
+    "step": 191,
+  },
+  {
+    "players.0.board.4.Haste": 4800,
+    "step": 192,
+  },
+  {
+    "players.0.board.4.Haste": 4700,
+    "step": 193,
+  },
+  {
+    "players.0.board.4.Haste": 4600,
+    "step": 194,
+  },
+  {
+    "players.0.board.4.Haste": 4500,
+    "step": 195,
+  },
+  {
+    "players.0.board.4.Haste": 4400,
+    "step": 196,
+  },
+  {
+    "players.0.board.4.Haste": 4300,
+    "step": 197,
+  },
+  {
+    "players.0.board.4.Haste": 4200,
+    "step": 198,
+  },
+  {
+    "players.0.board.4.Haste": 4100,
+    "step": 199,
+  },
+  {
+    "players.0.board.4.Haste": 4000,
+    "players.1.Health": 724,
+    "step": 200,
+  },
+  {
+    "players.0.Shield": 700,
+    "players.0.board.4.Haste": 3900,
+    "players.0.board.5.HealAmount": 230,
+    "players.0.board.6.HealAmount": 230,
+    "players.1.Health": 700,
+    "step": 201,
+  },
+  {
+    "players.0.board.4.Haste": 3800,
+    "step": 202,
+  },
+  {
+    "players.0.board.4.Haste": 3700,
+    "step": 203,
+  },
+  {
+    "players.0.board.4.Haste": 3600,
+    "step": 204,
+  },
+  {
+    "players.0.board.4.Haste": 3500,
+    "step": 205,
+  },
+  {
+    "players.0.board.4.Haste": 3400,
+    "step": 206,
+  },
+  {
+    "players.0.board.4.Haste": 3300,
+    "step": 207,
+  },
+  {
+    "players.0.board.4.Haste": 3200,
+    "step": 208,
+  },
+  {
+    "players.0.board.4.Haste": 3100,
+    "step": 209,
+  },
+  {
+    "players.0.board.4.Haste": 3000,
+    "step": 210,
+  },
+  {
+    "players.0.board.4.Haste": 2900,
+    "players.1.Health": 676,
+    "step": 211,
+  },
+  {
+    "players.0.board.4.Haste": 2800,
+    "step": 212,
+  },
+  {
+    "players.0.board.4.Haste": 2700,
+    "step": 213,
+  },
+  {
+    "players.0.board.4.Haste": 2600,
+    "step": 214,
+  },
+  {
+    "players.0.board.4.Haste": 2500,
+    "step": 215,
+  },
+  {
+    "players.0.board.4.Haste": 2400,
+    "step": 216,
+  },
+  {
+    "players.0.board.4.Haste": 2300,
+    "step": 217,
+  },
+  {
+    "players.0.board.4.Haste": 2200,
+    "step": 218,
+  },
+  {
+    "players.0.board.4.Haste": 2100,
+    "step": 219,
+  },
+  {
+    "players.0.board.4.Haste": 2000,
+    "step": 220,
+  },
+  {
+    "players.0.board.4.Haste": 1900,
+    "players.1.Health": 652,
+    "step": 221,
+  },
+  {
+    "players.0.board.4.Haste": 1800,
+    "step": 222,
+  },
+  {
+    "players.0.board.4.Haste": 1700,
+    "step": 223,
+  },
+  {
+    "players.0.board.4.Haste": 1600,
+    "step": 224,
+  },
+  {
+    "players.0.board.4.Haste": 1500,
+    "step": 225,
+  },
+  {
+    "players.0.board.4.Haste": 1400,
+    "step": 226,
+  },
+  {
+    "players.0.board.4.Haste": 1300,
+    "step": 227,
+  },
+  {
+    "players.0.board.4.Haste": 1200,
+    "step": 228,
+  },
+  {
+    "players.0.board.4.Haste": 1100,
+    "step": 229,
+  },
+  {
+    "players.0.board.4.Haste": 1000,
+    "players.0.board.5.HealAmount": 240,
+    "players.0.board.6.HealAmount": 240,
+    "players.1.Poison": 27,
+    "step": 230,
+  },
+  {
+    "players.0.board.4.Haste": 900,
+    "players.1.Health": 625,
+    "step": 231,
+  },
+  {
+    "players.0.board.4.Haste": 800,
+    "step": 232,
+  },
+  {
+    "players.0.board.4.Haste": 700,
+    "step": 233,
+  },
+  {
+    "players.0.board.4.Haste": 600,
+    "step": 234,
+  },
+  {
+    "players.0.board.4.Haste": 500,
+    "step": 235,
+  },
+  {
+    "players.0.board.4.Haste": 400,
+    "step": 236,
+  },
+  {
+    "players.0.board.4.Haste": 300,
+    "step": 237,
+  },
+  {
+    "players.0.board.4.Haste": 200,
+    "step": 238,
+  },
+  {
+    "players.0.board.4.Haste": 100,
+    "step": 239,
+  },
+  {
+    "players.0.board.4.Haste": 6000,
+    "players.0.board.5.HealAmount": 270,
+    "players.0.board.6.HealAmount": 270,
+    "players.1.Poison": 31,
+    "step": 240,
+  },
+  {
+    "players.0.Shield": 840,
+    "players.0.board.4.Haste": 5900,
+    "players.0.board.5.HealAmount": 280,
+    "players.0.board.6.HealAmount": 280,
+    "players.1.Health": 594,
+    "step": 241,
+  },
+  {
+    "players.0.board.4.Haste": 5800,
+    "step": 242,
+  },
+  {
+    "players.0.board.4.Haste": 5700,
+    "step": 243,
+  },
+  {
+    "players.0.board.4.Haste": 5600,
+    "step": 244,
+  },
+  {
+    "players.0.board.4.Haste": 5500,
+    "step": 245,
+  },
+  {
+    "players.0.board.4.Haste": 5400,
+    "step": 246,
+  },
+  {
+    "players.0.board.4.Haste": 5300,
+    "step": 247,
+  },
+  {
+    "players.0.board.4.Haste": 5200,
+    "step": 248,
+  },
+  {
+    "players.0.board.4.Haste": 5100,
+    "step": 249,
+  },
+  {
+    "players.0.board.4.Haste": 5000,
+    "players.1.Health": 570,
+    "step": 250,
+  },
+  {
+    "players.0.board.4.Haste": 4900,
+    "players.1.Health": 539,
+    "step": 251,
+  },
+  {
+    "players.0.board.4.Haste": 4800,
+    "step": 252,
+  },
+  {
+    "players.0.board.4.Haste": 4700,
+    "step": 253,
+  },
+  {
+    "players.0.board.4.Haste": 4600,
+    "step": 254,
+  },
+  {
+    "players.0.board.4.Haste": 4500,
+    "step": 255,
+  },
+  {
+    "players.0.board.4.Haste": 4400,
+    "step": 256,
+  },
+  {
+    "players.0.board.4.Haste": 4300,
+    "step": 257,
+  },
+  {
+    "players.0.board.4.Haste": 4200,
+    "step": 258,
+  },
+  {
+    "players.0.board.4.Haste": 4100,
+    "step": 259,
+  },
+  {
+    "players.0.board.4.Haste": 4000,
+    "step": 260,
+  },
+  {
+    "players.0.board.4.Haste": 3900,
+    "players.1.Health": 508,
+    "step": 261,
+  },
+  {
+    "players.0.board.4.Haste": 3800,
+    "step": 262,
+  },
+  {
+    "players.0.board.4.Haste": 3700,
+    "step": 263,
+  },
+  {
+    "players.0.board.4.Haste": 3600,
+    "step": 264,
+  },
+  {
+    "players.0.board.4.Haste": 3500,
+    "step": 265,
+  },
+  {
+    "players.0.board.4.Haste": 3400,
+    "step": 266,
+  },
+  {
+    "players.0.board.4.Haste": 3300,
+    "step": 267,
+  },
+  {
+    "players.0.board.4.Haste": 3200,
+    "step": 268,
+  },
+  {
+    "players.0.board.4.Haste": 3100,
+    "step": 269,
+  },
+  {
+    "players.0.board.4.Haste": 3000,
+    "players.0.board.5.HealAmount": 300,
+    "players.0.board.6.HealAmount": 300,
+    "players.1.Poison": 34,
+    "step": 270,
+  },
+  {
+    "players.0.board.4.Haste": 2900,
+    "players.1.Health": 474,
+    "step": 271,
+  },
+  {
+    "players.0.board.4.Haste": 2800,
+    "step": 272,
+  },
+  {
+    "players.0.board.4.Haste": 2700,
+    "step": 273,
+  },
+  {
+    "players.0.board.4.Haste": 2600,
+    "step": 274,
+  },
+  {
+    "players.0.board.4.Haste": 2500,
+    "step": 275,
+  },
+  {
+    "players.0.board.4.Haste": 2400,
+    "step": 276,
+  },
+  {
+    "players.0.board.4.Haste": 2300,
+    "step": 277,
+  },
+  {
+    "players.0.board.4.Haste": 2200,
+    "step": 278,
+  },
+  {
+    "players.0.board.4.Haste": 2100,
+    "step": 279,
+  },
+  {
+    "players.0.board.4.Haste": 2000,
+    "step": 280,
+  },
+  {
+    "players.0.board.4.Haste": 1900,
+    "players.1.Health": 440,
+    "step": 281,
+  },
+  {
+    "players.0.board.4.Haste": 1800,
+    "step": 282,
+  },
+  {
+    "players.0.board.4.Haste": 1700,
+    "step": 283,
+  },
+  {
+    "players.0.board.4.Haste": 1600,
+    "step": 284,
+  },
+  {
+    "players.0.board.4.Haste": 1500,
+    "step": 285,
+  },
+  {
+    "players.0.board.4.Haste": 1400,
+    "step": 286,
+  },
+  {
+    "players.0.board.4.Haste": 1300,
+    "step": 287,
+  },
+  {
+    "players.0.board.4.Haste": 1200,
+    "step": 288,
+  },
+  {
+    "players.0.board.4.Haste": 1100,
+    "step": 289,
+  },
+  {
+    "players.0.board.4.Haste": 1000,
+    "step": 290,
+  },
+  {
+    "players.0.Shield": 980,
+    "players.0.board.4.Haste": 900,
+    "players.0.board.5.HealAmount": 310,
+    "players.0.board.6.HealAmount": 310,
+    "players.1.Health": 406,
+    "step": 291,
+  },
+  {
+    "players.0.board.4.Haste": 800,
+    "step": 292,
+  },
+  {
+    "players.0.board.4.Haste": 700,
+    "step": 293,
+  },
+  {
+    "players.0.board.4.Haste": 600,
+    "step": 294,
+  },
+  {
+    "players.0.board.4.Haste": 500,
+    "step": 295,
+  },
+  {
+    "players.0.board.4.Haste": 400,
+    "step": 296,
+  },
+  {
+    "players.0.board.4.Haste": 300,
+    "step": 297,
+  },
+  {
+    "players.0.board.4.Haste": 200,
+    "step": 298,
+  },
+  {
+    "players.0.board.4.Haste": 100,
+    "step": 299,
+  },
+  {
+    "players.0.board.4.Haste": 6000,
+    "players.0.board.5.HealAmount": 340,
+    "players.0.board.6.HealAmount": 340,
+    "players.1.Health": 382,
+    "players.1.Poison": 38,
+    "step": 300,
+  },
+  {
+    "players.0.Shield": 979,
+    "players.0.board.4.Haste": 5900,
+    "players.1.Health": 343,
+    "step": 301,
+  },
+  {
+    "players.0.Shield": 978,
+    "players.0.board.4.Haste": 5800,
+    "players.1.Health": 342,
+    "step": 302,
+  },
+  {
+    "players.0.Shield": 977,
+    "players.0.board.4.Haste": 5700,
+    "players.1.Health": 341,
+    "step": 303,
+  },
+  {
+    "players.0.Shield": 976,
+    "players.0.board.4.Haste": 5600,
+    "players.1.Health": 340,
+    "step": 304,
+  },
+  {
+    "players.0.Shield": 975,
+    "players.0.board.4.Haste": 5500,
+    "players.1.Health": 339,
+    "step": 305,
+  },
+  {
+    "players.0.Shield": 974,
+    "players.0.board.4.Haste": 5400,
+    "players.1.Health": 338,
+    "step": 306,
+  },
+  {
+    "players.0.Shield": 973,
+    "players.0.board.4.Haste": 5300,
+    "players.1.Health": 337,
+    "step": 307,
+  },
+  {
+    "players.0.Shield": 972,
+    "players.0.board.4.Haste": 5200,
+    "players.1.Health": 336,
+    "step": 308,
+  },
+  {
+    "players.0.Shield": 971,
+    "players.0.board.4.Haste": 5100,
+    "players.1.Health": 335,
+    "step": 309,
+  },
+  {
+    "players.0.Shield": 970,
+    "players.0.board.4.Haste": 5000,
+    "players.0.board.5.HealAmount": 350,
+    "players.0.board.6.HealAmount": 350,
+    "players.1.Health": 334,
+    "players.1.Poison": 41,
+    "step": 310,
+  },
+  {
+    "players.0.Shield": 967,
+    "players.0.board.4.Haste": 4900,
+    "players.1.Health": 290,
+    "step": 311,
+  },
+  {
+    "players.0.Shield": 962,
+    "players.0.board.4.Haste": 4800,
+    "players.1.Health": 285,
+    "step": 312,
+  },
+  {
+    "players.0.Shield": 955,
+    "players.0.board.4.Haste": 4700,
+    "players.1.Health": 278,
+    "step": 313,
+  },
+  {
+    "players.0.Shield": 946,
+    "players.0.board.4.Haste": 4600,
+    "players.1.Health": 269,
+    "step": 314,
+  },
+  {
+    "players.0.Shield": 935,
+    "players.0.board.4.Haste": 4500,
+    "players.1.Health": 258,
+    "step": 315,
+  },
+  {
+    "players.0.Shield": 922,
+    "players.0.board.4.Haste": 4400,
+    "players.1.Health": 245,
+    "step": 316,
+  },
+  {
+    "players.0.Shield": 907,
+    "players.0.board.4.Haste": 4300,
+    "players.1.Health": 230,
+    "step": 317,
+  },
+  {
+    "players.0.Shield": 890,
+    "players.0.board.4.Haste": 4200,
+    "players.1.Health": 213,
+    "step": 318,
+  },
+  {
+    "players.0.Shield": 871,
+    "players.0.board.4.Haste": 4100,
+    "players.1.Health": 194,
+    "step": 319,
+  },
+  {
+    "players.0.Shield": 850,
+    "players.0.board.4.Haste": 4000,
+    "players.1.Health": 173,
+    "step": 320,
+  },
+  {
+    "players.0.Shield": 967,
+    "players.0.board.4.Haste": 3900,
+    "players.0.board.5.HealAmount": 360,
+    "players.0.board.6.HealAmount": 360,
+    "players.1.Health": 109,
+    "step": 321,
+  },
+  {
+    "players.0.Shield": 942,
+    "players.0.board.4.Haste": 3800,
+    "players.1.Health": 84,
+    "step": 322,
+  },
+  {
+    "players.0.Shield": 915,
+    "players.0.board.4.Haste": 3700,
+    "players.1.Health": 57,
+    "step": 323,
+  },
+  {
+    "players.0.Shield": 886,
+    "players.0.board.4.Haste": 3600,
+    "players.1.Health": 28,
+    "step": 324,
+  },
+  {
+    "isPlaying": false,
+    "players.0.Shield": 855,
+    "players.0.board.4.Haste": 3500,
+    "players.1.Health": -3,
+    "step": 325,
   },
 ]
 `;
@@ -26285,8 +28557,20 @@ exports[`Runs encounter "Day 10 - Master Alchemist" against empty board 1`] = `
 exports[`Runs encounter "Day 10 - Property Baron" against empty board 1`] = `
 [
   {
-    "error": "Unhandled action type: TActionCardForceUse",
+    "players.0.board.0.SellPrice": 120,
+    "players.0.board.1.SellPrice": 24,
+    "players.0.board.2.SellPrice": 48,
+    "players.0.board.3.SellPrice": 32,
     "step": 1,
+  },
+  {
+    "players.1.Health": 328,
+    "step": 60,
+  },
+  {
+    "isPlaying": false,
+    "players.1.Health": -1016,
+    "step": 120,
   },
 ]
 `;

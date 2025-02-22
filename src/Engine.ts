@@ -745,6 +745,49 @@ function triggerActions(
   );
 }
 
+function triggerCard(
+  gameState: GameState,
+  playerID: number,
+  boardCardID: number
+): void {
+  forEachAbility(
+    gameState,
+    (
+      targetPlayer,
+      targetPlayerID,
+      targetBoardCard,
+      targetBoardCardID,
+      ability,
+      addAction
+    ) => {
+      if (
+        ability.Trigger.$type === "TTriggerOnCardFired" &&
+        playerID === targetPlayerID &&
+        boardCardID === targetBoardCardID
+      ) {
+        addAction(playerID, boardCardID, targetPlayerID, targetBoardCardID);
+      } else if (ability.Trigger.$type === "TTriggerOnItemUsed") {
+        const subjects = getTargetCards(
+          gameState,
+          ability.Trigger.Subject,
+          playerID,
+          boardCardID,
+          targetPlayerID,
+          targetBoardCardID
+        );
+        subjects.forEach(([subjectPlayerID, subjectBoardCardID]) => {
+          if (
+            subjectPlayerID === playerID &&
+            subjectBoardCardID === boardCardID
+          ) {
+            addAction(playerID, boardCardID, targetPlayerID, targetBoardCardID);
+          }
+        });
+      }
+    }
+  );
+}
+
 // Returns true if the action critted
 function runAction(
   gameState: GameState,
@@ -757,6 +800,20 @@ function runAction(
   let hasCritted = false;
 
   switch (action.$type) {
+    case "TActionCardForceUse": {
+      const targetCards = getTargetCards(
+        gameState,
+        action.Target,
+        triggerPlayerID,
+        triggerBoardCardID,
+        targetPlayerID,
+        targetBoardCardID
+      );
+      targetCards.forEach(([actionTargetPlayerID, actionTargetBoardCardID]) => {
+        triggerCard(gameState, actionTargetPlayerID, actionTargetBoardCardID);
+      });
+      break;
+    }
     case "TActionPlayerDamage": {
       let amount = getCardAttribute(
         gameState,
@@ -2039,47 +2096,7 @@ function runGameTick(initialGameState: GameState): GameState {
       );
     }
 
-    forEachAbility(
-      gameState,
-      (
-        targetPlayer,
-        targetPlayerID,
-        targetBoardCard,
-        targetBoardCardID,
-        ability,
-        addAction
-      ) => {
-        if (
-          ability.Trigger.$type === "TTriggerOnCardFired" &&
-          playerID === targetPlayerID &&
-          boardCardID === targetBoardCardID
-        ) {
-          addAction(playerID, boardCardID, targetPlayerID, targetBoardCardID);
-        } else if (ability.Trigger.$type === "TTriggerOnItemUsed") {
-          const subjects = getTargetCards(
-            gameState,
-            ability.Trigger.Subject,
-            playerID,
-            boardCardID,
-            targetPlayerID,
-            targetBoardCardID
-          );
-          subjects.forEach(([subjectPlayerID, subjectBoardCardID]) => {
-            if (
-              subjectPlayerID === playerID &&
-              subjectBoardCardID === boardCardID
-            ) {
-              addAction(
-                playerID,
-                boardCardID,
-                targetPlayerID,
-                targetBoardCardID
-              );
-            }
-          });
-        }
-      }
-    );
+    triggerCard(gameState, playerID, boardCardID);
 
     if (!isMulticast) {
       gameState.players[playerID].board[boardCardID].tick = 0;

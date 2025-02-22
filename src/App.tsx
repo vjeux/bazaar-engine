@@ -65,7 +65,7 @@ function Tooltip({
           {tooltip}
         </div>
       ))}
-      <div>
+      <div style={{ margin: "10px 10px", color: "gray" }}>
         {[
           ...boardCard.card.Heroes,
           ...boardCard.card.Tags,
