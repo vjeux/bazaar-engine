@@ -742,6 +742,13 @@ export interface V2CardAttributes {
   SellPrice?: number;
 }
 
+/**
+ * Represents an effect which does not utilize a cooldown to activate.
+ *
+ * Can be:
+ * - Skills such as "If you have 4 or fewer items, you have +{aura.0} Max Health."
+ * - Card enchantments such as Deadly, Heavy, Icy, etc.
+ */
 export interface Aura {
   Id: string;
   ActiveIn: ActiveIn;
