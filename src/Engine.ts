@@ -1,13 +1,13 @@
 import {
   V2Card,
   Ability,
-  AbilityPrerequisite,
   FluffyValue,
   AbilityAction,
   Enchantments,
   TriggerType,
   ActionType,
-  Priority
+  Priority,
+  Aura
 } from "./types/cardTypes";
 
 import { Tier } from "./types/shared";
@@ -56,12 +56,14 @@ export interface BoardCard {
   ShieldApplyAmount?: number;
   Enchantment?: keyof Enchantments | null;
   isDisabled?: boolean;
+  Auras?: { [key: string]: Aura };
   [key: string]: any;
 }
 
 export interface BoardSkill {
   card: V2Card;
   tier: Tier;
+  Auras?: { [key: string]: Aura };
   [key: string]: any;
 }
 
@@ -217,13 +219,13 @@ function forEachAura(
     playerIndex: number,
     boardCard: BoardCardOrSkill,
     boardCardIndex: number,
-    aura: Ability
+    aura: Aura
   ) => void
 ): void {
   forEachCard(gameState, (player, playerIndex, boardCard, boardCardIndex) => {
     for (let i = 0; i < boardCard.AuraIds.length; ++i) {
       const auraId = boardCard.AuraIds[i];
-      const aura = boardCard.Auras[auraId];
+      const aura: Aura | undefined = boardCard.Auras?.[auraId];
       if (aura) {
         callback(player, playerIndex, boardCard, boardCardIndex, aura);
       }
