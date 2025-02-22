@@ -6,38 +6,51 @@ import { expect, describe, test } from "vitest";
 function getStateDiff(
   prev: any,
   curr: any,
-  path: string[] = []
+  initialPath: string[] = []
 ): Record<string, any> {
   const diff: Record<string, any> = {};
+  const stack: Array<{ prev: any; curr: any; path: string[] }> = [
+    { prev, curr, path: initialPath }
+  ];
 
-  if (typeof prev !== "object" || typeof curr !== "object") {
-    if (prev !== curr) {
-      diff[path.join(".")] = curr;
+  while (stack.length > 0) {
+    const { prev, curr, path } = stack.pop()!;
+
+    // Handle primitives and null cases
+    if (
+      typeof prev !== "object" ||
+      typeof curr !== "object" ||
+      prev == null ||
+      curr == null
+    ) {
+      if (prev !== curr) {
+        diff[path.join(".")] = curr;
+      }
+      continue;
     }
-    return diff;
-  }
 
-  if (prev === null || curr === null) {
-    if (prev !== curr) {
-      diff[path.join(".")] = curr;
+    // Process object properties
+    for (const key in curr) {
+      if (key === "card" || key === "tick") {
+        continue;
+      }
+      stack.push({
+        prev: prev[key],
+        curr: curr[key],
+        path: [...path, key]
+      });
     }
-    return diff;
-  }
-
-  const prevKeys = Object.keys(prev);
-  const currKeys = Object.keys(curr);
-  const allKeys = new Set([...prevKeys, ...currKeys]);
-  allKeys.delete("card");
-  allKeys.delete("tick");
-
-  for (const key of allKeys) {
-    if (!(key in prev)) {
-      diff[path.concat(key).join(".")] = curr[key];
-    } else if (!(key in curr)) {
-      diff[path.concat(key).join(".")] = undefined;
-    } else {
-      const valueDiff = getStateDiff(prev[key], curr[key], path.concat(key));
-      Object.assign(diff, valueDiff);
+    for (const key in prev) {
+      if (key === "card" || key === "tick") {
+        continue;
+      }
+      if (!(key in curr)) {
+        stack.push({
+          prev: prev[key],
+          curr: curr[key],
+          path: [...path, key]
+        });
+      }
     }
   }
 
