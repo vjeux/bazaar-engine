@@ -269,17 +269,7 @@ export function getCardAttribute(
         targetBoardCardID
       );
 
-      const targetCount =
-        action.TargetCount == null
-          ? targetCards.length
-          : getActionValue(
-              gameState,
-              action.TargetCount,
-              playerID,
-              boardCardID,
-              targetPlayerID,
-              targetBoardCardID
-            );
+      const targetCount = targetCards.length;
 
       targetCards
         .slice(0, targetCount)
