@@ -44,14 +44,8 @@ function _createBoardCardFromCard(
 
   // If the provided tier is not available, default to the first tier available.
   if (!card.Tiers || !(tier in card.Tiers)) {
-    console.error(
-      `Tier ${tier} not found for card ${card.Localization.Title.Text}`
-    );
     // Get tier key
     const tierKeys = Object.keys(card.Tiers || {});
-    if (tierKeys.length === 0) {
-      throw new Error(`Card ${card.Localization.Title.Text} has no tiers`);
-    }
     tier = tierKeys[0] as Tier;
   }
 
@@ -156,9 +150,6 @@ export function getDefaultTierBoardCard(Cards: V2Cards, name: string) {
     throw new Error(`Card ${name} not found`);
   }
   const tierKeys = Object.keys(card.Tiers || {});
-  if (tierKeys.length === 0) {
-    throw new Error(`Card ${card.Localization.Title.Text} has no tiers`);
-  }
   const tier = tierKeys[0] as Tier;
   return getBoardCard(Cards, name, tier);
 }

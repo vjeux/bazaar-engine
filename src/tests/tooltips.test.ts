@@ -1,13 +1,13 @@
 import { getDefaultTierBoardCard } from "../GameState";
 import validObjectNames from "../json/ValidObjectNames.json";
-import { describe, it } from "vitest";
 import Cards from "../json/v2_Cards.json";
 import { GameState, getTooltips } from "../Engine";
 import { V2Cards } from "../types/cardTypes";
+import { expect, it } from "vitest";
 
-describe("Tooltip Generation Test", () => {
-  it("should generate tooltips for all valid cards without errors", () => {
-    validObjectNames.forEach((cardName) => {
+validObjectNames.forEach((cardName) => {
+  it(`Generate tooltips for "${cardName}"`, () => {
+    try {
       const gameState: GameState = {
         tick: 0,
         isPlaying: true,
@@ -27,8 +27,15 @@ describe("Tooltip Generation Test", () => {
         multicast: [],
         getRand: () => 0.5
       };
-
-      getTooltips(gameState, 0, 0);
-    });
+      expect({
+        cardName,
+        tooltips: getTooltips(gameState, 0, 0)
+      }).toMatchSnapshot();
+    } catch (e) {
+      expect({
+        cardName,
+        error: (e as Error).message
+      }).toMatchSnapshot();
+    }
   });
 });
