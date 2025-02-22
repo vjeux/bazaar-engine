@@ -15,13 +15,6 @@ import { Card, EncounterDays, Group } from "./types/encounterTypes";
 // Day 4 - Flame Juggler
 // The skill Burst of Flame seems to trigger when the oppononent reaches 1/3 of life rather than 1/2.
 
-// Day 7 - Treasure Turtle
-// Day 8 - Car Conductor
-// Day 9 - Roaming Isle
-// Day 10 - Lord Arken
-// Day 10 - Property Baron
-// Uncaught Error: Unhandled action type: TActionCardForceUse
-
 // Need to fix crit trigger
 
 */
