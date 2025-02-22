@@ -16,8 +16,14 @@ export interface GameState {
   tick: number;
   isPlaying: boolean;
   players: Player[];
-  multicast: any[];
+  multicast: Multicast[];
   getRand: () => number;
+}
+
+export interface Multicast {
+  tick: number;
+  playerID: number;
+  boardCardID: number;
 }
 
 export interface Player {
