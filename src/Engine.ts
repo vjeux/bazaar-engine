@@ -67,6 +67,9 @@ export interface BoardSkill {
 
 export type BoardCardOrSkill = BoardCard | BoardSkill;
 
+/**
+ * Iterates over every board card for each player in the game state, calling the provided callback for each non-disabled board card.
+ */
 function forEachCard(
   gameState: GameState,
   callback: (
@@ -96,6 +99,16 @@ const priorityOrder = {
   [Priority.Highest]: 5
 };
 
+/**
+ * Iterates over all abilities in the game state and processes them using a callback function.
+ *
+ * The callback function can run `addAction` to push an action to the action queue, that will be ran using {@link runAction} after all abilities have been processed.
+ *
+ * After all abilities have been processed via the callback, all queued actions are filtered by verifying that
+ * any prerequisites specified by each ability are met, then sorted according to their priorities.
+ *
+ * Finally, the actions are executed in the sorted order.
+ */
 function forEachAbility(
   gameState: GameState,
   callback: (
