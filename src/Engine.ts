@@ -2225,15 +2225,40 @@ export function getTooltips(
         const action =
           boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
         if (action.$type === "TActionCardHaste") {
-          return boardCard.HasteTargets;
+          return getCardAttribute(
+            gameState,
+            playerID,
+            boardCardID,
+            "HasteTargets"
+          );
         } else if (action.$type === "TActionCardSlow") {
-          return boardCard.SlowTargets;
+          return getCardAttribute(
+            gameState,
+            playerID,
+            boardCardID,
+            "SlowTargets"
+          );
         } else if (action.$type === "TActionCardFreeze") {
-          return boardCard.FreezeTargets;
+          return getCardAttribute(
+            gameState,
+            playerID,
+            boardCardID,
+            "FreezeTargets"
+          );
         } else if (action.$type === "TActionCardCharge") {
-          return boardCard.ChargeTargets;
+          return getCardAttribute(
+            gameState,
+            playerID,
+            boardCardID,
+            "ChargeTargets"
+          );
         } else if (action.$type === "TActionCardReload") {
-          return boardCard.ReloadTargets;
+          return getCardAttribute(
+            gameState,
+            playerID,
+            boardCardID,
+            "ReloadTargets"
+          );
         }
         return `{?${type}.${id}.targets}`;
       }
@@ -2292,25 +2317,83 @@ export function getTooltips(
                 boardCardID
               );
             case "TActionPlayerDamage":
-              return boardCard.DamageAmount;
+              return getCardAttribute(
+                gameState,
+                playerID,
+                boardCardID,
+                "DamageAmount"
+              );
             case "TActionCardReload":
-              return boardCard.ReloadAmount;
+              return getCardAttribute(
+                gameState,
+                playerID,
+                boardCardID,
+                "ReloadAmount"
+              );
             case "TActionPlayerHeal":
-              return boardCard.HealAmount;
+              return getCardAttribute(
+                gameState,
+                playerID,
+                boardCardID,
+                "HealAmount"
+              );
             case "TActionPlayerShieldApply":
-              return boardCard.ShieldApplyAmount;
+              return getCardAttribute(
+                gameState,
+                playerID,
+                boardCardID,
+                "ShieldApplyAmount"
+              );
             case "TActionPlayerPoisonApply":
-              return boardCard.PoisonApplyAmount;
+              return getCardAttribute(
+                gameState,
+                playerID,
+                boardCardID,
+                "PoisonApplyAmount"
+              );
             case "TActionPlayerBurnApply":
-              return boardCard.BurnApplyAmount;
+              return getCardAttribute(
+                gameState,
+                playerID,
+                boardCardID,
+                "BurnApplyAmount"
+              );
             case "TActionCardFreeze":
-              return boardCard.FreezeAmount / 1000;
+              return (
+                getCardAttribute(
+                  gameState,
+                  playerID,
+                  boardCardID,
+                  "FreezeAmount"
+                ) / 1000
+              );
             case "TActionCardHaste":
-              return boardCard.HasteAmount / 1000;
+              return (
+                getCardAttribute(
+                  gameState,
+                  playerID,
+                  boardCardID,
+                  "HasteAmount"
+                ) / 1000
+              );
             case "TActionCardSlow":
-              return boardCard.SlowAmount / 1000;
+              return (
+                getCardAttribute(
+                  gameState,
+                  playerID,
+                  boardCardID,
+                  "SlowAmount"
+                ) / 1000
+              );
             case "TActionCardCharge":
-              return boardCard.ChargeAmount / 1000;
+              return (
+                getCardAttribute(
+                  gameState,
+                  playerID,
+                  boardCardID,
+                  "ChargeAmount"
+                ) / 1000
+              );
 
             default:
               throw new Error("Action type not implemented: " + action.$type);

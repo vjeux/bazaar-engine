@@ -824,7 +824,7 @@ exports[`Generate tooltips for "Brass Knuckles" 1`] = `
 {
   "cardName": "Brass Knuckles",
   "tooltips": [
-    "Deal 8 damage.",
+    "Deal 16 damage.",
     "This has double damage.",
   ],
 }
@@ -1666,7 +1666,7 @@ exports[`Generate tooltips for "Crook" 1`] = `
 {
   "cardName": "Crook",
   "tooltips": [
-    "Deal 16 damage.",
+    "Deal 24 damage.",
     "Your Medium Weapons have +8 Damage for each Medium item you have. [8]",
   ],
 }
@@ -2983,7 +2983,7 @@ exports[`Generate tooltips for "Handaxe" 1`] = `
 {
   "cardName": "Handaxe",
   "tooltips": [
-    "Deal 10 damage.",
+    "Deal 16 damage.",
     "Your weapons have +6 damage.",
   ],
 }
@@ -2993,7 +2993,7 @@ exports[`Generate tooltips for "Hard Shell" 1`] = `
 {
   "cardName": "Hard Shell",
   "tooltips": [
-    "The first time you fall below half health each fight, Shield equal to 20% of your Max Health. [0]",
+    "The first time you fall below half health each fight, Shield equal to 20% of your Max Health. [200]",
   ],
 }
 `;
@@ -3241,7 +3241,7 @@ exports[`Generate tooltips for "Hunker Down" 1`] = `
 {
   "cardName": "Hunker Down",
   "tooltips": [
-    "The first time you fall below half health each fight, Shield equal to 30% of your Max Health. [0]",
+    "The first time you fall below half health each fight, Shield equal to 30% of your Max Health. [300]",
   ],
 }
 `;
@@ -6090,7 +6090,7 @@ exports[`Generate tooltips for "Sniper Rifle" 1`] = `
 {
   "cardName": "Sniper Rifle",
   "tooltips": [
-    "Deal 100 damage.",
+    "Deal 300 damage.",
     "This deals 3 times more damage if it is your only weapon.",
   ],
 }
