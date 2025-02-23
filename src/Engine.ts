@@ -1,7 +1,7 @@
 import {
-  V2Card,
+  Card,
   Ability,
-  FluffyValue,
+  Value,
   AbilityAction,
   Enchantments,
   TriggerType,
@@ -40,7 +40,7 @@ export interface Player {
 }
 
 export interface BoardCard {
-  card: V2Card;
+  card: Card;
   tick: number;
   Slow: number;
   Freeze: number;
@@ -61,7 +61,7 @@ export interface BoardCard {
 }
 
 export interface BoardSkill {
-  card: V2Card;
+  card: Card;
   tier: Tier;
   Auras?: { [key: string]: Aura };
   [key: string]: any;
@@ -283,7 +283,7 @@ export function getCardAttribute(
 
           const actionValue = getActionValue(
             gameState,
-            action.Value as FluffyValue,
+            action.Value as Value,
             playerID,
             boardCardID,
             targetPlayerID,
@@ -339,7 +339,7 @@ export function getPlayerAttribute(
 
         const actionValue = getActionValue(
           gameState,
-          action.Value as FluffyValue,
+          action.Value as Value,
           playerID,
           -1,
           targetPlayerID,
@@ -1478,7 +1478,7 @@ function runAction(
     case "TActionPlayerModifyAttribute": {
       const actionValue = getActionValue(
         gameState,
-        action.Value as FluffyValue,
+        action.Value as Value,
         triggerPlayerID,
         triggerBoardCardID,
         targetPlayerID,
@@ -1518,7 +1518,7 @@ function runAction(
 
 function getActionValue(
   gameState: GameState,
-  value: FluffyValue,
+  value: Value,
   triggerPlayerID: number,
   triggerBoardCardID: number,
   targetPlayerID: number,

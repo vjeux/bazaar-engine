@@ -1,5 +1,5 @@
 import { genCardsAndEncounters } from "../Data";
-import { GameState, run } from "../Engine";
+import { run } from "../Engine";
 import { getFlattenedEncounters, getInitialGameState } from "../GameState";
 import { expect, test } from "vitest";
 

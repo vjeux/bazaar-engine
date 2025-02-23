@@ -1,5 +1,5 @@
 import pako from "pako";
-import { V2Cards } from "./types/cardTypes";
+import { Cards } from "./types/cardTypes";
 import { EncounterDays } from "./types/encounterTypes";
 
 function genDataFromLocalStorage(
@@ -36,12 +36,12 @@ function genDataFromLocalStorage(
 }
 
 export async function genCardsAndEncounters(): Promise<{
-  Cards: V2Cards;
+  Cards: Cards;
   Encounters: EncounterDays;
 }> {
   const [Cards, Encounters] = await Promise.all([
     genDataFromLocalStorage("Cards", import("./json/v2_Cards.json")),
     genDataFromLocalStorage("Encounters", import("./json/encounterDays.json"))
   ]);
-  return { Cards: Cards as V2Cards, Encounters: Encounters as EncounterDays };
+  return { Cards: Cards as Cards, Encounters: Encounters as EncounterDays };
 }
