@@ -1463,14 +1463,14 @@ function runAction(
               ? oldValue + actionValue
               : action.Operation === "Multiply"
                 ? oldValue * actionValue
-                : oldValue;
+                : oldValue - actionValue;
 
           updateCardAttribute(
             gameState,
             actionTargetPlayerID,
             actionTargetBoardCardID,
             action.AttributeType as string,
-            Math.floor(newValue)
+            Math.max(0, Math.floor(newValue))
           );
         });
       break;
