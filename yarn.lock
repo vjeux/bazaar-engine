@@ -2361,6 +2361,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"microdiff@npm:^1.5.0":
+  version: 1.5.0
+  resolution: "microdiff@npm:1.5.0"
+  checksum: 10c0/5f55ca049451d63abf79fd1692808e1052180fbedfc91d9fcab9f02df0dd902aa6a4e30199fd345d1f91982842b12d85ffa86785e38d7dbfb6d59280074f9129
+  languageName: node
+  linkType: hard
+
 "micromatch@npm:^4.0.4, micromatch@npm:^4.0.8":
   version: 4.0.8
   resolution: "micromatch@npm:4.0.8"
@@ -2773,6 +2780,7 @@ __metadata:
     eslint-plugin-react-hooks: "npm:^5.0.0"
     eslint-plugin-react-refresh: "npm:^0.4.19"
     globals: "npm:^15.15.0"
+    microdiff: "npm:^1.5.0"
     pako: "npm:2.1.0"
     prettier: "npm:3.4.2"
     react: "npm:^19.0.0"
