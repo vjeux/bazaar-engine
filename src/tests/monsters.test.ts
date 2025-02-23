@@ -42,10 +42,18 @@ function getOptimizedDiff(
 const { Cards, Encounters } = await genCardsAndEncounters();
 
 getFlattenedEncounters(Encounters).forEach((encounter) => {
-  test(`Runs encounter "Day ${encounter.day} - ${encounter.name}" against empty board`, () => {
+  test(`Runs encounter "Day ${encounter.day} - ${encounter.name}"`, () => {
     const gameState = getInitialGameState(Cards, Encounters, [
       { type: "monster", name: encounter.name },
-      { type: "player", health: 1000 }
+      {
+        type: "player",
+        health: 2000,
+        cards: [
+          { name: "Silk Scarf" },
+          { name: "Fang" },
+          { name: "Bag of Jewels" }
+        ]
+      }
     ]);
 
     let steps = [];
