@@ -36,7 +36,7 @@ export interface Card {
   Version: Version;
 }
 
-enum CardType {
+export enum CardType {
   TCardEncounterCombat = "TCardEncounterCombat",
   TCardEncounterEvent = "TCardEncounterEvent",
   TCardEncounterPedestal = "TCardEncounterPedestal",
@@ -263,7 +263,7 @@ enum Origin {
   TriggerSource = "TriggerSource"
 }
 
-enum ValueType {
+export enum ValueType {
   TFixedValue = "TFixedValue",
   TRangeValue = "TRangeValue",
   TReferenceValueCardAttribute = "TReferenceValueCardAttribute",
@@ -356,7 +356,7 @@ interface TargetPlayer {
   TargetSection?: TargetSection;
 }
 
-enum Type {
+export enum Type {
   CombatEncounter = "CombatEncounter",
   EncounterStep = "EncounterStep",
   EventEncounter = "EventEncounter",
@@ -382,7 +382,7 @@ export interface Value {
   MaxValue?: number;
 }
 
-enum ActiveIn {
+export enum ActiveIn {
   HandAndStash = "HandAndStash",
   HandOnly = "HandOnly"
 }
@@ -652,7 +652,7 @@ interface SelectionContext {
   Rules: Rules;
 }
 
-type Tiers = {
+export type Tiers = {
   [key in Tier]: TierInfo;
 };
 
@@ -663,7 +663,7 @@ interface TierInfo {
   TooltipIds: number[];
 }
 
-enum Version {
+export enum Version {
   The000 = "0.0.0",
   The100 = "1.0.0"
 }
