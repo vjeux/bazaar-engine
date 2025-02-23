@@ -13,7 +13,7 @@ import {
   getPlayerAttribute
 } from "./Engine.ts";
 
-import { V2Card, V2Cards } from "./types/cardTypes";
+import { Card, Cards } from "./types/cardTypes";
 import { EncounterDays } from "./types/encounterTypes";
 import React from "react";
 import {
@@ -852,8 +852,8 @@ function TooltipWithoutGameState({
   card,
   tier
 }: {
-  Cards: V2Cards;
-  card: V2Card;
+  Cards: Cards;
+  card: Card;
   tier: Tier;
 }) {
   const gameState = getInitialGameState(Cards, {} as EncounterDays, [
@@ -898,13 +898,13 @@ function CardSearch({
   onSelectCard,
   onSelectSkill
 }: {
-  Cards: V2Cards;
-  onSelectCard: (card: V2Card) => void;
-  onSelectSkill: (card: V2Card) => void;
+  Cards: Cards;
+  onSelectCard: (card: Card) => void;
+  onSelectSkill: (card: Card) => void;
 }) {
   const [search, setSearch] = useState("");
   const [hoveredCard, setHoveredCard] = useState<{
-    card: V2Card;
+    card: Card;
     tier: Tier;
   } | null>(null);
 
@@ -1150,7 +1150,7 @@ export default function App({
   Cards,
   Encounters
 }: {
-  Cards: V2Cards;
+  Cards: Cards;
   Encounters: EncounterDays;
 }) {
   const [monsterConfig, setMonsterConfig] = useState<MonsterConfig | null>(
