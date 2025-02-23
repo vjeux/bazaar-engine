@@ -1179,8 +1179,14 @@ function runAction(
         targetPlayerID,
         targetBoardCardID
       );
+      const targetCount = getCardAttribute(
+        gameState,
+        targetPlayerID,
+        targetBoardCardID,
+        "DisableTargets"
+      );
       targetCards
-        .slice(0, 1)
+        .slice(0, targetCount)
         .forEach(([actionTargetPlayerID, actionTargetBoardCardID]) => {
           const nextBoardCard =
             gameState.players[actionTargetPlayerID].board[
