@@ -1,56 +1,42 @@
 import { genCardsAndEncounters } from "../Data";
-import { run } from "../Engine";
+import { GameState, run } from "../Engine";
 import { getFlattenedEncounters, getInitialGameState } from "../GameState";
 import { expect, test } from "vitest";
 
-function getStateDiff(prev: any, curr: any): Record<string, any> {
-  const diff: Record<string, any> = {};
-  const stack: Array<{ prev: any; curr: any; path: string[] }> = [
-    { prev, curr, path: [] }
-  ];
+function getOptimizedDiff(
+  prev: any,
+  curr: any,
+  ignoreKeys = new Set(["card", "tick"]),
+  path: string[] = []
+): Record<string, any> {
+  // If both values are strictly equal, no diff
+  if (prev === curr) return {};
 
-  while (stack.length > 0) {
-    const { prev, curr, path } = stack.pop()!;
-
-    // Handle primitives and null cases
-    if (
-      typeof prev !== "object" ||
-      typeof curr !== "object" ||
-      prev == null ||
-      curr == null
-    ) {
-      if (prev !== curr) {
-        diff[path.join(".")] = curr;
-      }
-      continue;
-    }
-
-    // Process object properties
-    for (const key in curr) {
-      if (key === "card" || key === "tick") {
-        continue;
-      }
-      stack.push({
-        prev: prev[key],
-        curr: curr[key],
-        path: [...path, key]
-      });
-    }
-    for (const key in prev) {
-      if (key === "card" || key === "tick") {
-        continue;
-      }
-      if (!(key in curr)) {
-        stack.push({
-          prev: prev[key],
-          curr: curr[key],
-          path: [...path, key]
-        });
-      }
-    }
+  // If either value is not an object (or is null), record the change
+  if (
+    typeof prev !== "object" ||
+    prev === null ||
+    typeof curr !== "object" ||
+    curr === null
+  ) {
+    return { [path.join(".")]: curr };
   }
 
-  return diff;
+  const differences: Record<string, any> = {};
+  // Get the union of keys from both objects
+  const keys = new Set([...Object.keys(prev), ...Object.keys(curr)]);
+  for (const key of keys) {
+    if (ignoreKeys.has(key)) continue; // Skip ignored keys
+
+    // Recurse for the current key; build a new path
+    const subDiff = getOptimizedDiff(prev[key], curr[key], ignoreKeys, [
+      ...path,
+      key
+    ]);
+    // Merge any differences found
+    Object.assign(differences, subDiff);
+  }
+  return differences;
 }
 
 const { Cards, Encounters } = await genCardsAndEncounters();
@@ -71,7 +57,7 @@ getFlattenedEncounters(Encounters).forEach((encounter) => {
 
     const diffs: any[] = [];
     for (let i = 1; i < steps.length; i++) {
-      const diff = getStateDiff(steps[i - 1], steps[i]);
+      const diff = getOptimizedDiff(steps[i - 1], steps[i]);
       if (Object.keys(diff).length > 0) {
         diff.step = i;
         diffs.push(diff);
