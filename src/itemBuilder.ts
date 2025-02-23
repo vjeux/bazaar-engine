@@ -6,14 +6,17 @@ import {
   Card,
   Version,
   Type,
-  CardType
+  CardType,
+  Ability,
+  ValueType,
+  Tiers
 } from "./types/cardTypes";
 import * as NITypes from "./types/items";
 
 // A helper to extract a Size value from the item tags.
 function extractSize(tags: NITypes.HowBazaarTag[]): NITypes.Size {
-  const sizeTag = tags.find(
-    (tag) => tag === "Small" || tag === "Medium" || tag === "Large"
+  const sizeTag = tags.find((tag) =>
+    Object.values(NITypes.Size).includes(tag as NITypes.Size)
   );
   // Default to Small if no explicit size is found
   return (sizeTag as NITypes.Size) || "Small";
@@ -36,15 +39,128 @@ function extractCardTags(tags: NITypes.HowBazaarTag[]): string[] {
   ) as string[];
 }
 
+// Define the union type for the different kinds of values.
+type ValueItem =
+  | { type: "plain"; value: number }
+  | { type: "multiplier"; value: number }
+  | { type: "percentage"; value: number };
+
+/**
+ * Extracts the content within the first pair of parentheses and splits it by the arrow separator.
+ * Assumes only one set of parentheses exists in the string.
+ */
+function extractValues(input: string): string[] {
+  const match = input.match(/\(\s*([^)]*?)\s*\)/);
+  if (!match || !match[1]) {
+    return [];
+  }
+  return match[1].split("»").map((item) => item.trim());
+}
+
+/**
+ * Parses a single string value to determine if it's a plain number,
+ * a multiplier (ends with 'x'), or a percentage (ends with '%').
+ */
+function parseValueItem(item: string): ValueItem | null {
+  // Remove any leading/trailing whitespace and optional leading '+' sign.
+  let s = item.trim().replace(/^\+/, "");
+
+  // Check for multiplier values ending with 'x' (case-insensitive)
+  const multiplierMatch = s.match(/^(\d+(?:\.\d+)?)x$/i);
+  if (multiplierMatch) {
+    return { type: "multiplier", value: parseFloat(multiplierMatch[1]) };
+  }
+
+  // Check for percentage values ending with '%'
+  const percentageMatch = s.match(/^(\d+(?:\.\d+)?)%$/);
+  if (percentageMatch) {
+    return { type: "percentage", value: parseFloat(percentageMatch[1]) };
+  }
+
+  // Check for plain numbers (digits with optional decimals)
+  const numberMatch = s.match(/^(\d+(?:\.\d+)?)$/);
+  if (numberMatch) {
+    return { type: "plain", value: parseFloat(numberMatch[1]) };
+  }
+
+  // If the pattern doesn't match any expected formats, return null.
+  return null;
+}
+
+/**
+ * Wrapper function that extracts the values from the string and converts them into typed items.
+ */
+function parseExtractedValues(input: string): ValueItem[] {
+  const rawValues = extractValues(input);
+  const parsed: ValueItem[] = [];
+  for (const value of rawValues) {
+    const parsedValue = parseValueItem(value);
+    if (parsedValue !== null) {
+      parsed.push(parsedValue);
+    }
+  }
+  return parsed;
+}
+
+function parseCooldown(
+  cooldown: string | number | null
+): number | null | ValueItem[] {
+  if (cooldown === null) {
+    return null;
+  }
+  if (typeof cooldown === "number") {
+    return cooldown * 1000;
+  }
+  if (typeof cooldown === "string") {
+    const parsedValues = parseExtractedValues(cooldown);
+    if (parsedValues.length === 0) {
+      return null;
+    }
+    // Multiply all values by 1000
+    return parsedValues.map((vi) => {
+      if (vi.type === "plain") {
+        vi.value *= 1000;
+      }
+      return vi;
+    });
+  }
+  throw new Error("Invalid cooldown value");
+}
+
 // A very simple parser for the tooltip text.
 // For instance, if the text includes a phrase like "Deal X damage", we create a damage ability.
-function parseTooltipForAbility(item: NITypes.Item): any | null {
+function parseTooltipForAbility(item: NITypes.Item): Ability | null {
+  // Start by simply parsing the cooldown value/values
+  const cooldownValues = parseCooldown(item.cooldown);
+  console.log("CooldownValues", cooldownValues);
+
+  // Now move onto abilities
+
   // Look for a line containing "deal" and "damage" (case insensitive).
   const damageLine = item.text.find((line) => /deal\s+.*damage/i.test(line));
   if (damageLine) {
-    // Extract a number from the text (this is a simplification; real parsing may need to handle ranges or multipliers)
-    const match = damageLine.match(/\d+/);
-    const damageValue = match ? parseInt(match[0], 10) : 0;
+    const damageValues = parseExtractedValues(damageLine);
+
+    // Create the tiers
+    const tiers: Partial<Tiers> = {};
+    for (let i = 0; i < damageValues.length; i++) {
+      const tier = Object.values(NITypes.Tier)[i];
+      tiers[tier] = {
+        Attributes: {
+          CooldownMax:
+            cooldownValues === null
+              ? null
+              : typeof cooldownValues === "number"
+                ? cooldownValues
+                : cooldownValues[i].value,
+          DamageAmount: parseInt(damageValues[i].value.toString())
+        },
+        AbilityIds: ["0"],
+        AuraIds: [],
+        TooltipIds: [0]
+      };
+    }
+
     return {
       Id: "0",
       Trigger: {
@@ -52,10 +168,9 @@ function parseTooltipForAbility(item: NITypes.Item): any | null {
       },
       ActiveIn: ActiveIn.HandOnly,
       Action: {
-        $type: ActionType.TActionPlayerDamage,
-        // In a more complete parser you might parse out a range or formula here
-        Value: { $type: "TFixedValue", Value: damageValue }
+        $type: ActionType.TActionPlayerDamage
       },
+      Tiers: tiers,
       Prerequisites: null,
       Priority: Priority.Medium,
       InternalName: item.name,

@@ -263,7 +263,7 @@ enum Origin {
   TriggerSource = "TriggerSource"
 }
 
-enum ValueType {
+export enum ValueType {
   TFixedValue = "TFixedValue",
   TRangeValue = "TRangeValue",
   TReferenceValueCardAttribute = "TReferenceValueCardAttribute",
@@ -652,7 +652,7 @@ interface SelectionContext {
   Rules: Rules;
 }
 
-type Tiers = {
+export type Tiers = {
   [key in Tier]: TierInfo;
 };
 
