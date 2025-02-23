@@ -1,13 +1,13 @@
 import {
   V2Card,
   Ability,
-  AbilityPrerequisite,
   FluffyValue,
   AbilityAction,
   Enchantments,
   TriggerType,
   ActionType,
-  Priority
+  Priority,
+  Aura
 } from "./types/cardTypes";
 
 import { Tier } from "./types/shared";
@@ -16,8 +16,14 @@ export interface GameState {
   tick: number;
   isPlaying: boolean;
   players: Player[];
-  multicast: any[];
+  multicast: Multicast[];
   getRand: () => number;
+}
+
+export interface Multicast {
+  tick: number;
+  playerID: number;
+  boardCardID: number;
 }
 
 export interface Player {
@@ -50,17 +56,22 @@ export interface BoardCard {
   ShieldApplyAmount?: number;
   Enchantment?: keyof Enchantments | null;
   isDisabled?: boolean;
+  Auras?: { [key: string]: Aura };
   [key: string]: any;
 }
 
 export interface BoardSkill {
   card: V2Card;
   tier: Tier;
+  Auras?: { [key: string]: Aura };
   [key: string]: any;
 }
 
 export type BoardCardOrSkill = BoardCard | BoardSkill;
 
+/**
+ * Iterates over every board card for each player in the game state, calling the provided callback for each non-disabled board card.
+ */
 function forEachCard(
   gameState: GameState,
   callback: (
@@ -90,6 +101,16 @@ const priorityOrder = {
   [Priority.Highest]: 5
 };
 
+/**
+ * Iterates over all abilities in the game state and processes them using a callback function.
+ *
+ * The callback function can run `addAction` to push an action to the action queue, that will be ran using {@link runAction} after all abilities have been processed.
+ *
+ * After all abilities have been processed via the callback, all queued actions are filtered by verifying that
+ * any prerequisites specified by each ability are met, then sorted according to their priorities.
+ *
+ * Finally, the actions are executed in the sorted order.
+ */
 function forEachAbility(
   gameState: GameState,
   callback: (
@@ -198,13 +219,13 @@ function forEachAura(
     playerIndex: number,
     boardCard: BoardCardOrSkill,
     boardCardIndex: number,
-    aura: Ability
+    aura: Aura
   ) => void
 ): void {
   forEachCard(gameState, (player, playerIndex, boardCard, boardCardIndex) => {
     for (let i = 0; i < boardCard.AuraIds.length; ++i) {
       const auraId = boardCard.AuraIds[i];
-      const aura = boardCard.Auras[auraId];
+      const aura: Aura | undefined = boardCard.Auras?.[auraId];
       if (aura) {
         callback(player, playerIndex, boardCard, boardCardIndex, aura);
       }
@@ -248,17 +269,7 @@ export function getCardAttribute(
         targetBoardCardID
       );
 
-      const targetCount =
-        action.TargetCount == null
-          ? targetCards.length
-          : getActionValue(
-              gameState,
-              action.TargetCount,
-              playerID,
-              boardCardID,
-              targetPlayerID,
-              targetBoardCardID
-            );
+      const targetCount = targetCards.length;
 
       targetCards
         .slice(0, targetCount)

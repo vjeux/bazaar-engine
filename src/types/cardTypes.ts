@@ -742,6 +742,13 @@ export interface V2CardAttributes {
   SellPrice?: number;
 }
 
+/**
+ * Represents an effect which does not utilize a cooldown to activate.
+ *
+ * Can be:
+ * - Skills such as "If you have 4 or fewer items, you have +{aura.0} Max Health."
+ * - Card enchantments such as Deadly, Heavy, Icy, etc.
+ */
 export interface Aura {
   Id: string;
   ActiveIn: ActiveIn;
@@ -755,14 +762,14 @@ export interface Aura {
 }
 
 export interface AuraAction {
-  $type: TentacledType;
+  $type: AuraActionType;
   AttributeType: PurpleAttributeType;
   Operation: Operation;
   Value: TentacledValue;
   Target: TentacledTarget;
 }
 
-export enum TentacledType {
+export enum AuraActionType {
   TAuraActionCardModifyAttribute = "TAuraActionCardModifyAttribute",
   TAuraActionPlayerModifyAttribute = "TAuraActionPlayerModifyAttribute"
 }
@@ -1643,7 +1650,7 @@ export interface StickyE1 {
 }
 
 export interface HilariousAction {
-  $type: TentacledType;
+  $type: AuraActionType;
   AttributeType: AttributeType;
   Operation: Operation;
   Value: Limit;
@@ -1818,7 +1825,7 @@ export interface IndecentE1 {
 }
 
 export interface FriskyAction {
-  $type: TentacledType;
+  $type: AuraActionType;
   AttributeType: AttributeType;
   Operation: Operation;
   Value: PurpleValue;
@@ -2426,7 +2433,7 @@ export interface MischievousE1 {
 }
 
 export interface Action9 {
-  $type: TentacledType;
+  $type: AuraActionType;
   AttributeType: AttributeType;
   Operation: Operation;
   Value: HilariousValue;
