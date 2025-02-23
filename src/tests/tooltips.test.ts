@@ -1,32 +1,22 @@
-import { getDefaultTierBoardCard } from "../GameState";
+import { getInitialGameState } from "../GameState";
 import validObjectNames from "../json/ValidObjectNames.json";
-import Cards from "../json/v2_Cards.json";
-import { GameState, getTooltips } from "../Engine";
-import { V2Cards } from "../types/cardTypes";
+import validSkillNames from "../json/ValidSkillNames.json";
+import { getTooltips } from "../Engine";
 import { expect, it } from "vitest";
+import { genCardsAndEncounters } from "../Data";
 
-validObjectNames.forEach((cardName) => {
+const { Cards, Encounters } = await genCardsAndEncounters();
+
+[...validObjectNames, ...validSkillNames].forEach((cardName) => {
   it(`Generate tooltips for "${cardName}"`, () => {
     try {
-      const gameState: GameState = {
-        tick: 0,
-        isPlaying: true,
-        players: [
-          {
-            HealthMax: 100,
-            Health: 100,
-            HealthRegen: 0,
-            Shield: 0,
-            Burn: 0,
-            Poison: 0,
-            Gold: 0,
-            Income: 0,
-            board: [getDefaultTierBoardCard(Cards as V2Cards, cardName)] // Use first available tier
-          }
-        ],
-        multicast: [],
-        getRand: () => 0.5
-      };
+      const extension = validObjectNames.includes(cardName)
+        ? { cards: [{ name: cardName }] }
+        : { skills: [{ name: cardName }] };
+      const gameState = getInitialGameState(Cards, Encounters, [
+        { type: "player", health: 1000, ...extension },
+        { type: "player", health: 1000 }
+      ]);
       expect({
         cardName,
         tooltips: getTooltips(gameState, 0, 0)

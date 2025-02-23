@@ -125,7 +125,7 @@ function _createBoardCardFromCard(
 function getBoardCard(
   Cards: Cards,
   name: string,
-  tier: Tier,
+  tier: Tier | null = null,
   enchantment: keyof Enchantments | null = null
 ): BoardCard {
   const CardsValues = Object.values(Cards);
@@ -133,18 +133,7 @@ function getBoardCard(
   if (!card) {
     throw new Error(`Card ${name} not found`);
   }
-  return _createBoardCardFromCard(card, tier, enchantment);
-}
-
-export function getDefaultTierBoardCard(Cards: Cards, name: string) {
-  const CardsValues = Object.values(Cards);
-  const card = CardsValues.find((c) => c.Localization?.Title?.Text === name);
-  if (!card) {
-    throw new Error(`Card ${name} not found`);
-  }
-  const tierKeys = Object.keys(card.Tiers || {});
-  const tier = tierKeys[0] as Tier;
-  return getBoardCard(Cards, name, tier);
+  return _createBoardCardFromCard(card, tier ?? card.StartingTier, enchantment);
 }
 
 function getBoardCardFromId(
@@ -163,7 +152,7 @@ function getBoardCardFromId(
 function getBoardSkill(
   Cards: Cards,
   name: string,
-  tier: Tier,
+  tier: Tier | null = null,
   modifiers: any = {}
 ): BoardSkill {
   const CardsValues = Object.values(Cards);
@@ -183,7 +172,7 @@ function getBoardSkill(
       }
     }
   };
-  if (!card.Tiers || !card.Tiers[tier]) {
+  if (!card.Tiers || !card.Tiers[tier ?? card.StartingTier]) {
     throw new Error(
       name +
         " doesn't have tier " +
@@ -203,14 +192,14 @@ function getBoardSkill(
       AuraIds: tierValues?.AuraIds,
       TooltipIds: tierValues?.TooltipIds
     };
-    if (tierName === tier) {
+    if (tierName === (tier ?? card.StartingTier)) {
       break;
     }
   }
   const result = {
     card,
     ...attributes,
-    tier
+    tier: tier ?? card.StartingTier
   };
   return result;
 }
@@ -294,13 +283,13 @@ export interface MonsterConfig {
 
 export interface PlayerCardConfig {
   name: string;
-  tier: Tier;
+  tier?: Tier;
   enchantment?: keyof Enchantments | null;
 }
 
 export interface PlayerSkillConfig {
   name: string;
-  tier: Tier;
+  tier?: Tier;
 }
 
 export interface PlayerConfig {
