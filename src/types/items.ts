@@ -1,3 +1,5 @@
+import { Tier, Size, Tag, EnchantmentType } from "./shared";
+
 export interface Items {
   [key: string]: Item;
 }
@@ -20,29 +22,6 @@ export type HowBazaarTag =
   | keyof typeof Size
   | keyof typeof Hero
   | keyof typeof OtherTags;
-
-export enum Tier {
-  Bronze = "Bronze",
-  Silver = "Silver",
-  Gold = "Gold",
-  Diamond = "Diamond",
-  Legendary = "Legendary"
-}
-
-export enum EnchantmentType {
-  Deadly = "Deadly",
-  Fiery = "Fiery",
-  Golden = "Golden",
-  Heavy = "Heavy",
-  Icy = "Icy",
-  Obsidian = "Obsidian",
-  Radiant = "Radiant",
-  Restorative = "Restorative",
-  Shielded = "Shielded",
-  Shiny = "Shiny",
-  Toxic = "Toxic",
-  Turbo = "Turbo"
-}
 
 export enum OtherTags {
   Economy = "Economy",
@@ -71,41 +50,6 @@ export enum OtherTags {
   SlowReference = "SlowReference",
   Lifesteal = "Lifesteal",
   Experience = "Experience"
-}
-export enum Tag {
-  Apparel = "Apparel",
-  Aquatic = "Aquatic",
-  Burn = "Burn",
-  Core = "Core",
-  Damage = "Damage",
-  Dinosaur = "Dinosaur",
-  Dragon = "Dragon",
-  Food = "Food",
-  Freeze = "Freeze",
-  Friend = "Friend",
-  Haste = "Haste",
-  Heal = "Heal",
-  Joy = "Joy",
-  Loot = "Loot",
-  Merchant = "Merchant",
-  Poison = "Poison",
-  Potion = "Potion",
-  Property = "Property",
-  Ray = "Ray",
-  Shield = "Shield",
-  Slow = "Slow",
-  Tech = "Tech",
-  Tool = "Tool",
-  Toy = "Toy",
-  Unsellable = "Unsellable",
-  Vehicle = "Vehicle",
-  Weapon = "Weapon"
-}
-
-export enum Size {
-  Large = "Large",
-  Medium = "Medium",
-  Small = "Small"
 }
 
 export enum Hero {
