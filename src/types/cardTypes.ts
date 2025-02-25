@@ -1,4 +1,4 @@
-import { EnchantmentType, Tag, Tier } from "./shared";
+import { EnchantmentType, HiddenTag, Tag, Tier } from "./shared";
 
 export interface Cards {
   [key: string]: Card;
@@ -552,51 +552,8 @@ interface Enchantment {
 }
 
 type Attributes = {
-  [key in AttributeType]: number;
+  [key in AttributeType]?: number;
 };
-
-enum HiddenTag {
-  Active = "Active",
-  Ammo = "Ammo",
-  AmmoReference = "AmmoReference",
-  Burn = "Burn",
-  BurnReference = "BurnReference",
-  Charge = "Charge",
-  Cooldown = "Cooldown",
-  Crit = "Crit",
-  CritReference = "CritReference",
-  Damage = "Damage",
-  DamageReference = "DamageReference",
-  EconomyReference = "EconomyReference",
-  Experience = "Experience",
-  Freeze = "Freeze",
-  FreezeReference = "FreezeReference",
-  Gold = "Gold",
-  Haste = "Haste",
-  HasteReference = "HasteReference",
-  Heal = "Heal",
-  HealReference = "HealReference",
-  Health = "Health",
-  HealthMax = "HealthMax",
-  HealthReference = "HealthReference",
-  Income = "Income",
-  Joy = "Joy",
-  JoyReference = "JoyReference",
-  Lifesteal = "Lifesteal",
-  Multicast = "Multicast",
-  NonWeapon = "NonWeapon",
-  Passive = "Passive",
-  Poison = "Poison",
-  PoisonReference = "PoisonReference",
-  Regen = "Regen",
-  RegenReference = "RegenReference",
-  Shield = "Shield",
-  ShieldReference = "ShieldReference",
-  Slow = "Slow",
-  SlowReference = "SlowReference",
-  Toughness = "Toughness",
-  Value = "Value"
-}
 
 interface Tooltip {
   Content: Title;
@@ -656,7 +613,7 @@ export type Tiers = {
   [key in Tier]: TierInfo;
 };
 
-interface TierInfo {
+export interface TierInfo {
   Attributes: Attributes;
   AbilityIds: string[];
   AuraIds: string[];

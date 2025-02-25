@@ -4,33 +4,44 @@ import diff from "microdiff";
 
 const { Cards } = await genCardsAndEncounters();
 
-import { items } from "../json/items";
+import apiItems from "../json/apiItems.json";
 import { parseItemToCard } from "../itemBuilder";
-import { Card } from "../types/cardTypes";
+import { Card, Version } from "../types/cardTypes";
+import { Item, Items } from "../types/apiItems";
+import { log } from "console";
 
-Object.keys(items).forEach((itemKey) => {
-  const item = items[itemKey as keyof typeof items];
-  it(`Should parse item: ${itemKey} to card`, () => {
+const items: Item[] = apiItems.data;
+
+items.forEach((item: Item) => {
+  it(`Should parse item: ${item.name} to card`, () => {
     const card = parseItemToCard(item);
     expect(card).toBeDefined();
 
     // Check that the card object matches the expected structure from Cards
     const CardsValues = Object.values(Cards);
     const expectedCard = CardsValues.find(
-      (c) => c.Localization?.Title?.Text === itemKey
+      (c) => c.Localization?.Title?.Text === item.name
     );
     expect(expectedCard).toBeDefined();
 
-    // Check that the card object matches the expected structure from NewItems
-    const keysThatShouldMatch = ["$type", "Abilities", "Auras", "Tags"];
+    console.log("card", JSON.stringify(card, null, 2));
 
-    // For every key run diff
-    keysThatShouldMatch.forEach((key) => {
-      // Create objects with only the key we are interested in
-      const filteredCard = { [key]: card[key as keyof Card] };
-      const filteredExpectedCard = { [key]: expectedCard[key as keyof Card] };
-      const diffResult = diff(filteredCard, filteredExpectedCard);
-      expect(diffResult).toEqual([]);
-    });
+    expect(card).toEqual(
+      expect.objectContaining({
+        $type: expectedCard?.$type,
+        Abilities: expectedCard?.Abilities,
+        Auras: expect.any(Object),
+        Tags: expect.any(Array),
+        Tiers: expectedCard?.Tiers,
+        Heroes: expectedCard?.Heroes,
+        Id: expectedCard?.Id,
+        Type: expectedCard?.Type,
+        Size: expectedCard?.Size,
+        StartingTier: expectedCard?.StartingTier,
+        HiddenTags: expectedCard?.HiddenTags,
+        InternalDescription: expect.any(String),
+        Version: expectedCard?.Version
+      })
+    );
   });
 });

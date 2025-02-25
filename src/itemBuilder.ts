@@ -1,3 +1,5 @@
+import { PartialDeep } from "type-fest";
+import { Item } from "./types/apiItems";
 import {
   TriggerType,
   ActiveIn,
@@ -7,36 +9,25 @@ import {
   Version,
   Type,
   CardType,
-  Ability,
-  ValueType,
-  Tiers
+  Tiers,
+  Ability
 } from "./types/cardTypes";
 import * as NITypes from "./types/items";
+import { Tier, TierInt } from "./types/shared";
+import { log } from "console";
 
-// A helper to extract a Size value from the item tags.
-function extractSize(tags: NITypes.HowBazaarTag[]): NITypes.Size {
-  const sizeTag = tags.find((tag) =>
-    Object.values(NITypes.Size).includes(tag as NITypes.Size)
-  );
-  // Default to Small if no explicit size is found
-  return (sizeTag as NITypes.Size) || "Small";
-}
-
-// A helper to extract a Hero from the tags (if any)
-function extractHeroes(tags: NITypes.HowBazaarTag[]): NITypes.Hero[] {
-  const heroes = tags.filter((tag) =>
-    Object.values(NITypes.Hero).includes(tag as NITypes.Hero)
-  );
-
-  return heroes.length > 0 ? (heroes as NITypes.Hero[]) : [];
-}
-
-// A helper to filter the tags that are valid as Card Tags.
-function extractCardTags(tags: NITypes.HowBazaarTag[]): string[] {
-  const validTags = Object.values(NITypes.Tag);
-  return tags.filter((tag) =>
-    validTags.includes(tag as NITypes.Tag)
-  ) as string[];
+/**
+ * Filters an array of tags to only include valid enum values.
+ * @param enumObj The enum object to filter against.
+ * @param tags The array of tags to filter.
+ * @returns An array of valid enum values.
+ */
+function filterForEnum<T extends Record<string, string>>(
+  enumObj: T,
+  tags: string[]
+): T[keyof T][] {
+  const validTags = new Set(Object.values(enumObj));
+  return tags.filter((tag) => validTags.has(tag)) as T[keyof T][];
 }
 
 // Define the union type for the different kinds of values.
@@ -54,7 +45,8 @@ function extractValues(input: string): string[] {
   if (!match || !match[1]) {
     return [];
   }
-  return match[1].split("»").map((item) => item.trim());
+  // Support both » and / as separators
+  return match[1].split(/[»/]/).map((item) => item.trim());
 }
 
 /**
@@ -63,7 +55,7 @@ function extractValues(input: string): string[] {
  */
 function parseValueItem(item: string): ValueItem | null {
   // Remove any leading/trailing whitespace and optional leading '+' sign.
-  let s = item.trim().replace(/^\+/, "");
+  const s = item.trim().replace(/^\+/, "");
 
   // Check for multiplier values ending with 'x' (case-insensitive)
   const multiplierMatch = s.match(/^(\d+(?:\.\d+)?)x$/i);
@@ -102,67 +94,119 @@ function parseExtractedValues(input: string): ValueItem[] {
   return parsed;
 }
 
-function parseCooldown(
-  cooldown: string | number | null
-): number | null | ValueItem[] {
-  if (cooldown === null) {
-    return null;
+function parseCooldown(cooldown: string): number {
+  // Check if "cooldown" in string
+  if (!cooldown.includes("Cooldown")) {
+    throw new Error(`No cooldown found in string: ${cooldown}`);
   }
-  if (typeof cooldown === "number") {
-    return cooldown * 1000;
+  // Extract the single number from the cooldown string and convert to milliseconds
+  const match = cooldown.match(/\d+(?:\.\d+)?/);
+  if (!match) {
+    throw new Error(`No number found in cooldown string: ${cooldown}`);
   }
-  if (typeof cooldown === "string") {
-    const parsedValues = parseExtractedValues(cooldown);
-    if (parsedValues.length === 0) {
-      return null;
-    }
-    // Multiply all values by 1000
-    return parsedValues.map((vi) => {
-      if (vi.type === "plain") {
-        vi.value *= 1000;
+
+  return parseFloat(match[0]) * 1000;
+}
+
+// Main parser function
+export function parseItemToCard(item: Item): PartialDeep<Card> {
+  // Determine size, heroes, and valid tags from the item tags
+  const size = item.size;
+  const heroes = item.heroes;
+  const cardTags = item.tags;
+  const hiddenTags = item.hiddenTags;
+  const startingTier = item.startingTier;
+  const tiersToCreate = getTierRange(item);
+
+  console.log("item", item);
+
+  // Start to create TierInfos
+  const tiers: PartialDeep<Tiers> = {};
+  // Create cooldowns
+  tiersToCreate.forEach((tier) => {
+    console.log("tier", tier);
+    console.log(tiersToCreate);
+    console.log("arg:", item.tiers[tier].tooltips[0]);
+    const cooldown = parseCooldown(item.tiers[tier].tooltips[0]); // TODO: Assuming first tooltip always contains the cooldown
+
+    // Create the TierInfo object
+    tiers[tier] = {
+      Attributes: {
+        CooldownMax: cooldown
       }
-      return vi;
-    });
-  }
-  throw new Error("Invalid cooldown value");
+    };
+  });
+
+  let card: PartialDeep<Card> = {
+    $type: CardType.TCardItem,
+    Abilities: undefined,
+    Auras: undefined,
+    Heroes: heroes,
+    HiddenTags: hiddenTags,
+    Id: item.id,
+    InternalDescription: item.unifiedTooltips.join("\n"),
+    InternalName: item.name,
+    Localization: undefined,
+    Size: size,
+    StartingTier: startingTier,
+    Tags: cardTags,
+    Tiers: tiers,
+    TranslationKey: undefined,
+    Type: Type.Item,
+    Version: Version.The100
+  };
+
+  card = addAbilities(card, item);
+
+  // Add enchantments
+  card.Enchantments = parseEnchantments(item);
+
+  return card;
 }
 
 // A very simple parser for the tooltip text.
 // For instance, if the text includes a phrase like "Deal X damage", we create a damage ability.
-function parseTooltipForAbility(item: NITypes.Item): Ability | null {
-  // Start by simply parsing the cooldown value/values
-  const cooldownValues = parseCooldown(item.cooldown);
-  console.log("CooldownValues", cooldownValues);
+function addAbilities(card: PartialDeep<Card>, item: Item): PartialDeep<Card> {
+  // For each unified tooltip, parse to add ability/aura
+  item.unifiedTooltips.forEach((tooltip) => {
+    card = addAbility(card, item, tooltip);
+  });
+  return card;
+}
 
-  // Now move onto abilities
+function addAbility(
+  card: PartialDeep<Card>,
+  item: Item,
+  tooltip: string
+): PartialDeep<Card> {
+  // Get next ability index
+  const nextAbilityIndex = card.Abilities?.length ?? 0;
 
   // Look for a line containing "deal" and "damage" (case insensitive).
-  const damageLine = item.text.find((line) => /deal\s+.*damage/i.test(line));
+  const damageLine = /deal\s+.*damage/i.test(tooltip);
   if (damageLine) {
-    const damageValues = parseExtractedValues(damageLine);
+    const damageValues = parseExtractedValues(tooltip);
+    console.log("tooltip", tooltip);
+    console.log("damageValues", damageValues);
 
-    // Create the tiers
-    const tiers: Partial<Tiers> = {};
-    for (let i = 0; i < damageValues.length; i++) {
-      const tier = Object.values(NITypes.Tier)[i];
-      tiers[tier] = {
-        Attributes: {
-          CooldownMax:
-            cooldownValues === null
-              ? null
-              : typeof cooldownValues === "number"
-                ? cooldownValues
-                : cooldownValues[i].value,
-          DamageAmount: parseInt(damageValues[i].value.toString())
-        },
-        AbilityIds: ["0"],
-        AuraIds: [],
-        TooltipIds: [0]
+    // For each tier, add the dmg value to the attributes
+    getTierRange(item).forEach((tier, i) => {
+      const damageValue = damageValues[i];
+      // Add DamageAmount to TierInfo. Spread because of possible undefined properties
+      card.Tiers = {
+        ...card.Tiers,
+        [tier]: {
+          ...card.Tiers?.[tier],
+          Attributes: {
+            ...card.Tiers?.[tier]?.Attributes,
+            DamageAmount: damageValue.value
+          }
+        }
       };
-    }
+    });
 
-    return {
-      Id: "0",
+    const ab: Ability = {
+      Id: `${nextAbilityIndex}`,
       Trigger: {
         $type: TriggerType.TTriggerOnCardFired
       },
@@ -170,115 +214,47 @@ function parseTooltipForAbility(item: NITypes.Item): Ability | null {
       Action: {
         $type: ActionType.TActionPlayerDamage
       },
-      Tiers: tiers,
       Prerequisites: null,
       Priority: Priority.Medium,
       InternalName: item.name,
-      InternalDescription: damageLine,
+      InternalDescription: tooltip,
       MigrationData: "",
       VFXConfig: null,
-      TranslationKey: "" // This could be generated or based on item name
+      TranslationKey: ""
     };
+
+    card.Abilities = card.Abilities ?? {};
+
+    // Add ability to card
+    card.Abilities[`${nextAbilityIndex}`] = ab;
   }
-  return null;
+
+  // TODO Add dummy aura for now
+  card.Auras = {};
+
+  return card;
 }
 
 // A simple function to convert an item's enchantments (which are a mapping of enchantment type to text)
 // into a structure for card enchantments. Here we simply store the text in the Localization.Description.
-function parseEnchantments(item: NITypes.Item): { [key: string]: any } | null {
-  const keys = Object.keys(item.enchants);
-  if (keys.length === 0) return null;
-  const enchants: { [key: string]: any } = {};
-  for (const enchantKey of keys) {
-    // For a real implementation you would build an Enchantment object
-    enchants[enchantKey] = {
-      // Placeholder: you could parse the string to determine attributes, abilities, etc.
-      Localization: {
-        Title: { Key: enchantKey, Text: enchantKey },
-        Description: { Key: enchantKey, Text: item.enchants[enchantKey] },
-        FlavorText: null,
-        Tooltips: []
-      },
-      Attributes: {} as any,
-      Abilities: {},
-      Auras: {},
-      Tags: [],
-      HiddenTags: [],
-      HasAbilities: false,
-      HasAuras: false
-    };
-  }
-  return enchants;
+function parseEnchantments(item: Item): { [key: string]: any } | null {
+  // TODO: Implement enchantment parsing
+  return null;
 }
 
-// A helper to determine hidden tags based on the item's tooltip text.
-// For example, if a line mentions "damage", we add a "Damage" hidden tag.
-function extractHiddenTags(item: Item): HiddenTag[] {
-  const hidden: HiddenTag[] = [];
-  if (item.text.some((line) => /damage/i.test(line))) {
-    hidden.push("Damage" as HiddenTag);
-  }
-  // You can add further rules here (e.g., check for "shield", "heal", etc.)
-  return hidden;
+function extractLocalization(item: Item) {
+  // TODO: Implement localization extraction
+  return null;
 }
-
-// Main parser function
-export function parseItemToCard(item: NITypes.Item): Partial<Card> {
-  // Determine size, heroes, and valid tags from the item tags
-  const size = extractSize(item.tags);
-  const heroes = extractHeroes(item.tags);
-  const cardTags = extractCardTags(item.tags);
-  const hiddenTags = extractHiddenTags(item);
-
-  // Build an ability (if one is detected in the tooltip text)
-  const ability = parseTooltipForAbility(item);
-  const abilities = ability ? { "0": ability } : {};
-
-  // Build localization using the item's name and tooltip text
-  const localization = {
-    Title: {
-      Key: item.name,
-      Text: item.name
-    },
-    Description: null,
-    FlavorText: null,
-    Tooltips: item.text.map((text) => ({
-      Content: { Key: item.name, Text: text },
-      TooltipType: "Active", // You might decide the type based on content
-      Prerequisites: null
-    }))
-  };
-
-  // Construct the Card object.
-  // Many values here (like CardPackId, TranslationKey, etc.) are placeholders.
-  const card: Partial<Card> = {
-    $type: CardType.TCardItem,
-    Abilities: abilities,
-    Auras: {},
-    Heroes: heroes,
-    HiddenTags: hiddenTags,
-    //Id: key, // Using the item key as a unique identifier
-    InternalDescription: null,
-    InternalName: item.name,
-    Localization: localization,
-    Size: size,
-    StartingTier: item.tier,
-    Tags: cardTags,
-    TranslationKey: item.name, // Placeholder—could be generated differently
-    Type: Type.Item,
-    Version: Version.The100
-    // Optional fields like Attributes, CombatantType, etc. can be added here as needed.
-  };
-
-  // Optionally parse and assign enchantments if present
-  const enchants = parseEnchantments(item);
-  if (enchants) {
-    card.Enchantments = enchants;
-  }
-
-  return {
-    $type: CardType.TCardItem
-  } as Partial<Card>;
-
-  return card;
+function getTierRange(item: Item): Tier[] {
+  const startingIndex = TierInt[item.startingTier];
+  const tiers = Object.values(Tier);
+  tiers.forEach((tier) => {
+    console.log("tier", tier);
+    console.log("indexed", item.tiers);
+  });
+  // Filter out all tiers where the item doesn't have a tooltip
+  return tiers
+    .slice(startingIndex)
+    .filter((tier) => item.tiers[tier].tooltips.length > 0);
 }

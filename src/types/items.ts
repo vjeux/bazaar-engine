@@ -1,4 +1,5 @@
-import { Tier, Size, Tag, EnchantmentType } from "./shared";
+// Type of scraped items.ts file
+import { Tier, Size, Tag, EnchantmentType, Hero, HiddenTag } from "./shared";
 
 export interface Items {
   [key: string]: Item;
@@ -21,43 +22,4 @@ export type HowBazaarTag =
   | keyof typeof Tag
   | keyof typeof Size
   | keyof typeof Hero
-  | keyof typeof OtherTags;
-
-export enum OtherTags {
-  Economy = "Economy",
-  Crit = "Crit",
-  Value = "Value",
-  ShieldReference = "ShieldReference",
-  DamageReference = "DamageReference",
-  HealReference = "HealReference",
-  Ammo = "Ammo",
-  HasteReference = "HasteReference",
-  Charge = "Charge",
-  AmmoReference = "AmmoReference",
-  Cooldown = "Cooldown",
-  Income = "Income",
-  NonWeapon = "NonWeapon",
-  Passive = "Passive",
-  Health = "Health",
-  PoisonReference = "PoisonReference",
-  CritReference = "CritReference",
-  BurnReference = "BurnReference",
-  Active = "Active",
-  Regen = "Regen",
-  Gold = "Gold",
-  FreezeReference = "FreezeReference",
-  HealthReference = "HealthReference",
-  SlowReference = "SlowReference",
-  Lifesteal = "Lifesteal",
-  Experience = "Experience"
-}
-
-export enum Hero {
-  Common = "Common",
-  Dooley = "Dooley",
-  Jules = "Jules",
-  Mak = "Mak",
-  Pygmalien = "Pygmalien",
-  Stelle = "Stelle",
-  Vanessa = "Vanessa"
-}
+  | keyof typeof HiddenTag;
