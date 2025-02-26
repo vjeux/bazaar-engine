@@ -181,7 +181,7 @@ enum Operation {
   Subtract = "Subtract"
 }
 
-interface Source {
+export interface Source {
   $type: SourceType;
   Origin?: Origin;
   TargetMode?: Origin;
@@ -191,7 +191,7 @@ interface Source {
   TargetSection?: TargetSection;
 }
 
-enum SourceType {
+export enum SourceType {
   TCardConditionalAnd = "TCardConditionalAnd",
   TCardConditionalOr = "TCardConditionalOr",
   TTargetCardPositional = "TTargetCardPositional",
@@ -248,7 +248,7 @@ interface ComparisonValue {
   Value?: number | number;
 }
 
-enum Origin {
+export enum Origin {
   AllLeftCards = "AllLeftCards",
   AllRightCards = "AllRightCards",
   Both = "Both",
@@ -289,7 +289,7 @@ enum Operator {
   None = "None"
 }
 
-enum TargetSection {
+export enum TargetSection {
   AbsolutePlayerHand = "AbsolutePlayerHand",
   AbsolutePlayerHandAndStash = "AbsolutePlayerHandAndStash",
   AllHands = "AllHands",
@@ -338,7 +338,7 @@ interface Conditions {
   Tiers?: Tier[];
 }
 
-interface Target {
+export interface Target {
   $type: SourceType;
   TargetMode?: Origin;
   Conditions: Conditions | null;
@@ -348,7 +348,7 @@ interface Target {
   IncludeOrigin?: boolean;
 }
 
-interface TargetPlayer {
+export interface TargetPlayer {
   $type: SourceType;
   TargetMode?: Origin;
   Conditions: Conditions | null;
@@ -410,7 +410,7 @@ export enum Priority {
   Medium = "Medium"
 }
 
-interface Trigger {
+export interface Trigger {
   $type: TriggerType;
   Subject?: Subject;
   CombatType?: null | string;
@@ -459,7 +459,7 @@ enum CombatOutcome {
   Win = "Win"
 }
 
-interface Subject {
+export interface Subject {
   $type: SourceType;
   Conditions: Conditions | null;
   ExcludeSelf?: boolean;
