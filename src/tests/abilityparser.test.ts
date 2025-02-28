@@ -71,11 +71,19 @@ uniqueTooltips.forEach((tooltip) => {
       expect(parsedAbility).toEqual(
         expect.objectContaining({
           Action: expect.objectContaining({
-            $type: expectedAbility.Action.$type
+            $type: expectedAbility.Action.$type,
+            AttributeType: expectedAbility.Action.AttributeType,
+            Value: expectedAbility.Action.Value,
+            Operation: expectedAbility.Action.Operation,
+            Target: expectedAbility.Action.Target,
+            TargetPlayer: expectedAbility.Action.TargetPlayer,
+            TargetCount: expectedAbility.Action.TargetCount,
+            Source: expectedAbility.Action.Source
           }),
           Trigger: expect.objectContaining({
             $type: expectedAbility.Trigger.$type
-          })
+          }),
+          Prerequisites: expectedAbility.Prerequisites
         })
       );
     }
