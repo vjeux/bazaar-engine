@@ -140,53 +140,62 @@ const TRIGGERS: string[] = Object.keys(TRIGGER_MAPPING);
  * @param text The text to analyze
  * @returns A tuple of [subject, action, modifiers]
  */
-export function extractSubjectAction(
-  text: string
-): [string | null, string | null, string[]] {
+export function extractSubjectAction(text: string): {
+  subject: string | null;
+  action: string | null;
+  modifiers: string[];
+} {
   // Basic pattern matching for different tooltip structures
+  const patterns: {
+    regex: RegExp;
+    handler: (match: { [key: string]: string }) => {
+      subject: string | null;
+      action: string | null;
+      modifiers: string[];
+    };
+  }[] = [
+    {
+      // Matches "Action X for Y seconds", e.g. "Slow enemies for 2 seconds"
+      regex: /^(?<action>\w+)\s+(?<subject>.*?)\s+for\s+(?<modifier>.*?)$/,
+      handler: ({ action, subject, modifier }) => ({
+        subject,
+        action,
+        modifiers: [modifier]
+      })
+    },
+    {
+      // Matches "Subject action modifier", e.g. "enemies take 2 damage"
+      regex: /^(?<subject>.*?)\s+(?<action>\w+)\s+(?<modifier>.*?)$/,
+      handler: ({ subject, action, modifier }) => ({
+        subject,
+        action,
+        modifiers: [modifier]
+      })
+    },
+    {
+      // Matches "Action modifier", e.g. "Heal 2"
+      regex: /^(?<action>\w+)\s+(?<modifier>.*?)$/,
+      handler: ({ action, modifier }) => ({
+        subject: "target", // Default subject
+        action,
+        modifiers: [modifier]
+      })
+    }
+  ];
 
-  // Pattern: "Action X for Y seconds" - Matches patterns like "Slow enemies for 2 seconds"
-  // Format: [action verb] [subject] for [duration/modifier]
-  let match = text.match(/^(\w+)\s+(.*?)\s+for\s+(.*?)$/);
-  if (match) {
-    const action = match[1]; // First word (the action verb)
-    const subject = match[2]; // Content between action and "for"
-    const modifiers = [match[3]]; // Everything after "for"
-    return [subject, action, modifiers];
+  for (const { regex, handler } of patterns) {
+    const match = text.match(regex);
+    if (match && match.groups) {
+      return handler(match.groups);
+    }
   }
 
-  // Pattern: "Subject action modifier" - Matches patterns like "enemies take 2 damage" or "weapons have +1 attack"
-  // Format: [subject] [action verb] [modifier/amount]
-  match = text.match(/^(.*?)\s+(\w+)\s+(.*?)$/);
-  if (match) {
-    const subject = match[1]; // Text before the action verb
-    const action = match[2]; // Single word action in the middle
-    const modifiers = [match[3]]; // Everything after the action
-    return [subject, action, modifiers];
-  }
-
-  // Pattern: "Action modifier" - Matches simple patterns like "Heal 2" or "Draw 1"
-  // Format: [action verb] [modifier/amount]
-  match = text.match(/^(\w+)\s+(.*?)$/);
-  if (match) {
-    const action = match[1]; // First word (the action verb)
-    const modifiers = [match[2]]; // Everything after the action
-    return ["target", action, modifiers]; // Default subject to "target"
-  }
-
-  // Simplified version for specific patterns
-  if (text.includes("have")) {
-    const parts = text.split("have");
-    return [parts[0].trim(), "have", [parts[1].trim()]];
-  }
-
-  if (text.includes("gain")) {
-    const parts = text.split("gain");
-    return [parts[0].trim(), "gain", [parts[1].trim()]];
-  }
-
-  // If no patterns match, make a best guess
-  return ["this", text, []];
+  // Default to no subject or action if we can't match anything
+  return {
+    subject: null,
+    action: null,
+    modifiers: []
+  };
 }
 
 /**
