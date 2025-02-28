@@ -226,7 +226,7 @@ export function analyzeTooltip(tooltip: string): AnalyzedTooltip {
   }
 
   // Extract subject and action
-  const [subject, action, modifiers] = extractSubjectAction(remaining);
+  const { subject, action, modifiers } = extractSubjectAction(remaining);
   result.subject = subject;
   result.action = action;
   result.modifiers = modifiers;
