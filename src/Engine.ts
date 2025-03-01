@@ -101,6 +101,8 @@ const priorityOrder = {
   [Priority.Highest]: 5
 };
 
+type ActionMetadata = { changeValue?: number } | undefined;
+
 /**
  * Iterates over all abilities in the game state and processes them using a callback function.
  *
@@ -123,11 +125,13 @@ function forEachAbility(
       triggerPlayerID: number,
       triggerBoardCardID: number,
       targetPlayerID: number,
-      targetBoardCardID: number
+      targetBoardCardID: number,
+      metadata?: ActionMetadata
     ) => void
   ) => void
 ): void {
-  const actions: [Ability, number, number, number, number][] = [];
+  const actions: [Ability, number, number, number, number, ActionMetadata][] =
+    [];
   forEachCard(gameState, (player, playerIndex, boardCard, boardCardIndex) => {
     for (let i = 0; i < boardCard.AbilityIds.length; ++i) {
       const abilityId = boardCard.AbilityIds[i];
@@ -143,14 +147,16 @@ function forEachAbility(
             triggerPlayerID: number,
             triggerBoardCardID: number,
             targetPlayerID: number,
-            targetBoardCardID: number
+            targetBoardCardID: number,
+            metadata?: ActionMetadata
           ) {
             actions.push([
               ability,
               triggerPlayerID,
               triggerBoardCardID,
               targetPlayerID,
-              targetBoardCardID
+              targetBoardCardID,
+              metadata
             ]);
           }
         );
@@ -198,7 +204,8 @@ function forEachAbility(
         triggerPlayerID,
         triggerBoardCardID,
         targetPlayerID,
-        targetBoardCardID
+        targetBoardCardID,
+        metadata
       ]) => {
         runAction(
           gameState,
@@ -206,7 +213,8 @@ function forEachAbility(
           triggerPlayerID,
           triggerBoardCardID,
           targetPlayerID,
-          targetBoardCardID
+          targetBoardCardID,
+          metadata
         );
       }
     );
@@ -467,7 +475,9 @@ function updatePlayerAttribute<K extends keyof Player>(
           playerID,
           targetPlayerID
         ).forEach((subjectPlayerID) => {
-          addAction(subjectPlayerID, -1, targetPlayerID, targetBoardCardID);
+          addAction(subjectPlayerID, -1, targetPlayerID, targetBoardCardID, {
+            changeValue: Math.abs(value - existingValue)
+          });
         });
       }
     }
@@ -806,7 +816,8 @@ function runAction(
   triggerPlayerID: number,
   triggerBoardCardID: number,
   targetPlayerID: number,
-  targetBoardCardID: number
+  targetBoardCardID: number,
+  metadata?: ActionMetadata
 ): boolean {
   let hasCritted = false;
 
@@ -1429,7 +1440,8 @@ function runAction(
         triggerPlayerID,
         triggerBoardCardID,
         targetPlayerID,
-        targetBoardCardID
+        targetBoardCardID,
+        metadata
       );
 
       const targetCards = getTargetCards(
@@ -1528,7 +1540,8 @@ function getActionValue(
   triggerPlayerID: number,
   triggerBoardCardID: number,
   targetPlayerID: number,
-  targetBoardCardID: number
+  targetBoardCardID: number,
+  metadata?: ActionMetadata
 ): number {
   let amount: number | undefined = undefined;
 
@@ -1559,26 +1572,25 @@ function getActionValue(
       });
       break;
     }
-    case "TReferenceValuePlayerAttribute":
-      {
-        amount = value.DefaultValue;
-        const targetPlayers = getTargetPlayers(
-          gameState,
-          value.Target,
-          triggerPlayerID,
-          targetPlayerID
-        );
-        targetPlayers.forEach((valueTargetPlayerID) => {
-          amount =
-            (amount ?? 0) +
-            (getPlayerAttribute(
-              gameState,
-              valueTargetPlayerID,
-              value.AttributeType as string
-            ) ?? 0);
-        });
-      }
+    case "TReferenceValuePlayerAttribute": {
+      amount = value.DefaultValue;
+      const targetPlayers = getTargetPlayers(
+        gameState,
+        value.Target,
+        triggerPlayerID,
+        targetPlayerID
+      );
+      targetPlayers.forEach((valueTargetPlayerID) => {
+        amount =
+          (amount ?? 0) +
+          (getPlayerAttribute(
+            gameState,
+            valueTargetPlayerID,
+            value.AttributeType as string
+          ) ?? 0);
+      });
       break;
+    }
     case "TReferenceValueCardCount": {
       const targetCards = getTargetCards(
         gameState,
@@ -1589,6 +1601,11 @@ function getActionValue(
         targetBoardCardID
       );
       amount = targetCards.length;
+      break;
+    }
+    case "TReferenceValuePlayerAttributeChange": {
+      // Not sure what to do with value.Target
+      amount = metadata?.changeValue ?? value.DefaultValue;
       break;
     }
     default:
