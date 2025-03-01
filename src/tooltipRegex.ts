@@ -1,8 +1,11 @@
+import { CardType, TriggerType } from "./types/cardTypes";
+
 export interface RegexPartLiteral {
   literal: string;
   capture?: never;
   values?: never;
   number?: never;
+  nested?: never;
   optional?: boolean;
 }
 
@@ -11,10 +14,20 @@ export interface RegexPartCapture {
   literal?: never;
   values?: string[];
   number?: boolean;
+  nested?: never;
   optional?: boolean;
 }
 
-export type RegexPart = RegexPartLiteral | RegexPartCapture;
+export interface RegexPartNested {
+  nested: RegexPart[][];
+  literal?: never;
+  capture?: never;
+  values?: never;
+  number?: never;
+  optional?: boolean;
+}
+
+export type RegexPart = RegexPartLiteral | RegexPartCapture | RegexPartNested;
 
 export function tooltipRegexBuilder(parts: RegexPart[]): RegExp {
   // Helper to escape regex metacharacters in literal strings.
@@ -22,16 +35,8 @@ export function tooltipRegexBuilder(parts: RegexPart[]): RegExp {
     return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
   }
 
-  // Pattern for matching a number token.
-  // This will match either:
-  //   - A parenthesized group: e.g., "(2/4/6/8)", "(+30%/+40%)", "(1x/2x)"
-  //   - A standalone number: e.g., "42", "-3.14", "+30%", "1x"
-  const numberPattern =
-    "(?:\\((?:[+\\-]?\\d+(?:\\.\\d+)?(?:[x%])?(?:\\/[+\\-]?\\d+(?:\\.\\d+)?(?:[x%])?)+)\\)|[+\\-]?\\d+(?:\\.\\d+)?(?:[x%])?)";
-
-  // Build the full regex string piece by piece.
-  let regexStr = "^";
-  for (const part of parts) {
+  // Process a single part or a nested array of parts into a regex string
+  function processRegexPart(part: RegexPart): string {
     let partRegex = "";
 
     if (part.literal) {
@@ -51,6 +56,16 @@ export function tooltipRegexBuilder(parts: RegexPart[]): RegExp {
       }
       // Create a named capture group using the provided capture name.
       partRegex = `(?<${part.capture}>${innerPattern})`;
+    } else if (part.nested) {
+      // Handle nested patterns - each array in nested is an alternative pattern
+      const nestedPatterns = part.nested.map((alternativeParts) => {
+        // Process each part in this alternative and join them
+        return alternativeParts
+          .map((nestedPart) => processRegexPart(nestedPart))
+          .join("");
+      });
+      // Join all alternatives with the OR operator
+      partRegex = "(?:" + nestedPatterns.join("|") + ")";
     }
 
     // If the part is optional, wrap it with a non-capturing optional group
@@ -58,7 +73,20 @@ export function tooltipRegexBuilder(parts: RegexPart[]): RegExp {
       partRegex = `(?:${partRegex})?`;
     }
 
-    regexStr += partRegex;
+    return partRegex;
+  }
+
+  // Pattern for matching a number token.
+  // This will match either:
+  //   - A parenthesized group: e.g., "(2/4/6/8)", "(+30%/+40%)", "(1x/2x)"
+  //   - A standalone number: e.g., "42", "-3.14", "+30%", "1x"
+  const numberPattern =
+    "(?:\\((?:[+\\-]?\\d+(?:\\.\\d+)?(?:[x%])?(?:\\/[+\\-]?\\d+(?:\\.\\d+)?(?:[x%])?)+)\\)|[+\\-]?\\d+(?:\\.\\d+)?(?:[x%])?)";
+
+  // Build the full regex string piece by piece.
+  let regexStr = "^";
+  for (const part of parts) {
+    regexStr += processRegexPart(part);
   }
   regexStr += "$"; // End of string
   return new RegExp(regexStr, "i"); // Using case-insensitive flag
@@ -116,11 +144,8 @@ export const REGEX_LIST = [
     { literal: " " },
     { capture: "reference", values: REFERENCE }
   ]),
-
   // Adjacent Potions have +1 Ammo.
-
   // Adjacent Toys have +1 Multicast.
-  // Adjacent Vehicles have their cooldowns reduced by (5%/10%/15%/20%).
   // Adjacent Weapons have (+5/+10/+20/+40) damage.
   // Adjacent items have (+1/+2/+3/+4) Max Ammo.
   // Adjacent items have (+10%/+15%/+20%/+25%) Crit Chance.
@@ -129,17 +154,24 @@ export const REGEX_LIST = [
   // Adjacent items have (+25%/+50%) Crit Chance.
   // Adjacent items have (+3%/+6%/+9%/+12%) Crit chance.
   // Adjacent items have +1 ammo.
-  // Adjacent items have bonus damage, heal, or shield equal to their Crit Chance.
-  // Adjacent items have their cooldown reduced by (10%/15%/20%/25%).
-  // Adjacent items have their cooldowns reduced by (6%/9%/12%/15%).
-
   tooltipRegexBuilder([
     { literal: "Adjacent " },
     { capture: "target" },
     { literal: " " },
     { capture: "action", values: ["have"] },
     { capture: RECURSIVE }
-  ])
+  ]),
+  tooltipRegexBuilder([
+    { capture: "value", number: true },
+    { literal: " " },
+    { capture: "stat", values: STAT },
+    { literal: "." }
+  ]),
+  // Adjacent Vehicles have their cooldowns reduced by (5%/10%/15%/20%).
+  // Adjacent items have their cooldown reduced by (10%/15%/20%/25%).
+  // Adjacent items have their cooldowns reduced by (6%/9%/12%/15%).
+  // Adjacent items have bonus damage, heal, or shield equal to their Crit Chance.
+
   // Adjacent weapons (+3/+6/+9/+12) damage for the fight.
   // Adjacent weapons gain (10/15/20/25) Damage for the fight.
   // Adjacent weapons gain (3/6/9/12) damage for the fight.
@@ -154,9 +186,30 @@ export const REGEX_LIST = [
   // Adjacent Heal items gain (10/15/20/25) Heal for the fight.
   //   tooltipRegexBuilder([])
 
-  // Adjacent Weapons permanently gain (+1/+2/+3/+4) Damage.
-  // Adjacent items permanently gain (1%/2%/3%/4%) Crit chance.
-  // Adjacent Shield items permanently gain (+1/+2/+3/+4) Shield.
+  // Example using nested patterns:
+  // At the start of each fight/day, either get X or permanently gain Y
+  tooltipRegexBuilder([
+    { capture: "trigger", values: ["At the start of "] },
+    { capture: "eachx", values: ["each fight, ", "each day, "] },
+    {
+      nested: [
+        [
+          { capture: "eachAction", values: ["get"] },
+          { literal: " " },
+          { capture: "amount", number: true },
+          { literal: " " },
+          { capture: "getType" }
+        ],
+        [
+          { capture: "permGain", values: ["permanently gain"] },
+          { literal: " " },
+          { capture: "permGainAmount", number: true },
+          { literal: " " },
+          { capture: "permGainStat", values: ["Max Health"] }
+        ]
+      ]
+    }
+  ])
 ];
 
 /**
@@ -186,7 +239,7 @@ export function parseTooltip(
 
     // Copy all capture groups to the result
     for (const [key, value] of Object.entries(match.groups)) {
-      if (key === "reparse" && value) {
+      if (key === RECURSIVE && value) {
         // This is a reparse instruction, recursively parse the content
         const nestedPath = `${path}.${key}`;
         try {

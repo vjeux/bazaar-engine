@@ -112,6 +112,124 @@ describe("tooltipRegexBuilder", () => {
     expect(match?.groups?.amount).toBe("(2/3/4)");
     expect(match?.groups?.remaining).toBe(".");
   });
+
+  it("should handle nested patterns - first option", () => {
+    const regex = tooltipRegexBuilder([
+      { capture: "trigger", values: ["At the start of "] },
+      { capture: "eachx", values: ["each fight, ", "each day, "] },
+      {
+        nested: [
+          [
+            { capture: "eachAction", values: ["get"] },
+            { literal: " " },
+            { capture: "eachAmount", number: true },
+            { literal: " " },
+            { capture: "getType" }
+          ],
+          [
+            { capture: "permGain", values: ["permanently gain"] },
+            { literal: " " },
+            { capture: "permGainAmount", number: true },
+            { literal: " " },
+            { capture: "permGainStat", values: ["Max Health"] }
+          ]
+        ]
+      }
+    ]);
+
+    const match = "At the start of each fight, get 2 Gold".match(regex);
+    expect(match).not.toBeNull();
+    expect(match?.groups?.trigger).toBe("At the start of ");
+    expect(match?.groups?.eachx).toBe("each fight, ");
+    expect(match?.groups?.eachAction).toBe("get");
+    expect(match?.groups?.eachAmount).toBe("2");
+    expect(match?.groups?.getType).toBe("Gold");
+    expect(match?.groups?.permGain).toBeUndefined();
+    expect(match?.groups?.permGainStat).toBeUndefined();
+  });
+
+  it("should handle nested patterns - second option", () => {
+    const regex = tooltipRegexBuilder([
+      { capture: "trigger", values: ["At the start of "] },
+      { capture: "eachx", values: ["each fight, ", "each day, "] },
+      {
+        nested: [
+          [
+            { capture: "eachAction", values: ["get"] },
+            { literal: " " },
+            { capture: "amount", number: true },
+            { literal: " " },
+            { capture: "getType" }
+          ],
+          [
+            { capture: "permGain", values: ["permanently gain"] },
+            { literal: " " },
+            { capture: "permGainAmount", number: true },
+            { literal: " " },
+            { capture: "permGainStat", values: ["Max Health"] }
+          ]
+        ]
+      }
+    ]);
+
+    const match =
+      "At the start of each day, permanently gain 5 Max Health".match(regex);
+    expect(match).not.toBeNull();
+    expect(match?.groups?.trigger).toBe("At the start of ");
+    expect(match?.groups?.eachx).toBe("each day, ");
+    expect(match?.groups?.eachAction).toBeUndefined();
+    expect(match?.groups?.getType).toBeUndefined();
+    expect(match?.groups?.permGain).toBe("permanently gain");
+    expect(match?.groups?.permGainAmount).toBe("5");
+    expect(match?.groups?.permGainStat).toBe("Max Health");
+  });
+
+  it("should handle optional nested patterns", () => {
+    const regex = tooltipRegexBuilder([
+      { literal: "Deal " },
+      { capture: "amount", number: true },
+      { literal: " damage" },
+      {
+        nested: [
+          [
+            { literal: " and " },
+            { capture: "secondAction", values: ["heal"] },
+            { literal: " " },
+            { capture: "thirdAmount", number: true }
+          ],
+          [
+            { literal: " to " },
+            { capture: "target", values: ["all enemies", "a random enemy"] }
+          ]
+        ],
+        optional: true
+      },
+      { literal: "." }
+    ]);
+
+    // Test with first nested option
+    const match1 = "Deal (10/15/20) damage and heal 5.".match(regex);
+    expect(match1).not.toBeNull();
+    expect(match1?.groups?.amount).toBe("(10/15/20)");
+    expect(match1?.groups?.secondAction).toBe("heal");
+    expect(match1?.groups?.thirdAmount).toBe("5");
+    expect(match1?.groups?.target).toBeUndefined();
+
+    // Test with second nested option
+    const match2 = "Deal 30 damage to all enemies.".match(regex);
+    expect(match2).not.toBeNull();
+    expect(match2?.groups?.amount).toBe("30");
+    expect(match2?.groups?.secondAction).toBeUndefined();
+    expect(match2?.groups?.thirdAmount).toBeUndefined();
+    expect(match2?.groups?.target).toBe("all enemies");
+
+    // Test without the optional nested part
+    const match3 = "Deal 10 damage.".match(regex);
+    expect(match3).not.toBeNull();
+    expect(match3?.groups?.amount).toBe("10");
+    expect(match3?.groups?.secondAction).toBeUndefined();
+    expect(match3?.groups?.target).toBeUndefined();
+  });
 });
 
 describe("tooltipRegexBuilder with optional parts", () => {
