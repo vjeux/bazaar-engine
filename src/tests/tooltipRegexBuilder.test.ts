@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { tooltipRegexBuilder } from "../abilityParser";
+import { tooltipRegexBuilder } from "../tooltipRegex";
 
 describe("tooltipRegexBuilder", () => {
   it("should build a regex that matches literal parts", () => {
