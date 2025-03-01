@@ -246,7 +246,7 @@ function BoardCardElement({
               right: CARD_HEIGHT * paddingRight,
               bottom:
                 CARD_HEIGHT * paddingBottom +
-                (boardCard.tick / boardCard.CooldownMax) *
+                (boardCard.tick / CooldownMax) *
                   (CARD_HEIGHT -
                     CARD_HEIGHT * (paddingTop + paddingBottom) -
                     2),
