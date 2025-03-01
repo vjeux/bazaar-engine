@@ -135,50 +135,135 @@ const MODIFIER_PATTERNS = [
 // Common triggers that start tooltips
 const TRIGGERS: string[] = Object.keys(TRIGGER_MAPPING);
 
+interface RegexPartLiteral {
+  literal: string;
+  capture?: never;
+  values?: never;
+  number?: never;
+}
+
+interface RegexPartCapture {
+  capture: string;
+  literal?: never;
+  values?: string[];
+  number?: boolean;
+}
+
+type RegexPart = RegexPartLiteral | RegexPartCapture;
+
+export function tooltipRegexBuilder(parts: RegexPart[]): RegExp {
+  // Helper to escape regex metacharacters in literal strings.
+  function escapeRegex(str: string): string {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  }
+
+  // Pattern for matching a number token.
+  // This will match either:
+  //   - A parenthesized group: e.g., "(2/4/6/8)", "(+30%/+40%)", "(1x/2x)"
+  //   - A standalone number: e.g., "42", "-3.14", "+30%", "1x"
+  const numberPattern =
+    "(?:\\((?:[+\\-]?\\d+(?:\\.\\d+)?(?:[x%])?(?:\\/[+\\-]?\\d+(?:\\.\\d+)?(?:[x%])?)+)\\)|[+\\-]?\\d+(?:\\.\\d+)?(?:[x%])?)";
+
+  // Build the full regex string piece by piece.
+  let regexStr = "^";
+  for (const part of parts) {
+    if (part.literal) {
+      // A literal piece is simply escaped.
+      regexStr += escapeRegex(part.literal);
+    } else if (part.capture) {
+      let innerPattern = "";
+      if (part.values && Array.isArray(part.values)) {
+        // If allowed values are provided, join them with | (after escaping)
+        innerPattern = "(?:" + part.values.map(escapeRegex).join("|") + ")";
+      } else if (part.number) {
+        // Use our number matcher
+        innerPattern = numberPattern;
+      } else {
+        // If no specific pattern is provided, use a non-greedy wildcard. Matches multiple words.
+        innerPattern = ".+?";
+      }
+      // Create a named capture group using the provided capture name.
+      regexStr += `(?<${part.capture}>${innerPattern})`;
+    }
+  }
+  regexStr += "$"; // End of string
+  return new RegExp(regexStr, "i"); // Using case-insensitive flag
+}
+
 /**
- * Extract subject, action, and modifiers from the text.
- * @param text The text to analyze
- * @returns A tuple of [subject, action, modifiers]
+ * Split the text into
  */
 export function extractSubjectAction(text: string): {
   subject: string | null;
   action: string | null;
   modifiers: string[];
+  trigger: string | null;
+  prerequisites?: string | null;
 } {
-  // Basic pattern matching for different tooltip structures
-  const patterns: {
+  const allowedActions = [
+    "heal",
+    "draw",
+    "slow",
+    "freeze",
+    "poison",
+    "burn",
+    "haste",
+    "charge",
+    "shield"
+  ];
+  const allowedSubjects = ["enemies", "weapons", "target"];
+
+  // Build regex patterns that only match these allowed strings.
+  const actionsRegex = allowedActions.join("|");
+  const subjectsRegex = allowedSubjects.join("|");
+
+  const patterns: Array<{
     regex: RegExp;
     handler: (match: { [key: string]: string }) => {
       subject: string | null;
       action: string | null;
       modifiers: string[];
+      trigger: string | null;
+      prerequisites: string | null;
     };
-  }[] = [
+  }> = [
     {
-      // Matches "Action X for Y seconds", e.g. "Slow enemies for 2 seconds"
-      regex: /^(?<action>\w+)\s+(?<subject>.*?)\s+for\s+(?<modifier>.*?)$/,
+      // Pattern: "Action subject for modifier" e.g. "slow enemies for 2 seconds"
+      regex: new RegExp(
+        `^(?<action>${actionsRegex})\\s+(?<subject>${subjectsRegex})\\s+for\\s+(?<modifier>.+)$`,
+        "i"
+      ),
       handler: ({ action, subject, modifier }) => ({
         subject,
         action,
-        modifiers: [modifier]
+        modifiers: [modifier],
+        trigger: null, // No trigger in this pattern, probably on cooldown
+        prerequisites: null // No prerequisites in this pattern
       })
     },
     {
-      // Matches "Subject action modifier", e.g. "enemies take 2 damage"
-      regex: /^(?<subject>.*?)\s+(?<action>\w+)\s+(?<modifier>.*?)$/,
+      // Pattern: "Subject action modifier" e.g. "enemies take 2 damage"
+      regex: new RegExp(
+        `^(?<subject>${subjectsRegex})\\s+(?<action>${actionsRegex})\\s+(?<modifier>.+)$`,
+        "i"
+      ),
       handler: ({ subject, action, modifier }) => ({
         subject,
         action,
-        modifiers: [modifier]
+        modifiers: [modifier],
+        trigger: null,
+        prerequisites: null
       })
     },
     {
-      // Matches "Action modifier", e.g. "Heal 2"
-      regex: /^(?<action>\w+)\s+(?<modifier>.*?)$/,
+      // Pattern: "Action modifier" e.g. "heal 2"
+      regex: new RegExp(`^(?<action>${actionsRegex})\\s+(?<modifier>.+)$`, "i"),
       handler: ({ action, modifier }) => ({
-        subject: "target", // Default subject
+        subject: "target", // Default subject if none provided.
         action,
-        modifiers: [modifier]
+        modifiers: [modifier],
+        trigger: null,
+        prerequisites: null
       })
     }
   ];
@@ -190,12 +275,8 @@ export function extractSubjectAction(text: string): {
     }
   }
 
-  // Default to no subject or action if we can't match anything
-  return {
-    subject: null,
-    action: null,
-    modifiers: []
-  };
+  // Default to nothing found
+  throw new Error(`Could not extract subject, action etc. from: ${text}`);
 }
 
 /**
