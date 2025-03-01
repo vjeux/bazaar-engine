@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { tooltipRegexBuilder } from "../tooltipRegex";
+import { describe, it, expect, test } from "vitest";
+import { tooltipRegexBuilder, REGEX_LIST } from "../tooltipRegex";
 
 describe("tooltipRegexBuilder", () => {
   it("should build a regex that matches literal parts", () => {
@@ -104,11 +104,150 @@ describe("tooltipRegexBuilder", () => {
       { capture: "action", values: ["Burn"] },
       { literal: " " },
       { capture: "amount", number: true },
-      { literal: "." }
+      { capture: "remaining" }
     ]);
 
     const match = "Burn (2/3/4).".match(regex);
     expect(match?.groups?.action).toBe("Burn");
     expect(match?.groups?.amount).toBe("(2/3/4)");
+    expect(match?.groups?.remaining).toBe(".");
+  });
+});
+
+describe("tooltipRegexBuilder with optional parts", () => {
+  test("supports optional literals", () => {
+    const regex = tooltipRegexBuilder([
+      { literal: "Shield equal to " },
+      { capture: "amount", number: true },
+      { literal: " times", optional: true },
+      { literal: " " },
+      { capture: "reference" }
+    ]);
+
+    // Test with "times" present
+    {
+      const match = regex.exec("Shield equal to (1/2/3/4) times your Income.");
+      expect(match).not.toBeNull();
+      expect(match?.groups).toMatchObject({
+        amount: "(1/2/3/4)",
+        reference: "your Income."
+      });
+    }
+
+    // Test without "times" present
+    {
+      const match = regex.exec(
+        "Shield equal to (1x/2x) the value of the adjacent items."
+      );
+      expect(match).not.toBeNull();
+      expect(match?.groups).toMatchObject({
+        amount: "(1x/2x)",
+        reference: "the value of the adjacent items."
+      });
+    }
+  });
+
+  test("supports optional captures", () => {
+    const regex = tooltipRegexBuilder([
+      { literal: "Deal " },
+      { capture: "amount", number: true },
+      { literal: " damage" },
+      { capture: "modifier", optional: true },
+      { literal: "." }
+    ]);
+
+    // Test without the optional capture
+    {
+      const match = regex.exec("Deal (10/20/30) damage.");
+      expect(match).not.toBeNull();
+      expect(match?.groups).toMatchObject({
+        amount: "(10/20/30)"
+      });
+      expect(match?.groups?.modifier).toBeUndefined();
+    }
+
+    // Test with the optional capture
+    {
+      const match = regex.exec("Deal (10/20/30) damage to all enemies.");
+      expect(match).not.toBeNull();
+      expect(match?.groups).toMatchObject({
+        amount: "(10/20/30)",
+        modifier: " to all enemies"
+      });
+    }
+  });
+
+  test("can chain multiple optional parts", () => {
+    const regex = tooltipRegexBuilder([
+      { literal: "Deal " },
+      { capture: "amount", number: true },
+      { literal: " damage", optional: true },
+      { literal: " and ", optional: true },
+      { literal: "apply ", optional: true },
+      { capture: "effect", optional: true },
+      { literal: "." }
+    ]);
+
+    // Test with some optional parts
+    {
+      const match = regex.exec(
+        "Deal (10/20/30) damage and apply Burn (2/4/6)."
+      );
+      expect(match).not.toBeNull();
+      expect(match?.groups).toMatchObject({
+        amount: "(10/20/30)",
+        effect: "Burn (2/4/6)"
+      });
+    }
+
+    // Test with fewer optional parts
+    {
+      const match = regex.exec("Deal (10/20/30) damage.");
+      expect(match).not.toBeNull();
+      expect(match?.groups).toMatchObject({
+        amount: "(10/20/30)"
+      });
+      expect(match?.groups?.effect).toBeUndefined();
+    }
+
+    // Test with different combination
+    {
+      const match = regex.exec("Deal (10/20/30) and apply Weakness.");
+      expect(match).not.toBeNull();
+      expect(match?.groups).toMatchObject({
+        amount: "(10/20/30)",
+        effect: "Weakness"
+      });
+    }
+  });
+
+  test("handles edge cases with optional parts", () => {
+    const regex = tooltipRegexBuilder([
+      { literal: "Start with " },
+      { capture: "amount", number: true, optional: true },
+      { literal: " ", optional: true },
+      { capture: "item" },
+      { literal: "." }
+    ]);
+
+    // Test with all parts present
+    {
+      const match = regex.exec("Start with (2/3/4) Gold.");
+      expect(match).not.toBeNull();
+      expect(match?.groups).toMatchObject({
+        amount: "(2/3/4)",
+        item: "Gold"
+      });
+    }
+
+    // Test with optional parts missing
+    {
+      const match = regex.exec("Start with Energy.");
+      expect(match).not.toBeNull();
+      expect(match?.groups).toMatchObject({
+        item: "Energy"
+      });
+      expect(match?.groups?.amount).toBeUndefined();
+    }
   });
 });
