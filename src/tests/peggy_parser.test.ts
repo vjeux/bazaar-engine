@@ -127,8 +127,8 @@ describe("should build all partial cards correctly", () => {
         expect.objectContaining({
           $type: expectedCard?.$type,
           Abilities: expectedCard?.Abilities,
-          Auras: expect.any(Object),
-          Tags: expect.any(Array),
+          Auras: expectedCard?.Auras,
+          Tags: expectedCard?.Tags,
           Tiers: expectedCard?.Tiers,
           Heroes: expectedCard?.Heroes,
           Id: expectedCard?.Id,
@@ -136,8 +136,12 @@ describe("should build all partial cards correctly", () => {
           Size: expectedCard?.Size,
           StartingTier: expectedCard?.StartingTier,
           HiddenTags: expectedCard?.HiddenTags,
-          InternalDescription: expect.any(String),
-          Version: expectedCard?.Version
+          Version: expectedCard?.Version,
+          Localization: {
+            Title: {
+              Text: item.name
+            }
+          }
         })
       );
     });

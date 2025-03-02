@@ -3,7 +3,7 @@ import { readFileSync } from "fs";
 import peggy from "peggy";
 import { Item } from "./types/apiItems";
 import { PartialDeep } from "type-fest";
-import { Card } from "./types/cardTypes";
+import { Card, Version } from "./types/cardTypes";
 import _ from "lodash";
 
 export const parser = peggy.generate(
@@ -33,6 +33,16 @@ export function parseItem(item: Item): PartialDeep<Card> {
     abilityIndex = card.Abilities ? Object.keys(card.Abilities).length : 0;
     auraIndex = card.Auras ? Object.keys(card.Auras).length : 0;
   });
+
+  // Append the rest of the stuff we know about the card
+  card.Id = item.id;
+  card.Heroes = item.heroes;
+  card.Tags = item.tags;
+  card.HiddenTags = item.hiddenTags;
+  card.Size = item.size;
+  card.StartingTier = item.startingTier;
+  card.Version = Version.The100;
+  _.set(card, "Localization.Title.Text", item.name);
 
   return card;
 }
