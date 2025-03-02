@@ -225,8 +225,14 @@ ActionType
 // NormalActionTooltip parses tooltips like "deal 10 damage" or "heal 5"
 NormalActionTooltip
   = actionType:ActionType _ amount:Numbers ("." / " damage."i)? {
+      // Create TierInfo with DamageAmount attribute
+      const tiers_card = constructTierInfos(ITEM, "DamageAmount", amount);
+      // Append AbilityIds to the card object
+      Object.keys(tiers_card.Tiers).forEach((tier) => {
+        tiers_card.Tiers[tier].AbilityIds = [`${abilityIndex}`];
+      });
       // Create card object with the action
-      return {
+      const ability_card = {
         Abilities: {
           [abilityIndex]: {
             Action: {
@@ -253,6 +259,8 @@ NormalActionTooltip
         },
         Auras: {}
       };
+
+      return _.merge(ability_card, tiers_card);
     }
 
 WhenSource
