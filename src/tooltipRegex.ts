@@ -1,4 +1,17 @@
-import { CardType, TriggerType } from "./types/cardTypes";
+import {
+  ActionType,
+  AttributeType,
+  CardType,
+  TierInfo,
+  Tiers,
+  TriggerType,
+  ValueType
+} from "./types/cardTypes";
+import { PartialDeep } from "type-fest";
+import { Card } from "./types/cardTypes";
+import { Item } from "./types/apiItems";
+import { Tier, TierInt } from "./types/shared";
+import _ from "lodash";
 
 export interface RegexPartLiteral {
   literal: string;
@@ -92,125 +105,171 @@ export function tooltipRegexBuilder(parts: RegexPart[]): RegExp {
   return new RegExp(regexStr, "i"); // Using case-insensitive flag
 }
 
-export const ACTIONS = ["Burn", "Cooldown", "Deal", "Heal", "Poison", "Shield"];
+/**
+ * Extracts numbers from the first pair of parentheses in the input string.
+ * Supports numbers with an optional '+' sign, as well as values ending with 'x' or '%'.
+ * Separators between values can be either '»' or '/'.
+ *
+ * @param input - The string to parse, e.g. "(+3x » 50% / 25)".
+ * @returns An array of numbers extracted from the string.
+ */
+function parseNumbers(input: string): number[] {
+  // Extract the content within the first pair of parentheses.
+  const match = input.match(/\(\s*([^)]*?)\s*\)/);
+  if (!match || !match[1]) {
+    return [];
+  }
 
-export const STAT = ["Ammo"];
+  // Split the content by either '»' or '/' and process each item.
+  return (
+    match[1]
+      .split(/[»/]/)
+      .map((item) => {
+        // Remove whitespace and an optional leading '+'.
+        const s = item.trim().replace(/^\+/, "");
 
-export const RECURSIVE = "reparse";
+        // Check for multiplier values ending with 'x' (case-insensitive).
+        const multiplierMatch = s.match(/^(\d+(?:\.\d+)?)x$/i);
+        if (multiplierMatch) {
+          return parseFloat(multiplierMatch[1]);
+        }
 
-export const REF_ACTION = ["Shield equal to"];
-export const REFERENCE = [
-  "this item's value.",
-  "your Income.",
-  "the value of the adjacent items."
-];
+        // Check for percentage values ending with '%'.
+        const percentageMatch = s.match(/^(\d+(?:\.\d+)?)%$/);
+        if (percentageMatch) {
+          return parseFloat(percentageMatch[1]);
+        }
 
-// Regex patterns for parsing unified tooltips.
-// Capture group named "reparse" will indicate that that section should be sent back in again for parsing.
-// This is useful for nested tooltips, e.g., "At the start of each fight, reparse: Burn (2/3/4)."
-export const REGEX_LIST = [
-  // Burn (1/2/3).
-  // Cooldown 5 seconds
-  // Deal (12/18/24/30) damage.
-  // Heal 20.
-  // Poison (3/6/9/12).
-  // Shield (40/60/80).
-  tooltipRegexBuilder([
+        // Check for plain numbers.
+        const numberMatch = s.match(/^(\d+(?:\.\d+)?)$/);
+        if (numberMatch) {
+          return parseFloat(numberMatch[1]);
+        }
+
+        // If none of the expected patterns match, return NaN.
+        return NaN;
+      })
+      // Filter out any non-numeric results.
+      .filter((num) => !isNaN(num))
+  );
+}
+
+export enum ACTION {
+  BURN = "burn",
+  DEAL = "deal",
+  HEAL = "heal",
+  POISON = "poison",
+  SHIELD = "shield"
+}
+export const ACTIONS = Object.values(ACTION);
+
+// Map action to AttributeType
+const ACTION_TO_ATTRIBUTE: Record<string, AttributeType> = {
+  [ACTION.BURN]: AttributeType.Burn,
+  [ACTION.DEAL]: AttributeType.DamageAmount,
+  [ACTION.HEAL]: AttributeType.HealAmount,
+  [ACTION.POISON]: AttributeType.Poison,
+  [ACTION.SHIELD]: AttributeType.Shield
+};
+
+const ACTION_TO_ACTIONTYPE: Record<string, ActionType> = {
+  [ACTION.BURN]: ActionType.TActionPlayerBurnApply,
+  [ACTION.DEAL]: ActionType.TActionPlayerDamage,
+  [ACTION.HEAL]: ActionType.TActionPlayerHeal,
+  [ACTION.POISON]: ActionType.TActionPlayerPoisonApply,
+  [ACTION.SHIELD]: ActionType.TActionPlayerShieldApply
+};
+
+export interface TooltipMatch {
+  regexParts: Array<RegexPart>;
+  handler: (
+    matched: Record<string, string>,
+    item: Item,
+    ability_number: number
+  ) => PartialDeep<Card>;
+}
+
+function constructTierInfos(
+  item: Item,
+  attribute_type: AttributeType,
+  values: string
+): PartialDeep<Card> {
+  const startingIndex = TierInt[item.startingTier];
+  let tiers = Object.values(Tier);
+  // Filter out all tiers where the item doesn't have a tooltip
+  tiers = tiers
+    .slice(startingIndex)
+    .filter((tier) => item.tiers[tier].tooltips.length > 0);
+
+  const tierValues = parseNumbers(values);
+
+  // For every tier, create a TierInfo object
+  const tierInfos: PartialDeep<Tiers> = {};
+  tiers.forEach((tier, index) => {
+    tierInfos[tier] = {
+      Attributes: {
+        [attribute_type]: tierValues[index]
+      }
+    };
+  });
+
+  // Return partial card object
+  return {
+    Tiers: tierInfos
+  };
+}
+
+// Cooldown, Ammo
+export enum STAT {
+  AMMO = "ammo",
+  COOLDOWN = "cooldown"
+}
+const STAT_TO_ATTRIBUTE: Record<string, AttributeType> = {
+  [STAT.AMMO]: AttributeType.Ammo,
+  [STAT.COOLDOWN]: AttributeType.CooldownMax
+};
+const STAT_TOOLTIP: TooltipMatch = {
+  regexParts: [
+    { capture: "stat", values: Object.values(STAT) },
+    { literal: " " },
+    { capture: "values", number: true },
+    { capture: "remaining" }
+  ],
+  handler: (matched, item) => {
+    const attributeType: AttributeType = STAT_TO_ATTRIBUTE[matched.stat];
+    return constructTierInfos(item, attributeType, matched.values);
+  }
+};
+
+const NORMAL_ACTION: TooltipMatch = {
+  regexParts: [
     { capture: "action", values: ACTIONS },
     { literal: " " },
     { capture: "amount", number: true },
     { capture: "remaining" }
-  ]),
-  // At the start of
-  tooltipRegexBuilder([
-    { capture: "trigger", values: ["At the start of "] },
-    { capture: "eachx", values: ["each fight, ", "each day, "] },
-    { capture: RECURSIVE }
-  ]),
-  // Ammo 2
-  tooltipRegexBuilder([
-    { capture: "stat", values: STAT },
-    { literal: " " },
-    { capture: "amount", number: true }
-  ]),
+  ],
+  handler: (matched, item, ability_number) => {
+    // Start by constructing TierInfos
+    const tier_card = constructTierInfos(
+      item,
+      ACTION_TO_ATTRIBUTE[matched.action],
+      matched.amount
+    );
+    const ability_card: PartialDeep<Card> = {
+      Abilities: {
+        [ability_number]: {
+          Action: {
+            $type: ACTION_TO_ACTIONTYPE[matched.action]
+          }
+        }
+      }
+    };
+    // Return lodash merged objects
+    return _.merge(tier_card, ability_card);
+  }
+};
 
-  // Shield equal to (1/2/3/4) times your Income.
-  // Shield equal to (1x/2x) the value of the adjacent items.
-  tooltipRegexBuilder([
-    { capture: "action", values: REF_ACTION },
-    { literal: " " },
-    { capture: "amount", number: true },
-    { literal: " times", optional: true },
-    { literal: " " },
-    { capture: "reference", values: REFERENCE }
-  ]),
-  // Adjacent Potions have +1 Ammo.
-  // Adjacent Toys have +1 Multicast.
-  // Adjacent Weapons have (+5/+10/+20/+40) damage.
-  // Adjacent items have (+1/+2/+3/+4) Max Ammo.
-  // Adjacent items have (+10%/+15%/+20%/+25%) Crit Chance.
-  // Adjacent items have (+15%/+30%/+50%) Crit Chance.
-  // Adjacent items have (+20%/+30%/+40%/+50%) Crit Chance.
-  // Adjacent items have (+25%/+50%) Crit Chance.
-  // Adjacent items have (+3%/+6%/+9%/+12%) Crit chance.
-  // Adjacent items have +1 ammo.
-  tooltipRegexBuilder([
-    { literal: "Adjacent " },
-    { capture: "target" },
-    { literal: " " },
-    { capture: "action", values: ["have"] },
-    { capture: RECURSIVE }
-  ]),
-  tooltipRegexBuilder([
-    { capture: "value", number: true },
-    { literal: " " },
-    { capture: "stat", values: STAT },
-    { literal: "." }
-  ]),
-  // Adjacent Vehicles have their cooldowns reduced by (5%/10%/15%/20%).
-  // Adjacent items have their cooldown reduced by (10%/15%/20%/25%).
-  // Adjacent items have their cooldowns reduced by (6%/9%/12%/15%).
-  // Adjacent items have bonus damage, heal, or shield equal to their Crit Chance.
-
-  // Adjacent weapons (+3/+6/+9/+12) damage for the fight.
-  // Adjacent weapons gain (10/15/20/25) Damage for the fight.
-  // Adjacent weapons gain (3/6/9/12) damage for the fight.
-  // Adjacent items gain (+10%/+15%/+20%) crit chance for the fight.
-  // Adjacent items gain (2%/4%/6%/8%) Crit Chance for the fight.
-  // Adjacent items gain (2%/4%/6%/8%) Crit chance for the fight.
-  // Adjacent Weapons gain (5/10) Damage for the fight.
-  // Adjacent Shield items (+2/+4/+6/+8) Shield for the fight.
-  // Adjacent Shield items gain (10/15/20/25) Shield for the fight.
-  // Adjacent Shield items gain (3/6/9/12) Shield for the fight.
-  // Adjacent Shield items gain (5/10) Shield for the fight.
-  // Adjacent Heal items gain (10/15/20/25) Heal for the fight.
-  //   tooltipRegexBuilder([])
-
-  // Example using nested patterns:
-  // At the start of each fight/day, either get X or permanently gain Y
-  tooltipRegexBuilder([
-    { capture: "trigger", values: ["At the start of "] },
-    { capture: "eachx", values: ["each fight, ", "each day, "] },
-    {
-      nested: [
-        [
-          { capture: "eachAction", values: ["get"] },
-          { literal: " " },
-          { capture: "amount", number: true },
-          { literal: " " },
-          { capture: "getType" }
-        ],
-        [
-          { capture: "permGain", values: ["permanently gain"] },
-          { literal: " " },
-          { capture: "permGainAmount", number: true },
-          { literal: " " },
-          { capture: "permGainStat", values: ["Max Health"] }
-        ]
-      ]
-    }
-  ])
-];
+export const REGEX_LIST: TooltipMatch[] = [STAT_TOOLTIP, NORMAL_ACTION];
 
 /**
  * Interface for parsed tooltip results
@@ -222,48 +281,45 @@ export interface ParsedTooltip {
 /**
  * Parse a tooltip string, handling any nested reparsing
  * @param tooltip The tooltip string to parse
- * @returns An object containing all captured groups, with reparsed content nested
+ * @param item The Item containing tier information
+ * @param ability_number The current ability number
+ * @returns A tuple containing [PartialDeep<Card>, boolean] where the boolean indicates
+ *          whether the ability_number should be updated after this tooltip is processed
  * @throws Error if the tooltip doesn't match any regex pattern
  */
 export function parseTooltip(
   tooltip: string,
-  path: string = "root"
-): ParsedTooltip {
+  item: Item,
+  ability_number: number = 0
+): [PartialDeep<Card>, boolean] {
+  // Convert to lowercase
+  tooltip = tooltip.toLowerCase();
   // Try each regex pattern in order
-  for (const regex of REGEX_LIST) {
+  for (const { regexParts, handler } of REGEX_LIST) {
+    const regex = tooltipRegexBuilder(regexParts);
     const match = regex.exec(tooltip);
     if (!match || !match.groups) continue;
 
-    // We found a match, process the capture groups
-    const result: ParsedTooltip = {};
+    // We found a match, create an object with all captured groups
+    const matched: Record<string, string> = {};
 
     // Copy all capture groups to the result
     for (const [key, value] of Object.entries(match.groups)) {
-      if (key === RECURSIVE && value) {
-        // This is a reparse instruction, recursively parse the content
-        const nestedPath = `${path}.${key}`;
-        try {
-          const reparsedResult = parseTooltip(value.trim(), nestedPath);
-          result[key] = reparsedResult;
-        } catch (error) {
-          // If reparsing failed, include path information in the error
-          const errorMessage =
-            error instanceof Error ? error.message : String(error);
-          throw new Error(
-            `Failed at ${nestedPath}: ${errorMessage}\nOriginal content: "${value}"`
-          );
-        }
-      } else if (value) {
-        // Regular capture group
-        result[key] = value;
+      if (value) {
+        matched[key] = value;
       }
     }
 
-    return result;
+    // Process the matched groups with the handler to get a Card object
+    const card = handler(matched, item, ability_number);
+
+    // Determine if we should update the ability number based on the matched pattern
+    // STAT_TOOLTIP handlers don't update ability_number, others do
+    const shouldUpdateAbilityNumber = !(regexParts === STAT_TOOLTIP.regexParts);
+
+    return [card, shouldUpdateAbilityNumber];
   }
 
   // No match found, throw an error
-  throw new Error(
-    `Tooltip does not match any regex pattern at ${path}: "${tooltip}"`
-  );
+  throw new Error(`Tooltip does not match any regex pattern "${tooltip}"`);
 }

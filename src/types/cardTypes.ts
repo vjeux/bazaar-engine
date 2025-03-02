@@ -110,7 +110,7 @@ export enum ActionType {
   TAuraActionPlayerModifyAttribute = "TAuraActionPlayerModifyAttribute"
 }
 
-enum AttributeType {
+export enum AttributeType {
   Ammo = "Ammo",
   AmmoMax = "AmmoMax",
   Burn = "Burn",
@@ -610,7 +610,7 @@ interface SelectionContext {
 }
 
 export type Tiers = {
-  [key in Tier]: TierInfo;
+  [key in Tier]?: TierInfo;
 };
 
 export interface TierInfo {
