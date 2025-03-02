@@ -3,7 +3,7 @@ import { readFileSync } from "fs";
 import peggy from "peggy";
 import { Item } from "./types/apiItems";
 import { PartialDeep } from "type-fest";
-import { Card, Version } from "./types/cardTypes";
+import { Card, CardType, Version } from "./types/cardTypes";
 import _ from "lodash";
 
 export const parser = peggy.generate(
@@ -36,6 +36,7 @@ export function parseItem(item: Item): PartialDeep<Card> {
 
   // Append the rest of the stuff we know about the card
   card.Id = item.id;
+  card.$type = CardType.TCardItem;
   card.Heroes = item.heroes;
   card.Tags = item.tags;
   card.HiddenTags = item.hiddenTags;

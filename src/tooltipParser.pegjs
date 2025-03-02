@@ -63,8 +63,11 @@
 
     let result = {};
 
-    tiers.forEach((tier, index) => {
-      result = _.merge(result, construct_function(item, tier, values, index));
+    values.forEach((value, index) => {
+      if (index < tiers.length) {
+        const tier = tiers[index];
+        result = _.merge(result, construct_function(item, tier, values, index));
+      }
     });
 
     return result;
@@ -197,48 +200,111 @@ StatType
 StatTooltip
   = stat:StatType _ values:Numbers remaining:$(.*)? {
       // If cooldown
-      if (stat.toLowerCase() === "cooldown") {
-        values = values.map((value) => value * 1000);
-        console.log("Cooldown values", values);
-        return constructTierInfos(ITEM, "CooldownMax", values);
-      } else if (stat.toLowerCase() === "ammo") {
-        return constructTierInfos(ITEM, "AmmoMax", values);
+      switch (stat.toLowerCase()) {
+        case "cooldown":
+          values = values.map((value) => value * 1000);
+          return constructTierInfos(ITEM, "CooldownMax", values);
+        case "ammo":
+          return constructTierInfos(ITEM, "AmmoMax", values);
+        default:
+          throw new Error("Unknown stat type: " + stat);
       }
-      throw new Error("Unknown stat type: " + stat);
     }
 
 // ActionType matches all possible action types
 ActionType
-  = "burn"i
-  / "deal"i
-  / "heal"i
-  / "poison"i
-  / "shield"i
+  = "burn"i { return "TActionPlayerBurnApply"; }
+  / "deal"i { return "TActionPlayerDamage"; }
+  / "heal"i { return "TActionPlayerHeal"; }
+  / "poison"i { return "TActionPlayerPoisonApply"; }
+  / "shield"i { return "TActionPlayerShieldApply"; }
+  / "freeze"i { return "TActionCardFreeze"; }
+  / "haste"i { return "TActionCardHaste"; }
+  / "slow"i { return "TActionCardSlow"; }
 
-// NormalActionTooltip parses tooltips like "deal (10)" or "heal (5)"
+// NormalActionTooltip parses tooltips like "deal 10 damage" or "heal 5"
 NormalActionTooltip
-  = action:ActionType _ amount:Numbers remaining:$(.*)? {
+  = actionType:ActionType _ amount:Numbers ("." / " damage."i)? {
+      // Create card object with the action
       return {
-        type: "NormalActionTooltip",
-        action: action.toLowerCase(),
-        amount: amount,
-        remaining: remaining || ""
+        Abilities: {
+          [abilityIndex]: {
+            Action: {
+              $type: actionType,
+              ReferenceValue: null,
+              Target: {
+                $type: "TTargetPlayerRelative",
+                TargetMode: [
+                  "TActionPlayerHeal",
+                  "TActionPlayerShieldApply"
+                ].includes(actionType)
+                  ? "Self"
+                  : "Opponent",
+                Conditions: null
+              }
+            },
+            ActiveIn: "HandOnly",
+            Id: `${abilityIndex}`,
+            Prerequisites: null,
+            Trigger: {
+              $type: "TTriggerOnCardFired"
+            }
+          }
+        },
+        Auras: {}
       };
     }
 
-// TooltipAction parses a single action with its values, used as building blocks for nested tooltips
-TooltipAction
-  = action:ActionType _ amount:Numbers {
-      return {
-        action: action.toLowerCase(),
-        amount: amount
-      };
-    }
-  / stat:StatType _ values:Numbers {
-      return {
-        stat: stat.toLowerCase(),
-        values: values
-      };
+WhenSource
+  = "any item"i
+  / "one of your items"i
+  / "the Core gains"i
+  / "this or an adjacent item"i
+  / ("this"i _? "item"i?)
+
+Trigger = "When"i _ source:WhenSource
+
+// Adjacent Heal items gain (10/15/20/25) Heal for the fight.
+// Adjacent Shield items gain (10/15/20/25) Shield for the fight.
+// Adjacent Shield items gain (3/6/9/12) Shield for the fight.
+// Adjacent Shield items gain (5/10) Shield for the fight.
+// Adjacent Shield items permanently gain (+1/+2/+3/+4) Shield.
+// Adjacent Weapons gain (5/10) Damage for the fight.
+// Adjacent Weapons permanently gain (+1/+2/+3/+4) Damage.
+// Adjacent items gain (+10%/+15%/+20%) crit chance for the fight.
+// Adjacent items gain (2%/4%/6%/8%) Crit Chance for the fight.
+// Adjacent items gain (2%/4%/6%/8%) Crit chance for the fight.
+// Adjacent items permanently gain (1%/2%/3%/4%) Crit chance.
+// Adjacent weapons gain (10/15/20/25) Damage for the fight.
+// Adjacent weapons gain (3/6/9/12) damage for the fight.
+Target
+  = "items"
+  / TagType " items"
+  / "weapons"i
+
+AdjacentTarget
+  = "Adjacent"i
+    _
+    target:Target
+    (_ permanent:"permanently")?
+    _
+    "gain"
+    _
+    amount:Numbers
+    _
+    attribute:AttributeType
+    _?
+    forFight:"for the fight."? {
+      // Start by creating TierInfos with Custom_x attributes
+      tiers = cfTier(ITEM, amount, (item, tier, values, index) => {
+        const tierInfo = {
+          Attributes: {
+            [`Custom_${index}`]: values[index]
+          }
+        };
+      });
+      // Now create the ability
+      // TODO
     }
 
 // Numbers matches a number pattern, either a single number or a parenthesized list
