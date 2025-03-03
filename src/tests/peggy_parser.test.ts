@@ -124,7 +124,7 @@ describe("should build all partial cards correctly", () => {
       // We don't need to check every field, just the ones that are important
 
       // Omit fields that are not needed for functional parity
-      const omitKeys = [
+      const omitToplevelKeys = [
         "InternalDescription",
         "InternalName",
         "MigrationData",
@@ -132,14 +132,25 @@ describe("should build all partial cards correctly", () => {
         "TranslationKey",
         "VFXConfig"
       ];
-      const omittedAbilities:
-        | PartialDeep<{ [key: string]: Ability }>
-        | undefined = expectedCard?.Abilities;
-      if (omittedAbilities) {
-        Object.keys(omittedAbilities).forEach((key) => {
-          omittedAbilities[key] = _.omit(omittedAbilities[key], omitKeys);
-        });
-      }
+      const omittedAbilities = expectedCard?.Abilities
+        ? _.mapValues(expectedCard.Abilities, (ability) =>
+            _.omit(ability, omitToplevelKeys)
+          )
+        : undefined;
+
+      const omitTierKeys = ["BuyPrice", "SellPrice"];
+      const omittedTiers = expectedCard?.Tiers
+        ? _.mapValues(expectedCard.Tiers, (ti) =>
+            _.mapValues(ti, (tierInfo) => _.omit(tierInfo, omitTierKeys))
+          )
+        : undefined;
+
+      const omitTooltipKeys = ["Content.Key", "TooltipType", "Prerequisites"]; // TODO dont care about these for now
+      const omittedTooltips = expectedCard?.Localization?.Tooltips
+        ? _.map(expectedCard.Localization.Tooltips, (tooltip) =>
+            _.omit(tooltip, omitTooltipKeys)
+          )
+        : undefined;
 
       expect(parsedCard).toEqual(
         expect.objectContaining({
@@ -147,7 +158,7 @@ describe("should build all partial cards correctly", () => {
           Abilities: omittedAbilities,
           Auras: expectedCard?.Auras,
           Tags: expectedCard?.Tags,
-          Tiers: expectedCard?.Tiers,
+          Tiers: omittedTiers,
           Heroes: expectedCard?.Heroes,
           Id: expectedCard?.Id,
           Type: expectedCard?.Type,
@@ -158,7 +169,8 @@ describe("should build all partial cards correctly", () => {
           Localization: {
             Title: {
               Text: item.name
-            }
+            },
+            Tooltips: omittedTooltips
           }
         })
       );

@@ -3,7 +3,7 @@ import { readFileSync } from "fs";
 import peggy from "peggy";
 import { Item } from "./types/apiItems";
 import { PartialDeep } from "type-fest";
-import { Card, CardType, Version } from "./types/cardTypes";
+import { Card, CardType, Type, Version } from "./types/cardTypes";
 import _ from "lodash";
 
 export const parser = peggy.generate(
@@ -17,6 +17,10 @@ export function parse(input: string, options?: any) {
 export function parseItem(item: Item): PartialDeep<Card> {
   let card: PartialDeep<Card> = {};
 
+  card.Localization = {
+    Tooltips: []
+  };
+
   let abilityIndex = 0;
   let auraIndex = 0;
 
@@ -29,6 +33,24 @@ export function parseItem(item: Item): PartialDeep<Card> {
     });
     // Merge the parsed card into the card object
     card = _.merge(card, parsedCard);
+
+    // Replace tooltip parenthesis text with {ability.abilityIndex}
+    const tooltip_ingame = tooltip.replace(
+      /\(.*?\)/g,
+      `{ability.${abilityIndex}}`
+    );
+
+    // If tooltip is cooldown, skip
+    if (!tooltip.includes("Cooldown")) {
+      // This is dumb, but typescript doesn't recognize the initialization above
+      if (!card.Localization) card.Localization = {};
+      if (!card.Localization.Tooltips) card.Localization.Tooltips = [];
+      card.Localization.Tooltips.push({
+        Content: {
+          Text: tooltip_ingame
+        }
+      });
+    }
     // Update abilityIndex and auraIndex
     abilityIndex = card.Abilities ? Object.keys(card.Abilities).length : 0;
     auraIndex = card.Auras ? Object.keys(card.Auras).length : 0;
@@ -37,6 +59,7 @@ export function parseItem(item: Item): PartialDeep<Card> {
   // Append the rest of the stuff we know about the card
   card.Id = item.id;
   card.$type = CardType.TCardItem;
+  card.Type = Type.Item;
   card.Heroes = item.heroes;
   card.Tags = item.tags;
   card.HiddenTags = item.hiddenTags;

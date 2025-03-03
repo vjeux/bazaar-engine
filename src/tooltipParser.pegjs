@@ -229,7 +229,21 @@ NormalActionTooltip
       const tiers_card = constructTierInfos(ITEM, "DamageAmount", amount);
       // Append AbilityIds to the card object
       Object.keys(tiers_card.Tiers).forEach((tier) => {
-        tiers_card.Tiers[tier].AbilityIds = [`${abilityIndex}`];
+        tiers_card.Tiers[tier].AbilityIds = {
+          [abilityIndex]: `${abilityIndex}`
+        };
+      });
+      // Set startingTier multicast to 1
+      tiers_card.Tiers[ITEM.startingTier].Attributes.Multicast = 1;
+      // Add ampty AuraIds
+      Object.keys(tiers_card.Tiers).forEach((tier) => {
+        tiers_card.Tiers[tier].AuraIds = {};
+      });
+      // Add tooltip
+      Object.keys(tiers_card.Tiers).forEach((tier) => {
+        tiers_card.Tiers[tier].TooltipIds = {
+          [abilityIndex]: abilityIndex
+        };
       });
       // Create card object with the action
       const ability_card = {
