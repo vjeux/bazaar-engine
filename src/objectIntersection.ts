@@ -13,7 +13,7 @@ export function deepIntersection<T extends object, U extends object>(
     return _.isEqual(obj1, obj2) ? obj1 : {};
   }
 
-  const result: Record<string, any> = {};
+  const result: Record<string, unknown> = {};
   const keys1 = Object.keys(obj1);
 
   for (const key of keys1) {
