@@ -1,0 +1,14 @@
+{
+  "$type": "TCardItem",
+  "Type": "Item",
+  "Version": "1.0.0",
+  "AudioKey": "",
+  "Localization": {
+    "FlavorText": null,
+    "Tooltips": {
+      "0": {
+        "Prerequisites": null
+      }
+    }
+  }
+}
