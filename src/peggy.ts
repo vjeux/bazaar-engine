@@ -1,25 +1,50 @@
 // Import tooltipParser.pegjs with its text content
 import { readFileSync } from "fs";
-import peggy from "peggy";
+import peggy, { ParserOptions } from "peggy";
 import { Item } from "./types/apiItems";
 import { PartialDeep } from "type-fest";
-import { Card, CardType, Type, Version } from "./types/cardTypes";
+import { Card, CardType, Tooltip, Type, Version } from "./types/cardTypes";
 import _ from "lodash";
 
 export const parser = peggy.generate(
   readFileSync("./src/tooltipParser.pegjs", "utf8")
 );
 
-export function parse(input: string, options?: any) {
+export function parse(input: string, options?: ParserOptions) {
   return parser.parse(input, options);
 }
 
-export function parseItem(item: Item): PartialDeep<Card> {
-  let card: PartialDeep<Card> = {};
-
-  card.Localization = {
-    Tooltips: []
+// Define the default card structure
+type DefaultCardRequired = {
+  $type: CardType;
+  Type: Type;
+  Version: Version;
+  AudioKey: string;
+  Localization: {
+    FlavorText: null;
+    Tooltips: PartialDeep<Tooltip>[];
   };
+};
+
+// Combine required fields with the rest being partial
+const DEFAULT_CARD: DefaultCardRequired &
+  PartialDeep<Omit<Card, keyof DefaultCardRequired>> = {
+  $type: CardType.TCardItem,
+  Type: Type.Item,
+  Version: Version.The100,
+  AudioKey: "",
+  Localization: {
+    FlavorText: null,
+    Tooltips: [
+      {
+        Prerequisites: null
+      }
+    ]
+  }
+};
+
+export function parseItem(item: Item): PartialDeep<Card> {
+  let card = _.cloneDeep(DEFAULT_CARD);
 
   let abilityIndex = 0;
   let auraIndex = 0;
@@ -43,8 +68,6 @@ export function parseItem(item: Item): PartialDeep<Card> {
     // If tooltip is cooldown, skip
     if (!tooltip.includes("Cooldown")) {
       // This is dumb, but typescript doesn't recognize the initialization above
-      if (!card.Localization) card.Localization = {};
-      if (!card.Localization.Tooltips) card.Localization.Tooltips = [];
       card.Localization.Tooltips.push({
         Content: {
           Text: tooltip_ingame
@@ -68,5 +91,6 @@ export function parseItem(item: Item): PartialDeep<Card> {
   card.Version = Version.The100;
   _.set(card, "Localization.Title.Text", item.name);
 
-  return card;
+  // Cast the card to the expected return type to resolve type compatibility issues
+  return card as PartialDeep<Card>;
 }

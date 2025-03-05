@@ -555,13 +555,13 @@ type Attributes = {
   [key in AttributeType]?: number;
 };
 
-interface Tooltip {
+export interface Tooltip {
   Content: Title;
   TooltipType: HiddenTag;
   Prerequisites: null;
 }
 
-interface Title {
+export interface Title {
   Key: string;
   Text: string;
 }
