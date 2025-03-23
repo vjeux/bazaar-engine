@@ -27,7 +27,7 @@ import {
 import { Tier } from "./types/shared.ts";
 
 import ValidSkillNames from "./json/ValidSkillNames.json";
-import ValidObjectNames from "./json/ValidObjectNames.json";
+import ValidItemNames from "./json/ValidItemNames.json";
 
 const CARD_HEIGHT = 180;
 
@@ -920,7 +920,7 @@ function CardSearch({
       );
     } else if (card.$type === "TCardItem") {
       return (
-        ValidObjectNames.includes(cardName) &&
+        ValidItemNames.includes(cardName) &&
         cardName.toLowerCase().includes(searchLower)
       );
     }
