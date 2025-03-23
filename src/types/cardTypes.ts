@@ -1,4 +1,5 @@
-import { EnchantmentType, Tag, Tier } from "./shared";
+// Types for the card data in the game
+import { EnchantmentType, HiddenTag, Tag, Tier } from "./shared";
 
 export interface Cards {
   "0.1.9": Card[];
@@ -110,7 +111,7 @@ export enum ActionType {
   TAuraActionPlayerModifyAttribute = "TAuraActionPlayerModifyAttribute"
 }
 
-enum AttributeType {
+export enum AttributeType {
   Ammo = "Ammo",
   AmmoMax = "AmmoMax",
   Burn = "Burn",
@@ -181,7 +182,7 @@ enum Operation {
   Subtract = "Subtract"
 }
 
-interface Source {
+export interface Source {
   $type: SourceType;
   Origin?: Origin;
   TargetMode?: Origin;
@@ -191,7 +192,7 @@ interface Source {
   TargetSection?: TargetSection;
 }
 
-enum SourceType {
+export enum SourceType {
   TCardConditionalAnd = "TCardConditionalAnd",
   TCardConditionalOr = "TCardConditionalOr",
   TTargetCardPositional = "TTargetCardPositional",
@@ -248,7 +249,7 @@ interface ComparisonValue {
   Value?: number | number;
 }
 
-enum Origin {
+export enum Origin {
   AllLeftCards = "AllLeftCards",
   AllRightCards = "AllRightCards",
   Both = "Both",
@@ -289,7 +290,7 @@ enum Operator {
   None = "None"
 }
 
-enum TargetSection {
+export enum TargetSection {
   AbsolutePlayerHand = "AbsolutePlayerHand",
   AbsolutePlayerHandAndStash = "AbsolutePlayerHandAndStash",
   AllHands = "AllHands",
@@ -338,7 +339,7 @@ interface Conditions {
   Tiers?: Tier[];
 }
 
-interface Target {
+export interface Target {
   $type: SourceType;
   TargetMode?: Origin;
   Conditions: Conditions | null;
@@ -348,7 +349,7 @@ interface Target {
   IncludeOrigin?: boolean;
 }
 
-interface TargetPlayer {
+export interface TargetPlayer {
   $type: SourceType;
   TargetMode?: Origin;
   Conditions: Conditions | null;
@@ -410,7 +411,7 @@ export enum Priority {
   Medium = "Medium"
 }
 
-interface Trigger {
+export interface Trigger {
   $type: TriggerType;
   Subject?: Subject;
   CombatType?: null | string;
@@ -459,7 +460,7 @@ enum CombatOutcome {
   Win = "Win"
 }
 
-interface Subject {
+export interface Subject {
   $type: SourceType;
   Conditions: Conditions | null;
   ExcludeSelf?: boolean;
@@ -552,59 +553,16 @@ interface Enchantment {
 }
 
 type Attributes = {
-  [key in AttributeType]: number;
+  [key in AttributeType]?: number;
 };
 
-enum HiddenTag {
-  Active = "Active",
-  Ammo = "Ammo",
-  AmmoReference = "AmmoReference",
-  Burn = "Burn",
-  BurnReference = "BurnReference",
-  Charge = "Charge",
-  Cooldown = "Cooldown",
-  Crit = "Crit",
-  CritReference = "CritReference",
-  Damage = "Damage",
-  DamageReference = "DamageReference",
-  EconomyReference = "EconomyReference",
-  Experience = "Experience",
-  Freeze = "Freeze",
-  FreezeReference = "FreezeReference",
-  Gold = "Gold",
-  Haste = "Haste",
-  HasteReference = "HasteReference",
-  Heal = "Heal",
-  HealReference = "HealReference",
-  Health = "Health",
-  HealthMax = "HealthMax",
-  HealthReference = "HealthReference",
-  Income = "Income",
-  Joy = "Joy",
-  JoyReference = "JoyReference",
-  Lifesteal = "Lifesteal",
-  Multicast = "Multicast",
-  NonWeapon = "NonWeapon",
-  Passive = "Passive",
-  Poison = "Poison",
-  PoisonReference = "PoisonReference",
-  Regen = "Regen",
-  RegenReference = "RegenReference",
-  Shield = "Shield",
-  ShieldReference = "ShieldReference",
-  Slow = "Slow",
-  SlowReference = "SlowReference",
-  Toughness = "Toughness",
-  Value = "Value"
-}
-
-interface Tooltip {
+export interface Tooltip {
   Content: Title;
   TooltipType: HiddenTag;
   Prerequisites: null;
 }
 
-interface Title {
+export interface Title {
   Key: string;
   Text: string;
 }
@@ -653,10 +611,10 @@ interface SelectionContext {
 }
 
 export type Tiers = {
-  [key in Tier]: TierInfo;
+  [key in Tier]?: TierInfo;
 };
 
-interface TierInfo {
+export interface TierInfo {
   Attributes: Attributes;
   AbilityIds: string[];
   AuraIds: string[];

@@ -1,4 +1,4 @@
-// Common types extracted from cardTypes and encounterTypes
+// Common types used throughout the other type files
 
 export enum Tier {
   Bronze = "Bronze",
@@ -8,10 +8,28 @@ export enum Tier {
   Legendary = "Legendary"
 }
 
+export enum TierInt {
+  Bronze = 0,
+  Silver = 1,
+  Gold = 2,
+  Diamond = 3,
+  Legendary = 4
+}
+
 export enum Size {
   Large = "Large",
   Medium = "Medium",
   Small = "Small"
+}
+
+export enum Hero {
+  Common = "Common",
+  Dooley = "Dooley",
+  Jules = "Jules",
+  Mak = "Mak",
+  Pygmalien = "Pygmalien",
+  Stelle = "Stelle",
+  Vanessa = "Vanessa"
 }
 
 export enum EnchantmentType {
@@ -57,4 +75,48 @@ export enum Tag {
   Unsellable = "Unsellable",
   Vehicle = "Vehicle",
   Weapon = "Weapon"
+}
+
+export enum HiddenTag {
+  Active = "Active",
+  Ammo = "Ammo",
+  AmmoReference = "AmmoReference",
+  Burn = "Burn",
+  BurnReference = "BurnReference",
+  Charge = "Charge",
+  Cooldown = "Cooldown",
+  Crit = "Crit",
+  CritReference = "CritReference",
+  Damage = "Damage",
+  DamageReference = "DamageReference",
+  EconomyReference = "EconomyReference",
+  Experience = "Experience",
+  Freeze = "Freeze",
+  FreezeReference = "FreezeReference",
+  Gold = "Gold",
+  Haste = "Haste",
+  HasteReference = "HasteReference",
+  Heal = "Heal",
+  HealReference = "HealReference",
+  Health = "Health",
+  HealthMax = "HealthMax",
+  HealthReference = "HealthReference",
+  Income = "Income",
+  Joy = "Joy",
+  JoyReference = "JoyReference",
+  Lifesteal = "Lifesteal",
+  Multicast = "Multicast",
+  NonWeapon = "NonWeapon",
+  Passive = "Passive",
+  Poison = "Poison",
+  PoisonReference = "PoisonReference",
+  Regen = "Regen",
+  RegenReference = "RegenReference",
+  Shield = "Shield",
+  ShieldReference = "ShieldReference",
+  Slow = "Slow",
+  SlowReference = "SlowReference",
+  Toughness = "Toughness",
+  Value = "Value",
+  Economy = "Economy"
 }
