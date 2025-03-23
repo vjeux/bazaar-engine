@@ -909,7 +909,7 @@ function CardSearch({
   } | null>(null);
 
   const searchLower = search.toLowerCase();
-  const filteredCards = Object.values(Cards).filter((card) => {
+  const filteredCards = Cards["0.1.9"].filter((card) => {
     const cardName = card.Localization.Title.Text;
 
     // Filter by valid names based on card type

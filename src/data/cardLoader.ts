@@ -40,8 +40,11 @@ export async function genCardsAndEncounters(): Promise<{
   Encounters: EncounterDays;
 }> {
   const [Cards, Encounters] = await Promise.all([
-    genDataFromLocalStorage("Cards", import("../json/v2_Cards.json")),
-    genDataFromLocalStorage("Encounters", import("../json/encounterDays.json"))
+    genDataFromLocalStorage("Cards", import("../json/cards.json")),
+    genDataFromLocalStorage(
+      "Encounters",
+      import("../json/monsterEncounterDays.json")
+    )
   ]);
   return { Cards: Cards as Cards, Encounters: Encounters as EncounterDays };
 }

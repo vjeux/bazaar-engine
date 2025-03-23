@@ -1,7 +1,7 @@
 import { EnchantmentType, Tag, Tier } from "./shared";
 
 export interface Cards {
-  [key: string]: Card;
+  "0.1.9": Card[];
 }
 
 export interface Card {

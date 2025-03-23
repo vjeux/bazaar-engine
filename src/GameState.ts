@@ -128,7 +128,7 @@ function getBoardCard(
   tier: Tier | null = null,
   enchantment: keyof Enchantments | null = null
 ): BoardCard {
-  const CardsValues = Object.values(Cards);
+  const CardsValues = Cards["0.1.9"];
   const card = CardsValues.find((c) => c.Localization?.Title?.Text === name);
   if (!card) {
     throw new Error(`Card ${name} not found`);
@@ -142,7 +142,7 @@ function getBoardCardFromId(
   tier: Tier,
   enchantment: keyof Enchantments | null = null
 ): BoardCard {
-  const card = Cards[cardId];
+  const card = Cards["0.1.9"].find((card) => card.Id === cardId);
   if (!card) {
     throw new Error(`Card from id ${cardId} not found`);
   }
@@ -155,7 +155,7 @@ function getBoardSkill(
   tier: Tier | null = null,
   modifiers: any = {}
 ): BoardSkill {
-  const CardsValues = Object.values(Cards);
+  const CardsValues = Cards["0.1.9"];
   const card = CardsValues.find(
     (card) => card.Localization.Title.Text === name
   );
