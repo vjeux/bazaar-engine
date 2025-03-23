@@ -88,7 +88,7 @@ exports[`Generate tooltips for "Amber" 1`] = `
 {
   "cardName": "Amber",
   "tooltips": [
-    "Slow 1 items for 3 second(s).",
+    "Slow 1 item(s) for 3 second(s).",
     "Your other Slow items have +1 Slow.",
   ],
 }
@@ -107,7 +107,9 @@ exports[`Generate tooltips for "Ambergris" 1`] = `
 exports[`Generate tooltips for "Ambush" 1`] = `
 {
   "cardName": "Ambush",
-  "error": "Ambush doesn't have tier null, the first one is undefined",
+  "tooltips": [
+    "At the start of each fight, deal damage equal to 15% of your enemy's Max Health.",
+  ],
 }
 `;
 
@@ -194,7 +196,7 @@ exports[`Generate tooltips for "Arc Blaster" 1`] = `
   "cardName": "Arc Blaster",
   "tooltips": [
     "Deal 20 damage.",
-    "When you use a Tech, charge this 1 second(s).",
+    "When you use another Tech, charge this 1 second(s).",
   ],
 }
 `;
@@ -241,7 +243,7 @@ exports[`Generate tooltips for "Artillery Spotter" 1`] = `
 {
   "cardName": "Artillery Spotter",
   "tooltips": [
-    "If you have 4 or fewer items, your items have +5% Crit Chance.",
+    "If you have 5 or fewer items, your items have +10% Crit Chance.",
   ],
 }
 `;
@@ -269,9 +271,9 @@ exports[`Generate tooltips for "Athanor" 1`] = `
 {
   "cardName": "Athanor",
   "tooltips": [
-    "Burn 2.",
-    "Poison 1.",
-    "Reload your Potions 1 Ammo.",
+    "Burn 4.",
+    "Reload your Potions 1 Ammo and Charge them 1 second(s).",
+    "At the start of each day, get a Small Potion item.",
   ],
 }
 `;
@@ -323,6 +325,16 @@ exports[`Generate tooltips for "Augmented Weaponry" 1`] = `
 }
 `;
 
+exports[`Generate tooltips for "Aurora Dome" 1`] = `
+{
+  "cardName": "Aurora Dome",
+  "tooltips": [
+    "Shield 5.",
+    "When you Freeze, your Shield items get +5 Shield for the fight.",
+  ],
+}
+`;
+
 exports[`Generate tooltips for "Backroom Dealings" 1`] = `
 {
   "cardName": "Backroom Dealings",
@@ -363,7 +375,7 @@ exports[`Generate tooltips for "Balcony" 1`] = `
 {
   "cardName": "Balcony",
   "tooltips": [
-    "The Property to the left of this has double value in combat and has its cooldown reduced by 10%.",
+    "The Property to the left of this has double value in combat and has its cooldown reduced by 5%.",
   ],
 }
 `;
@@ -382,8 +394,8 @@ exports[`Generate tooltips for "Balloon Bot" 1`] = `
 {
   "cardName": "Balloon Bot",
   "tooltips": [
-    "When you use the weapon to the right of this, this gains 10 Shield for the fight.",
     "Shield 20.",
+    "When you use a Weapon, this gains 10 Shield for the fight.",
   ],
 }
 `;
@@ -476,11 +488,7 @@ exports[`Generate tooltips for "Beach Ball" 1`] = `
 exports[`Generate tooltips for "Beast of Burden" 1`] = `
 {
   "cardName": "Beast of Burden",
-  "tooltips": [
-    "Deal 40 damage.",
-    "When you buy another item, this gains that item's Types.",
-    "This has +1 Multicast for each of its Types.",
-  ],
+  "error": "Unhandled value type: TReferenceValueCardTagCount",
 }
 `;
 
@@ -585,8 +593,9 @@ exports[`Generate tooltips for "Billboard" 1`] = `
 {
   "cardName": "Billboard",
   "tooltips": [
-    "Your Properties have +25% Crit Chance.",
-    "At the start of each day, your items gain 1 value.",
+    "Shield 200.",
+    "When you Shield or Heal, give your items +1 value for the fight.",
+    "This item's cooldown is reduced by 1% for every value it has.",
   ],
 }
 `;
@@ -595,8 +604,8 @@ exports[`Generate tooltips for "Black Ice" 1`] = `
 {
   "cardName": "Black Ice",
   "tooltips": [
-    "Poison 4.",
-    "When you Freeze, Charge this 2 second(s).",
+    "Freeze 1 medium or small item(s) for 1 second(s).",
+    "When you Freeze, Poison 6.",
   ],
 }
 `;
@@ -614,10 +623,7 @@ exports[`Generate tooltips for "Black Pepper" 1`] = `
 exports[`Generate tooltips for "Black Rose" 1`] = `
 {
   "cardName": "Black Rose",
-  "tooltips": [
-    "Heal 10.",
-    "When you Poison, this gains +5 Heal for the fight.",
-  ],
+  "error": "Action type not implemented: TActionPlayerRegenApply",
 }
 `;
 
@@ -814,7 +820,7 @@ exports[`Generate tooltips for "Bottled Lightning" 1`] = `
 {
   "cardName": "Bottled Lightning",
   "tooltips": [
-    "Deal 25 damage.",
+    "Deal 30 damage.",
     "Burn 4.",
   ],
 }
@@ -888,15 +894,6 @@ exports[`Generate tooltips for "Building Crescendo" 1`] = `
 }
 `;
 
-exports[`Generate tooltips for "Bulky Package" 1`] = `
-{
-  "cardName": "Bulky Package",
-  "tooltips": [
-    "Farai will return for this",
-  ],
-}
-`;
-
 exports[`Generate tooltips for "Bullet Time" 1`] = `
 {
   "cardName": "Bullet Time",
@@ -910,7 +907,8 @@ exports[`Generate tooltips for "Bunker" 1`] = `
 {
   "cardName": "Bunker",
   "tooltips": [
-    "You take 20% less damage.",
+    "You take 10% less damage.",
+    "Your Shield items have +1 Multicast.",
   ],
 }
 `;
@@ -955,7 +953,7 @@ exports[`Generate tooltips for "Bushel" 1`] = `
 {
   "cardName": "Bushel",
   "tooltips": [
-    "Heal 40.",
+    "Heal 60.",
     "When you Shield, charge this 1 second(s).",
   ],
 }
@@ -1031,8 +1029,8 @@ exports[`Generate tooltips for "Cannon" 1`] = `
 {
   "cardName": "Cannon",
   "tooltips": [
-    "Deal 25 damage.",
-    "Burn 3.",
+    "Deal 40 damage.",
+    "Burn 4.",
   ],
 }
 `;
@@ -1088,7 +1086,9 @@ exports[`Generate tooltips for "Cargo Shorts" 1`] = `
 {
   "cardName": "Cargo Shorts",
   "tooltips": [
-    "When you buy, sell or upgrade this, get 1 Candy and 1 Spare Change.",
+    "Heal 10 for each type this has.",
+    "Shield 10 for each type this has.",
+    "This has the Types of items you have in your Stash.",
   ],
 }
 `;
@@ -1134,7 +1134,7 @@ exports[`Generate tooltips for "Catfish" 1`] = `
 {
   "cardName": "Catfish",
   "tooltips": [
-    "Poison 4.",
+    "Poison 3.",
     "When this gains Haste, this gains +1 Poison for the fight.",
   ],
 }
@@ -1144,8 +1144,8 @@ exports[`Generate tooltips for "Cauldron" 1`] = `
 {
   "cardName": "Cauldron",
   "tooltips": [
-    "Burn 2.",
-    "Poison 1.",
+    "Burn 1 for each unique type you have.",
+    "Poison 1 for each unique type you have.",
   ],
 }
 `;
@@ -1194,7 +1194,7 @@ exports[`Generate tooltips for "Chilling Touch" 1`] = `
 {
   "cardName": "Chilling Touch",
   "tooltips": [
-    "The first time you Freeze each fight, Slow all your opponent's items for 3 second(s).",
+    "The first time you Freeze each fight, Slow all enemy items for 3 second(s).",
   ],
 }
 `;
@@ -1268,9 +1268,7 @@ exports[`Generate tooltips for "Circle of Life" 1`] = `
 exports[`Generate tooltips for "Citrus" 1`] = `
 {
   "cardName": "Citrus",
-  "tooltips": [
-    "When you sell this, permanently gain 1 Regeneration.",
-  ],
+  "error": "Action type not implemented: TActionPlayerRegenApply",
 }
 `;
 
@@ -1360,6 +1358,13 @@ exports[`Generate tooltips for "Cog" 1`] = `
 }
 `;
 
+exports[`Generate tooltips for "Cold Room" 1`] = `
+{
+  "cardName": "Cold Room",
+  "error": "Action type not implemented: TActionPlayerRegenApply",
+}
+`;
+
 exports[`Generate tooltips for "Colossal Popsicle" 1`] = `
 {
   "cardName": "Colossal Popsicle",
@@ -1387,7 +1392,7 @@ exports[`Generate tooltips for "Combat Medic" 1`] = `
 {
   "cardName": "Combat Medic",
   "tooltips": [
-    "When you Heal, an item gains 3% Crit Chance for the fight.",
+    "When you Heal or gain Regeneration, an item gains 3% Crit Chance for the fight.",
   ],
 }
 `;
@@ -1442,10 +1447,7 @@ exports[`Generate tooltips for "Conflagration" 1`] = `
 exports[`Generate tooltips for "Cookies" 1`] = `
 {
   "cardName": "Cookies",
-  "tooltips": [
-    "When you sell this, you lose 10 Max Health.",
-    "When you sell this, permanently gain 1 Regeneration.",
-  ],
+  "error": "Action type not implemented: TActionPlayerRegenApply",
 }
 `;
 
@@ -1463,7 +1465,7 @@ exports[`Generate tooltips for "Coolant Leak" 1`] = `
 {
   "cardName": "Coolant Leak",
   "tooltips": [
-    "The first 4 times you use your rightmost item each fight, Freeze 1 item for 1 second(s).",
+    "The first 3 times you use your rightmost item each fight, Charge 1 Freeze item 1 second(s).",
   ],
 }
 `;
@@ -1483,7 +1485,7 @@ exports[`Generate tooltips for "Cooling Fan" 1`] = `
   "cardName": "Cooling Fan",
   "tooltips": [
     "The Core gains +5% Crit Chance for the fight.",
-    "While either player has Burn, reduce this item's cooldown by 50%.",
+    "While either player has Burn, this item's cooldown is reduced by 50%.",
   ],
 }
 `;
@@ -1600,7 +1602,7 @@ exports[`Generate tooltips for "Creeping Chill" 1`] = `
 {
   "cardName": "Creeping Chill",
   "tooltips": [
-    "The first time you Slow each fight, Freeze 1 item for 3 second(s).",
+    "The first time you Slow each fight, Freeze 1 item for 2 second(s).",
   ],
 }
 `;
@@ -1716,7 +1718,7 @@ exports[`Generate tooltips for "Cryosphere" 1`] = `
 {
   "cardName": "Cryosphere",
   "tooltips": [
-    "Freeze all items other than The Core for 2 second(s).",
+    "Freeze both players' non-Core items for 2 second(s).",
   ],
 }
 `;
@@ -1734,9 +1736,9 @@ exports[`Generate tooltips for "Crystal Bonsai" 1`] = `
 {
   "cardName": "Crystal Bonsai",
   "tooltips": [
-    "Heal equal to this item's value.",
-    "At the start of each fight with Crystal Bonsai, this gains 2 value.",
-    "When you lose a fight with Crystal Bonsai, this item loses all of its value.",
+    "Heal equal to 2 times this item's value.",
+    "At the start of each fight with Crystal Bonsai, this gains 6 value.",
+    "When you lose a fight with Crystal Bonsai, permanently destroy this.",
   ],
 }
 `;
@@ -1775,8 +1777,9 @@ exports[`Generate tooltips for "DJ Rob0t" 1`] = `
 {
   "cardName": "DJ Rob0t",
   "tooltips": [
-    "Haste your Friends for 1 second(s).",
+    "Haste your Friends for 2 second(s).",
     "When you buy this, get 3 Nanobots.",
+    "When you use another Friend, charge this 1 second.",
   ],
 }
 `;
@@ -1787,6 +1790,16 @@ exports[`Generate tooltips for "Dam" 1`] = `
   "tooltips": [
     "Destroy this and all smaller items for the fight.",
     "When you use another Aquatic item, charge this 1 second(s).",
+  ],
+}
+`;
+
+exports[`Generate tooltips for "Darkwater Anglerfish" 1`] = `
+{
+  "cardName": "Darkwater Anglerfish",
+  "tooltips": [
+    "Burn 10.",
+    "When you Slow, charge this 2 seconds.",
   ],
 }
 `;
@@ -1805,17 +1818,7 @@ exports[`Generate tooltips for "Death Caps" 1`] = `
   "cardName": "Death Caps",
   "tooltips": [
     "Poison 1.",
-    "Increase the poison of your items by 1 for the fight.",
-  ],
-}
-`;
-
-exports[`Generate tooltips for "Deed" 1`] = `
-{
-  "cardName": "Deed",
-  "tooltips": [
-    "When you sell a Large item, this gains 2 Sell Value.",
-    "Your items have double value in combat.",
+    "Your Poison items gain +1 Poison for the fight.",
   ],
 }
 `;
@@ -1824,8 +1827,7 @@ exports[`Generate tooltips for "Defense Grid" 1`] = `
 {
   "cardName": "Defense Grid",
   "tooltips": [
-    "At the start of each fight, gain shield equal to 10% of your max health.",
-    "??",
+    "The first time you use an item each fight, shield equal to 10% of your max health. [100.00099999999999]",
   ],
 }
 `;
@@ -1925,6 +1927,27 @@ exports[`Generate tooltips for "Distributed Systems" 1`] = `
 }
 `;
 
+exports[`Generate tooltips for "Dive Weights" 1`] = `
+{
+  "cardName": "Dive Weights",
+  "tooltips": [
+    "Haste 1 item for 1 second(s).",
+    "For each adjacent Aquatic item, reduce this item's cooldown by 1 second.",
+    "This has + Multicast equal to its ammo.",
+  ],
+}
+`;
+
+exports[`Generate tooltips for "Diving Helmet" 1`] = `
+{
+  "cardName": "Diving Helmet",
+  "tooltips": [
+    "Shield 50.",
+    "Adjacent items are Aquatic.",
+  ],
+}
+`;
+
 exports[`Generate tooltips for "Dock Lines" 1`] = `
 {
   "cardName": "Dock Lines",
@@ -1958,7 +1981,7 @@ exports[`Generate tooltips for "Double Barrel" 1`] = `
 {
   "cardName": "Double Barrel",
   "tooltips": [
-    "Deal 25 damage.",
+    "Deal 20 damage.",
   ],
 }
 `;
@@ -1985,7 +2008,17 @@ exports[`Generate tooltips for "Draconic Rage" 1`] = `
 {
   "cardName": "Draconic Rage",
   "tooltips": [
-    "When you use a Medium item, a Burn item gains 10 burn for the fight.",
+    "When you use a Medium item, one of your Burn items gains +10 burn for the fight.",
+  ],
+}
+`;
+
+exports[`Generate tooltips for "Dragon Heart" 1`] = `
+{
+  "cardName": "Dragon Heart",
+  "tooltips": [
+    "Double the Burn of an item for the fight.",
+    "When you Burn or use a Dragon item, charge this 2 seconds.",
   ],
 }
 `;
@@ -2034,7 +2067,7 @@ exports[`Generate tooltips for "Dual Wield" 1`] = `
 {
   "cardName": "Dual Wield",
   "tooltips": [
-    "If you have exactly 2 Weapons in play, your items have +50 Crit Chance.",
+    "If you have exactly 2 Weapons, your items have +50% Crit Chance.",
   ],
 }
 `;
@@ -2044,7 +2077,7 @@ exports[`Generate tooltips for "Duct Tape" 1`] = `
   "cardName": "Duct Tape",
   "tooltips": [
     "Slow 1 item for 1 second(s).",
-    "When you use an adjacent item, Shield 4.",
+    "When you use an adjacent item, Shield 5.",
   ],
 }
 `;
@@ -2063,7 +2096,7 @@ exports[`Generate tooltips for "Earrings" 1`] = `
   "cardName": "Earrings",
   "tooltips": [
     "Gain 20 Max Health for the fight.",
-    "When you Slow, Charge this 1 second(s).",
+    "When you Haste or Slow, Charge this 1 second(s).",
   ],
 }
 `;
@@ -2073,7 +2106,7 @@ exports[`Generate tooltips for "Ectoplasm" 1`] = `
   "cardName": "Ectoplasm",
   "tooltips": [
     "Poison 1.",
-    "Heal equal to your opponent's Poison.",
+    "Heal equal to your enemy's Poison.",
   ],
 }
 `;
@@ -2103,7 +2136,7 @@ exports[`Generate tooltips for "Emerald" 1`] = `
   "cardName": "Emerald",
   "tooltips": [
     "Poison 1.",
-    "Your other Poison items have +1 Poison.",
+    "Your other Poison items have +3 Poison.",
   ],
 }
 `;
@@ -2120,9 +2153,7 @@ exports[`Generate tooltips for "Emergency Burn" 1`] = `
 exports[`Generate tooltips for "Emergency Draught" 1`] = `
 {
   "cardName": "Emergency Draught",
-  "tooltips": [
-    "The first time you fall below half health each fight, gain 20 Regeneration for the fight.",
-  ],
+  "error": "Action type not implemented: TActionPlayerRegenApply",
 }
 `;
 
@@ -2148,7 +2179,7 @@ exports[`Generate tooltips for "Energy Potion" 1`] = `
 {
   "cardName": "Energy Potion",
   "tooltips": [
-    "Haste your items for 2 second(s).",
+    "Haste your items for 1 second(s).",
   ],
 }
 `;
@@ -2407,7 +2438,7 @@ exports[`Generate tooltips for "Fixer Upper" 1`] = `
   "cardName": "Fixer Upper",
   "tooltips": [
     "Shield equal to 1 times this item's value.",
-    "At the start of each day, upgrade this.",
+    "Every 50 you spend, upgrade this. [Gold Spent: 0]",
   ],
 }
 `;
@@ -2545,7 +2576,7 @@ exports[`Generate tooltips for "Flashy Reload" 1`] = `
 {
   "cardName": "Flashy Reload",
   "tooltips": [
-    "When you Crit with an item, reload another item +1 ammo.",
+    "When you Crit with an item, Reload another item 1 ammo.",
   ],
 }
 `;
@@ -2581,7 +2612,7 @@ exports[`Generate tooltips for "Force Field" 1`] = `
 {
   "cardName": "Force Field",
   "tooltips": [
-    "Shield 10.",
+    "Shield 30.",
     "Deal damage equal to your shield.",
   ],
 }
@@ -2601,7 +2632,7 @@ exports[`Generate tooltips for "Forklift" 1`] = `
   "cardName": "Forklift",
   "tooltips": [
     "Deal 50 damage for each item to the left of this.",
-    "Haste this and the items on the right of this for 2 second(s).",
+    "Haste this and the items to the right of this for 2 second(s).",
   ],
 }
 `;
@@ -2640,7 +2671,7 @@ exports[`Generate tooltips for "Frost Potion" 1`] = `
 {
   "cardName": "Frost Potion",
   "tooltips": [
-    "Freeze 1 item(s) for 1 second(s).",
+    "Freeze 1 small item(s) for 2 second(s).",
   ],
 }
 `;
@@ -2649,7 +2680,7 @@ exports[`Generate tooltips for "Frostfire" 1`] = `
 {
   "cardName": "Frostfire",
   "tooltips": [
-    "The first time you Burn each fight, Freeze 1 item for 3 second(s).",
+    "The first time you Burn each fight, Freeze 1 item for 2 second(s).",
   ],
 }
 `;
@@ -2678,7 +2709,7 @@ exports[`Generate tooltips for "Frozen Shot" 1`] = `
 {
   "cardName": "Frozen Shot",
   "tooltips": [
-    "The first 4 times you use your Slowest weapon each fight, Freeze 1 item of equal or smaller size for 1 second(s).",
+    "Your Weapons' cooldowns are reduced by 5% while your enemy has a Frozen item.",
   ],
 }
 `;
@@ -2794,9 +2825,7 @@ exports[`Generate tooltips for "Giant Ice Club" 1`] = `
 exports[`Generate tooltips for "Gland" 1`] = `
 {
   "cardName": "Gland",
-  "tooltips": [
-    "When you sell this, permanently gain 1 Regeneration.",
-  ],
+  "error": "Action type not implemented: TActionPlayerRegenApply",
 }
 `;
 
@@ -2844,7 +2873,7 @@ exports[`Generate tooltips for "Grapeshot" 1`] = `
   "cardName": "Grapeshot",
   "tooltips": [
     "Deal 15 damage.",
-    "When you use another Ammo item, this reloads 1 ammo.",
+    "When you use another Ammo item, Reload 1 ammo.",
   ],
 }
 `;
@@ -2898,7 +2927,10 @@ exports[`Generate tooltips for "Grindstone" 1`] = `
 exports[`Generate tooltips for "Gumball Machine" 1`] = `
 {
   "cardName": "Gumball Machine",
-  "error": "Cannot read properties of undefined (reading 'map')",
+  "tooltips": [
+    "Shield 10.",
+    "At the start of each hour, spend 2 gold to get a Gumball.",
+  ],
 }
 `;
 
@@ -2914,9 +2946,7 @@ exports[`Generate tooltips for "Gunner" 1`] = `
 exports[`Generate tooltips for "Gunpowder" 1`] = `
 {
   "cardName": "Gunpowder",
-  "tooltips": [
-    "When you sell this, your leftmost Ammo item gains 1 Max Ammo.",
-  ],
+  "error": "Cannot read properties of undefined (reading 'map')",
 }
 `;
 
@@ -3011,7 +3041,7 @@ exports[`Generate tooltips for "Hardly Workin'" 1`] = `
 {
   "cardName": "Hardly Workin'",
   "tooltips": [
-    "When you Slow, gain 2 Regeneration for the fight.",
+    "The first 5 times you slow each fight, Charge 1 Regeneration item 1 second(s).",
   ],
 }
 `;
@@ -3040,7 +3070,7 @@ exports[`Generate tooltips for "Hatchet" 1`] = `
   "cardName": "Hatchet",
   "tooltips": [
     "Deal 6 damage.",
-    "When you buy this, get a Spare Change.",
+    "When you buy this, get a Truffle.",
   ],
 }
 `;
@@ -3051,6 +3081,13 @@ exports[`Generate tooltips for "Heal Power" 1`] = `
   "tooltips": [
     "Your Heal items have +10 Heal.",
   ],
+}
+`;
+
+exports[`Generate tooltips for "Healthy Heart" 1`] = `
+{
+  "cardName": "Healthy Heart",
+  "error": "Action type not implemented: TActionPlayerBurnRemove",
 }
 `;
 
@@ -3084,9 +3121,7 @@ exports[`Generate tooltips for "Healthy Tip" 1`] = `
 exports[`Generate tooltips for "Heat Lover" 1`] = `
 {
   "cardName": "Heat Lover",
-  "tooltips": [
-    "When you or your enemy Burns, gain 2 Regeneration for the fight.",
-  ],
+  "error": "Action type not implemented: TActionPlayerRegenApply",
 }
 `;
 
@@ -3112,7 +3147,7 @@ exports[`Generate tooltips for "Heavy Firepower" 1`] = `
 {
   "cardName": "Heavy Firepower",
   "tooltips": [
-    "If you have 4 or fewer items in play, your Weapons have +25 damage.",
+    "If you have 5 or fewer items in play, your Weapons have +25 damage.",
   ],
 }
 `;
@@ -3158,7 +3193,7 @@ exports[`Generate tooltips for "Hogwash" 1`] = `
   "cardName": "Hogwash",
   "tooltips": [
     "Heal equal to 4% of your Max Health.",
-    "When you Heal, gain 10 Max Health for the fight.",
+    "When you Heal, gain 50 Max Health for the fight.",
   ],
 }
 `;
@@ -3176,7 +3211,7 @@ exports[`Generate tooltips for "Honed Arsenal" 1`] = `
 {
   "cardName": "Honed Arsenal",
   "tooltips": [
-    "Your items have +1% Crit Chance per Weapon you have. [0%]",
+    "Your items have +2% Crit Chance per Weapon you have. [0%]",
   ],
 }
 `;
@@ -3225,6 +3260,13 @@ exports[`Generate tooltips for "Hot Springs" 1`] = `
     "Heal 25.",
     "When you sell this, your Heal items gain +10 Heal.",
   ],
+}
+`;
+
+exports[`Generate tooltips for "Hot Stones" 1`] = `
+{
+  "cardName": "Hot Stones",
+  "error": "Action type not implemented: TActionPlayerRegenApply",
 }
 `;
 
@@ -3290,7 +3332,7 @@ exports[`Generate tooltips for "Ice Bullets" 1`] = `
 {
   "cardName": "Ice Bullets",
   "tooltips": [
-    "When you Freeze, reload an Weapon 1 ammo.",
+    "When you Freeze, Reload a Weapon 1 ammo.",
   ],
 }
 `;
@@ -3314,12 +3356,22 @@ exports[`Generate tooltips for "Ice Cubes" 1`] = `
 }
 `;
 
+exports[`Generate tooltips for "Ice Luge" 1`] = `
+{
+  "cardName": "Ice Luge",
+  "tooltips": [
+    "Freeze adjacent items for 1 second(s).",
+    "Reduce the cooldown of adjacent items by 1 second(s) for the fight.",
+  ],
+}
+`;
+
 exports[`Generate tooltips for "Ice Pick" 1`] = `
 {
   "cardName": "Ice Pick",
   "tooltips": [
     "Deal 36 damage.",
-    "Freeze 1 small item for 1 second(s).",
+    "Freeze 1 for 1 second(s).",
     "When you Freeze, this gains 10 damage for the fight.",
   ],
 }
@@ -3329,7 +3381,7 @@ exports[`Generate tooltips for "Iceberg" 1`] = `
 {
   "cardName": "Iceberg",
   "tooltips": [
-    "When your enemy uses an item, Freeze it for 1 second(s).",
+    "When your enemy uses an item, Freeze it for 0.5 second(s).",
   ],
 }
 `;
@@ -3389,7 +3441,7 @@ exports[`Generate tooltips for "IllusoRay" 1`] = `
   "cardName": "IllusoRay",
   "tooltips": [
     "Slow 1 item for 1 second(s).",
-    "For each adjacent Friend, this has +1 Multicast.",
+    "For each adjacent Friend or Ray, this has +1 Multicast.",
   ],
 }
 `;
@@ -3418,7 +3470,7 @@ exports[`Generate tooltips for "Improvised Bludgeon" 1`] = `
   "tooltips": [
     "Deal 20 damage.",
     "Slow 2 items for 3 second(s).",
-    "When you sell this, your leftmost Slow item gains +1 Slow.",
+    "When you sell this, your leftmost Slow item gains +1000 Slow duration.",
   ],
 }
 `;
@@ -3481,10 +3533,7 @@ exports[`Generate tooltips for "Incendiary Rounds" 1`] = `
 exports[`Generate tooltips for "Incense" 1`] = `
 {
   "cardName": "Incense",
-  "tooltips": [
-    "Slow 1 item for 4 second(s).",
-    "Heal 20.",
-  ],
+  "error": "Action type not implemented: TActionPlayerRegenApply",
 }
 `;
 
@@ -3586,7 +3635,7 @@ exports[`Generate tooltips for "Invigorating Cold" 1`] = `
 {
   "cardName": "Invigorating Cold",
   "tooltips": [
-    "The first time you Freeze each fight, Haste 1 items for 2 second(s).",
+    "The first time you Freeze each fight, Haste 1 item(s) for 2 second(s).",
   ],
 }
 `;
@@ -3604,7 +3653,7 @@ exports[`Generate tooltips for "Isochoric Freezer" 1`] = `
 {
   "cardName": "Isochoric Freezer",
   "tooltips": [
-    "Freeze a small item for 1 second(s).",
+    "Freeze an item with a cooldown of 5 seconds or less for 1 second(s).",
   ],
 }
 `;
@@ -3643,7 +3692,7 @@ exports[`Generate tooltips for "Jellyfish" 1`] = `
 {
   "cardName": "Jellyfish",
   "tooltips": [
-    "Poison 1.",
+    "Poison 3.",
     "When you use an adjacent Aquatic item, this gains Haste for 1 second(s).",
   ],
 }
@@ -3722,7 +3771,7 @@ exports[`Generate tooltips for "Jury Rigger" 1`] = `
 {
   "cardName": "Jury Rigger",
   "tooltips": [
-    "When you use an Ammo item, reload 1 the item to the left of it.",
+    "When you use an Ammo item, Reload the item to the left of it 1 Ammo.",
   ],
 }
 `;
@@ -3759,7 +3808,7 @@ exports[`Generate tooltips for "Kinetic Cannon" 1`] = `
   "cardName": "Kinetic Cannon",
   "tooltips": [
     "Deal 100 damage.",
-    "When you use a Small item, this gains 10 damage for the fight.",
+    "When you use a Small item, this gains 20 damage for the fight.",
   ],
 }
 `;
@@ -3778,7 +3827,7 @@ exports[`Generate tooltips for "Knife Set" 1`] = `
   "cardName": "Knife Set",
   "tooltips": [
     "Deal 30 damage.",
-    "When you use a weapon, charge this 2 second(s).",
+    "When you use another weapon, charge this 2 second(s).",
   ],
 }
 `;
@@ -3827,7 +3876,7 @@ exports[`Generate tooltips for "Large Appetites" 1`] = `
 {
   "cardName": "Large Appetites",
   "tooltips": [
-    "If you have 4 or fewer items, you have +500 Max Health.",
+    "If you have 5 or fewer items, you have +500 Max Health.",
   ],
 }
 `;
@@ -3869,12 +3918,21 @@ exports[`Generate tooltips for "Lash Out" 1`] = `
 }
 `;
 
+exports[`Generate tooltips for "Ledger" 1`] = `
+{
+  "cardName": "Ledger",
+  "tooltips": [
+    "When you sell 10 items, adjacent items gain 5 value. [Items Sold: 0]",
+  ],
+}
+`;
+
 exports[`Generate tooltips for "Leeches" 1`] = `
 {
   "cardName": "Leeches",
   "tooltips": [
-    "Deal 5 Damage.",
-    "When you poison, this gains 5 damage for the fight.",
+    "Deal 20 Damage.",
+    "When you poison, this gains 10 damage for the fight.",
   ],
 }
 `;
@@ -3930,7 +3988,7 @@ exports[`Generate tooltips for "Lethargy" 1`] = `
 {
   "cardName": "Lethargy",
   "tooltips": [
-    "All items have a cooldown increase of 30%.",
+    "All item cooldowns are increased by 1 second(s).",
   ],
 }
 `;
@@ -4063,7 +4121,7 @@ exports[`Generate tooltips for "Lockbox" 1`] = `
 {
   "cardName": "Lockbox",
   "tooltips": [
-    "When you win a fight, this gains 1 value.",
+    "When you win a fight, this gains 2 value.",
     "Your weapons have + damage equal to this item's value. [4]",
   ],
 }
@@ -4073,7 +4131,7 @@ exports[`Generate tooltips for "Long Strides" 1`] = `
 {
   "cardName": "Long Strides",
   "tooltips": [
-    "If you have 4 or fewer items, your items have their cooldowns reduced by 4%.",
+    "If you have 5 or fewer items, your items have their cooldowns reduced by 4%.",
   ],
 }
 `;
@@ -4093,6 +4151,16 @@ exports[`Generate tooltips for "Lumboars" 1`] = `
   "tooltips": [
     "Deal 5 damage.",
     "Your weapons gain 2 damage for the fight.",
+  ],
+}
+`;
+
+exports[`Generate tooltips for "Luxury Kiuas" 1`] = `
+{
+  "cardName": "Luxury Kiuas",
+  "tooltips": [
+    "Burn equal to this item's value.",
+    "When you sell a Property, this item gains 1 value.",
   ],
 }
 `;
@@ -4120,8 +4188,8 @@ exports[`Generate tooltips for "Magic Carpet" 1`] = `
 {
   "cardName": "Magic Carpet",
   "tooltips": [
-    "Deal 5 Damage.",
-    "When you Crit, this gains 5 damage for the fight.",
+    "Deal 10 Damage.",
+    "When you Crit, reduce this item's cooldown by 10% for the fight.",
   ],
 }
 `;
@@ -4158,8 +4226,8 @@ exports[`Generate tooltips for "Makeshift Barricade" 1`] = `
 {
   "cardName": "Makeshift Barricade",
   "tooltips": [
-    "Slow 1 items for 1 second(s).",
-    "When you sell this, your leftmost Slow item gains 1000 second to Slow.",
+    "Slow 1 item(s) for 1 second(s).",
+    "When you sell this, your leftmost Slow item gains +1000 Slow duration.",
   ],
 }
 `;
@@ -4169,6 +4237,17 @@ exports[`Generate tooltips for "Makeshift Plate" 1`] = `
   "cardName": "Makeshift Plate",
   "tooltips": [
     "Your Shield items have +1 Shield for every 4 gold you have. [0]",
+  ],
+}
+`;
+
+exports[`Generate tooltips for "Mantis Shrimp" 1`] = `
+{
+  "cardName": "Mantis Shrimp",
+  "tooltips": [
+    "Deal 20 damage.",
+    "Burn 2.",
+    "When you slow, this gains +10 damage and +1 burn for the fight.",
   ],
 }
 `;
@@ -4278,15 +4357,6 @@ exports[`Generate tooltips for "Micro Dave" 1`] = `
 }
 `;
 
-exports[`Generate tooltips for "Microfiber" 1`] = `
-{
-  "cardName": "Microfiber",
-  "tooltips": [
-    "Your Small Shield items have +3 shield.",
-  ],
-}
-`;
-
 exports[`Generate tooltips for "Minimalist" 1`] = `
 {
   "cardName": "Minimalist",
@@ -4301,7 +4371,7 @@ exports[`Generate tooltips for "Miss Isles" 1`] = `
   "cardName": "Miss Isles",
   "tooltips": [
     "Deal 20 damage.",
-    "When you use the Core, reload this.",
+    "When you use the Core, Reload this.",
   ],
 }
 `;
@@ -4310,7 +4380,7 @@ exports[`Generate tooltips for "Mixed Message" 1`] = `
 {
   "cardName": "Mixed Message",
   "tooltips": [
-    "The first 4 times you use a non-Weapon item each fight, Charge 1 Weapon 1 second(s).",
+    "The first 3 times you use a non-Weapon item each fight, Charge 1 Weapon 1 second(s).",
   ],
 }
 `;
@@ -4380,8 +4450,8 @@ exports[`Generate tooltips for "Mortar & Pestle" 1`] = `
 {
   "cardName": "Mortar & Pestle",
   "tooltips": [
-    "Your Lifesteal Weapons gain +5 damage for the fight.",
-    "The weapon on the right has Lifesteal.",
+    "Your Lifesteal Weapons gain +10 damage for the fight.",
+    "The weapon to the right of this has Lifesteal.",
   ],
 }
 `;
@@ -4419,8 +4489,8 @@ exports[`Generate tooltips for "Musket" 1`] = `
 {
   "cardName": "Musket",
   "tooltips": [
-    "Deal 50 damage.",
-    "When you Burn, reload this 1 ammo.",
+    "Deal 100 damage.",
+    "When you Burn, Reload this 1 ammo.",
   ],
 }
 `;
@@ -4428,26 +4498,16 @@ exports[`Generate tooltips for "Musket" 1`] = `
 exports[`Generate tooltips for "Myrrh" 1`] = `
 {
   "cardName": "Myrrh",
-  "tooltips": [
-    "Heal 10.",
-  ],
+  "error": "Action type not implemented: TActionPlayerRegenApply",
 }
 `;
 
-exports[`Generate tooltips for "Nanite Healing" 1`] = `
+exports[`Generate tooltips for "Nanobot" 1`] = `
 {
-  "cardName": "Nanite Healing",
+  "cardName": "Nanobot",
   "tooltips": [
-    "Your Small Heal items have +3 Heal.",
-  ],
-}
-`;
-
-exports[`Generate tooltips for "Nanobots" 1`] = `
-{
-  "cardName": "Nanobots",
-  "tooltips": [
-    "Deal 5 damage for each Small Friend you have.",
+    "Deal 15 damage for each Friend you have.",
+    "This item's cooldown is reduced by 1 second for each adjacent Friend.",
   ],
 }
 `;
@@ -4467,7 +4527,7 @@ exports[`Generate tooltips for "Narwhal" 1`] = `
 {
   "cardName": "Narwhal",
   "tooltips": [
-    "Deal 4 damage.",
+    "Deal 6 damage.",
   ],
 }
 `;
@@ -4475,11 +4535,7 @@ exports[`Generate tooltips for "Narwhal" 1`] = `
 exports[`Generate tooltips for "Necronomicon" 1`] = `
 {
   "cardName": "Necronomicon",
-  "tooltips": [
-    "Poison 10.",
-    "Gain 10 Regeneration for the fight.",
-    "When any non-weapon is used, Charge this 1 second(s).",
-  ],
+  "error": "Action type not implemented: TActionPlayerRegenApply",
 }
 `;
 
@@ -4525,7 +4581,7 @@ exports[`Generate tooltips for "Nightshade" 1`] = `
   "cardName": "Nightshade",
   "tooltips": [
     "Poison 2.",
-    "When you Heal, this gains +1 Poison for the fight.",
+    "When you Heal or gain Regeneration, this gains +1 Poison for the fight.",
   ],
 }
 `;
@@ -4563,9 +4619,7 @@ exports[`Generate tooltips for "Noisy Cricket" 1`] = `
 exports[`Generate tooltips for "Noxious Potion" 1`] = `
 {
   "cardName": "Noxious Potion",
-  "tooltips": [
-    "Poison both players 4.",
-  ],
+  "error": "Action type not implemented: TActionPlayerRegenApply",
 }
 `;
 
@@ -4573,7 +4627,7 @@ exports[`Generate tooltips for "Oceanic Rush" 1`] = `
 {
   "cardName": "Oceanic Rush",
   "tooltips": [
-    "At the start of each fight, Haste 1 Aquatic items for 2 second(s).",
+    "The first time you use an item each fight, Haste 1 Aquatic item(s) for 2 second(s).",
   ],
 }
 `;
@@ -4629,8 +4683,8 @@ exports[`Generate tooltips for "Open Sign" 1`] = `
 {
   "cardName": "Open Sign",
   "tooltips": [
-    "Weapon Properties adjacent to this have + Damage equal to the value of your highest value item. [8]",
-    "Shield Properties adjacent to this have + Shield equal to the value of your highest value item. [8]",
+    "Weapon Properties adjacent to this have + Damage equal to 1 times the value of your highest value item. [8]",
+    "Shield Properties adjacent to this have + Shield equal to 1 times the value of your highest value item. [8]",
   ],
 }
 `;
@@ -4657,10 +4711,7 @@ exports[`Generate tooltips for "Orbital Polisher" 1`] = `
 exports[`Generate tooltips for "Ouroboros Statue" 1`] = `
 {
   "cardName": "Ouroboros Statue",
-  "tooltips": [
-    "Poison 2.",
-    "When you Poison, gain +1 Regeneration for the fight.",
-  ],
+  "error": "Action type not implemented: TActionPlayerRegenApply",
 }
 `;
 
@@ -4699,7 +4750,7 @@ exports[`Generate tooltips for "Palanquin" 1`] = `
   "cardName": "Palanquin",
   "tooltips": [
     "Your items have +20% Crit Chance.",
-    "When you Crit with an item, reduce its cooldown by 10% for the fight.",
+    "When you Crit with an item, reduce its cooldown by 5% for the fight.",
   ],
 }
 `;
@@ -4708,7 +4759,7 @@ exports[`Generate tooltips for "Panic" 1`] = `
 {
   "cardName": "Panic",
   "tooltips": [
-    "The first time you fall below 50% health each fight, reload 2 items.",
+    "The first time you fall below 50% health each fight, Reload 2 items.",
   ],
 }
 `;
@@ -4717,7 +4768,7 @@ exports[`Generate tooltips for "Paralytic Poison" 1`] = `
 {
   "cardName": "Paralytic Poison",
   "tooltips": [
-    "The first time you Poison each fight, Freeze 1 item for 3 second(s).",
+    "The first time you Poison each fight, Freeze 1 item for 2 second(s).",
   ],
 }
 `;
@@ -4791,9 +4842,7 @@ exports[`Generate tooltips for "Pendulum" 1`] = `
 {
   "cardName": "Pendulum",
   "tooltips": [
-    "Haste 1 items for 3 second(s).",
-    "When you Crit, Charge this 2 second(s).",
-    "Adjacent items have +20% Crit Chance.",
+    "When you use an adjacent item, charge the other adjacent item for 1 second(s) and it gains 10% Crit Chance for the fight.",
   ],
 }
 `;
@@ -4947,9 +4996,7 @@ exports[`Generate tooltips for "Plasma Rifle" 1`] = `
 exports[`Generate tooltips for "Poison Tyrant" 1`] = `
 {
   "cardName": "Poison Tyrant",
-  "tooltips": [
-    "When you or your enemy Poisons, gain 2 Regeneration for the fight.",
-  ],
+  "error": "Action type not implemented: TActionPlayerRegenApply",
 }
 `;
 
@@ -4975,8 +5022,8 @@ exports[`Generate tooltips for "Poppy Field" 1`] = `
 {
   "cardName": "Poppy Field",
   "tooltips": [
-    "Poison 3.",
-    "If you have no weapons, your items have their cooldowns reduced by 5%.",
+    "When you use a Weapon, Poison 3.",
+    "Your Weapons have + Damage equal to the Poison on your enemy.",
   ],
 }
 `;
@@ -5024,7 +5071,7 @@ exports[`Generate tooltips for "Power Drill" 1`] = `
   "cardName": "Power Drill",
   "tooltips": [
     "Deal 50 damage.",
-    "When you Haste, Slow, Freeze, Burn or Poison, charge this 2 second(s).",
+    "When you Haste, Slow, Freeze, Poison, or Burn, charge this 2 second(s).",
   ],
 }
 `;
@@ -5052,7 +5099,29 @@ exports[`Generate tooltips for "Prime Real Estate" 1`] = `
 {
   "cardName": "Prime Real Estate",
   "tooltips": [
-    "When you use a Property, adjacent items gain 5 Crit chance for the fight.",
+    "When you use a Property, adjacent items gain 5% Crit chance for the fight.",
+  ],
+}
+`;
+
+exports[`Generate tooltips for "Primordial Depth Charge" 1`] = `
+{
+  "cardName": "Primordial Depth Charge",
+  "tooltips": [
+    "Poison 4, Burn 4, and Freeze 1 medium or small item for 1 second(s).",
+    "This has +1 Multicast for each other Aquatic item you have.",
+  ],
+}
+`;
+
+exports[`Generate tooltips for "Private Hot Springs" 1`] = `
+{
+  "cardName": "Private Hot Springs",
+  "tooltips": [
+    "Burn 8.",
+    "Gain 8 Regeneration for the fight.",
+    "The first time you fall below half health each fight, Freeze ALL other items for 3 seconds.",
+    "When you Freeze, Charge this 4 second(s).",
   ],
 }
 `;
@@ -5099,7 +5168,7 @@ exports[`Generate tooltips for "Pufferfish" 1`] = `
 {
   "cardName": "Pufferfish",
   "tooltips": [
-    "Poison 4.",
+    "Poison 10.",
     "When you Haste, charge this 2 second(s).",
   ],
 }
@@ -5128,7 +5197,7 @@ exports[`Generate tooltips for "Pyg's Gym" 1`] = `
 {
   "cardName": "Pyg's Gym",
   "tooltips": [
-    "Your weapons gain Damage equal to this item's value for the fight.",
+    "Your weapons gain Damage equal to this item's value for the fight. [6]",
     "When you buy a weapon, this gains 1 value and you gain 20 max health.",
   ],
 }
@@ -5195,7 +5264,7 @@ exports[`Generate tooltips for "Quick Ignition" 1`] = `
 {
   "cardName": "Quick Ignition",
   "tooltips": [
-    "At the start of each fight, Haste 2 Burn items for 2 second(s).",
+    "The first time you use an item each fight, Haste 1 Burn item(s) for 2 second(s).",
   ],
 }
 `;
@@ -5214,7 +5283,7 @@ exports[`Generate tooltips for "Railgun" 1`] = `
 {
   "cardName": "Railgun",
   "tooltips": [
-    "Deal 200 damage.",
+    "Deal 300 damage.",
     "When you use another Tech, charge this 2 second(s).",
   ],
 }
@@ -5224,10 +5293,9 @@ exports[`Generate tooltips for "Rainbow Potion" 1`] = `
 {
   "cardName": "Rainbow Potion",
   "tooltips": [
-    "Burn 4.",
-    "Poison 2.",
-    "Freeze 1 item for 2 second(s).",
-    "Slow 1 item for 4 second(s).",
+    "Burn 3. Poison 3.",
+    "Freeze 1 small item for 1 second(s).",
+    "Slow 1 item for 2 second(s).",
   ],
 }
 `;
@@ -5274,7 +5342,7 @@ exports[`Generate tooltips for "Reaching the Summit" 1`] = `
 {
   "cardName": "Reaching the Summit",
   "tooltips": [
-    "When you Freeze, your items gain +2% Crit Chance for the fight.",
+    "When you Freeze, your items gain +3% Crit Chance for the fight.",
   ],
 }
 `;
@@ -5319,7 +5387,7 @@ exports[`Generate tooltips for "Red Piggles A" 1`] = `
 {
   "cardName": "Red Piggles A",
   "tooltips": [
-    "Your adjacent weapons +3 damage for the fight.",
+    "Adjacent weapons +3 damage for the fight.",
   ],
 }
 `;
@@ -5401,9 +5469,7 @@ exports[`Generate tooltips for "Reinforced Steel" 1`] = `
 exports[`Generate tooltips for "Relax Bro" 1`] = `
 {
   "cardName": "Relax Bro",
-  "tooltips": [
-    "When you Slow, gain 2 Regeneration for the fight.",
-  ],
+  "error": "Action type not implemented: TActionPlayerRegenApply",
 }
 `;
 
@@ -5448,7 +5514,7 @@ exports[`Generate tooltips for "Retaliatory Toxins" 1`] = `
 {
   "cardName": "Retaliatory Toxins",
   "tooltips": [
-    "The first time you fall below half health each fight, Poison 20.",
+    "When your enemy uses an item, Poison 1.",
   ],
 }
 `;
@@ -5457,7 +5523,7 @@ exports[`Generate tooltips for "Retool" 1`] = `
 {
   "cardName": "Retool",
   "tooltips": [
-    "When you use a Tool, reload 1 to adjacent items.",
+    "When you use a Tool, Reload an adjacent item.",
   ],
 }
 `;
@@ -5467,7 +5533,7 @@ exports[`Generate tooltips for "Revolver" 1`] = `
   "cardName": "Revolver",
   "tooltips": [
     "Deal 8 damage.",
-    "When you Crit, reload 2 Ammo.",
+    "When you Crit, Reload this 2 Ammo.",
   ],
 }
 `;
@@ -5486,7 +5552,7 @@ exports[`Generate tooltips for "Rifle" 1`] = `
   "cardName": "Rifle",
   "tooltips": [
     "Deal 6 damage.",
-    "When you use this, reload this 1 Ammo if it is your only weapon.",
+    "When you use this, Reload this 1 Ammo if it is your only weapon with a cooldown.",
   ],
 }
 `;
@@ -5522,7 +5588,7 @@ exports[`Generate tooltips for "Righty Tighty" 1`] = `
 {
   "cardName": "Righty Tighty",
   "tooltips": [
-    "The first 5 times you use your rightmost item each fight, slow 1 item for 1 second(s).",
+    "The first 2 times you use your rightmost item each fight, Charge 1 Slow item 1 second(s).",
   ],
 }
 `;
@@ -5531,7 +5597,8 @@ exports[`Generate tooltips for "Ritual Dagger" 1`] = `
 {
   "cardName": "Ritual Dagger",
   "tooltips": [
-    "Deal 14 damage.",
+    "Deal 2 damage.",
+    "Gain Regeneration for the fight equal to this item's damage.",
   ],
 }
 `;
@@ -5560,6 +5627,7 @@ exports[`Generate tooltips for "Robotic Factory" 1`] = `
 {
   "cardName": "Robotic Factory",
   "tooltips": [
+    "Your Friends items have +10% Crit Chance.",
     "Your Friends have +1 Multicast.",
   ],
 }
@@ -5570,7 +5638,7 @@ exports[`Generate tooltips for "Rocket Boots" 1`] = `
   "cardName": "Rocket Boots",
   "tooltips": [
     "Haste adjacent items for 1 second(s).",
-    "When you sell this, your leftmost Haste item gains +1000 Haste.",
+    "When you sell this, your leftmost Haste item gains +1000 Haste duration.",
   ],
 }
 `;
@@ -5609,8 +5677,8 @@ exports[`Generate tooltips for "Ruby" 1`] = `
 {
   "cardName": "Ruby",
   "tooltips": [
-    "Burn 4.",
-    "Increase your other items' Burn by 2.",
+    "Burn 3.",
+    "Your other Burn items have +3 Burn.",
   ],
 }
 `;
@@ -5629,7 +5697,7 @@ exports[`Generate tooltips for "Runic Double Bow" 1`] = `
 {
   "cardName": "Runic Double Bow",
   "tooltips": [
-    "Deal 10 Damage.",
+    "Deal 20 Damage.",
     "This deals double Crit damage.",
   ],
 }
@@ -5639,8 +5707,8 @@ exports[`Generate tooltips for "Runic Great Axe" 1`] = `
 {
   "cardName": "Runic Great Axe",
   "tooltips": [
-    "Deal 20 damage.",
-    "Your Weapons with lifesteal gain +20 damage for the fight.",
+    "Deal 160 damage.",
+    "Your Lifesteal weapons have double damage.",
   ],
 }
 `;
@@ -5695,7 +5763,7 @@ exports[`Generate tooltips for "Salt" 1`] = `
 {
   "cardName": "Salt",
   "tooltips": [
-    "Adjacent items gain +1 crit chance for the fight.",
+    "Adjacent items gain +10% crit chance for the fight.",
   ],
 }
 `;
@@ -5704,8 +5772,8 @@ exports[`Generate tooltips for "Sapphire" 1`] = `
 {
   "cardName": "Sapphire",
   "tooltips": [
-    "Freeze 1 item for 3 second(s).",
-    "Increase your other items' Freeze by 1 second(s).",
+    "Freeze 1 item(s) for 1 second(s).",
+    "Your other Freeze items have +0.5 Freeze duration.",
   ],
 }
 `;
@@ -5713,11 +5781,14 @@ exports[`Generate tooltips for "Sapphire" 1`] = `
 exports[`Generate tooltips for "Satchel" 1`] = `
 {
   "cardName": "Satchel",
-  "tooltips": [
-    "Reload a potion.",
-    "You have 4 Regeneration.",
-    "When you buy a Potion, increase this item's +Regeneration by +1.",
-  ],
+  "error": "Action type not implemented: TActionPlayerRegenApply",
+}
+`;
+
+exports[`Generate tooltips for "Sauna" 1`] = `
+{
+  "cardName": "Sauna",
+  "error": "Action type not implemented: TActionPlayerRegenApply",
 }
 `;
 
@@ -5760,7 +5831,7 @@ exports[`Generate tooltips for "Sea Shell" 1`] = `
 {
   "cardName": "Sea Shell",
   "tooltips": [
-    "Shield 5 for each Aquatic item you have.",
+    "Shield 10 for each Aquatic item you have.",
   ],
 }
 `;
@@ -5900,7 +5971,7 @@ exports[`Generate tooltips for "Shield Potion" 1`] = `
 {
   "cardName": "Shield Potion",
   "tooltips": [
-    "Shield 40.",
+    "Shield 60.",
   ],
 }
 `;
@@ -5918,6 +5989,7 @@ exports[`Generate tooltips for "Shipwreck" 1`] = `
 {
   "cardName": "Shipwreck",
   "tooltips": [
+    "Your Aquatic items have +10% Crit Chance.",
     "Your Aquatic items have +1 Multicast.",
   ],
 }
@@ -6026,7 +6098,7 @@ exports[`Generate tooltips for "Skyscraper" 1`] = `
   "tooltips": [
     "Deal damage equal to 3 times the value of your items.",
     "This has double value in combat.",
-    "If you have 4 or fewer items in play, this has +1 Multicast.",
+    "If you have 5 or fewer items in play, this has +1 Multicast.",
   ],
 }
 `;
@@ -6035,7 +6107,7 @@ exports[`Generate tooltips for "Sleeping Potion" 1`] = `
 {
   "cardName": "Sleeping Potion",
   "tooltips": [
-    "Slow 2 items for 4 second(s).",
+    "Slow the slowest enemy item for 3 second(s).",
   ],
 }
 `;
@@ -6044,8 +6116,8 @@ exports[`Generate tooltips for "Slingshot" 1`] = `
 {
   "cardName": "Slingshot",
   "tooltips": [
-    "Deal 15 damage.",
-    "This has +1 Max Ammo for each small item you have. [1]",
+    "Deal 30 damage.",
+    "This has +1 Max Ammo for each Toy you have. [1]",
   ],
 }
 `;
@@ -6063,7 +6135,7 @@ exports[`Generate tooltips for "Slow and Steady" 1`] = `
 {
   "cardName": "Slow and Steady",
   "tooltips": [
-    "When you Slow, your weapons gain 3 damage for the fight.",
+    "When you Slow, your weapons gain 2 damage for the fight.",
   ],
 }
 `;
@@ -6073,6 +6145,16 @@ exports[`Generate tooltips for "Slowed Targets" 1`] = `
   "cardName": "Slowed Targets",
   "tooltips": [
     "When you Slow, your items gain +1% Crit Chance for the fight.",
+  ],
+}
+`;
+
+exports[`Generate tooltips for "Slumbering Primordial" 1`] = `
+{
+  "cardName": "Slumbering Primordial",
+  "tooltips": [
+    "Deal 75 damage.",
+    "When you poison, freeze, or burn, charge this 1 second(s) and this gains +75 Damage for the fight.",
   ],
 }
 `;
@@ -6100,7 +6182,7 @@ exports[`Generate tooltips for "Snow Globe" 1`] = `
 {
   "cardName": "Snow Globe",
   "tooltips": [
-    "Freeze 1 medium or small item for 1 second(s).",
+    "Freeze 1 for 1 second(s).",
     "This has +1 Multicast for each adjacent Property.",
   ],
 }
@@ -6110,7 +6192,18 @@ exports[`Generate tooltips for "Snowflake" 1`] = `
 {
   "cardName": "Snowflake",
   "tooltips": [
-    "When you sell this, Your leftmost Freeze item gains +1000 second to Freeze.",
+    "When you sell this, your leftmost Freeze item gains +500 Freeze duration.",
+  ],
+}
+`;
+
+exports[`Generate tooltips for "Snowmobile" 1`] = `
+{
+  "cardName": "Snowmobile",
+  "tooltips": [
+    "Deal 20 damage.",
+    "This gains +10 Damage for the fight.",
+    "When this gains Haste or when you Freeze, Charge this 2 second(s).",
   ],
 }
 `;
@@ -6127,11 +6220,7 @@ exports[`Generate tooltips for "Snowstorm" 1`] = `
 exports[`Generate tooltips for "Solar Farm" 1`] = `
 {
   "cardName": "Solar Farm",
-  "tooltips": [
-    "Haste your other items for 1 second(s).",
-    "Gain 6 Regeneration for the fight.",
-    "When you Burn, charge this for 2 seconds.",
-  ],
+  "error": "Action type not implemented: TActionPlayerRegenApply",
 }
 `;
 
@@ -6247,9 +6336,9 @@ exports[`Generate tooltips for "Stained Glass Window" 1`] = `
 {
   "cardName": "Stained Glass Window",
   "tooltips": [
-    "When you win a fight with Stained Glass Window in play, your Properties in play gain 4 value.",
-    "When you lose a fight with Stained Glass Window in play, your Properties in play lose 2 value.",
-    "If you have 4 or fewer items in play, their cooldowns are reduced by 10%.",
+    "When you win a fight with Stained Glass Window in play, your Properties in play gain 5 value.",
+    "When you lose a fight with Stained Glass Window in play, permanently destroy this.",
+    "If you have 5 or fewer items in play, their cooldowns are reduced by 10%.",
     "??",
   ],
 }
@@ -6306,6 +6395,25 @@ exports[`Generate tooltips for "Staying Power" 1`] = `
   "cardName": "Staying Power",
   "tooltips": [
     "When you use a Tool, Heal 5.",
+  ],
+}
+`;
+
+exports[`Generate tooltips for "Steam Ladle" 1`] = `
+{
+  "cardName": "Steam Ladle",
+  "tooltips": [
+    "Burn 2.",
+    "When you Freeze, this gains +2 Burn for the fight.",
+  ],
+}
+`;
+
+exports[`Generate tooltips for "Steelstorm" 1`] = `
+{
+  "cardName": "Steelstorm",
+  "tooltips": [
+    "Your Weapons have +4 Damage for each Weapon you have.",
   ],
 }
 `;
@@ -6385,6 +6493,17 @@ exports[`Generate tooltips for "Submerged" 1`] = `
 }
 `;
 
+exports[`Generate tooltips for "Submersible" 1`] = `
+{
+  "cardName": "Submersible",
+  "tooltips": [
+    "Deal 24 damage.",
+    "Shield equal to this item's damage.",
+    "If you have another vehicle or large item, reduce this item's cooldown by 50%.",
+  ],
+}
+`;
+
 exports[`Generate tooltips for "Subscraper" 1`] = `
 {
   "cardName": "Subscraper",
@@ -6418,11 +6537,7 @@ exports[`Generate tooltips for "Sunderer" 1`] = `
 exports[`Generate tooltips for "Sunlight Spear" 1`] = `
 {
   "cardName": "Sunlight Spear",
-  "tooltips": [
-    "Heal 30.",
-    "Burn 1.",
-    "When you Heal, this gains 2 Burn for the fight.",
-  ],
+  "error": "Action type not implemented: TActionPlayerRegenApply",
 }
 `;
 
@@ -6468,10 +6583,7 @@ exports[`Generate tooltips for "Tall Buildings" 1`] = `
 exports[`Generate tooltips for "Tazidian Dagger" 1`] = `
 {
   "cardName": "Tazidian Dagger",
-  "tooltips": [
-    "Deal 5 damage.",
-    "Adjacent Potions have +1 Ammo.",
-  ],
+  "error": "Action type not implemented: TActionPlayerRegenApply",
 }
 `;
 
@@ -6508,7 +6620,7 @@ exports[`Generate tooltips for "Temporal Strike" 1`] = `
 {
   "cardName": "Temporal Strike",
   "tooltips": [
-    "If you have exactly one weapon, the first 5 times you use it each fight, Slow 1 item for 3 second(s).",
+    "If you have exactly one weapon, its cooldown is reduced by 5% while your enemy has a Slowed item.",
   ],
 }
 `;
@@ -6596,8 +6708,8 @@ exports[`Generate tooltips for "Thermal Lance" 1`] = `
 {
   "cardName": "Thermal Lance",
   "tooltips": [
-    "Burn 2.",
-    "When this gains Haste, this gains 2 Burn for the fight.",
+    "Burn 5.",
+    "When this gains Haste, this gains 5 Burn for the fight.",
   ],
 }
 `;
@@ -6643,8 +6755,8 @@ exports[`Generate tooltips for "Thrown Net" 1`] = `
 {
   "cardName": "Thrown Net",
   "tooltips": [
-    "Deal 5 damage.",
-    "Your Weapons gain 2 damage for the fight and your opponent's Weapons lose 2 damage for the fight.",
+    "Slow 1 item for 1 second(s).",
+    "This has +1 Multicast for each Weapon or friend your enemy has.",
   ],
 }
 `;
@@ -6662,10 +6774,7 @@ exports[`Generate tooltips for "Thrusters" 1`] = `
 exports[`Generate tooltips for "Thurible" 1`] = `
 {
   "cardName": "Thurible",
-  "tooltips": [
-    "Burn 4.",
-    "Gain 1 Regeneration for the fight.",
-  ],
+  "error": "Action type not implemented: TActionPlayerRegenApply",
 }
 `;
 
@@ -6692,7 +6801,7 @@ exports[`Generate tooltips for "Tiny Dancer" 1`] = `
 {
   "cardName": "Tiny Dancer",
   "tooltips": [
-    "If you have at least 7 items in play, your items have their cooldowns reduced by 5%.",
+    "If you have at least 7 items, your items have their cooldowns reduced by 5%.",
   ],
 }
 `;
@@ -6823,7 +6932,7 @@ exports[`Generate tooltips for "Toxin Injector" 1`] = `
 {
   "cardName": "Toxin Injector",
   "tooltips": [
-    "At the start of each fight, Haste 2 Poison items for 2 second(s).",
+    "The first time you use an item each fight, Haste 1 Poison item(s) for 2 second(s).",
   ],
 }
 `;
@@ -6841,7 +6950,7 @@ exports[`Generate tooltips for "Trader" 1`] = `
 {
   "cardName": "Trader",
   "tooltips": [
-    "At the start of each day, your items gain 1 value.",
+    "Your items have +1 value.",
   ],
 }
 `;
@@ -6897,10 +7006,7 @@ exports[`Generate tooltips for "Tripwire" 1`] = `
 exports[`Generate tooltips for "Tropical Island" 1`] = `
 {
   "cardName": "Tropical Island",
-  "tooltips": [
-    "When you Slow, gain 2 Regeneration for the fight.",
-    "At the start of each hour, get a Coconut or Citrus.",
-  ],
+  "error": "Action type not implemented: TActionPlayerRegenApply",
 }
 `;
 
@@ -6908,8 +7014,7 @@ exports[`Generate tooltips for "Truffles" 1`] = `
 {
   "cardName": "Truffles",
   "tooltips": [
-    "Heal equal to 1 times the value of your highest value item.",
-    "When you sell this, your leftmost item gains value equal to this item's value.",
+    "When you sell this, your leftmost item +1 value.",
   ],
 }
 `;
@@ -6948,7 +7053,7 @@ exports[`Generate tooltips for "Upgrade Hammer" 1`] = `
 {
   "cardName": "Upgrade Hammer",
   "tooltips": [
-    "When you sell this, upgrade your leftmost item.",
+    "When you sell this, upgrade your leftmost Bronzer-tier item.",
   ],
 }
 `;
@@ -6972,6 +7077,16 @@ exports[`Generate tooltips for "Uzi" 1`] = `
 }
 `;
 
+exports[`Generate tooltips for "VIP Pass" 1`] = `
+{
+  "cardName": "VIP Pass",
+  "tooltips": [
+    "Haste adjacent Properties for 1 second(s).",
+    "When you use an adjacent Property, increase its value and this item's value by 1.",
+  ],
+}
+`;
+
 exports[`Generate tooltips for "Vanessa's Amulet" 1`] = `
 {
   "cardName": "Vanessa's Amulet",
@@ -6985,7 +7100,7 @@ exports[`Generate tooltips for "Vending Machine" 1`] = `
 {
   "cardName": "Vending Machine",
   "tooltips": [
-    "At the start of each day, get 3 Chocolate Bars or Spare Changes.",
+    "At the start of each day, get a Chocolate Bar, Spare Change and Truffle.",
   ],
 }
 `;
@@ -7012,10 +7127,7 @@ exports[`Generate tooltips for "Venom" 1`] = `
 exports[`Generate tooltips for "Venomander" 1`] = `
 {
   "cardName": "Venomander",
-  "tooltips": [
-    "Poison 1.",
-    "Gain 1 Regeneration for the fight.",
-  ],
+  "error": "Action type not implemented: TActionPlayerRegenApply",
 }
 `;
 
@@ -7115,6 +7227,15 @@ exports[`Generate tooltips for "Void Shield" 1`] = `
 }
 `;
 
+exports[`Generate tooltips for "Volcanic Vents" 1`] = `
+{
+  "cardName": "Volcanic Vents",
+  "tooltips": [
+    "Burn 1.",
+  ],
+}
+`;
+
 exports[`Generate tooltips for "Wallace" 1`] = `
 {
   "cardName": "Wallace",
@@ -7177,7 +7298,7 @@ exports[`Generate tooltips for "Waters of Infinity" 1`] = `
 {
   "cardName": "Waters of Infinity",
   "tooltips": [
-    "You have +10 Regeneration for each non-weapon item you have in play. [0]",
+    "You have +10 Regeneration for each non-weapon item you have. [0]",
   ],
 }
 `;
@@ -7306,7 +7427,7 @@ exports[`Generate tooltips for "Yellow Piggles A" 1`] = `
 {
   "cardName": "Yellow Piggles A",
   "tooltips": [
-    "Your adjacent Shield items +2 Shield for the fight.",
+    "Adjacent Shield items +2 Shield for the fight.",
   ],
 }
 `;
@@ -7338,12 +7459,33 @@ exports[`Generate tooltips for "Yellow Piggles X" 1`] = `
 }
 `;
 
+exports[`Generate tooltips for "Yeti Crab" 1`] = `
+{
+  "cardName": "Yeti Crab",
+  "tooltips": [
+    "Freeze 1 item for 1 second(s).",
+    "When you freeze, adjacent Poison items gain +1 Poison for the fight.",
+  ],
+}
+`;
+
 exports[`Generate tooltips for "Yo-Yo" 1`] = `
 {
   "cardName": "Yo-Yo",
   "tooltips": [
     "Deal 1 damage.",
     "When you use an adjacent item, charge this 1 second(s).",
+  ],
+}
+`;
+
+exports[`Generate tooltips for "Zoarcid" 1`] = `
+{
+  "cardName": "Zoarcid",
+  "tooltips": [
+    "Deal 20 damage.",
+    "Haste adjacent items for 1 seconds.",
+    "When you Burn, charge this 1 second(s).",
   ],
 }
 `;

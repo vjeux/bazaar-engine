@@ -1,5 +1,5 @@
 import { getInitialGameState } from "../GameState";
-import validObjectNames from "../json/ValidObjectNames.json";
+import validItemNames from "../json/ValidItemNames.json";
 import validSkillNames from "../json/ValidSkillNames.json";
 import { getTooltips } from "../Engine";
 import { expect, it } from "vitest";
@@ -7,10 +7,10 @@ import { genCardsAndEncounters } from "../Data";
 
 const { Cards, Encounters } = await genCardsAndEncounters();
 
-[...validObjectNames, ...validSkillNames].forEach((cardName) => {
+[...validItemNames, ...validSkillNames].forEach((cardName) => {
   it(`Generate tooltips for "${cardName}"`, () => {
     try {
-      const extension = validObjectNames.includes(cardName)
+      const extension = validItemNames.includes(cardName)
         ? { cards: [{ name: cardName }] }
         : { skills: [{ name: cardName }] };
       const gameState = getInitialGameState(Cards, Encounters, [
