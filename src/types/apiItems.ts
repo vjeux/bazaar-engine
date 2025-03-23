@@ -1,3 +1,4 @@
+// howbazaar api items schema
 import { EnchantmentType, Hero, HiddenTag, Size, Tag, Tier } from "./shared";
 
 export interface Items {

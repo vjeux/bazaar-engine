@@ -1,3 +1,4 @@
+// Types for the card data in the game
 import { EnchantmentType, HiddenTag, Tag, Tier } from "./shared";
 
 export interface Cards {

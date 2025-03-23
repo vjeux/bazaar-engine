@@ -1,4 +1,4 @@
-// Common types extracted from cardTypes and encounterTypes
+// Common types used throughout the other type files
 
 export enum Tier {
   Bronze = "Bronze",
