@@ -39,8 +39,7 @@
   "scripts": {
     "start": "vite",
     "build": "vite build",
-    "test": "vitest",
-    "peg": "peggy ./src/tooltipParser.pegjs --format es --output ./src/tooltipParser.js"
+    "test": "vitest"
   },
   "browserslist": [
     ">0.2%",

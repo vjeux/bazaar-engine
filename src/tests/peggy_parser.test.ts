@@ -6,8 +6,6 @@ import { parseItem } from "../peggy";
 import { genCardsAndEncounters } from "../Data";
 import { Item } from "../types/apiItems";
 import _ from "lodash";
-import { PartialDeep } from "type-fest";
-import { Ability } from "../types/cardTypes";
 
 const items: Item[] = apiItems.data;
 
