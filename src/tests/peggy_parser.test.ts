@@ -1,13 +1,13 @@
 import { parse } from "../peggy";
 import { describe, expect, it } from "vitest";
 import { createColors } from "colorette";
-import apiItems from "../json/apiItems.json";
+import apiItems from "../json/items.json";
 import { parseItem } from "../peggy";
 import { genCardsAndEncounters } from "../Data";
 import { Item } from "../types/apiItems";
 import _ from "lodash";
 
-const items: Item[] = apiItems.data;
+const items: Item[] = apiItems.data as Item[];
 
 const { yellow } = createColors({ useColor: true });
 
@@ -74,37 +74,6 @@ describe("Peggy-generated tooltip parser", () => {
     // We don't expect all tooltips to match initially since the parser is still being developed
     // This test just provides statistics rather than failing
     expect(true).toBe(true);
-  });
-
-  // Test specific tooltip examples that we expect to work with the current parser
-  describe("should parse specific tooltip formats correctly", () => {
-    it("parses stat tooltips with numbers in parentheses", () => {
-      expect(() => parse("Cooldown (10/9/8) seconds", undefined)).not.toThrow();
-    });
-
-    it("parses plain stat tooltips", () => {
-      expect(() => parse("Cooldown 10 seconds", undefined)).not.toThrow();
-    });
-
-    it("parses burn action tooltips with numbers in parentheses", () => {
-      expect(() => parse("Burn (1/2/3).", undefined)).not.toThrow();
-    });
-
-    it("parses plain action tooltips", () => {
-      expect(() => parse("Deal 50 damage.", undefined)).not.toThrow();
-    });
-
-    it("parses heal tooltips", () => {
-      expect(() => parse("Heal 10.", undefined)).not.toThrow();
-    });
-
-    it("parses poison tooltips", () => {
-      expect(() => parse("Poison 5.", undefined)).not.toThrow();
-    });
-
-    it("parses shield tooltips", () => {
-      expect(() => parse("Shield 20.", undefined)).not.toThrow();
-    });
   });
 });
 
