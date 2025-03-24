@@ -105,6 +105,7 @@ export enum ActionType {
   TActionPlayerPoisonApply = "TActionPlayerPoisonApply",
   TActionPlayerPoisonRemove = "TActionPlayerPoisonRemove",
   TActionPlayerReviveHeal = "TActionPlayerReviveHeal",
+  TActionPlayerRegenApply = "TActionPlayerRegenApply",
   TActionPlayerShieldApply = "TActionPlayerShieldApply",
   TActionPlayerShieldRemove = "TActionPlayerShieldRemove",
   TAuraActionCardModifyAttribute = "TAuraActionCardModifyAttribute",

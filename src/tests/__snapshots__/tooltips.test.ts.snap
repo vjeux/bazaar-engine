@@ -1980,32 +1980,44 @@ exports[`Generate tooltips for "Black Pepper" 3`] = `
 exports[`Generate tooltips for "Black Rose" 1`] = `
 {
   "cardName": "Black Rose",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Bronze",
+  "tooltips": [
+    "Gain 4 Regeneration for the fight.",
+    "When you Poison, this gains +1 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Black Rose" 2`] = `
 {
   "cardName": "Black Rose",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Silver",
+  "tooltips": [
+    "Gain 4 Regeneration for the fight.",
+    "When you Poison, this gains +2 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Black Rose" 3`] = `
 {
   "cardName": "Black Rose",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "Gain 4 Regeneration for the fight.",
+    "When you Poison, this gains +3 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Black Rose" 4`] = `
 {
   "cardName": "Black Rose",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "Gain 4 Regeneration for the fight.",
+    "When you Poison, this gains +4 Regeneration for the fight.",
+  ],
 }
 `;
 
@@ -4230,32 +4242,40 @@ exports[`Generate tooltips for "Circle of Life" 1`] = `
 exports[`Generate tooltips for "Citrus" 1`] = `
 {
   "cardName": "Citrus",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Bronze",
+  "tooltips": [
+    "When you sell this, permanently gain 1 Regeneration.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Citrus" 2`] = `
 {
   "cardName": "Citrus",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Silver",
+  "tooltips": [
+    "When you sell this, permanently gain 2 Regeneration.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Citrus" 3`] = `
 {
   "cardName": "Citrus",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "When you sell this, permanently gain 3 Regeneration.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Citrus" 4`] = `
 {
   "cardName": "Citrus",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "When you sell this, permanently gain 4 Regeneration.",
+  ],
 }
 `;
 
@@ -4569,24 +4589,36 @@ exports[`Generate tooltips for "Cog" 3`] = `
 exports[`Generate tooltips for "Cold Room" 1`] = `
 {
   "cardName": "Cold Room",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Silver",
+  "tooltips": [
+    "Freeze 1 item(s) for 1 second(s).",
+    "When you Freeze, gain 3 Regeneration for the fight.",
+    "When your enemy uses an item, charge this 1 second(s).",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Cold Room" 2`] = `
 {
   "cardName": "Cold Room",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "Freeze 2 item(s) for 1 second(s).",
+    "When you Freeze, gain 6 Regeneration for the fight.",
+    "When your enemy uses an item, charge this 1 second(s).",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Cold Room" 3`] = `
 {
   "cardName": "Cold Room",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "Freeze 3 item(s) for 1 second(s).",
+    "When you Freeze, gain 9 Regeneration for the fight.",
+    "When your enemy uses an item, charge this 1 second(s).",
+  ],
 }
 `;
 
@@ -4855,32 +4887,44 @@ exports[`Generate tooltips for "Conflagration" 3`] = `
 exports[`Generate tooltips for "Cookies" 1`] = `
 {
   "cardName": "Cookies",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Bronze",
+  "tooltips": [
+    "When you sell this, you lose 10 Max Health.",
+    "When you sell this, permanently gain 1 Regeneration.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Cookies" 2`] = `
 {
   "cardName": "Cookies",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Silver",
+  "tooltips": [
+    "When you sell this, you lose 20 Max Health.",
+    "When you sell this, permanently gain 2 Regeneration.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Cookies" 3`] = `
 {
   "cardName": "Cookies",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "When you sell this, you lose 30 Max Health.",
+    "When you sell this, permanently gain 3 Regeneration.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Cookies" 4`] = `
 {
   "cardName": "Cookies",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "When you sell this, you lose 40 Max Health.",
+    "When you sell this, permanently gain 4 Regeneration.",
+  ],
 }
 `;
 
@@ -7175,16 +7219,20 @@ exports[`Generate tooltips for "Emergency Burn" 3`] = `
 exports[`Generate tooltips for "Emergency Draught" 1`] = `
 {
   "cardName": "Emergency Draught",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "The first time you fall below half health each fight, gain 1 times your Regeneration for the fight. [0]",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Emergency Draught" 2`] = `
 {
   "cardName": "Emergency Draught",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "The first time you fall below half health each fight, gain 2 times your Regeneration for the fight. [0]",
+  ],
 }
 `;
 
@@ -9375,32 +9423,40 @@ exports[`Generate tooltips for "Giant Ice Club" 2`] = `
 exports[`Generate tooltips for "Gland" 1`] = `
 {
   "cardName": "Gland",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Bronze",
+  "tooltips": [
+    "When you sell this, permanently gain 1 Regeneration.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Gland" 2`] = `
 {
   "cardName": "Gland",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Silver",
+  "tooltips": [
+    "When you sell this, permanently gain 2 Regeneration.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Gland" 3`] = `
 {
   "cardName": "Gland",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "When you sell this, permanently gain 3 Regeneration.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Gland" 4`] = `
 {
   "cardName": "Gland",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "When you sell this, permanently gain 4 Regeneration.",
+  ],
 }
 `;
 
@@ -10436,32 +10492,40 @@ exports[`Generate tooltips for "Healthy Tip" 2`] = `
 exports[`Generate tooltips for "Heat Lover" 1`] = `
 {
   "cardName": "Heat Lover",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Bronze",
+  "tooltips": [
+    "When you Burn, gain 2 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Heat Lover" 2`] = `
 {
   "cardName": "Heat Lover",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Silver",
+  "tooltips": [
+    "When you Burn, gain 4 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Heat Lover" 3`] = `
 {
   "cardName": "Heat Lover",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "When you Burn, gain 6 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Heat Lover" 4`] = `
 {
   "cardName": "Heat Lover",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "When you Burn, gain 8 Regeneration for the fight.",
+  ],
 }
 `;
 
@@ -10927,32 +10991,44 @@ exports[`Generate tooltips for "Hot Springs" 4`] = `
 exports[`Generate tooltips for "Hot Stones" 1`] = `
 {
   "cardName": "Hot Stones",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Bronze",
+  "tooltips": [
+    "Burn 3.",
+    "Gain 3 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Hot Stones" 2`] = `
 {
   "cardName": "Hot Stones",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Silver",
+  "tooltips": [
+    "Burn 5.",
+    "Gain 5 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Hot Stones" 3`] = `
 {
   "cardName": "Hot Stones",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "Burn 7.",
+    "Gain 7 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Hot Stones" 4`] = `
 {
   "cardName": "Hot Stones",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "Burn 9.",
+    "Gain 9 Regeneration for the fight.",
+  ],
 }
 `;
 
@@ -11738,32 +11814,44 @@ exports[`Generate tooltips for "Incendiary Rounds" 1`] = `
 exports[`Generate tooltips for "Incense" 1`] = `
 {
   "cardName": "Incense",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Bronze",
+  "tooltips": [
+    "Slow 1 item for 3 second(s).",
+    "Gain 2 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Incense" 2`] = `
 {
   "cardName": "Incense",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Silver",
+  "tooltips": [
+    "Slow 1 item for 4 second(s).",
+    "Gain 4 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Incense" 3`] = `
 {
   "cardName": "Incense",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "Slow 1 item for 5 second(s).",
+    "Gain 6 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Incense" 4`] = `
 {
   "cardName": "Incense",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "Slow 1 item for 6 second(s).",
+    "Gain 8 Regeneration for the fight.",
+  ],
 }
 `;
 
@@ -15065,32 +15153,40 @@ exports[`Generate tooltips for "Musket" 3`] = `
 exports[`Generate tooltips for "Myrrh" 1`] = `
 {
   "cardName": "Myrrh",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Bronze",
+  "tooltips": [
+    "Gain 4 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Myrrh" 2`] = `
 {
   "cardName": "Myrrh",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Silver",
+  "tooltips": [
+    "Gain 4 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Myrrh" 3`] = `
 {
   "cardName": "Myrrh",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "Gain 4 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Myrrh" 4`] = `
 {
   "cardName": "Myrrh",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "Gain 4 Regeneration for the fight.",
+  ],
 }
 `;
 
@@ -15194,8 +15290,12 @@ exports[`Generate tooltips for "Narwhal" 4`] = `
 exports[`Generate tooltips for "Necronomicon" 1`] = `
 {
   "cardName": "Necronomicon",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Legendary",
+  "tooltips": [
+    "Poison 10.",
+    "Gain 10 Regeneration for the fight.",
+    "When any non-weapon is used, Charge this 1 second(s).",
+  ],
 }
 `;
 
@@ -15446,32 +15546,44 @@ exports[`Generate tooltips for "Noisy Cricket" 3`] = `
 exports[`Generate tooltips for "Noxious Potion" 1`] = `
 {
   "cardName": "Noxious Potion",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Bronze",
+  "tooltips": [
+    "Poison both players 4.",
+    "Gain Regeneration for the fight equal to half your current Poison. [0]",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Noxious Potion" 2`] = `
 {
   "cardName": "Noxious Potion",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Silver",
+  "tooltips": [
+    "Poison both players 6.",
+    "Gain Regeneration for the fight equal to half your current Poison. [0]",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Noxious Potion" 3`] = `
 {
   "cardName": "Noxious Potion",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "Poison both players 8.",
+    "Gain Regeneration for the fight equal to half your current Poison. [0]",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Noxious Potion" 4`] = `
 {
   "cardName": "Noxious Potion",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "Poison both players 10.",
+    "Gain Regeneration for the fight equal to half your current Poison. [0]",
+  ],
 }
 `;
 
@@ -15709,24 +15821,33 @@ exports[`Generate tooltips for "Orbital Polisher" 2`] = `
 exports[`Generate tooltips for "Ouroboros Statue" 1`] = `
 {
   "cardName": "Ouroboros Statue",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Silver",
+  "tooltips": [
+    "Poison 4.",
+    "When you Poison, gain +2 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Ouroboros Statue" 2`] = `
 {
   "cardName": "Ouroboros Statue",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "Poison 5.",
+    "When you Poison, gain +4 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Ouroboros Statue" 3`] = `
 {
   "cardName": "Ouroboros Statue",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "Poison 6.",
+    "When you Poison, gain +6 Regeneration for the fight.",
+  ],
 }
 `;
 
@@ -16654,32 +16775,40 @@ exports[`Generate tooltips for "Plasma Rifle" 3`] = `
 exports[`Generate tooltips for "Poison Tyrant" 1`] = `
 {
   "cardName": "Poison Tyrant",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Bronze",
+  "tooltips": [
+    "When you Poison, gain 2 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Poison Tyrant" 2`] = `
 {
   "cardName": "Poison Tyrant",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Silver",
+  "tooltips": [
+    "When you Poison, gain 4 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Poison Tyrant" 3`] = `
 {
   "cardName": "Poison Tyrant",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "When you Poison, gain 6 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Poison Tyrant" 4`] = `
 {
   "cardName": "Poison Tyrant",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "When you Poison, gain 8 Regeneration for the fight.",
+  ],
 }
 `;
 
@@ -18221,16 +18350,20 @@ exports[`Generate tooltips for "Reinforced Steel" 3`] = `
 exports[`Generate tooltips for "Relax Bro" 1`] = `
 {
   "cardName": "Relax Bro",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "When you Slow, gain 2 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Relax Bro" 2`] = `
 {
   "cardName": "Relax Bro",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "When you Slow, gain 4 Regeneration for the fight.",
+  ],
 }
 `;
 
@@ -19324,48 +19457,69 @@ exports[`Generate tooltips for "Sapphire" 3`] = `
 exports[`Generate tooltips for "Satchel" 1`] = `
 {
   "cardName": "Satchel",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Silver",
+  "tooltips": [
+    "Reload an item.",
+    "When you reload, gain 5 Regeneration for the fight.",
+    "When you buy a Potion, increase this item's +Regeneration by +1.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Satchel" 2`] = `
 {
   "cardName": "Satchel",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "Reload an item.",
+    "When you reload, gain 5 Regeneration for the fight.",
+    "When you buy a Potion, increase this item's +Regeneration by +2.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Satchel" 3`] = `
 {
   "cardName": "Satchel",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "Reload an item.",
+    "When you reload, gain 5 Regeneration for the fight.",
+    "When you buy a Potion, increase this item's +Regeneration by +3.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Sauna" 1`] = `
 {
   "cardName": "Sauna",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Silver",
+  "tooltips": [
+    "Burn 4.",
+    "When you Burn, Heal 10 and gain 1 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Sauna" 2`] = `
 {
   "cardName": "Sauna",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "Burn 5.",
+    "When you Burn, Heal 20 and gain 2 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Sauna" 3`] = `
 {
   "cardName": "Sauna",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "Burn 6.",
+    "When you Burn, Heal 30 and gain 3 Regeneration for the fight.",
+  ],
 }
 `;
 
@@ -20789,24 +20943,36 @@ exports[`Generate tooltips for "Snowstorm" 4`] = `
 exports[`Generate tooltips for "Solar Farm" 1`] = `
 {
   "cardName": "Solar Farm",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Silver",
+  "tooltips": [
+    "Haste your other items for 1 second(s).",
+    "Gain 6 Regeneration for the fight.",
+    "When you Burn, charge this for 2 seconds.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Solar Farm" 2`] = `
 {
   "cardName": "Solar Farm",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "Haste your other items for 2 second(s).",
+    "Gain 9 Regeneration for the fight.",
+    "When you Burn, charge this for 2 seconds.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Solar Farm" 3`] = `
 {
   "cardName": "Solar Farm",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "Haste your other items for 3 second(s).",
+    "Gain 12 Regeneration for the fight.",
+    "When you Burn, charge this for 2 seconds.",
+  ],
 }
 `;
 
@@ -21859,24 +22025,36 @@ exports[`Generate tooltips for "Sunderer" 4`] = `
 exports[`Generate tooltips for "Sunlight Spear" 1`] = `
 {
   "cardName": "Sunlight Spear",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Silver",
+  "tooltips": [
+    "Gain 2 Regeneration for the fight.",
+    "Burn equal to your Regeneration.",
+    "Deal damage equal to the Regeneration plus the Burn on both players.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Sunlight Spear" 2`] = `
 {
   "cardName": "Sunlight Spear",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "Gain 4 Regeneration for the fight.",
+    "Burn equal to your Regeneration.",
+    "Deal damage equal to the Regeneration plus the Burn on both players.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Sunlight Spear" 3`] = `
 {
   "cardName": "Sunlight Spear",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "Gain 6 Regeneration for the fight.",
+    "Burn equal to your Regeneration.",
+    "Deal damage equal to the Regeneration plus the Burn on both players.",
+  ],
 }
 `;
 
@@ -22013,32 +22191,48 @@ exports[`Generate tooltips for "Tall Buildings" 2`] = `
 exports[`Generate tooltips for "Tazidian Dagger" 1`] = `
 {
   "cardName": "Tazidian Dagger",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Bronze",
+  "tooltips": [
+    "Deal 5 damage.",
+    "Gain 1 Regeneration for the fight.",
+    "Adjacent Potions have +1 Ammo.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Tazidian Dagger" 2`] = `
 {
   "cardName": "Tazidian Dagger",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Silver",
+  "tooltips": [
+    "Deal 10 damage.",
+    "Gain 2 Regeneration for the fight.",
+    "Adjacent Potions have +1 Ammo.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Tazidian Dagger" 3`] = `
 {
   "cardName": "Tazidian Dagger",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "Deal 15 damage.",
+    "Gain 3 Regeneration for the fight.",
+    "Adjacent Potions have +1 Ammo.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Tazidian Dagger" 4`] = `
 {
   "cardName": "Tazidian Dagger",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "Deal 20 damage.",
+    "Gain 4 Regeneration for the fight.",
+    "Adjacent Potions have +1 Ammo.",
+  ],
 }
 `;
 
@@ -22591,32 +22785,44 @@ exports[`Generate tooltips for "Thrusters" 4`] = `
 exports[`Generate tooltips for "Thurible" 1`] = `
 {
   "cardName": "Thurible",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Bronze",
+  "tooltips": [
+    "Burn 3.",
+    "Gain 1 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Thurible" 2`] = `
 {
   "cardName": "Thurible",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Silver",
+  "tooltips": [
+    "Burn 5.",
+    "Gain 2 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Thurible" 3`] = `
 {
   "cardName": "Thurible",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "Burn 7.",
+    "Gain 3 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Thurible" 4`] = `
 {
   "cardName": "Thurible",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "Burn 9.",
+    "Gain 4 Regeneration for the fight.",
+  ],
 }
 `;
 
@@ -23355,16 +23561,22 @@ exports[`Generate tooltips for "Tripwire" 2`] = `
 exports[`Generate tooltips for "Tropical Island" 1`] = `
 {
   "cardName": "Tropical Island",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "When you Slow, gain 5 Regeneration for the fight.",
+    "At the start of each hour, get a Coconut or Citrus.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Tropical Island" 2`] = `
 {
   "cardName": "Tropical Island",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "When you Slow, gain 10 Regeneration for the fight.",
+    "At the start of each hour, get a Coconut or Citrus.",
+  ],
 }
 `;
 
@@ -23779,32 +23991,44 @@ exports[`Generate tooltips for "Venom" 3`] = `
 exports[`Generate tooltips for "Venomander" 1`] = `
 {
   "cardName": "Venomander",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Bronze",
+  "tooltips": [
+    "Poison 1.",
+    "Gain 1 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Venomander" 2`] = `
 {
   "cardName": "Venomander",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Silver",
+  "tooltips": [
+    "Poison 2.",
+    "Gain 2 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Venomander" 3`] = `
 {
   "cardName": "Venomander",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Gold",
+  "tooltips": [
+    "Poison 3.",
+    "Gain 3 Regeneration for the fight.",
+  ],
 }
 `;
 
 exports[`Generate tooltips for "Venomander" 4`] = `
 {
   "cardName": "Venomander",
-  "error": "Action type not implemented: TActionPlayerRegenApply",
   "tier": "Diamond",
+  "tooltips": [
+    "Poison 4.",
+    "Gain 4 Regeneration for the fight.",
+  ],
 }
 `;
 

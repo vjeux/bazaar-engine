@@ -983,6 +983,45 @@ function runAction(
       });
       break;
     }
+    case "TActionPlayerRegenApply": {
+      let amount = getCardAttribute(
+        gameState,
+        targetPlayerID,
+        targetBoardCardID,
+        "RegenApplyAmount"
+      );
+      const critChance = getCardAttribute(
+        gameState,
+        targetPlayerID,
+        targetBoardCardID,
+        "CritChance"
+      );
+      if (critChance > 0) {
+        if (gameState.getRand() * 100 < critChance) {
+          amount *= 2;
+          hasCritted = true;
+        }
+      }
+
+      getTargetPlayers(
+        gameState,
+        action.Target,
+        triggerPlayerID,
+        targetPlayerID
+      ).forEach((playerID) => {
+        const poison = getPlayerAttribute(gameState, playerID, "Regen");
+        updatePlayerAttribute(gameState, playerID, "Regen", poison + amount);
+        triggerActions(
+          gameState,
+          TriggerType.TTriggerOnCardPerformedPoison,
+          playerID,
+          -1,
+          targetPlayerID,
+          targetBoardCardID
+        );
+      });
+      break;
+    }
     case "TActionPlayerPoisonApply": {
       let amount = getCardAttribute(
         gameState,
@@ -2374,6 +2413,13 @@ export function getTooltips(
                 playerID,
                 boardCardID,
                 "BurnApplyAmount"
+              );
+            case "TActionPlayerRegenApply":
+              return getCardAttribute(
+                gameState,
+                playerID,
+                boardCardID,
+                "RegenApplyAmount"
               );
             case "TActionCardFreeze":
               return (
