@@ -1,6 +1,6 @@
 // Import tooltipParser.pegjs with its text content
 import { readFileSync } from "fs";
-import peggy, { ParserOptions } from "peggy";
+import peggy, { ParserOptions, ParserTracer } from "peggy";
 import { Item } from "./types/apiItems";
 import { PartialDeep } from "type-fest";
 import { Card, CardType, Tooltip, Type, Version } from "./types/cardTypes";
@@ -10,7 +10,18 @@ export const parser = peggy.generate(
   readFileSync("./src/tooltipParser.pegjs", "utf8")
 );
 
-export function parse(input: string, options?: ParserOptions) {
+interface CustomParserOptions {
+  item: Item;
+  abilityIndex: number;
+  auraIndex: number;
+
+  // Optional properties for the parser
+  grammarSource?: any;
+  startRule?: string;
+  tracer?: ParserTracer;
+}
+
+export function parse(input: string, options?: CustomParserOptions) {
   return parser.parse(input, options);
 }
 
