@@ -132,7 +132,8 @@ if (false) {
             "BuyPrice",
             "SellPrice",
             "FlavorText",
-            "Key"
+            "Key",
+            "Title"
           ].includes(key)
         ) {
           newObj[key] = removeSpecificKeys(val);

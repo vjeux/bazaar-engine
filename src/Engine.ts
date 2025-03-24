@@ -2273,7 +2273,7 @@ export function getTooltips(
   return boardCard.TooltipIds.map((tooltipId: string) => {
     const tooltipObject = boardCard.Localization.Tooltips[tooltipId];
     if (!tooltipObject) {
-      return "??";
+      return null;
     }
     const tooltip: string | number = tooltipObject.Content.Text.replace(
       /\{([a-z]+)\.([a-z0-9]+)\.targets\}/g,
@@ -2470,7 +2470,7 @@ export function getTooltips(
         }
       );
     return tooltip;
-  });
+  }).filter((tooltip: string | null) => tooltip !== null);
 }
 
 export function run(

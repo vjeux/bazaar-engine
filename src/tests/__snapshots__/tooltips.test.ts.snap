@@ -1836,7 +1836,6 @@ exports[`Generate tooltips for "Big Numbers" 1`] = `
   "tier": "Gold",
   "tooltips": [
     "Your large items have +25% crit chance",
-    "??",
   ],
 }
 `;
@@ -5248,7 +5247,6 @@ exports[`Generate tooltips for "Cosmic Plumage" 1`] = `
   "tier": "Silver",
   "tooltips": [
     "Your Shield items gain +4 Shield and your Weapons +4 damage for the fight.",
-    "??",
     "When you crit, charge this 1 second(s).",
   ],
 }
@@ -5260,7 +5258,6 @@ exports[`Generate tooltips for "Cosmic Plumage" 2`] = `
   "tier": "Gold",
   "tooltips": [
     "Your Shield items gain +8 Shield and your Weapons +8 damage for the fight.",
-    "??",
     "When you crit, charge this 1 second(s).",
   ],
 }
@@ -5272,7 +5269,6 @@ exports[`Generate tooltips for "Cosmic Plumage" 3`] = `
   "tier": "Diamond",
   "tooltips": [
     "Your Shield items gain +12 Shield and your Weapons +12 damage for the fight.",
-    "??",
     "When you crit, charge this 1 second(s).",
   ],
 }
@@ -9466,7 +9462,6 @@ exports[`Generate tooltips for "Glass Cannon" 1`] = `
   "tier": "Diamond",
   "tooltips": [
     "Both players' weapons have double damage.",
-    "??",
   ],
 }
 `;
@@ -10282,7 +10277,6 @@ exports[`Generate tooltips for "Harpoon" 2`] = `
   "tier": "Silver",
   "tooltips": [
     "Destroy a small item.",
-    "??",
   ],
 }
 `;
@@ -11873,7 +11867,6 @@ exports[`Generate tooltips for "Induction Aegis" 2`] = `
   "tooltips": [
     "Shield 15.",
     "Burn 2.",
-    "??",
   ],
 }
 `;
@@ -11896,7 +11889,6 @@ exports[`Generate tooltips for "Induction Aegis" 4`] = `
   "tooltips": [
     "Shield 25.",
     "Burn 4.",
-    "??",
   ],
 }
 `;
@@ -11969,7 +11961,6 @@ exports[`Generate tooltips for "Initial Chill" 1`] = `
   "tier": "Silver",
   "tooltips": [
     "The first time you use a Large item each fight, Freeze 1 item for 3 second(s).",
-    "??",
   ],
 }
 `;
@@ -13753,7 +13744,6 @@ exports[`Generate tooltips for "Lion Cane" 1`] = `
   "tooltips": [
     "Deal damage equal to 10% of your Max Health.",
     "When you Level Up, permanently gain 100 Max Health.",
-    "??",
   ],
 }
 `;
@@ -13765,7 +13755,6 @@ exports[`Generate tooltips for "Lion Cane" 2`] = `
   "tooltips": [
     "Deal damage equal to 20% of your Max Health.",
     "When you Level Up, permanently gain 200 Max Health.",
-    "??",
   ],
 }
 `;
@@ -14417,7 +14406,6 @@ exports[`Generate tooltips for "Masterpiece" 1`] = `
   "tier": "Silver",
   "tooltips": [
     "At the start of each hour, this gains 1 value.",
-    "??",
   ],
 }
 `;
@@ -19611,7 +19599,6 @@ exports[`Generate tooltips for "Scythe" 1`] = `
   "tier": "Legendary",
   "tooltips": [
     "Deal damage equal to a third of your enemy's max health.",
-    "??",
   ],
 }
 `;
@@ -21290,7 +21277,6 @@ exports[`Generate tooltips for "Stained Glass Window" 1`] = `
     "When you win a fight with Stained Glass Window in play, your Properties in play gain 5 value.",
     "When you lose a fight with Stained Glass Window in play, permanently destroy this.",
     "If you have 5 or fewer items in play, their cooldowns are reduced by 10%.",
-    "??",
   ],
 }
 `;
@@ -21303,7 +21289,6 @@ exports[`Generate tooltips for "Stained Glass Window" 2`] = `
     "When you win a fight with Stained Glass Window in play, your Properties in play gain 10 value.",
     "When you lose a fight with Stained Glass Window in play, permanently destroy this.",
     "If you have 5 or fewer items in play, their cooldowns are reduced by 20%.",
-    "??",
   ],
 }
 `;
