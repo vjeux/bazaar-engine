@@ -7,3 +7,6 @@ node_modules
 !.yarn/sdks
 !.yarn/versions
 build
+
+# Ignore the .env file, should never be committed
+.env
