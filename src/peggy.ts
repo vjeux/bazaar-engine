@@ -29,8 +29,6 @@ export function parse(input: string, options?: CustomParserOptions) {
 type DefaultCardRequired = {
   $type: CardType;
   Type: Type;
-  Version: Version;
-  AudioKey: string;
   Localization: {
     FlavorText: null;
     Tooltips: PartialDeep<Tooltip>[];
@@ -42,15 +40,9 @@ const DEFAULT_CARD: DefaultCardRequired &
   PartialDeep<Omit<Card, keyof DefaultCardRequired>> = {
   $type: CardType.TCardItem,
   Type: Type.Item,
-  Version: Version.The100,
-  AudioKey: "",
   Localization: {
     FlavorText: null,
-    Tooltips: [
-      {
-        Prerequisites: null
-      }
-    ]
+    Tooltips: []
   }
 };
 
@@ -62,11 +54,20 @@ export function parseItem(item: Item): PartialDeep<Card> {
 
   // For each tooltip, parse it and merge the result into the card
   item.unifiedTooltips.forEach((tooltip) => {
-    const parsedCard = parse(tooltip, {
-      item: item,
-      abilityIndex: abilityIndex,
-      auraIndex: auraIndex
-    });
+    let parsedCard: PartialDeep<Card>;
+    try {
+      parsedCard = parse(tooltip, {
+        item: item,
+        abilityIndex: abilityIndex,
+        auraIndex: auraIndex
+      });
+    } catch (error) {
+      // If parsing fails, log the error and skip this tooltip
+      console.error(
+        `Peggy parser error for tooltip: "${tooltip}", error: "${error}"`
+      );
+      return;
+    }
     // Merge the parsed card into the card object
     card = _.merge(card, parsedCard);
 
@@ -99,7 +100,6 @@ export function parseItem(item: Item): PartialDeep<Card> {
   card.HiddenTags = item.hiddenTags;
   card.Size = item.size;
   card.StartingTier = item.startingTier;
-  card.Version = Version.The100;
   _.set(card, "Localization.Title.Text", item.name);
 
   // Cast the card to the expected return type to resolve type compatibility issues

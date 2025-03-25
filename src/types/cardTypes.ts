@@ -622,7 +622,4 @@ export interface TierInfo {
   TooltipIds: number[];
 }
 
-export enum Version {
-  The000 = "0.0.0",
-  The100 = "1.0.0"
-}
+export type Version = string;

@@ -12,7 +12,7 @@ const items: Item[] = apiItems.data as Item[];
 const { yellow } = createColors({ useColor: true });
 
 const { Cards } = await genCardsAndEncounters();
-const CardsValues = Object.values(Cards);
+const CardsValues = Object.values(Cards["0.1.9"]);
 
 describe("Peggy-generated tooltip parser", () => {
   // Track which tooltips don't match the parser's grammar
@@ -132,8 +132,8 @@ describe("should build all partial cards correctly", () => {
           Size: expectedCard?.Size,
           StartingTier: expectedCard?.StartingTier,
           HiddenTags: expectedCard?.HiddenTags,
-          Version: expectedCard?.Version,
           Localization: {
+            FlavorText: null,
             Title: {
               Text: item.name
             },
