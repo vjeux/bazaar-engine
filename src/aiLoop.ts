@@ -3,37 +3,35 @@ import z from "zod";
 
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 
-import { createVitest, startVitest } from "vitest/node";
+import { createGoogleGenerativeAI } from "@ai-sdk/google";
 
-const vitest = await createVitest(
-  "test",
-  { watch: false }, // override test config
-  {}, // override Vite config
-  {} // custom Vitest options
-);
 
-try {
-  const result = await vitest.start(["peggy"]);
+let model;
 
-  console.log("Vitest result:", result);
-} catch (err) {
-  console.log("Error starting Vitest:", err);
-} finally {
-  await vitest.close();
+switch (process.env.PROVIDER) {
+  case "google": {
+    const google = createGoogleGenerativeAI({
+      apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY
+    });
+    model = google("models/gemini-2.0-flash");
+    break;
+  }
+  case "lmstudio": {
+    const lmstudio = createOpenAICompatible({
+      name: "lmstudio",
+      baseURL: "http://localhost:1234/v1"
+    });
+    model = lmstudio("gemma-3-27b-it");
+    break;
+  }
+  default:
+    throw new Error("Unsupported provider specified in .env");
 }
-
-// exit to avoid running below code
-process.exit();
-
-const lmstudio = createOpenAICompatible({
-  name: "lmstudio",
-  baseURL: "http://localhost:1234/v1"
-});
 
 const messages: CoreMessage[] = [];
 
 const { response } = await generateText({
-  model: lmstudio("gemma-3-27b-it"),
+  model: model,
   tools: {
     weather: tool({
       description: "Get the weather in a location",
@@ -46,6 +44,8 @@ const { response } = await generateText({
       })
     })
   },
+  system:
+    "You are a helpful assistant which can answer questions about the weather and suggest attractions. You can also call the weather tool to get the current temperature in a location.",
   prompt:
     "What is the weather in San Francisco and what attractions should I visit? Give me the top 3 attractions.",
   maxSteps: 2

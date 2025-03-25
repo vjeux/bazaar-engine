@@ -11132,54 +11132,6 @@ exports[`Generate tooltips for "Hypnotic Drain" 1`] = `
 }
 `;
 
-exports[`Generate tooltips for "Ice 9000" 1`] = `
-{
-  "cardName": "Ice 9000",
-  "tier": "Bronze",
-  "tooltips": [
-    "Poison 2.",
-    "Freeze 1 item for 1 second(s).",
-    "When you Freeze, this gains 1 Poison for the fight.",
-  ],
-}
-`;
-
-exports[`Generate tooltips for "Ice 9000" 2`] = `
-{
-  "cardName": "Ice 9000",
-  "tier": "Silver",
-  "tooltips": [
-    "Poison 4.",
-    "Freeze 1 item for 2 second(s).",
-    "When you Freeze, this gains 2 Poison for the fight.",
-  ],
-}
-`;
-
-exports[`Generate tooltips for "Ice 9000" 3`] = `
-{
-  "cardName": "Ice 9000",
-  "tier": "Gold",
-  "tooltips": [
-    "Poison 6.",
-    "Freeze 1 item for 3 second(s).",
-    "When you Freeze, this gains 3 Poison for the fight.",
-  ],
-}
-`;
-
-exports[`Generate tooltips for "Ice 9000" 4`] = `
-{
-  "cardName": "Ice 9000",
-  "tier": "Diamond",
-  "tooltips": [
-    "Poison 8.",
-    "Freeze 1 item for 4 second(s).",
-    "When you Freeze, this gains 4 Poison for the fight.",
-  ],
-}
-`;
-
 exports[`Generate tooltips for "Ice Bullets" 1`] = `
 {
   "cardName": "Ice Bullets",
