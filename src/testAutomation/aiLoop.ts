@@ -1,12 +1,17 @@
-import { generateText, tool } from "ai";
-import z from "zod";
-
+import { generateText } from "ai";
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
-
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
-
 // Load environment variables from .env file
 import "jsr:@std/dotenv/load";
+
+// Read prompt.txt file
+const promptText = await Deno.readTextFile("src/testAutomation/prompt.txt");
+
+// Extract system prompt from the prompt.txt file
+const systemPromptMatch = promptText.match(
+  /<systemPrompt>(.*?)<\/systemPrompt>/s
+);
+const systemPrompt = systemPromptMatch ? systemPromptMatch[1].trim() : "";
 
 let model;
 
@@ -15,7 +20,7 @@ switch (Deno.env.get("PROVIDER")) {
     const google = createGoogleGenerativeAI({
       apiKey: Deno.env.get("GOOGLE_GENERATIVE_AI_API_KEY")
     });
-    model = google("models/gemini-2.0-flash");
+    model = google("models/gemini-2.5-pro-exp-03-25");
     break;
   }
   case "lmstudio": {
@@ -32,27 +37,16 @@ switch (Deno.env.get("PROVIDER")) {
     );
 }
 
-const messages = [];
-
-const { response } = await generateText({
+console.log("Sending prompt to model...");
+const result = await generateText({
   model: model,
-  tools: {
-    weather: tool({
-      description: "Get the weather in a location",
-      parameters: z.object({
-        location: z.string().describe("The location to get the weather for")
-      }),
-      execute: async ({ location }) => ({
-        location,
-        temperature: 72 + Math.floor(Math.random() * 21) - 10
-      })
-    })
-  },
-  system:
-    "You are a helpful assistant which can answer questions about the weather and suggest attractions. You can also call the weather tool to get the current temperature in a location.",
-  prompt:
-    "What is the weather in San Francisco and what attractions should I visit? Give me the top 3 attractions.",
-  maxSteps: 2
+  system: systemPrompt,
+  prompt: promptText,
+  maxSteps: 5
 });
 
-console.log("Response:", response);
+console.log("Received response from model");
+
+// Write the response to answer.txt
+await Deno.writeTextFile("src/testAutomation/answer.txt", result.text);
+console.log("Response written to: src/testAutomation/answer.txt");

@@ -2,6 +2,9 @@
   "version": "4",
   "specifiers": {
     "jsr:@std/dotenv@*": "0.225.3",
+    "jsr:@std/fs@*": "1.0.15",
+    "jsr:@std/path@*": "1.0.8",
+    "jsr:@std/path@^1.0.8": "1.0.8",
     "npm:@ai-sdk/google@^1.2.2": "1.2.3_zod@3.24.2",
     "npm:@ai-sdk/openai-compatible@~0.2.1": "0.2.2_zod@3.24.2",
     "npm:@eslint/js@^9.20.0": "9.23.0",
@@ -40,6 +43,15 @@
   "jsr": {
     "@std/dotenv@0.225.3": {
       "integrity": "a95e5b812c27b0854c52acbae215856d9cce9d4bbf774d938c51d212711e8d4a"
+    },
+    "@std/fs@1.0.15": {
+      "integrity": "c083fb479889d6440d768e498195c3fc499d426fbf9a6592f98f53884d1d3f41",
+      "dependencies": [
+        "jsr:@std/path@^1.0.8"
+      ]
+    },
+    "@std/path@1.0.8": {
+      "integrity": "548fa456bb6a04d3c1a1e7477986b6cffbce95102d0bb447c67c4ee70e0364be"
     }
   },
   "npm": {
