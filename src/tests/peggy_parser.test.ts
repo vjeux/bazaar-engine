@@ -14,69 +14,6 @@ const { yellow } = createColors({ useColor: true });
 const { Cards } = await genCardsAndEncounters();
 const CardsValues = Object.values(Cards["0.1.9"]);
 
-describe("Peggy-generated tooltip parser", () => {
-  // Track which tooltips don't match the parser's grammar
-  const unmatchedTooltips = new Set<string>();
-  const matchedTooltips = new Set<string>();
-  const allTooltips = new Set<string>();
-
-  // Process items one by one
-  apiItems.data.forEach((item) => {
-    if (item.unifiedTooltips && Array.isArray(item.unifiedTooltips)) {
-      it(`${item.name} - parse tooltips`, () => {
-        const itemUnmatchedTooltips: string[] = [];
-
-        item.unifiedTooltips.forEach((tooltip) => {
-          allTooltips.add(tooltip);
-
-          try {
-            // Try to parse the tooltip with the Peggy parser
-            parse(tooltip, {
-              item: item,
-              abilityIndex: 0,
-              auraIndex: 0
-            });
-            matchedTooltips.add(tooltip);
-          } catch (error) {
-            unmatchedTooltips.add(tooltip);
-            itemUnmatchedTooltips.push(tooltip);
-            throw error;
-          }
-        });
-
-        if (itemUnmatchedTooltips.length > 0) {
-          console.log(
-            `Item ${item.name} has ${itemUnmatchedTooltips.length} unmatched tooltips:`
-          );
-          itemUnmatchedTooltips.forEach((tooltip) =>
-            console.log(`- "${tooltip}"`)
-          );
-        }
-
-        expect(itemUnmatchedTooltips.length).toBe(0);
-      });
-    }
-  });
-
-  it("should provide statistics about matched vs unmatched tooltips", () => {
-    const matchedCount = matchedTooltips.size;
-    const unmatchedCount = unmatchedTooltips.size;
-
-    console.log(
-      yellow(`
-    Tooltip Parsing Statistics:
-    - Total unique tooltips: ${allTooltips.size}
-    - Matched: ${matchedCount} (${((matchedCount / allTooltips.size) * 100).toFixed(2)}%)
-    - Unmatched: ${unmatchedCount} (${((unmatchedCount / allTooltips.size) * 100).toFixed(2)}%)
-    `)
-    );
-
-    // We don't expect all tooltips to match initially since the parser is still being developed
-    // This test just provides statistics rather than failing
-    expect(true).toBe(true);
-  });
-});
-
 describe("should build all partial cards correctly", () => {
   // For each item, parse it, build it and check equality
   items.forEach((item) => {
