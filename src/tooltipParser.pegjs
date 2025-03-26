@@ -286,49 +286,6 @@ WhenSource
 
 Trigger = "When"i _ source:WhenSource
 
-// Adjacent Heal items gain (10/15/20/25) Heal for the fight.
-// Adjacent Shield items gain (10/15/20/25) Shield for the fight.
-// Adjacent Shield items gain (3/6/9/12) Shield for the fight.
-// Adjacent Shield items gain (5/10) Shield for the fight.
-// Adjacent Shield items permanently gain (+1/+2/+3/+4) Shield.
-// Adjacent Weapons gain (5/10) Damage for the fight.
-// Adjacent Weapons permanently gain (+1/+2/+3/+4) Damage.
-// Adjacent items gain (+10%/+15%/+20%) crit chance for the fight.
-// Adjacent items gain (2%/4%/6%/8%) Crit Chance for the fight.
-// Adjacent items gain (2%/4%/6%/8%) Crit chance for the fight.
-// Adjacent items permanently gain (1%/2%/3%/4%) Crit chance.
-// Adjacent weapons gain (10/15/20/25) Damage for the fight.
-// Adjacent weapons gain (3/6/9/12) damage for the fight.
-Target
-  = "items"
-  / TagType " items"
-  / "weapons"i
-
-AdjacentTarget
-  = "Adjacent"i
-    _
-    target:Target
-    (_ permanent:"permanently")?
-    _
-    "gain"
-    _
-    amount:Numbers
-    _
-    attribute:AttributeType
-    _?
-    forFight:"for the fight."? {
-      // Start by creating TierInfos with Custom_x attributes
-      tiers = cfTier(ITEM, amount, (item, tier, values, index) => {
-        const tierInfo = {
-          Attributes: {
-            [`Custom_${index}`]: values[index]
-          }
-        };
-      });
-      // Now create the ability
-      // TODO
-    }
-
 // Numbers matches a number pattern, either a single number or a parenthesized list
 Numbers
   = "(" values:$[^)]+ ")" { return extractNumbers("(" + values + ")"); }
