@@ -1,17 +1,19 @@
-import { CoreMessage, generateText, tool } from "ai";
+import { generateText, tool } from "ai";
 import z from "zod";
 
 import { createOpenAICompatible } from "@ai-sdk/openai-compatible";
 
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 
+// Load environment variables from .env file
+import "jsr:@std/dotenv/load";
 
 let model;
 
-switch (process.env.PROVIDER) {
+switch (Deno.env.get("PROVIDER")) {
   case "google": {
     const google = createGoogleGenerativeAI({
-      apiKey: process.env.GOOGLE_GENERATIVE_AI_API_KEY
+      apiKey: Deno.env.get("GOOGLE_GENERATIVE_AI_API_KEY")
     });
     model = google("models/gemini-2.0-flash");
     break;
@@ -25,10 +27,12 @@ switch (process.env.PROVIDER) {
     break;
   }
   default:
-    throw new Error("Unsupported provider specified in .env");
+    throw new Error(
+      "Unsupported provider specified in .env:" + Deno.env.get("PROVIDER")
+    );
 }
 
-const messages: CoreMessage[] = [];
+const messages = [];
 
 const { response } = await generateText({
   model: model,
