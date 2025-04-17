@@ -1,6 +1,6 @@
 import pako from "pako";
-import type { Cards } from "./types/cardTypes.ts";
-import type { EncounterDays } from "./types/encounterTypes.ts";
+import type { Cards } from "../types/cardTypes.ts";
+import type { EncounterDays } from "../types/encounterTypes.ts";
 
 function genDataFromLocalStorage(
   localStorageKey: string,
@@ -41,11 +41,11 @@ export async function genCardsAndEncounters(): Promise<{
 }> {
   const [Cards, Encounters] = await Promise.all([
     // https://cdn.playthebazaar.com/bazaardesigndataprod/cards.json
-    genDataFromLocalStorage("Cards", import("./json/cards.json")),
+    genDataFromLocalStorage("Cards", import("../json/cards.json")),
     // https://www.howbazaar.gg/api/monsterEncounterDays
     genDataFromLocalStorage(
       "Encounters",
-      import("./json/monsterEncounterDays.json")
+      import("../json/monsterEncounterDays.json")
     )
   ]);
   return { Cards: Cards as Cards, Encounters: Encounters as EncounterDays };

@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import App from "./-App.tsx";
-import { genCardsAndEncounters } from "../Data.ts";
+import { genCardsAndEncounters } from "../lib/Data.ts";
 
 const { Cards, Encounters } = await genCardsAndEncounters();
 
