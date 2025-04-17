@@ -4,7 +4,7 @@ import type { EncounterDays } from "../types/encounterTypes.ts";
 
 function genDataFromLocalStorage(
   localStorageKey: string,
-  importCall: Promise<any>
+  importCall: Promise<any>,
 ) {
   return new Promise((success) => {
     if (typeof localStorage === "undefined") {
@@ -17,7 +17,7 @@ function genDataFromLocalStorage(
         importCall.then((module) => {
           const data = module.default;
           const compressed = JSON.stringify([
-            ...pako.deflate(JSON.stringify(data))
+            ...pako.deflate(JSON.stringify(data)),
           ]);
           try {
             localStorage.setItem(localStorageKey, compressed);
@@ -45,8 +45,8 @@ export async function genCardsAndEncounters(): Promise<{
     // https://www.howbazaar.gg/api/monsterEncounterDays
     genDataFromLocalStorage(
       "Encounters",
-      import("../json/monsterEncounterDays.json")
-    )
+      import("../json/monsterEncounterDays.json"),
+    ),
   ]);
   return { Cards: Cards as Cards, Encounters: Encounters as EncounterDays };
 }

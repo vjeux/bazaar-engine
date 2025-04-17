@@ -4,7 +4,7 @@ import { EncounterDays } from "../types/encounterTypes";
 
 function genDataFromLocalStorage(
   localStorageKey: string,
-  importCall: Promise<any>
+  importCall: Promise<any>,
 ) {
   return new Promise((success) => {
     if (typeof localStorage === "undefined") {
@@ -17,7 +17,7 @@ function genDataFromLocalStorage(
         importCall.then((module) => {
           const data = module.default;
           const compressed = JSON.stringify([
-            ...pako.deflate(JSON.stringify(data))
+            ...pako.deflate(JSON.stringify(data)),
           ]);
           try {
             localStorage.setItem(localStorageKey, compressed);
@@ -43,8 +43,8 @@ export async function genCardsAndEncounters(): Promise<{
     genDataFromLocalStorage("Cards", import("../json/cards.json")),
     genDataFromLocalStorage(
       "Encounters",
-      import("../json/monsterEncounterDays.json")
-    )
+      import("../json/monsterEncounterDays.json"),
+    ),
   ]);
   return { Cards: Cards as Cards, Encounters: Encounters as EncounterDays };
 }

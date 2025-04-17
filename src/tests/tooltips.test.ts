@@ -30,7 +30,7 @@ function getTiers(startingTier: Tier): Tier[] {
 [...validItemNames, ...validSkillNames].forEach((cardName) => {
   it(`Generate tooltips for "${cardName}"`, () => {
     const card = Cards["0.1.9"].find(
-      (card) => card.Localization.Title.Text === cardName
+      (card) => card.Localization.Title.Text === cardName,
     );
     if (!card) {
       throw new Error(`Card "${cardName}" not found`);
@@ -42,18 +42,18 @@ function getTiers(startingTier: Tier): Tier[] {
           : { skills: [{ name: cardName, tier }] };
         const gameState = getInitialGameState(Cards, Encounters, [
           { type: "player", health: 1000, ...extension },
-          { type: "player", health: 1000 }
+          { type: "player", health: 1000 },
         ]);
         expect({
           cardName,
           tier,
-          tooltips: getTooltips(gameState, 0, 0)
+          tooltips: getTooltips(gameState, 0, 0),
         }).toMatchSnapshot();
       } catch (e) {
         expect({
           cardName,
           tier,
-          error: (e as Error).message
+          error: (e as Error).message,
         }).toMatchSnapshot();
       }
     });
@@ -64,7 +64,7 @@ if (false) {
   const tests = [...validItemNames, ...validSkillNames]
     .map((cardName) => {
       const card = Cards["0.1.9"].find(
-        (card) => card.Localization.Title.Text === cardName
+        (card) => card.Localization.Title.Text === cardName,
       );
       if (!card) {
         throw new Error(`Card "${cardName}" not found`);
@@ -73,7 +73,7 @@ if (false) {
         Abilities: card.Abilities,
         Auras: card.Auras,
         Tiers: card.Tiers,
-        Localization: card.Localization
+        Localization: card.Localization,
       });
       try {
         const tooltips = getTiers(card.StartingTier).map((tier) => {
@@ -82,7 +82,7 @@ if (false) {
             : { skills: [{ name: cardName, tier }] };
           const gameState = getInitialGameState(Cards, Encounters, [
             { type: "player", health: 1000, ...extension },
-            { type: "player", health: 1000 }
+            { type: "player", health: 1000 },
           ]);
           return getTooltips(gameState, 0, 0);
         });
@@ -99,11 +99,11 @@ if (false) {
       {
         description:
           "You are building a program that takes tooltips of a card game and your goal is to generate the internal json representation of the card. You are going to be fed tooltips and cards one by one and your goal is to write a generalizable parser such that when seeing tooltips from cards it doesn't know, it will be able to generate the internal representation.",
-        tests
+        tests,
       },
       null,
-      2
-    )
+      2,
+    ),
   );
 
   function removeSpecificKeys(value: any): any {
@@ -133,7 +133,7 @@ if (false) {
             "SellPrice",
             "FlavorText",
             "Key",
-            "Title"
+            "Title",
           ].includes(key)
         ) {
           newObj[key] = removeSpecificKeys(val);

@@ -10,85 +10,85 @@
 
 // Import Routes
 
-import { Route as rootRoute } from './routes/__root'
-import { Route as DragndropImport } from './routes/dragndrop'
-import { Route as IndexImport } from './routes/index'
+import { Route as rootRoute } from "./routes/__root";
+import { Route as DragndropImport } from "./routes/dragndrop";
+import { Route as IndexImport } from "./routes/index";
 
 // Create/Update Routes
 
 const DragndropRoute = DragndropImport.update({
-  id: '/dragndrop',
-  path: '/dragndrop',
+  id: "/dragndrop",
+  path: "/dragndrop",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 const IndexRoute = IndexImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRoute,
-} as any)
+} as any);
 
 // Populate the FileRoutesByPath interface
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
-      parentRoute: typeof rootRoute
-    }
-    '/dragndrop': {
-      id: '/dragndrop'
-      path: '/dragndrop'
-      fullPath: '/dragndrop'
-      preLoaderRoute: typeof DragndropImport
-      parentRoute: typeof rootRoute
-    }
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexImport;
+      parentRoute: typeof rootRoute;
+    };
+    "/dragndrop": {
+      id: "/dragndrop";
+      path: "/dragndrop";
+      fullPath: "/dragndrop";
+      preLoaderRoute: typeof DragndropImport;
+      parentRoute: typeof rootRoute;
+    };
   }
 }
 
 // Create and export the route tree
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/dragndrop': typeof DragndropRoute
+  "/": typeof IndexRoute;
+  "/dragndrop": typeof DragndropRoute;
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/dragndrop': typeof DragndropRoute
+  "/": typeof IndexRoute;
+  "/dragndrop": typeof DragndropRoute;
 }
 
 export interface FileRoutesById {
-  __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/dragndrop': typeof DragndropRoute
+  __root__: typeof rootRoute;
+  "/": typeof IndexRoute;
+  "/dragndrop": typeof DragndropRoute;
 }
 
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dragndrop'
-  fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dragndrop'
-  id: '__root__' | '/' | '/dragndrop'
-  fileRoutesById: FileRoutesById
+  fileRoutesByFullPath: FileRoutesByFullPath;
+  fullPaths: "/" | "/dragndrop";
+  fileRoutesByTo: FileRoutesByTo;
+  to: "/" | "/dragndrop";
+  id: "__root__" | "/" | "/dragndrop";
+  fileRoutesById: FileRoutesById;
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  DragndropRoute: typeof DragndropRoute
+  IndexRoute: typeof IndexRoute;
+  DragndropRoute: typeof DragndropRoute;
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DragndropRoute: DragndropRoute,
-}
+};
 
 export const routeTree = rootRoute
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
 /* ROUTE_MANIFEST_START
 {

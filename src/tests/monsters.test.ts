@@ -7,7 +7,7 @@ function getOptimizedDiff(
   prev: any,
   curr: any,
   ignoreKeys = new Set(["card", "tick"]),
-  path: string[] = []
+  path: string[] = [],
 ): Record<string, any> {
   // If both values are strictly equal, no diff
   if (prev === curr) return {};
@@ -31,7 +31,7 @@ function getOptimizedDiff(
     // Recurse for the current key; build a new path
     const subDiff = getOptimizedDiff(prev[key], curr[key], ignoreKeys, [
       ...path,
-      key
+      key,
     ]);
     // Merge any differences found
     Object.assign(differences, subDiff);
@@ -51,9 +51,9 @@ getFlattenedEncounters(Encounters).forEach((encounter) => {
         cards: [
           { name: "Silk Scarf" },
           { name: "Fang" },
-          { name: "Bag of Jewels" }
-        ]
-      }
+          { name: "Bag of Jewels" },
+        ],
+      },
     ]);
 
     let steps = [];

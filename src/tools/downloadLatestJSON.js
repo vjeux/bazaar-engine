@@ -22,8 +22,8 @@ fetch("https://www.howbazaar.gg/api/items")
       JSON.stringify(
         JSON.parse(text).data.map((card) => card.name),
         null,
-        2
-      )
+        2,
+      ),
     );
   });
 
@@ -37,7 +37,7 @@ fetch("https://www.howbazaar.gg/api/skills")
       JSON.stringify(
         JSON.parse(text).data.map((card) => card.name),
         null,
-        2
-      )
+        2,
+      ),
     );
   });

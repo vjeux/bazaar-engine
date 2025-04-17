@@ -34,7 +34,7 @@ describe("Peggy-generated tooltip parser", () => {
             parse(tooltip, {
               item: item,
               abilityIndex: 0,
-              auraIndex: 0
+              auraIndex: 0,
             });
             matchedTooltips.add(tooltip);
           } catch (error) {
@@ -46,7 +46,7 @@ describe("Peggy-generated tooltip parser", () => {
 
         if (itemUnmatchedTooltips.length > 0) {
           console.log(
-            `Item ${item.name} has ${itemUnmatchedTooltips.length} unmatched tooltips:`
+            `Item ${item.name} has ${itemUnmatchedTooltips.length} unmatched tooltips:`,
           );
           itemUnmatchedTooltips.forEach((tooltip) =>
             console.log(`- "${tooltip}"`)
@@ -66,9 +66,13 @@ describe("Peggy-generated tooltip parser", () => {
       yellow(`
     Tooltip Parsing Statistics:
     - Total unique tooltips: ${allTooltips.size}
-    - Matched: ${matchedCount} (${((matchedCount / allTooltips.size) * 100).toFixed(2)}%)
-    - Unmatched: ${unmatchedCount} (${((unmatchedCount / allTooltips.size) * 100).toFixed(2)}%)
-    `)
+    - Matched: ${matchedCount} (${
+        ((matchedCount / allTooltips.size) * 100).toFixed(2)
+      }%)
+    - Unmatched: ${unmatchedCount} (${
+        ((unmatchedCount / allTooltips.size) * 100).toFixed(2)
+      }%)
+    `),
     );
 
     // We don't expect all tooltips to match initially since the parser is still being developed
@@ -128,26 +132,29 @@ describe("should build all partial cards correctly", () => {
         "MigrationData",
         "Priority", // TODO - Figure out some way to handle priority
         "TranslationKey",
-        "VFXConfig"
+        "VFXConfig",
       ];
       const omittedAbilities = expectedCard?.Abilities
-        ? _.mapValues(expectedCard.Abilities, (ability) =>
-            _.omit(ability, omitToplevelKeys)
-          )
+        ? _.mapValues(
+          expectedCard.Abilities,
+          (ability) => _.omit(ability, omitToplevelKeys),
+        )
         : undefined;
 
       const omitTierKeys = ["BuyPrice", "SellPrice"];
       const omittedTiers = expectedCard?.Tiers
-        ? _.mapValues(expectedCard.Tiers, (ti) =>
-            _.mapValues(ti, (tierInfo) => _.omit(tierInfo, omitTierKeys))
-          )
+        ? _.mapValues(
+          expectedCard.Tiers,
+          (ti) => _.mapValues(ti, (tierInfo) => _.omit(tierInfo, omitTierKeys)),
+        )
         : undefined;
 
       const omitTooltipKeys = ["Content.Key", "TooltipType", "Prerequisites"]; // TODO dont care about these for now
       const omittedTooltips = expectedCard?.Localization?.Tooltips
-        ? _.map(expectedCard.Localization.Tooltips, (tooltip) =>
-            _.omit(tooltip, omitTooltipKeys)
-          )
+        ? _.map(
+          expectedCard.Localization.Tooltips,
+          (tooltip) => _.omit(tooltip, omitTooltipKeys),
+        )
         : undefined;
 
       expect(parsedCard).toEqual(
@@ -166,11 +173,11 @@ describe("should build all partial cards correctly", () => {
           Version: expectedCard?.Version,
           Localization: {
             Title: {
-              Text: item.name
+              Text: item.name,
             },
-            Tooltips: omittedTooltips
-          }
-        })
+            Tooltips: omittedTooltips,
+          },
+        }),
       );
     });
   });

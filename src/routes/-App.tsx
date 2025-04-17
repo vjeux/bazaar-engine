@@ -1,32 +1,34 @@
 import "../styles.css";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
-  run,
-  getTooltips,
-  TICK_RATE,
-  type GameState,
   type BoardCard,
-  type BoardSkill,
-  type Player,
   type BoardCardOrSkill,
+  type BoardSkill,
+  type GameState,
   getCardAttribute,
-  getPlayerAttribute
+  getPlayerAttribute,
+  getTooltips,
+  type Player,
+  run,
+  TICK_RATE,
 } from "../engine/Engine.ts";
 
 import type { Card, Cards } from "../types/cardTypes.ts";
 import type { EncounterDays } from "../types/encounterTypes.ts";
 import type React from "react";
 import {
+  getFlattenedEncounters,
   getInitialGameState,
   type MonsterConfig,
   type PlayerCardConfig,
   type PlayerConfig,
   type PlayerSkillConfig,
-  getFlattenedEncounters
 } from "../engine/GameState.ts";
 import type { Tier } from "../types/shared.ts";
 
-import ValidSkillNames from "../json/ValidSkillNames.json" with { type: "json" };
+import ValidSkillNames from "../json/ValidSkillNames.json" with {
+  type: "json",
+};
 import ValidItemNames from "../json/ValidItemNames.json" with { type: "json" };
 
 const CARD_HEIGHT = 180;
@@ -35,7 +37,7 @@ function Tooltip({
   boardCard,
   gameState,
   playerID,
-  boardCardID
+  boardCardID,
 }: {
   boardCard: BoardCardOrSkill;
   gameState: GameState;
@@ -53,7 +55,7 @@ function Tooltip({
         borderRadius: 5,
         padding: "5px 10px",
         zIndex: 1,
-        minWidth: 200
+        minWidth: 200,
       }}
       className="tooltip"
     >
@@ -69,7 +71,7 @@ function Tooltip({
         {[
           ...boardCard.card.Heroes,
           ...boardCard.card.Tags,
-          ...boardCard.card.HiddenTags
+          ...boardCard.card.HiddenTags,
         ].join(", ")}
       </div>
     </div>
@@ -80,7 +82,7 @@ function BoardCardElement({
   boardCard,
   gameState,
   playerID,
-  boardCardID
+  boardCardID,
 }: {
   boardCard: BoardCard;
   gameState: GameState;
@@ -89,18 +91,19 @@ function BoardCardElement({
 }) {
   const card = boardCard.card;
   const tier = boardCard.tier;
-  const cardWidth =
-    card.Size === "Small"
-      ? CARD_HEIGHT / 2
-      : card.Size === "Medium"
-        ? CARD_HEIGHT / 1
-        : CARD_HEIGHT * 1.5;
+  const cardWidth = card.Size === "Small"
+    ? CARD_HEIGHT / 2
+    : card.Size === "Medium"
+    ? CARD_HEIGHT / 1
+    : CARD_HEIGHT * 1.5;
 
   const localeText = card.Localization.Title.Text;
-  const imgUrl = `https://www.howbazaar.gg/images/items/${localeText.replace(
-    /[ '\-&]/g,
-    ""
-  )}.avif`;
+  const imgUrl = `https://www.howbazaar.gg/images/items/${
+    localeText.replace(
+      /[ '\-&]/g,
+      "",
+    )
+  }.avif`;
 
   const paddingTop = 0.06;
   const paddingLeft = 0.03;
@@ -110,39 +113,42 @@ function BoardCardElement({
   const sizesOneLetter = {
     Large: "L",
     Medium: "M",
-    Small: "S"
+    Small: "S",
   };
-  const frameUrl = `https://www.bazaarplanner.com/images/fromBT/CardFrame_${tier}_${sizesOneLetter[card.Size]}_TUI.png`;
+  const frameUrl =
+    `https://www.bazaarplanner.com/images/fromBT/CardFrame_${tier}_${
+      sizesOneLetter[card.Size]
+    }_TUI.png`;
 
   const DamageAmount = getCardAttribute(
     gameState,
     playerID,
     boardCardID,
-    "DamageAmount"
+    "DamageAmount",
   );
   const HealAmount = getCardAttribute(
     gameState,
     playerID,
     boardCardID,
-    "HealAmount"
+    "HealAmount",
   );
   const BurnApplyAmount = getCardAttribute(
     gameState,
     playerID,
     boardCardID,
-    "BurnApplyAmount"
+    "BurnApplyAmount",
   );
   const PoisonApplyAmount = getCardAttribute(
     gameState,
     playerID,
     boardCardID,
-    "PoisonApplyAmount"
+    "PoisonApplyAmount",
   );
   const ShieldApplyAmount = getCardAttribute(
     gameState,
     playerID,
     boardCardID,
-    "ShieldApplyAmount"
+    "ShieldApplyAmount",
   );
   const Freeze = getCardAttribute(gameState, playerID, boardCardID, "Freeze");
   const Slow = getCardAttribute(gameState, playerID, boardCardID, "Slow");
@@ -151,19 +157,19 @@ function BoardCardElement({
     gameState,
     playerID,
     boardCardID,
-    "CritChance"
+    "CritChance",
   );
   const SellPrice = getCardAttribute(
     gameState,
     playerID,
     boardCardID,
-    "SellPrice"
+    "SellPrice",
   );
   const Multicast = getCardAttribute(
     gameState,
     playerID,
     boardCardID,
-    "Multicast"
+    "Multicast",
   );
   const AmmoMax = getCardAttribute(gameState, playerID, boardCardID, "AmmoMax");
   const Ammo = getCardAttribute(gameState, playerID, boardCardID, "Ammo");
@@ -171,13 +177,13 @@ function BoardCardElement({
     gameState,
     playerID,
     boardCardID,
-    "CooldownMax"
+    "CooldownMax",
   );
   const Lifesteal = getCardAttribute(
     gameState,
     playerID,
     boardCardID,
-    "Lifesteal"
+    "Lifesteal",
   );
 
   return (
@@ -204,7 +210,7 @@ function BoardCardElement({
           height: CARD_HEIGHT,
           width: cardWidth,
           marginTop: 5,
-          opacity: boardCard.isDisabled ? 0.1 : 1
+          opacity: boardCard.isDisabled ? 0.1 : 1,
         }}
       >
         {/* Image container */}
@@ -214,7 +220,7 @@ function BoardCardElement({
             top: CARD_HEIGHT * paddingTop,
             left: CARD_HEIGHT * paddingLeft,
             bottom: CARD_HEIGHT * paddingBottom,
-            right: CARD_HEIGHT * paddingRight
+            right: CARD_HEIGHT * paddingRight,
           }}
         >
           <img
@@ -222,7 +228,7 @@ function BoardCardElement({
             style={{
               filter: boardCard.Freeze > 0 ? "grayscale(1)" : "",
               opacity: boardCard.Freeze > 0 ? 0.5 : 1,
-              borderRadius: 5
+              borderRadius: 5,
             }}
             width="100%"
             height="100%"
@@ -232,47 +238,48 @@ function BoardCardElement({
         <img
           src={frameUrl}
           style={{
-            position: "absolute"
+            position: "absolute",
           }}
           width="100%"
           height="100%"
         />
         {/* Cooldown Indicator */}
-        {CooldownMax > 0 ? (
-          <div
-            style={{
-              position: "absolute",
-              left: CARD_HEIGHT * paddingLeft,
-              right: CARD_HEIGHT * paddingRight,
-              bottom:
-                CARD_HEIGHT * paddingBottom +
-                (boardCard.tick / CooldownMax) *
-                  (CARD_HEIGHT -
-                    CARD_HEIGHT * (paddingTop + paddingBottom) -
-                    2),
-              borderTop: "2px solid white",
-              color: "white",
-              textAlign: "right",
-              fontSize: "8pt",
-              boxSizing: "border-box",
-              height: 2
-            }}
-          >
-            <span
+        {CooldownMax > 0
+          ? (
+            <div
               style={{
                 position: "absolute",
-                ...(boardCard.tick / boardCard.CooldownMax > 0.5
-                  ? { top: 1 }
-                  : { bottom: 3 }),
-                right: 2,
-                display: "inline-block"
+                left: CARD_HEIGHT * paddingLeft,
+                right: CARD_HEIGHT * paddingRight,
+                bottom: CARD_HEIGHT * paddingBottom +
+                  (boardCard.tick / CooldownMax) *
+                    (CARD_HEIGHT -
+                      CARD_HEIGHT * (paddingTop + paddingBottom) -
+                      2),
+                borderTop: "2px solid white",
+                color: "white",
+                textAlign: "right",
+                fontSize: "8pt",
+                boxSizing: "border-box",
+                height: 2,
               }}
             >
-              {(boardCard.tick / 1000).toFixed(1)} /{" "}
-              {(CooldownMax / 1000).toFixed(1)}
-            </span>
-          </div>
-        ) : null}
+              <span
+                style={{
+                  position: "absolute",
+                  ...(boardCard.tick / boardCard.CooldownMax > 0.5
+                    ? { top: 1 }
+                    : { bottom: 3 }),
+                  right: 2,
+                  display: "inline-block",
+                }}
+              >
+                {(boardCard.tick / 1000).toFixed(1)} /{" "}
+                {(CooldownMax / 1000).toFixed(1)}
+              </span>
+            </div>
+          )
+          : null}
         {/* Status effects container */}
         <div
           style={{
@@ -283,45 +290,51 @@ function BoardCardElement({
             display: "flex",
             flexDirection: "column",
             color: "white",
-            whiteSpace: "preserve nowrap"
+            whiteSpace: "preserve nowrap",
           }}
         >
-          {Freeze > 0 ? (
-            <div
-              style={{
-                background: "rgba(0.2, 0.2, 0.2, 0.5)",
-                padding: "2px 5px",
-                borderRadius: 5,
-                margin: 2
-              }}
-            >
-              ❄️ {(Freeze / 1000).toFixed(1)}
-            </div>
-          ) : null}
-          {Slow > 0 ? (
-            <div
-              style={{
-                background: "rgba(0.2, 0.2, 0.2, 0.5)",
-                padding: "2px 5px",
-                borderRadius: 5,
-                margin: 2
-              }}
-            >
-              🐌 {(Slow / 1000).toFixed(1)}
-            </div>
-          ) : null}
-          {Haste > 0 ? (
-            <div
-              style={{
-                background: "rgba(0.2, 0.2, 0.2, 0.5)",
-                padding: "2px 5px",
-                borderRadius: 5,
-                margin: 2
-              }}
-            >
-              ⏱️ {(Haste / 1000).toFixed(1)}
-            </div>
-          ) : null}
+          {Freeze > 0
+            ? (
+              <div
+                style={{
+                  background: "rgba(0.2, 0.2, 0.2, 0.5)",
+                  padding: "2px 5px",
+                  borderRadius: 5,
+                  margin: 2,
+                }}
+              >
+                ❄️ {(Freeze / 1000).toFixed(1)}
+              </div>
+            )
+            : null}
+          {Slow > 0
+            ? (
+              <div
+                style={{
+                  background: "rgba(0.2, 0.2, 0.2, 0.5)",
+                  padding: "2px 5px",
+                  borderRadius: 5,
+                  margin: 2,
+                }}
+              >
+                🐌 {(Slow / 1000).toFixed(1)}
+              </div>
+            )
+            : null}
+          {Haste > 0
+            ? (
+              <div
+                style={{
+                  background: "rgba(0.2, 0.2, 0.2, 0.5)",
+                  padding: "2px 5px",
+                  borderRadius: 5,
+                  margin: 2,
+                }}
+              >
+                ⏱️ {(Haste / 1000).toFixed(1)}
+              </div>
+            )
+            : null}
         </div>
         {/* Amount container */}
         <div
@@ -330,20 +343,19 @@ function BoardCardElement({
             left: "50%",
             transform: "translate(-50%, -50%)",
             display: "flex",
-            top: (CARD_HEIGHT * paddingTop) / 2
+            top: (CARD_HEIGHT * paddingTop) / 2,
           }}
         >
           {DamageAmount !== undefined && (
             <div
               style={{
-                background:
-                  Lifesteal > 0
-                    ? "linear-gradient(to bottom right, purple, red)"
-                    : "red",
+                background: Lifesteal > 0
+                  ? "linear-gradient(to bottom right, purple, red)"
+                  : "red",
                 padding: "2px 5px",
                 margin: "0 2px",
                 borderRadius: 5,
-                color: "white"
+                color: "white",
               }}
             >
               {DamageAmount}
@@ -356,7 +368,7 @@ function BoardCardElement({
                 padding: "2px 5px",
                 margin: "0 2px",
                 borderRadius: 5,
-                color: "white"
+                color: "white",
               }}
             >
               {HealAmount}
@@ -369,7 +381,7 @@ function BoardCardElement({
                 padding: "2px 5px",
                 margin: "0 2px",
                 borderRadius: 5,
-                color: "white"
+                color: "white",
               }}
             >
               {BurnApplyAmount}
@@ -382,7 +394,7 @@ function BoardCardElement({
                 padding: "2px 5px",
                 margin: "0 2px",
                 borderRadius: 5,
-                color: "white"
+                color: "white",
               }}
             >
               {PoisonApplyAmount}
@@ -394,7 +406,7 @@ function BoardCardElement({
                 backgroundColor: "yellow",
                 borderRadius: 5,
                 padding: "2px 5px",
-                margin: "0 2px"
+                margin: "0 2px",
               }}
             >
               {ShieldApplyAmount}
@@ -411,7 +423,7 @@ function BoardCardElement({
               padding: "1px 3px",
               borderRadius: 5,
               fontSize: "9pt",
-              color: "white"
+              color: "white",
             }}
           >
             🎯 {CritChance + "%"}
@@ -427,7 +439,7 @@ function BoardCardElement({
               padding: "1px 3px",
               borderRadius: 5,
               fontSize: "9pt",
-              color: "white"
+              color: "white",
             }}
           >
             💰 {SellPrice}
@@ -444,7 +456,7 @@ function BoardCardElement({
               padding: "1px 3px",
               borderRadius: 5,
               fontSize: "9pt",
-              color: "white"
+              color: "white",
             }}
           >
             x{Multicast}
@@ -460,45 +472,47 @@ function BoardCardElement({
               display: "flex",
               backgroundColor: "gray",
               padding: "2px 5px",
-              borderRadius: 5
+              borderRadius: 5,
             }}
           >
-            {AmmoMax > 5 ? (
-              <div style={{ color: "orange", fontSize: "8pt" }}>
-                {Ammo === undefined ? AmmoMax : Ammo}/{AmmoMax}&nbsp;
-                <div
-                  style={{
-                    width: 4,
-                    height: 4,
-                    borderRadius: 4,
-                    display: "inline-block",
-                    backgroundColor: "orange",
-                    margin: "1px 1px",
-                    border: "1px solid orange"
-                  }}
-                />
-              </div>
-            ) : (
-              [...new Array(AmmoMax)].map((_, i) => {
-                return (
-                  // Ammo indicator
+            {AmmoMax > 5
+              ? (
+                <div style={{ color: "orange", fontSize: "8pt" }}>
+                  {Ammo === undefined ? AmmoMax : Ammo}/{AmmoMax}&nbsp;
                   <div
-                    key={"ammo" + i}
                     style={{
                       width: 4,
                       height: 4,
                       borderRadius: 4,
-                      backgroundColor:
-                        (Ammo === undefined ? AmmoMax : Ammo) > i
-                          ? "orange"
-                          : "transparent",
+                      display: "inline-block",
+                      backgroundColor: "orange",
                       margin: "1px 1px",
-                      border: "1px solid orange"
+                      border: "1px solid orange",
                     }}
                   />
-                );
-              })
-            )}
+                </div>
+              )
+              : (
+                [...new Array(AmmoMax)].map((_, i) => {
+                  return (
+                    // Ammo indicator
+                    <div
+                      key={"ammo" + i}
+                      style={{
+                        width: 4,
+                        height: 4,
+                        borderRadius: 4,
+                        backgroundColor:
+                          (Ammo === undefined ? AmmoMax : Ammo) > i
+                            ? "orange"
+                            : "transparent",
+                        margin: "1px 1px",
+                        border: "1px solid orange",
+                      }}
+                    />
+                  );
+                })
+              )}
           </div>
         )}
       </div>
@@ -516,7 +530,7 @@ function BoardSkillElement({
   boardSkill,
   gameState,
   playerID,
-  boardCardID
+  boardCardID,
 }: {
   boardSkill: BoardSkill;
   gameState: GameState;
@@ -530,12 +544,15 @@ function BoardSkillElement({
   const borderSize = 0.1;
 
   const localeText = card.Localization.Title.Text;
-  const imgUrl = `https://www.howbazaar.gg/images/skills/${localeText.replace(
-    /[ '\-&]/g,
-    ""
-  )}.avif`;
+  const imgUrl = `https://www.howbazaar.gg/images/skills/${
+    localeText.replace(
+      /[ '\-&]/g,
+      "",
+    )
+  }.avif`;
 
-  const frameUrl = `https://www.bazaarplanner.com/images/fromBT/skill_tier_${tier.toLowerCase()}.png`;
+  const frameUrl =
+    `https://www.bazaarplanner.com/images/fromBT/skill_tier_${tier.toLowerCase()}.png`;
 
   return (
     <div
@@ -550,7 +567,7 @@ function BoardSkillElement({
           margin: 5,
           position: "relative",
           height: IMAGE_SIZE,
-          width: IMAGE_SIZE
+          width: IMAGE_SIZE,
         }}
       >
         {/* Image container */}
@@ -560,13 +577,13 @@ function BoardSkillElement({
             top: IMAGE_SIZE * borderSize,
             left: IMAGE_SIZE * borderSize,
             right: IMAGE_SIZE * borderSize,
-            bottom: IMAGE_SIZE * borderSize
+            bottom: IMAGE_SIZE * borderSize,
           }}
         >
           <img
             src={imgUrl}
             style={{
-              borderRadius: "100%"
+              borderRadius: "100%",
             }}
             height="100%"
             width="100%"
@@ -599,7 +616,7 @@ function GameStep({ gameState }: { gameState: GameState }) {
         const HealthRegen = getPlayerAttribute(
           gameState,
           playerID,
-          "HealthRegen"
+          "HealthRegen",
         );
         const Health = getPlayerAttribute(gameState, playerID, "Health");
         const HealthMax = getPlayerAttribute(gameState, playerID, "HealthMax");
@@ -621,7 +638,7 @@ function GameStep({ gameState }: { gameState: GameState }) {
               justifyContent: "center",
               backgroundColor: "rgba(87, 66, 52, 0.4)",
               position: "relative",
-              overflow: "hidden"
+              overflow: "hidden",
             }}
           >
             {/* Health bar */}
@@ -632,7 +649,7 @@ function GameStep({ gameState }: { gameState: GameState }) {
                 top: 0,
                 bottom: 0,
                 left: 0,
-                width: Math.max(0, Health / HealthMax) * 100 + "%"
+                width: Math.max(0, Health / HealthMax) * 100 + "%",
               }}
             />
             {/* Shield bar */}
@@ -643,7 +660,7 @@ function GameStep({ gameState }: { gameState: GameState }) {
                 top: 0,
                 bottom: "50%",
                 left: 0,
-                width: Math.min(1, Shield / HealthMax) * 100 + "%"
+                width: Math.min(1, Shield / HealthMax) * 100 + "%",
               }}
             />
             {[...new Array(ticks)].map((_, i) => {
@@ -661,7 +678,7 @@ function GameStep({ gameState }: { gameState: GameState }) {
                     width: 1,
                     top: i % 5 === 0 ? 1 : 5,
                     bottom: i % 5 === 0 ? 1 : 5,
-                    left: (i / ticks) * 100 + "%"
+                    left: (i / ticks) * 100 + "%",
                   }}
                 />
               );
@@ -673,68 +690,76 @@ function GameStep({ gameState }: { gameState: GameState }) {
                 fontSize: "20pt",
                 textShadow:
                   "-1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000",
-                fontSmooth: "antialiased"
+                fontSmooth: "antialiased",
               }}
             >
               <span
                 style={{
                   color: "white",
                   display: "inline-block",
-                  margin: "0 5px"
+                  margin: "0 5px",
                 }}
               >
                 {Math.floor(player.Health)}
               </span>
-              {Shield > 0 ? (
-                <span
-                  style={{
-                    color: "#ffd62e",
-                    display: "inline-block",
-                    margin: "0 5px"
-                  }}
-                >
-                  {Shield}
-                </span>
-              ) : null}
-              {Poison > 0 ? (
-                <span
-                  style={{
-                    color: "#1e976d",
-                    display: "inline-block",
-                    margin: "0 5px"
-                  }}
-                >
-                  {Poison}
-                </span>
-              ) : null}
-              {Burn > 0 ? (
-                <span
-                  style={{
-                    color: "#d99c3e",
-                    display: "inline-block",
-                    margin: "0 5px"
-                  }}
-                >
-                  {Burn}
-                </span>
-              ) : null}
-              {HealthRegen > 0 ? (
-                <span
-                  style={{
-                    color: "#96dd4b",
-                    display: "inline-block",
-                    margin: "0 5px"
-                  }}
-                >
-                  {HealthRegen}
-                </span>
-              ) : null}
+              {Shield > 0
+                ? (
+                  <span
+                    style={{
+                      color: "#ffd62e",
+                      display: "inline-block",
+                      margin: "0 5px",
+                    }}
+                  >
+                    {Shield}
+                  </span>
+                )
+                : null}
+              {Poison > 0
+                ? (
+                  <span
+                    style={{
+                      color: "#1e976d",
+                      display: "inline-block",
+                      margin: "0 5px",
+                    }}
+                  >
+                    {Poison}
+                  </span>
+                )
+                : null}
+              {Burn > 0
+                ? (
+                  <span
+                    style={{
+                      color: "#d99c3e",
+                      display: "inline-block",
+                      margin: "0 5px",
+                    }}
+                  >
+                    {Burn}
+                  </span>
+                )
+                : null}
+              {HealthRegen > 0
+                ? (
+                  <span
+                    style={{
+                      color: "#96dd4b",
+                      display: "inline-block",
+                      margin: "0 5px",
+                    }}
+                  >
+                    {HealthRegen}
+                  </span>
+                )
+                : null}
             </div>
             {/* Gold/Income container */}
             <div style={{ position: "absolute", right: 4, color: "yellow" }}>
               {[
                 Gold > 0 ? `Gold: ${Gold}` : null,
-                Income > 0 ? `Income: ${Income}` : null
+                Income > 0 ? `Income: ${Income}` : null,
               ]
                 .filter((x) => x)
                 .join(", ")}
@@ -771,14 +796,13 @@ function GameStep({ gameState }: { gameState: GameState }) {
                     playerID={playerID}
                     boardCardID={player.board.indexOf(boardSkill)}
                   />
-                )
+                ),
               )}
           </div>
         );
-        const display =
-          playerID === 0
-            ? [boardSkills, healthBar, board]
-            : [board, healthBar, boardSkills];
+        const display = playerID === 0
+          ? [boardSkills, healthBar, board]
+          : [board, healthBar, boardSkills];
         return <div key={playerID}>{display}</div>;
       })}
     </div>
@@ -839,7 +863,7 @@ function Game({ steps }: { steps: GameState[] }) {
         </label>
       </div>
 
-      <p>Time: {stepCountToSeconds(boundedStepCount).toFixed(1)}s </p>
+      <p>Time: {stepCountToSeconds(boundedStepCount).toFixed(1)}s</p>
       <p>
         Steps: {boundedStepCount}/{steps.length - 1}
       </p>
@@ -850,7 +874,7 @@ function Game({ steps }: { steps: GameState[] }) {
 function TooltipWithoutGameState({
   Cards,
   card,
-  tier
+  tier,
 }: {
   Cards: Cards;
   card: Card;
@@ -862,14 +886,14 @@ function TooltipWithoutGameState({
       health: 1000,
       cards: card
         ? [
-            {
-              name: card.Localization.Title.Text,
-              tier
-            }
-          ]
-        : []
+          {
+            name: card.Localization.Title.Text,
+            tier,
+          },
+        ]
+        : [],
     },
-    { type: "player", health: 1000 }
+    { type: "player", health: 1000 },
   ]);
 
   return (
@@ -880,7 +904,7 @@ function TooltipWithoutGameState({
         bottom: 0,
         pointerEvents: "none",
         left: 80,
-        width: 200
+        width: 200,
       }}
     >
       <Tooltip
@@ -896,17 +920,19 @@ function TooltipWithoutGameState({
 function CardSearch({
   Cards,
   onSelectCard,
-  onSelectSkill
+  onSelectSkill,
 }: {
   Cards: Cards;
   onSelectCard: (card: Card) => void;
   onSelectSkill: (card: Card) => void;
 }) {
   const [search, setSearch] = useState("");
-  const [hoveredCard, setHoveredCard] = useState<{
-    card: Card;
-    tier: Tier;
-  } | null>(null);
+  const [hoveredCard, setHoveredCard] = useState<
+    {
+      card: Card;
+      tier: Tier;
+    } | null
+  >(null);
 
   const searchLower = search.toLowerCase();
   const filteredCards = Cards["0.1.9"].filter((card) => {
@@ -951,7 +977,7 @@ function CardSearch({
         padding: 10,
         borderLeft: "1px solid #444",
         overflowY: "auto",
-        position: "relative"
+        position: "relative",
       }}
     >
       <input
@@ -962,7 +988,7 @@ function CardSearch({
         style={{
           width: "90%",
           padding: "8px",
-          marginBottom: "10px"
+          marginBottom: "10px",
         }}
       />
       <div>
@@ -970,12 +996,11 @@ function CardSearch({
           <>
             <h3 style={{ marginBottom: 10 }}>Items</h3>
             {items.map((card) => {
-              const imgWidth =
-                card.Size === "Small"
-                  ? CONTAINER_SIZE / 2
-                  : card.Size === "Large"
-                    ? CONTAINER_SIZE * 1.5
-                    : CONTAINER_SIZE;
+              const imgWidth = card.Size === "Small"
+                ? CONTAINER_SIZE / 2
+                : card.Size === "Large"
+                ? CONTAINER_SIZE * 1.5
+                : CONTAINER_SIZE;
 
               const paddingTop = 0.06;
               const paddingLeft = 0.03;
@@ -985,9 +1010,12 @@ function CardSearch({
               const sizesOneLetter = {
                 Large: "L",
                 Medium: "M",
-                Small: "S"
+                Small: "S",
               };
-              const frameUrl = `https://www.bazaarplanner.com/images/fromBT/CardFrame_${card.StartingTier}_${sizesOneLetter[card.Size]}_TUI.png`;
+              const frameUrl =
+                `https://www.bazaarplanner.com/images/fromBT/CardFrame_${card.StartingTier}_${
+                  sizesOneLetter[card.Size]
+                }_TUI.png`;
 
               return (
                 // Card container
@@ -998,14 +1026,14 @@ function CardSearch({
                     display: "flex",
                     alignItems: "center",
                     position: "relative",
-                    cursor: "pointer"
+                    cursor: "pointer",
                   }}
                   className="tooltipContainer"
                   onClick={() => onSelectCard(card)}
                   onMouseEnter={() => {
                     setHoveredCard({
                       card,
-                      tier: card.StartingTier
+                      tier: card.StartingTier,
                     });
                   }}
                   onMouseLeave={() => setHoveredCard(null)}
@@ -1017,7 +1045,7 @@ function CardSearch({
                       height: CONTAINER_SIZE,
                       display: "flex",
                       alignItems: "center",
-                      justifyContent: "center"
+                      justifyContent: "center",
                     }}
                   >
                     {/* Card image */}
@@ -1026,22 +1054,26 @@ function CardSearch({
                         width: imgWidth,
                         height: CONTAINER_SIZE,
                         position: "relative",
-                        display: "inline-block"
+                        display: "inline-block",
                       }}
                     >
                       <img
-                        src={`https://www.howbazaar.gg/images/items/${card.Localization.Title.Text?.replace(/[ '\-&]/g, "") ?? ""}.avif`}
+                        src={`https://www.howbazaar.gg/images/items/${
+                          card.Localization.Title.Text?.replace(
+                            /[ '\-&]/g,
+                            "",
+                          ) ?? ""
+                        }.avif`}
                         style={{
                           position: "absolute",
                           left: paddingLeft * CONTAINER_SIZE,
                           right: paddingRight * CONTAINER_SIZE,
                           top: paddingTop * CONTAINER_SIZE,
-                          bottom: paddingBottom * CONTAINER_SIZE
+                          bottom: paddingBottom * CONTAINER_SIZE,
                         }}
                         width={imgWidth * (1 - paddingLeft - paddingRight)}
-                        height={
-                          CONTAINER_SIZE * (1 - paddingTop - paddingBottom)
-                        }
+                        height={CONTAINER_SIZE *
+                          (1 - paddingTop - paddingBottom)}
                         alt={card.Localization.Title.Text}
                       />
                       <img
@@ -1074,7 +1106,8 @@ function CardSearch({
             {skills.map((card) => {
               const borderSize = 0.1;
 
-              const frameUrl = `https://www.bazaarplanner.com/images/fromBT/skill_tier_${card.StartingTier.toLowerCase()}.png`;
+              const frameUrl =
+                `https://www.bazaarplanner.com/images/fromBT/skill_tier_${card.StartingTier.toLowerCase()}.png`;
               return (
                 // Skill container
                 <div
@@ -1084,14 +1117,14 @@ function CardSearch({
                     display: "flex",
                     alignItems: "center",
                     position: "relative",
-                    cursor: "pointer"
+                    cursor: "pointer",
                   }}
                   className="tooltipContainer"
                   onClick={() => onSelectSkill(card)}
                   onMouseEnter={() => {
                     setHoveredCard({
                       card,
-                      tier: card.StartingTier
+                      tier: card.StartingTier,
                     });
                   }}
                   onMouseLeave={() => setHoveredCard(null)}
@@ -1102,18 +1135,21 @@ function CardSearch({
                       width: CONTAINER_SIZE,
                       height: CONTAINER_SIZE,
                       position: "relative",
-                      display: "inline-block"
+                      display: "inline-block",
                     }}
                   >
                     <img
-                      src={`https://www.howbazaar.gg/images/skills/${card.Localization.Title.Text?.replace(/[ '\-&]/g, "") ?? ""}.avif`}
+                      src={`https://www.howbazaar.gg/images/skills/${
+                        card.Localization.Title.Text?.replace(/[ '\-&]/g, "") ??
+                          ""
+                      }.avif`}
                       style={{
                         position: "absolute",
                         left: borderSize * CONTAINER_SIZE,
                         right: borderSize * CONTAINER_SIZE,
                         top: borderSize * CONTAINER_SIZE,
                         bottom: borderSize * CONTAINER_SIZE,
-                        borderRadius: "100%"
+                        borderRadius: "100%",
                       }}
                       width={CONTAINER_SIZE * (1 - 2 * borderSize)}
                       height={CONTAINER_SIZE * (1 - 2 * borderSize)}
@@ -1148,13 +1184,13 @@ function CardSearch({
 
 export default function App({
   Cards,
-  Encounters
+  Encounters,
 }: {
   Cards: Cards;
   Encounters: EncounterDays;
 }) {
   const [monsterConfig, setMonsterConfig] = useState<MonsterConfig | null>(
-    null
+    null,
   );
   const [playerCards, setPlayerCards] = useState<PlayerCardConfig[]>([]);
   const [playerSkills, setPlayerSkills] = useState<PlayerSkillConfig[]>([]);
@@ -1163,12 +1199,12 @@ export default function App({
     health: 2000,
     healthRegen: 0,
     cards: playerCards,
-    skills: playerSkills
+    skills: playerSkills,
   } as PlayerConfig;
 
   const initialGameState = getInitialGameState(Cards, Encounters, [
     monsterConfig ?? { type: "player", health: 3500 },
-    playerConfig
+    playerConfig,
   ]);
   const steps = run(initialGameState, 100000);
 
@@ -1185,7 +1221,7 @@ export default function App({
         <select
           onChange={(e) => {
             setMonsterConfig(
-              e.target.value ? { type: "monster", name: e.target.value } : null
+              e.target.value ? { type: "monster", name: e.target.value } : null,
             );
           }}
         >
@@ -1208,15 +1244,13 @@ export default function App({
         onSelectCard={(card) =>
           setPlayerCards([
             ...playerCards,
-            { name: card.Localization.Title.Text, tier: card.StartingTier }
-          ])
-        }
+            { name: card.Localization.Title.Text, tier: card.StartingTier },
+          ])}
         onSelectSkill={(card) =>
           setPlayerSkills([
             ...playerSkills,
-            { name: card.Localization.Title.Text, tier: card.StartingTier }
-          ])
-        }
+            { name: card.Localization.Title.Text, tier: card.StartingTier },
+          ])}
       />
     </div>
   );

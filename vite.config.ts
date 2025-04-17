@@ -9,14 +9,14 @@ export default defineConfig({
     // Please make sure that '@tanstack/router-plugin' is passed before '@vitejs/plugin-react'
     TanStackRouterVite({ target: "react", autoCodeSplitting: true }),
     deno(),
-    react()
+    react(),
   ],
   server: {
-    port: 3000
+    port: 3000,
   },
   build: {
     target: "esnext",
     chunkSizeWarningLimit: 1000000000,
-    outDir: "build"
-  }
+    outDir: "build",
+  },
 });

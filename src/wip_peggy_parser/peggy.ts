@@ -7,7 +7,7 @@ import { Card, CardType, Tooltip, Type, Version } from "./types/cardTypes";
 import _ from "lodash";
 
 export const parser = peggy.generate(
-  readFileSync("./src/tooltipParser.pegjs", "utf8")
+  readFileSync("./src/tooltipParser.pegjs", "utf8"),
 );
 
 export function parse(input: string, options?: ParserOptions) {
@@ -27,21 +27,22 @@ type DefaultCardRequired = {
 };
 
 // Combine required fields with the rest being partial
-const DEFAULT_CARD: DefaultCardRequired &
-  PartialDeep<Omit<Card, keyof DefaultCardRequired>> = {
-  $type: CardType.TCardItem,
-  Type: Type.Item,
-  Version: Version.The100,
-  AudioKey: "",
-  Localization: {
-    FlavorText: null,
-    Tooltips: [
-      {
-        Prerequisites: null
-      }
-    ]
-  }
-};
+const DEFAULT_CARD:
+  & DefaultCardRequired
+  & PartialDeep<Omit<Card, keyof DefaultCardRequired>> = {
+    $type: CardType.TCardItem,
+    Type: Type.Item,
+    Version: Version.The100,
+    AudioKey: "",
+    Localization: {
+      FlavorText: null,
+      Tooltips: [
+        {
+          Prerequisites: null,
+        },
+      ],
+    },
+  };
 
 export function parseItem(item: Item): PartialDeep<Card> {
   let card = _.cloneDeep(DEFAULT_CARD);
@@ -54,7 +55,7 @@ export function parseItem(item: Item): PartialDeep<Card> {
     const parsedCard = parse(tooltip, {
       item: item,
       abilityIndex: abilityIndex,
-      auraIndex: auraIndex
+      auraIndex: auraIndex,
     });
     // Merge the parsed card into the card object
     card = _.merge(card, parsedCard);
@@ -62,7 +63,7 @@ export function parseItem(item: Item): PartialDeep<Card> {
     // Replace tooltip parenthesis text with {ability.abilityIndex}
     const tooltip_ingame = tooltip.replace(
       /\(.*?\)/g,
-      `{ability.${abilityIndex}}`
+      `{ability.${abilityIndex}}`,
     );
 
     // If tooltip is cooldown, skip
@@ -70,8 +71,8 @@ export function parseItem(item: Item): PartialDeep<Card> {
       // This is dumb, but typescript doesn't recognize the initialization above
       card.Localization.Tooltips.push({
         Content: {
-          Text: tooltip_ingame
-        }
+          Text: tooltip_ingame,
+        },
       });
     }
     // Update abilityIndex and auraIndex

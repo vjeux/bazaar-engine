@@ -43,7 +43,7 @@ export enum CardType {
   TCardEncounterPedestal = "TCardEncounterPedestal",
   TCardEncounterStep = "TCardEncounterStep",
   TCardItem = "TCardItem",
-  TCardSkill = "TCardSkill"
+  TCardSkill = "TCardSkill",
 }
 
 export interface Ability {
@@ -109,7 +109,7 @@ export enum ActionType {
   TActionPlayerShieldApply = "TActionPlayerShieldApply",
   TActionPlayerShieldRemove = "TActionPlayerShieldRemove",
   TAuraActionCardModifyAttribute = "TAuraActionCardModifyAttribute",
-  TAuraActionPlayerModifyAttribute = "TAuraActionPlayerModifyAttribute"
+  TAuraActionPlayerModifyAttribute = "TAuraActionPlayerModifyAttribute",
 }
 
 export enum AttributeType {
@@ -160,7 +160,7 @@ export enum AttributeType {
   ShieldApplyAmount = "ShieldApplyAmount",
   ShieldRemoveAmount = "ShieldRemoveAmount",
   Slow = "Slow",
-  SlowAmount = "SlowAmount"
+  SlowAmount = "SlowAmount",
 }
 
 interface Duration {
@@ -169,18 +169,18 @@ interface Duration {
 }
 
 enum DurationType {
-  TDeterminantDuration = "TDeterminantDuration"
+  TDeterminantDuration = "TDeterminantDuration",
 }
 
 enum DurationTypeEnum {
   UntilEndOfCombat = "UntilEndOfCombat",
-  UntilEndOfDay = "UntilEndOfDay"
+  UntilEndOfDay = "UntilEndOfDay",
 }
 
 enum Operation {
   Add = "Add",
   Multiply = "Multiply",
-  Subtract = "Subtract"
+  Subtract = "Subtract",
 }
 
 export interface Source {
@@ -204,7 +204,7 @@ export enum SourceType {
   TTargetCardXMost = "TTargetCardXMost",
   TTargetPlayer = "TTargetPlayer",
   TTargetPlayerAbsolute = "TTargetPlayerAbsolute",
-  TTargetPlayerRelative = "TTargetPlayerRelative"
+  TTargetPlayerRelative = "TTargetPlayerRelative",
 }
 
 enum ConditionType {
@@ -224,7 +224,7 @@ enum ConditionType {
   TCardConditionalTriggerSource = "TCardConditionalTriggerSource",
   TCardConditionalType = "TCardConditionalType",
   TPlayerConditionalAttribute = "TPlayerConditionalAttribute",
-  TRunConditionalCurrentDay = "TRunConditionalCurrentDay"
+  TRunConditionalCurrentDay = "TRunConditionalCurrentDay",
 }
 
 enum Comparison {
@@ -232,7 +232,7 @@ enum Comparison {
   GreaterThan = "GreaterThan",
   GreaterThanOrEqual = "GreaterThanOrEqual",
   LessThan = "LessThan",
-  LessThanOrEqual = "LessThanOrEqual"
+  LessThanOrEqual = "LessThanOrEqual",
 }
 
 interface TargetPlayerClass {
@@ -262,18 +262,19 @@ export enum Origin {
   RightCard = "RightCard",
   RightMostCard = "RightMostCard",
   Self = "Self",
-  TriggerSource = "TriggerSource"
+  TriggerSource = "TriggerSource",
 }
 
 export enum ValueType {
   TFixedValue = "TFixedValue",
   TRangeValue = "TRangeValue",
   TReferenceValueCardAttribute = "TReferenceValueCardAttribute",
-  TReferenceValueCardAttributeAggregate = "TReferenceValueCardAttributeAggregate",
+  TReferenceValueCardAttributeAggregate =
+    "TReferenceValueCardAttributeAggregate",
   TReferenceValueCardCount = "TReferenceValueCardCount",
   TReferenceValueCardTagCount = "TReferenceValueCardTagCount",
   TReferenceValuePlayerAttribute = "TReferenceValuePlayerAttribute",
-  TReferenceValuePlayerAttributeChange = "TReferenceValuePlayerAttributeChange"
+  TReferenceValuePlayerAttributeChange = "TReferenceValuePlayerAttributeChange",
 }
 
 interface Modifier {
@@ -288,7 +289,7 @@ interface TargetCount {
 
 enum Operator {
   Any = "Any",
-  None = "None"
+  None = "None",
 }
 
 export enum TargetSection {
@@ -300,7 +301,7 @@ export enum TargetSection {
   SelfBoard = "SelfBoard",
   SelfHand = "SelfHand",
   SelfHandAndStash = "SelfHandAndStash",
-  SelfNeighbors = "SelfNeighbors"
+  SelfNeighbors = "SelfNeighbors",
 }
 
 interface SpawnContext {
@@ -309,7 +310,7 @@ interface SpawnContext {
 }
 
 enum SpawnContextType {
-  TSpawnContextQuery = "TSpawnContextQuery"
+  TSpawnContextQuery = "TSpawnContextQuery",
 }
 
 interface Limit {
@@ -364,13 +365,13 @@ export enum Type {
   EventEncounter = "EventEncounter",
   Item = "Item",
   PedestalEncounter = "PedestalEncounter",
-  Skill = "Skill"
+  Skill = "Skill",
 }
 
 enum Size {
   Large = "Large",
   Medium = "Medium",
-  Small = "Small"
+  Small = "Small",
 }
 
 export interface Value {
@@ -386,7 +387,7 @@ export interface Value {
 
 export enum ActiveIn {
   HandAndStash = "HandAndStash",
-  HandOnly = "HandOnly"
+  HandOnly = "HandOnly",
 }
 
 interface AbilityPrerequisite {
@@ -400,7 +401,7 @@ interface AbilityPrerequisite {
 enum PrerequisiteType {
   TPrerequisiteCardCount = "TPrerequisiteCardCount",
   TPrerequisitePlayer = "TPrerequisitePlayer",
-  TPrerequisiteRun = "TPrerequisiteRun"
+  TPrerequisiteRun = "TPrerequisiteRun",
 }
 
 export enum Priority {
@@ -409,7 +410,7 @@ export enum Priority {
   Immediate = "Immediate",
   Low = "Low",
   Lowest = "Lowest",
-  Medium = "Medium"
+  Medium = "Medium",
 }
 
 export interface Trigger {
@@ -447,18 +448,19 @@ export enum TriggerType {
   TTriggerOnHourStarted = "TTriggerOnHourStarted",
   TTriggerOnItemUsed = "TTriggerOnItemUsed",
   TTriggerOnPlayerAttributeChanged = "TTriggerOnPlayerAttributeChanged",
-  TTriggerOnPlayerAttributePercentChange = "TTriggerOnPlayerAttributePercentChange",
-  TTriggerOnPlayerDied = "TTriggerOnPlayerDied"
+  TTriggerOnPlayerAttributePercentChange =
+    "TTriggerOnPlayerAttributePercentChange",
+  TTriggerOnPlayerDied = "TTriggerOnPlayerDied",
 }
 
 enum ChangeType {
   Gain = "Gain",
-  Loss = "Loss"
+  Loss = "Loss",
 }
 
 enum CombatOutcome {
   Lose = "Lose",
-  Win = "Win"
+  Win = "Win",
 }
 
 export interface Subject {
@@ -506,7 +508,7 @@ interface AuraAction {
 
 enum AuraActionType {
   TAuraActionCardModifyAttribute = "TAuraActionCardModifyAttribute",
-  TAuraActionPlayerModifyAttribute = "TAuraActionPlayerModifyAttribute"
+  TAuraActionPlayerModifyAttribute = "TAuraActionPlayerModifyAttribute",
 }
 
 interface AuraPrerequisite {
@@ -526,7 +528,7 @@ enum CardPackID {
   StelleCore = "Stelle_Core",
   Vanessa = "Vanessa",
   VanessaCore = "Vanessa_Core",
-  VanessaMysteriesOfTheDeep = "Vanessa_Mysteries_of_the_Deep"
+  VanessaMysteriesOfTheDeep = "Vanessa_Mysteries_of_the_Deep",
 }
 
 interface CombatantType {
@@ -535,7 +537,7 @@ interface CombatantType {
 }
 
 enum CombatantTypeType {
-  TCombatantMonster = "TCombatantMonster"
+  TCombatantMonster = "TCombatantMonster",
 }
 
 export type Enchantments = {
@@ -575,7 +577,7 @@ enum Hero {
   Mak = "Mak",
   Pygmalien = "Pygmalien",
   Stelle = "Stelle",
-  Vanessa = "Vanessa"
+  Vanessa = "Vanessa",
 }
 
 interface Localization {
@@ -624,5 +626,5 @@ export interface TierInfo {
 
 export enum Version {
   The000 = "0.0.0",
-  The100 = "1.0.0"
+  The100 = "1.0.0",
 }
