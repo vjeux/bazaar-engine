@@ -1,4 +1,4 @@
-import { parse } from "../peggy.ts";
+import { parse } from "./peggy.ts";
 import { describe, expect, it } from "npm:vitest";
 import { createColors } from "npm:colorette";
 import apiItems from "../json/apiItems.json";
