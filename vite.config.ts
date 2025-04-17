@@ -9,7 +9,13 @@ export default defineConfig({
     // Please make sure that '@tanstack/router-plugin' is passed before '@vitejs/plugin-react'
     TanStackRouterVite({ target: "react", autoCodeSplitting: true }),
     deno(),
-    react(),
+    react(
+      {
+        babel: {
+          plugins: ["babel-plugin-react-compiler"],
+        },
+      },
+    ),
   ],
   server: {
     port: 3000,

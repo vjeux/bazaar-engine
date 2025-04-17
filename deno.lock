@@ -20,6 +20,7 @@
     "npm:@types/react@^19.0.10": "19.0.12",
     "npm:@types/react@^19.0.8": "19.0.12",
     "npm:@vitejs/plugin-react@^4.3.4": "4.3.4_vite@6.2.3__@types+node@22.13.13__tsx@4.19.3_@babel+core@7.26.10_@types+node@22.13.13_tsx@4.19.3",
+    "npm:babel-plugin-react-compiler@^19.0.0-beta-ebf51a3-20250411": "19.0.0-beta-ebf51a3-20250411",
     "npm:colorette@*": "2.0.20",
     "npm:colorette@^2.0.20": "2.0.20",
     "npm:eslint-plugin-react-hooks@5": "5.2.0_eslint@9.23.0",
@@ -920,6 +921,12 @@
         "@babel/core",
         "@babel/parser",
         "@babel/traverse",
+        "@babel/types"
+      ]
+    },
+    "babel-plugin-react-compiler@19.0.0-beta-ebf51a3-20250411": {
+      "integrity": "sha512-q84bNR9JG1crykAlJUt5Ud0/5BUyMFuQww/mrwIQDFBaxsikqBDj3f/FNDsVd2iR26A1HvXKWPEIfgJDv8/V2g==",
+      "dependencies": [
         "@babel/types"
       ]
     },
@@ -1909,6 +1916,7 @@
       "npm:@types/react-dom@^19.0.4",
       "npm:@types/react@^19.0.10",
       "npm:@vitejs/plugin-react@^4.3.4",
+      "npm:babel-plugin-react-compiler@^19.0.0-beta-ebf51a3-20250411",
       "npm:lodash@4.17.21",
       "npm:microdiff@1.5.0",
       "npm:pako@2.1.0",
