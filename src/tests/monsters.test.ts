@@ -1,7 +1,10 @@
-import { genCardsAndEncounters } from "../Data";
-import { run } from "../Engine";
-import { getFlattenedEncounters, getInitialGameState } from "../GameState";
-import { expect, test } from "vitest";
+import { genCardsAndEncounters } from "../lib/Data.ts";
+import { run } from "../engine/Engine.ts";
+import {
+  getFlattenedEncounters,
+  getInitialGameState,
+} from "../engine/GameState.ts";
+import { expect, test } from "npm:vitest";
 
 function getOptimizedDiff(
   prev: any,
