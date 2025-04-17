@@ -21,7 +21,7 @@ function genDataFromLocalStorage(
           ]);
           try {
             localStorage.setItem(localStorageKey, compressed);
-          } catch (e) {
+          } catch (_e) {
             // Ignore quota errors
           }
           success(data);
