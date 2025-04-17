@@ -1,18 +1,19 @@
 import { createRootRoute, Link, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import { HeadContent } from "@tanstack/react-router";
 
 export const Route = createRootRoute({
+  head: () => ({
+    meta: [
+      { title: "Bazaar Engine" },
+    ],
+    links: [
+      { rel: "stylesheet", href: "/src/styles.css" },
+    ],
+  }),
   component: () => (
     <>
-      <div className="p-2 flex gap-2">
-        <Link to="/" className="[&.active]:font-bold">
-          Home
-        </Link>{" "}
-        <Link to="/dragndrop" className="[&.active]:font-bold">
-          Drag and Drop
-        </Link>
-      </div>
-      <hr />
+      <HeadContent />
       <Outlet />
       <TanStackRouterDevtools />
     </>
