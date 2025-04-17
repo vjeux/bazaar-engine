@@ -1,6 +1,6 @@
 import pako from "pako";
-import { Cards } from "../types/cardTypes";
-import { EncounterDays } from "../types/encounterTypes";
+import type { Cards } from "../types/cardTypes.ts";
+import type { EncounterDays } from "../types/encounterTypes.ts";
 
 function genDataFromLocalStorage(
   localStorageKey: string,

@@ -1,5 +1,5 @@
 // Types for the card data in the game
-import { EnchantmentType, HiddenTag, Tag, Tier } from "./shared";
+import type { EnchantmentType, HiddenTag, Tag, Tier } from "./shared.ts";
 
 export interface Cards {
   "0.1.9": Card[];

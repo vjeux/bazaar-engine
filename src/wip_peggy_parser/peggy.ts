@@ -1,9 +1,9 @@
 // Import tooltipParser.pegjs with its text content
 import { readFileSync } from "fs";
-import peggy, { ParserOptions } from "peggy";
-import { Item } from "./types/apiItems";
-import { PartialDeep } from "type-fest";
-import { Card, CardType, Tooltip, Type, Version } from "./types/cardTypes";
+import peggy, { type ParserOptions } from "peggy";
+import type { Item } from "./types/apiItems";
+import type { PartialDeep } from "type-fest";
+import { type Card, CardType, type Tooltip, Type, Version } from "./types/cardTypes";
 import _ from "lodash";
 
 export const parser = peggy.generate(

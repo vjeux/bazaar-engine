@@ -1,4 +1,4 @@
-import { EnchantmentType, Tag, Tier } from "./shared.ts";
+import type { EnchantmentType, Tag, Tier } from "./shared.ts";
 
 export interface EncounterDays {
   data: Datum[];

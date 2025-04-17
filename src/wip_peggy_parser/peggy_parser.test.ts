@@ -4,7 +4,7 @@ import { createColors } from "npm:colorette";
 import apiItems from "../json/apiItems.json";
 import { parseItem } from "../peggy";
 import { genCardsAndEncounters } from "../Data";
-import { Item } from "../types/apiItems";
+import type { Item } from "../types/apiItems.ts";
 import _ from "lodash";
 
 const items: Item[] = apiItems.data;
