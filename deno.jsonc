@@ -37,5 +37,7 @@
     },
     "exclude": ["src/routeTree.gen.ts"]
   },
+  // To format the pegjs files, would need prettier-plugin-pegjs, but it is not currently included in the project.
+  "fmt": {},
   "exports": {}
 }
