@@ -64,7 +64,8 @@ function RouteComponent() {
           </div>
           <span className="absolute inset-0 flex items-center justify-center text-sm">
             250
-          </span>{" "}
+          </span>
+          {" "}
         </div>
 
         {/* Cards Area */}
@@ -102,7 +103,8 @@ function RouteComponent() {
           </div>
           <span className="absolute inset-0 flex items-center justify-center text-sm">
             2000
-          </span>{" "}
+          </span>
+          {" "}
         </div>
 
         {/* Player Skills */}
