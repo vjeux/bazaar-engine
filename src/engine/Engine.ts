@@ -8,9 +8,9 @@ import {
   type ActionType,
   Priority,
   type Aura
-} from "./types/cardTypes.ts";
+} from "../types/cardTypes.ts";
 
-import type { Tier } from "./types/shared.ts";
+import type { Tier } from "../types/shared.ts";
 
 export interface GameState {
   tick: number;

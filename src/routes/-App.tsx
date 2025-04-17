@@ -11,7 +11,7 @@ import {
   type BoardCardOrSkill,
   getCardAttribute,
   getPlayerAttribute
-} from "../Engine.ts";
+} from "../engine/Engine.ts";
 
 import type { Card, Cards } from "../types/cardTypes.ts";
 import type { EncounterDays } from "../types/encounterTypes.ts";
@@ -23,7 +23,7 @@ import {
   type PlayerConfig,
   type PlayerSkillConfig,
   getFlattenedEncounters
-} from "../GameState.ts";
+} from "../engine/GameState.ts";
 import type { Tier } from "../types/shared.ts";
 
 import ValidSkillNames from "../json/ValidSkillNames.json" with { type: "json" };
