@@ -1,0 +1,41 @@
+{
+  "name": "@bazaar/engine",
+  "version": "1.0.0",
+  "nodeModulesDir": "auto",
+  "compilerOptions": {
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "jsx": "react-jsx",
+    "jsxImportSource": "react",
+    "jsxImportSourceTypes": "@types/react",
+    "strict": true,
+    "allowJs": true
+  },
+  "imports": {
+    "@dnd-kit/core": "npm:@dnd-kit/core@^6.3.1",
+    "react": "npm:react@19",
+    "vite": "npm:vite@^6.1.1",
+    "react-dom": "npm:react-dom@19",
+    "lodash": "npm:lodash@4.17.21",
+    "microdiff": "npm:microdiff@1.5.0",
+    "pako": "npm:pako@2.1.0",
+    "@tanstack/react-router": "npm:@tanstack/react-router@1.116.0",
+    "@tanstack/react-router-devtools": "npm:@tanstack/react-router-devtools@1.116.0",
+    "@deno/vite-plugin": "npm:@deno/vite-plugin@^1.0.4",
+    "@types/react": "npm:@types/react@^19.0.10",
+    "@types/react-dom": "npm:@types/react-dom@^19.0.4",
+    "@vitejs/plugin-react": "npm:@vitejs/plugin-react@^4.3.4"
+  },
+  "tasks": {
+    "dev": "deno run -A --node-modules-dir npm:vite",
+    "build": "deno run -A --node-modules-dir npm:vite build",
+    "preview": "deno run -A --node-modules-dir npm:vite preview",
+    "test": "deno run -A --node-modules-dir npm:vitest"
+  },
+  "lint": {
+    "rules": {
+      "exclude": ["no-explicit-any"]
+    },
+    "exclude": ["src/routeTree.gen.ts"]
+  },
+  "exports": {}
+}
