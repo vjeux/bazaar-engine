@@ -1,16 +1,16 @@
 import {
-  Card,
-  Ability,
-  Value,
-  AbilityAction,
-  Enchantments,
+  type Card,
+  type Ability,
+  type Value,
+  type AbilityAction,
+  type Enchantments,
   TriggerType,
-  ActionType,
+  type ActionType,
   Priority,
-  Aura
-} from "./types/cardTypes";
+  type Aura
+} from "./types/cardTypes.ts";
 
-import { Tier } from "./types/shared";
+import type { Tier } from "./types/shared.ts";
 
 export interface GameState {
   tick: number;

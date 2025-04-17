@@ -1,33 +1,33 @@
-import "./styles.css";
+import "../styles.css";
 import { useState, useEffect } from "react";
 import {
   run,
   getTooltips,
   TICK_RATE,
-  GameState,
-  BoardCard,
-  BoardSkill,
-  Player,
-  BoardCardOrSkill,
+  type GameState,
+  type BoardCard,
+  type BoardSkill,
+  type Player,
+  type BoardCardOrSkill,
   getCardAttribute,
   getPlayerAttribute
-} from "./Engine.ts";
+} from "../Engine.ts";
 
-import { Card, Cards } from "./types/cardTypes";
-import { EncounterDays } from "./types/encounterTypes";
-import React from "react";
+import type { Card, Cards } from "../types/cardTypes.ts";
+import type { EncounterDays } from "../types/encounterTypes.ts";
+import type React from "react";
 import {
   getInitialGameState,
-  MonsterConfig,
-  PlayerCardConfig,
-  PlayerConfig,
-  PlayerSkillConfig,
+  type MonsterConfig,
+  type PlayerCardConfig,
+  type PlayerConfig,
+  type PlayerSkillConfig,
   getFlattenedEncounters
-} from "./GameState.ts";
-import { Tier } from "./types/shared.ts";
+} from "../GameState.ts";
+import type { Tier } from "../types/shared.ts";
 
-import ValidSkillNames from "./json/ValidSkillNames.json";
-import ValidItemNames from "./json/ValidItemNames.json";
+import ValidSkillNames from "../json/ValidSkillNames.json" with { type: "json" };
+import ValidItemNames from "../json/ValidItemNames.json" with { type: "json" };
 
 const CARD_HEIGHT = 180;
 
@@ -194,7 +194,7 @@ function BoardCardElement({
         style={{ position: "absolute", top: 2, right: 2, zIndex: 1 }}
         className="tooltip"
       >
-        <button>⚙️</button>
+        <button type="button">⚙️</button>
       </div>
       {/* Card container */}
       <div

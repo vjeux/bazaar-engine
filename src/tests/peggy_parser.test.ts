@@ -1,6 +1,6 @@
-import { parse } from "../peggy";
-import { describe, expect, it } from "vitest";
-import { createColors } from "colorette";
+import { parse } from "../peggy.ts";
+import { describe, expect, it } from "npm:vitest";
+import { createColors } from "npm:colorette";
 import apiItems from "../json/apiItems.json";
 import { parseItem } from "../peggy";
 import { genCardsAndEncounters } from "../Data";
