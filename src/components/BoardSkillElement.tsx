@@ -37,39 +37,26 @@ export function BoardSkillElement({
     >
       {/* Skill container */}
       <div
+        className="relative m-[5px]"
         style={{
-          margin: 5,
-          position: "relative",
           height: IMAGE_SIZE,
           width: IMAGE_SIZE,
         }}
       >
         {/* Image container */}
         <div
+          className="absolute rounded-full"
           style={{
-            position: "absolute",
             top: IMAGE_SIZE * borderSize,
             left: IMAGE_SIZE * borderSize,
             right: IMAGE_SIZE * borderSize,
             bottom: IMAGE_SIZE * borderSize,
           }}
         >
-          <img
-            src={imgUrl}
-            style={{
-              borderRadius: "100%",
-            }}
-            height="100%"
-            width="100%"
-          />
+          <img src={imgUrl} className="h-full w-full rounded-full" />
         </div>
         {/* Frame image */}
-        <img
-          src={frameUrl}
-          style={{ position: "absolute", top: 0, left: 0 }}
-          width="100%"
-          height="100%"
-        />
+        <img src={frameUrl} className="absolute top-0 left-0 h-full w-full" />
       </div>
       <Tooltip
         boardCard={boardSkill}
