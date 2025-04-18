@@ -1,4 +1,5 @@
-import "../styles.css";
+"use client";
+import "../globals.css";
 import { useEffect, useState } from "react";
 import {
   type BoardCard,
@@ -11,10 +12,10 @@ import {
   type Player,
   run,
   TICK_RATE,
-} from "../engine/Engine.ts";
+} from "@/engine/Engine.ts";
 
-import type { Card, Cards } from "../types/cardTypes.ts";
-import type { EncounterDays } from "../types/encounterTypes.ts";
+import type { Card, Cards } from "@/types/cardTypes.ts";
+import type { EncounterDays } from "@/types/encounterTypes.ts";
 import type React from "react";
 import {
   getFlattenedEncounters,
@@ -23,13 +24,11 @@ import {
   type PlayerCardConfig,
   type PlayerConfig,
   type PlayerSkillConfig,
-} from "../engine/GameState.ts";
-import type { Tier } from "../types/shared.ts";
+} from "@/engine/GameState.ts";
+import type { Tier } from "@/types/shared.ts";
 
-import ValidSkillNames from "../json/ValidSkillNames.json" with {
-  type: "json",
-};
-import ValidItemNames from "../json/ValidItemNames.json" with { type: "json" };
+import ValidSkillNames from "@/json/ValidSkillNames.json";
+import ValidItemNames from "@/json/ValidItemNames.json";
 
 const CARD_HEIGHT = 180;
 

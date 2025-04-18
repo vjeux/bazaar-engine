@@ -1,10 +1,8 @@
 import { useMemo, useState } from "react";
 import { Card, Cards, CardType } from "../types/cardTypes.ts";
 import Fuse from "fuse.js";
-import ValidSkillNames from "../json/ValidSkillNames.json" with {
-  type: "json",
-};
-import ValidItemNames from "../json/ValidItemNames.json" with { type: "json" };
+import ValidSkillNames from "../json/ValidSkillNames.json";
+import ValidItemNames from "../json/ValidItemNames.json";
 import { cn } from "../lib/utils.ts";
 
 export function SearchCardSkill({

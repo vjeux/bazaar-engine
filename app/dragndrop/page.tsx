@@ -1,6 +1,6 @@
-import { createFileRoute } from "@tanstack/react-router";
+"use client";
 import { useState } from "react"; // Import useState
-import { genCardsAndEncounters } from "../lib/Data.ts";
+import { genCardsAndEncounters } from "@/lib/Data.ts";
 import {
   getFlattenedEncounters,
   getInitialGameState,
@@ -8,24 +8,20 @@ import {
   PlayerCardConfig,
   PlayerConfig,
   PlayerSkillConfig,
-} from "../engine/GameState.ts";
-import { run } from "../engine/Engine.ts";
-import { SearchCardSkill } from "../components/SearchCardSkill.tsx";
+} from "@/engine/GameState.ts";
+import { run } from "@/engine/Engine.ts";
+import { SearchCardSkill } from "@/components/SearchCardSkill.tsx";
 import { ComboBox } from "@/components/ui/combobox.tsx";
 import { Toggle } from "@/components/ui/toggle.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
-import { HealthBar } from "../components/HealthBar.tsx"; // Import the new HealthBar component
-
-export const Route = createFileRoute("/_layout/dragndrop")({
-  component: RouteComponent,
-});
+import { HealthBar } from "@/components/HealthBar.tsx"; // Import the new HealthBar component
 
 const { Cards: CardsData, Encounters: EncounterData } =
   await genCardsAndEncounters();
 
 const encounters = getFlattenedEncounters(EncounterData);
 
-function RouteComponent() {
+export default function DragNDrop() {
   const [monsterConfig, setMonsterConfig] = useState<MonsterConfig | null>(
     null,
   );
