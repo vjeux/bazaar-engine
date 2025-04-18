@@ -2,6 +2,7 @@ import { StrictMode } from "react";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import "./globals.css";
 import Navbar from "./navbar";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 export default function RootLayout({
   children,
@@ -23,11 +24,13 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="flex h-screen flex-col">
-              <Navbar />
-              {/* NOTE: Children have to handle overflow themselves */}
-              <main className="flex-1 overflow-hidden">{children}</main>
-            </div>
+            <NuqsAdapter>
+              <div className="flex h-screen flex-col">
+                <Navbar />
+                {/* NOTE: Children have to handle overflow themselves */}
+                <main className="flex-1 overflow-hidden">{children}</main>
+              </div>
+            </NuqsAdapter>
           </ThemeProvider>
         </body>
       </html>

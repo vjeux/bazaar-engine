@@ -4,7 +4,7 @@ import type { BoardCard, BoardSkill, GameState, Player } from "./Engine.ts";
 import type { Card, Cards, Enchantments } from "../types/cardTypes.ts";
 import type { Tier } from "../types/shared.ts";
 import type { EncounterDays, Group } from "../types/encounterTypes.ts";
-
+import { z } from "zod";
 /* Bugs
 
 // Day 1 - Viper
@@ -276,10 +276,14 @@ function sfc32(a: number, b: number, c: number, d: number) {
   };
 }
 
-export interface MonsterConfig {
-  type: "monster";
-  name: string;
-}
+// Define Zod schema for MonsterConfig
+export const MonsterConfigSchema = z.object({
+  type: z.literal("monster"),
+  name: z.string(),
+});
+
+// Infer the TypeScript type from the Zod schema
+export type MonsterConfig = z.infer<typeof MonsterConfigSchema>;
 
 export interface PlayerCardConfig {
   name: string;

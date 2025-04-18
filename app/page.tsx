@@ -5,16 +5,19 @@ import {
   getFlattenedEncounters,
   getInitialGameState,
   MonsterConfig,
+  MonsterConfigSchema,
   PlayerCardConfig,
   PlayerConfig,
   PlayerSkillConfig,
 } from "@/engine/GameState.ts";
-import { run, TICK_RATE } from "@/engine/Engine.ts";
+import { BoardCard, Player, run, TICK_RATE } from "@/engine/Engine.ts";
 import { SearchCardSkill } from "@/components/SearchCardSkill.tsx";
 import { ComboBox } from "@/components/ui/combobox.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { HealthBar } from "@/components/HealthBar.tsx"; // Import the new HealthBar component
 import { Slider } from "@/components/ui/slider";
+import { BoardCardElement } from "./old/BoardCardElement";
+import { parseAsJson, useQueryState } from "nuqs";
 
 const { Cards: CardsData, Encounters: EncounterData } =
   await genCardsAndEncounters();
@@ -22,8 +25,9 @@ const { Cards: CardsData, Encounters: EncounterData } =
 const encounters = getFlattenedEncounters(EncounterData);
 
 export default function DragNDrop() {
-  const [monsterConfig, setMonsterConfig] = useState<MonsterConfig | null>(
-    null,
+  const [monsterConfig, setMonsterConfig] = useQueryState(
+    "monster",
+    parseAsJson<MonsterConfig>((p) => MonsterConfigSchema.parse(p)),
   );
   const [playerCards, setPlayerCards] = useState<PlayerCardConfig[]>([]);
   const [playerSkills, setPlayerSkills] = useState<PlayerSkillConfig[]>([]);
@@ -103,28 +107,26 @@ export default function DragNDrop() {
 
         {/* Cards Area */}
         <div className="bg-card border-border flex flex-grow flex-col items-center justify-center gap-2 rounded border p-4">
-          {/* Top Row Cards */}
-          <div className="mb-4 flex gap-2">
-            {Array.from({ length: 4 }).map((_, i) => (
+          {currentGameState.players.map((player: Player, playerID: number) => {
+            return (
               <div
-                key={`card-top-${i}`}
-                className="border-primary bg-secondary text-secondary-foreground flex h-24 w-16 items-center justify-center rounded border text-xs"
+                key={`player-${playerID}`}
+                className="flex w-full items-center justify-center gap-2"
               >
-                Card {i + 1}
+                {player.board
+                  .filter((x): x is BoardCard => x.card.$type === "TCardItem")
+                  .map((card, i) => (
+                    <BoardCardElement
+                      boardCard={card}
+                      gameState={currentGameState}
+                      key={i}
+                      playerID={playerID}
+                      boardCardID={i}
+                    />
+                  ))}
               </div>
-            ))}
-          </div>
-          {/* Bottom Row Cards */}
-          <div className="flex gap-2">
-            {Array.from({ length: 5 }).map((_, i) => (
-              <div
-                key={`card-bottom-${i}`}
-                className="border-primary bg-secondary text-secondary-foreground flex h-24 w-16 items-center justify-center rounded border text-xs"
-              >
-                Card {i + 5}
-              </div>
-            ))}
-          </div>
+            );
+          })}
         </div>
 
         {/* Player Health Bar*/}
