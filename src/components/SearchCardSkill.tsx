@@ -41,12 +41,14 @@ export function SearchCardSkill({
   }, [search, filteredItems, fuse]);
 
   return (
-    <div className="w-64 flex flex-col gap-2 bg-gray-800 p-3 rounded border border-gray-700 overflow-auto">
-      <h2 className="text-lg font-semibold mb-2">Cards & Skills</h2>
+    <div className="w-64 flex flex-col gap-2 bg-background p-3 rounded border border-border overflow-auto">
+      <h2 className="text-lg font-semibold mb-2 text-card-foreground">
+        Cards & Skills
+      </h2>
       <input
         type="text"
         placeholder="Search cards & skills..."
-        className="bg-gray-700 border border-gray-600 rounded p-1 mb-2 text-sm"
+        className="bg-input border border-input rounded p-1 mb-2 text-sm text-foreground"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
@@ -54,7 +56,7 @@ export function SearchCardSkill({
         {searchResults.map((item) => (
           <div
             key={item.Id}
-            className="flex items-center gap-2 p-1 bg-gray-700 rounded hover:bg-gray-600 cursor-pointer text-sm"
+            className="flex items-center gap-2 p-1 rounded hover:bg-accent cursor-pointer text-sm text-secondary-foreground"
             onClick={() => {
               if (item.$type == CardType.TCardSkill) {
                 onSelectSkill(item);
@@ -65,7 +67,7 @@ export function SearchCardSkill({
           >
             <div
               className={cn(
-                "w-8 h-10 border border-gray-500 rounded bg-gray-600 flex items-center justify-center text-[8px]",
+                "w-8 h-10 border border-border rounded bg-card flex items-center justify-center text-[8px] text-muted-foreground",
                 item.$type == CardType.TCardSkill && "rounded-full h-8",
               )}
             />
