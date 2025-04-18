@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { ThemeProvider } from "@/components/theme-provider.tsx";
 import "./globals.css";
+import Navbar from "./navbar";
 
 export default function RootLayout({
   children,
@@ -25,11 +26,11 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="grid h-screen grid-rows-[auto_1fr]">
-              <nav className="h-16">
-                Test nav bar
-              </nav>
-              <main className="overflow-auto">
+            {/* Use flexbox for the main layout */}
+            <div className="flex flex-col h-screen">
+              <Navbar /> {/* Navbar takes its natural height */}
+              {/* Main content area grows and handles its own overflow */}
+              <main className="flex-1 overflow-hidden">
                 {children}
               </main>
             </div>

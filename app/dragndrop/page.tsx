@@ -50,7 +50,7 @@ export default function DragNDrop() {
   const currentGameState = steps[boundedStepCount]; // Get the game state for the current step
 
   return (
-    <div className="grid grid-cols-[1fr_auto] h-screen bg-background text-foreground p-4 gap-4">
+    <div className="grid grid-cols-[1fr_auto] h-full bg-background text-foreground p-4 gap-4">
       {/* Main Game Area */}
       <div className="flex flex-col gap-2">
         {/* Enemy Selection */}
