@@ -19,7 +19,7 @@ export function HealthBar(
   }
 
   const healthPercentage = player.HealthMax > 0
-    ? (player.Health / player.HealthMax) * 100
+    ? Math.max(0, (player.Health / player.HealthMax) * 100)
     : 0;
   const healthBarColor = "bg-green-600";
   const textColor = "text-primary";
