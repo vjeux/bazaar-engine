@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react"; // Import useState
+import { useEffect, useState } from "react"; // Import useState
 import { genCardsAndEncounters } from "@/lib/Data.ts";
 import {
   getFlattenedEncounters,
@@ -12,9 +12,9 @@ import {
 import { run } from "@/engine/Engine.ts";
 import { SearchCardSkill } from "@/components/SearchCardSkill.tsx";
 import { ComboBox } from "@/components/ui/combobox.tsx";
-import { Toggle } from "@/components/ui/toggle.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { HealthBar } from "@/components/HealthBar.tsx"; // Import the new HealthBar component
+import { Slider } from "@/components/ui/slider";
 
 const { Cards: CardsData, Encounters: EncounterData } =
   await genCardsAndEncounters();
@@ -48,6 +48,18 @@ export default function DragNDrop() {
   // If you live reload with a step higher than the length, it would throw.
   const boundedStepCount = Math.min(steps.length - 1, stepCount);
   const currentGameState = steps[boundedStepCount]; // Get the game state for the current step
+
+  useEffect(() => {
+    if (!autoScroll) return;
+
+    const interval = setInterval(() => {
+      setStepCount((prev) =>
+        prev >= steps.length - 1 ? (autoReset ? 0 : prev) : prev + 1
+      );
+    }, 100);
+
+    return () => clearInterval(interval);
+  }, [autoScroll, autoReset]);
 
   return (
     <div className="grid grid-cols-[1fr_auto] h-full bg-background text-foreground p-4 gap-4">
@@ -146,13 +158,16 @@ export default function DragNDrop() {
             id="autoRestart"
           />
           <label htmlFor="autoRestart" className="text-sm">Auto Restart</label>
-          <input
-            type="range"
-            min="0"
-            max="324"
-            defaultValue="0"
-            className="flex-grow h-2 bg-muted rounded-lg appearance-none cursor-pointer dark:bg-secondary"
+          <Slider
+            defaultValue={[0]}
+            min={0}
+            max={steps.length - 1}
+            value={[boundedStepCount]}
+            onValueChange={([value]) => {
+              setStepCount(value);
+            }}
           />
+
           <span className="text-sm">Time: 0.0s</span>
           <span className="text-sm">Steps: 0/324</span>
         </div>
