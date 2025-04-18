@@ -1,37 +1,48 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react"; // Import useState
+import { genCardsAndEncounters } from "../lib/Data.ts";
+import {
+  getFlattenedEncounters,
+  getInitialGameState,
+  MonsterConfig,
+  PlayerCardConfig,
+  PlayerConfig,
+  PlayerSkillConfig,
+} from "../engine/GameState.ts";
+import { run } from "../engine/Engine.ts";
+import { SearchCardSkill } from "../components/SearchCardSkill.tsx";
 
 export const Route = createFileRoute("/dragndrop")({
   component: RouteComponent,
 });
 
+const { Cards: CardsData, Encounters: EncounterData } =
+  await genCardsAndEncounters();
+
 // Placeholder data
 const enemies = ["Giant Mosquito", "Slime", "Goblin"];
-const items = [
-  "Abacus",
-  "Agility Boots",
-  "Alpha Ray",
-  "Amber",
-  "Ambergris",
-  "Anchor",
-  "Angry Balloon Bot",
-  "Antimatter Chamber",
-  "Apropos Chapeau",
-  "Arbalest",
-  "Arc Blaster",
-  "Arken's Ring",
-  "Armored Core",
-  "Astrolabe",
-  "Athanor",
-  "Atlas Stone",
-  "Atlatl",
-];
 
 function RouteComponent() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const filteredItems = items.filter((item) =>
-    item.toLowerCase().includes(searchTerm.toLowerCase())
+  const [monsterConfig, setMonsterConfig] = useState<MonsterConfig | null>(
+    null,
   );
+  const [playerCards, setPlayerCards] = useState<PlayerCardConfig[]>([]);
+  const [playerSkills, setPlayerSkills] = useState<PlayerSkillConfig[]>([]);
+  const playerConfig = {
+    type: "player",
+    health: 2000,
+    healthRegen: 0,
+    cards: playerCards,
+    skills: playerSkills,
+  } as PlayerConfig;
+
+  const initialGameState = getInitialGameState(CardsData, EncounterData, [
+    monsterConfig ?? { type: "player", health: 3500 },
+    playerConfig,
+  ]);
+  const steps = run(initialGameState, 100000);
+
+  const encounters = getFlattenedEncounters(EncounterData);
 
   return (
     <div className="grid grid-cols-[1fr_auto] h-screen bg-gray-900 text-white p-4 gap-4">
@@ -137,29 +148,20 @@ function RouteComponent() {
         </div>
       </div>
 
-      {/* Right Sidebar - Items */}
-      <div className="w-64 flex flex-col gap-2 bg-gray-800 p-3 rounded border border-gray-700">
-        <h2 className="text-lg font-semibold mb-2">Cards & Skills</h2>
-        <input
-          type="text"
-          placeholder="Search cards & skills..."
-          className="bg-gray-700 border border-gray-600 rounded p-1 mb-2 text-sm"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <div className="flex-grow overflow-y-auto space-y-1 pr-1">
-          {filteredItems.map((item) => (
-            <div
-              key={item}
-              className="flex items-center gap-2 p-1 bg-gray-700 rounded hover:bg-gray-600 cursor-pointer text-sm"
-            >
-              <div className="w-8 h-10 border border-gray-500 rounded bg-gray-600 flex items-center justify-center text-[8px]">
-              </div>
-              <span>{item}</span>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* Right Sidebar - Card and skill search */}
+      <SearchCardSkill
+        Cards={CardsData}
+        onSelectCard={(card) =>
+          setPlayerCards([
+            ...playerCards,
+            { name: card.Localization.Title.Text, tier: card.StartingTier },
+          ])}
+        onSelectSkill={(card) =>
+          setPlayerSkills([
+            ...playerSkills,
+            { name: card.Localization.Title.Text, tier: card.StartingTier },
+          ])}
+      />
     </div>
   );
 }
