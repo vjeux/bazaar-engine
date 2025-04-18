@@ -8,10 +8,7 @@ export default function Navbar() {
     const pathname = usePathname();
 
     return (
-        // Use background for the main nav area, border-b for separation
-        // Text color defaults to foreground
         <nav className="flex items-center justify-between h-16 px-4 border-b bg-background text-foreground">
-            {/* Title uses standard foreground color and styling */}
             <div className="text-lg font-bold">Bazaar Engine</div>
             <div className="flex space-x-4">
                 <Link

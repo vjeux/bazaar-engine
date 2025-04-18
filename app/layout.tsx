@@ -26,10 +26,9 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            {/* Use flexbox for the main layout */}
             <div className="flex flex-col h-screen">
-              <Navbar /> {/* Navbar takes its natural height */}
-              {/* Main content area grows and handles its own overflow */}
+              <Navbar />
+              {/* NOTE: Children have to handle overflow themselves */}
               <main className="flex-1 overflow-hidden">
                 {children}
               </main>
