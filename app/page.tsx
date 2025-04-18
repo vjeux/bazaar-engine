@@ -84,8 +84,7 @@ export default function DragNDrop() {
               });
             }
           }}
-        >
-        </ComboBox>
+        />
 
         {/* Enemy Skills */}
         <div className="flex gap-1 h-12 items-center">
