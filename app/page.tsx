@@ -10,14 +10,22 @@ import {
   PlayerConfig,
   PlayerSkillConfig,
 } from "@/engine/GameState.ts";
-import { BoardCard, Player, run, TICK_RATE } from "@/engine/Engine.ts";
+import {
+  BoardCard,
+  BoardSkill,
+  Player,
+  run,
+  TICK_RATE,
+} from "@/engine/Engine.ts";
 import { SearchCardSkill } from "@/components/SearchCardSkill.tsx";
 import { ComboBox } from "@/components/ui/combobox.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { HealthBar } from "@/components/HealthBar.tsx"; // Import the new HealthBar component
 import { Slider } from "@/components/ui/slider";
-import { BoardCardElement } from "./old/BoardCardElement";
 import { parseAsJson, useQueryState } from "nuqs";
+import { BoardSkillElement } from "../src/components/BoardSkillElement";
+import { BoardSkills } from "@/components/BoardSkills";
+import { CardDeck } from "@/components/CardDeck"; // Import the new CardDeck component
 
 const { Cards: CardsData, Encounters: EncounterData } =
   await genCardsAndEncounters();
@@ -91,58 +99,22 @@ export default function DragNDrop() {
         />
 
         {/* Enemy Skills */}
-        <div className="flex h-12 items-center gap-1">
-          {Array.from({ length: 2 }).map((_, i) => (
-            <div
-              key={`enemy-skill-${i}`}
-              className="border-border bg-muted text-muted-foreground flex h-10 w-10 items-center justify-center rounded-full border text-xs"
-            >
-              ES{i + 1}
-            </div>
-          ))}
-        </div>
+        <BoardSkills gameState={currentGameState} playerId={0} />
 
         {/* Enemy Health Bar*/}
         <HealthBar gameState={currentGameState} playerId={0} />
 
         {/* Cards Area */}
         <div className="bg-card border-border flex flex-grow flex-col items-center justify-center gap-2 rounded border p-4">
-          {currentGameState.players.map((player: Player, playerID: number) => {
-            return (
-              <div
-                key={`player-${playerID}`}
-                className="flex w-full items-center justify-center gap-2"
-              >
-                {player.board
-                  .filter((x): x is BoardCard => x.card.$type === "TCardItem")
-                  .map((card, i) => (
-                    <BoardCardElement
-                      boardCard={card}
-                      gameState={currentGameState}
-                      key={i}
-                      playerID={playerID}
-                      boardCardID={i}
-                    />
-                  ))}
-              </div>
-            );
-          })}
+          <CardDeck gameState={currentGameState} playerId={0} />
+          <CardDeck gameState={currentGameState} playerId={1} />
         </div>
 
         {/* Player Health Bar*/}
         <HealthBar gameState={currentGameState} playerId={1} />
 
         {/* Player Skills */}
-        <div className="flex h-12 items-center gap-1">
-          {Array.from({ length: 3 }).map((_, i) => (
-            <div
-              key={`player-skill-${i}`}
-              className="border-border bg-muted text-muted-foreground flex h-10 w-10 items-center justify-center rounded-full border text-xs"
-            >
-              PS{i + 1}
-            </div>
-          ))}
-        </div>
+        <BoardSkills gameState={currentGameState} playerId={1} />
 
         {/* Time Slider */}
         <div className="mt-2 flex items-center gap-2">

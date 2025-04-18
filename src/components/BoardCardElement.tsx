@@ -5,7 +5,7 @@ import {
   getCardAttribute,
 } from "@/engine/Engine";
 import React from "react";
-import { CARD_HEIGHT, Tooltip } from "./-App";
+import { CARD_HEIGHT, Tooltip } from "../../app/old/-App";
 import { cn } from "@/lib/utils";
 
 export function BoardCardElement({
