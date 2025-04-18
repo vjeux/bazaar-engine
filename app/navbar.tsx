@@ -23,17 +23,6 @@ export default function Navbar() {
                     Home
                 </Link>
                 <Link
-                    href="/dragndrop"
-                    className={cn(
-                        "text-sm font-medium transition-colors hover:text-primary",
-                        pathname === "/dragndrop"
-                            ? "text-primary font-bold"
-                            : "text-muted-foreground",
-                    )}
-                >
-                    Drag and Drop
-                </Link>
-                <Link
                     href="/old"
                     className={cn(
                         "text-sm font-medium transition-colors hover:text-primary",

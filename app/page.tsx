@@ -9,7 +9,7 @@ import {
   PlayerConfig,
   PlayerSkillConfig,
 } from "@/engine/GameState.ts";
-import { run } from "@/engine/Engine.ts";
+import { run, TICK_RATE } from "@/engine/Engine.ts";
 import { SearchCardSkill } from "@/components/SearchCardSkill.tsx";
 import { ComboBox } from "@/components/ui/combobox.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
@@ -168,8 +168,12 @@ export default function DragNDrop() {
             }}
           />
 
-          <span className="text-sm">Time: 0.0s</span>
-          <span className="text-sm">Steps: 0/324</span>
+          <span className="text-sm">
+            Time: {stepCountToSeconds(boundedStepCount).toFixed(1)}s
+          </span>
+          <span className="text-sm">
+            Steps: {boundedStepCount}/{steps.length - 1}
+          </span>
         </div>
       </div>
 
@@ -189,4 +193,8 @@ export default function DragNDrop() {
       />
     </div>
   );
+}
+
+function stepCountToSeconds(stepCount: number) {
+  return (stepCount * TICK_RATE) / 1000;
 }
