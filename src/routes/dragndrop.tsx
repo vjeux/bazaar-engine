@@ -14,6 +14,7 @@ import { SearchCardSkill } from "../components/SearchCardSkill.tsx";
 import { ComboBox } from "@/components/ui/combobox.tsx";
 import { Toggle } from "@/components/ui/toggle.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
+import { HealthBar } from "../components/HealthBar.tsx"; // Import the new HealthBar component
 
 export const Route = createFileRoute("/dragndrop")({
   component: RouteComponent,
@@ -50,9 +51,10 @@ function RouteComponent() {
 
   // If you live reload with a step higher than the length, it would throw.
   const boundedStepCount = Math.min(steps.length - 1, stepCount);
+  const currentGameState = steps[boundedStepCount]; // Get the game state for the current step
 
   return (
-    <div className="grid grid-cols-[1fr_auto] h-screen bg-gray-900 text-white p-4 gap-4">
+    <div className="grid grid-cols-[1fr_auto] h-screen bg-background text-foreground p-4 gap-4">
       {/* Main Game Area */}
       <div className="flex flex-col gap-2">
         {/* Enemy Selection */}
@@ -82,31 +84,24 @@ function RouteComponent() {
           {Array.from({ length: 2 }).map((_, i) => (
             <div
               key={`enemy-skill-${i}`}
-              className="w-10 h-10 border border-gray-500 rounded-full bg-gray-600 flex items-center justify-center text-xs"
+              className="w-10 h-10 border border-border rounded-full bg-muted flex items-center justify-center text-xs text-muted-foreground"
             >
               ES{i + 1}
             </div>
           ))}
         </div>
 
-        {/* Enemy Health Bar */}
-        <div className="relative w-full bg-gray-700 rounded h-6 border border-gray-600">
-          <div className="bg-red-600 h-full rounded" style={{ width: "80%" }}>
-          </div>
-          <span className="absolute inset-0 flex items-center justify-center text-sm">
-            250
-          </span>
-          {" "}
-        </div>
+        {/* Enemy Health Bar*/}
+        <HealthBar gameState={currentGameState} playerId={0} />
 
         {/* Cards Area */}
-        <div className="flex-grow flex flex-col justify-center items-center gap-2 bg-gray-800 border border-gray-700 rounded p-4">
+        <div className="flex-grow flex flex-col justify-center items-center gap-2 bg-card border border-border rounded p-4">
           {/* Top Row Cards */}
           <div className="flex gap-2 mb-4">
             {Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={`card-top-${i}`}
-                className="w-16 h-24 border border-yellow-500 rounded bg-gray-600 flex items-center justify-center text-xs"
+                className="w-16 h-24 border border-primary rounded bg-secondary flex items-center justify-center text-xs text-secondary-foreground"
               >
                 Card {i + 1}
               </div>
@@ -117,7 +112,7 @@ function RouteComponent() {
             {Array.from({ length: 5 }).map((_, i) => (
               <div
                 key={`card-bottom-${i}`}
-                className="w-16 h-24 border border-yellow-500 rounded bg-gray-600 flex items-center justify-center text-xs"
+                className="w-16 h-24 border border-primary rounded bg-secondary flex items-center justify-center text-xs text-secondary-foreground"
               >
                 Card {i + 5}
               </div>
@@ -125,25 +120,15 @@ function RouteComponent() {
           </div>
         </div>
 
-        {/* Player Health Bar */}
-        <div className="relative w-full bg-gray-700 rounded h-6 border border-gray-600">
-          <div
-            className="bg-green-600 h-full rounded"
-            style={{ width: "100%" }}
-          >
-          </div>
-          <span className="absolute inset-0 flex items-center justify-center text-sm">
-            2000
-          </span>
-          {" "}
-        </div>
+        {/* Player Health Bar*/}
+        <HealthBar gameState={currentGameState} playerId={1} />
 
         {/* Player Skills */}
         <div className="flex gap-1 h-12 items-center">
           {Array.from({ length: 3 }).map((_, i) => (
             <div
               key={`player-skill-${i}`}
-              className="w-10 h-10 border border-gray-500 rounded-full bg-gray-600 flex items-center justify-center text-xs"
+              className="w-10 h-10 border border-border rounded-full bg-muted flex items-center justify-center text-xs text-muted-foreground"
             >
               PS{i + 1}
             </div>
@@ -170,7 +155,7 @@ function RouteComponent() {
             min="0"
             max="324"
             defaultValue="0"
-            className="flex-grow h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer dark:bg-gray-600"
+            className="flex-grow h-2 bg-muted rounded-lg appearance-none cursor-pointer dark:bg-secondary"
           />
           <span className="text-sm">Time: 0.0s</span>
           <span className="text-sm">Steps: 0/324</span>
