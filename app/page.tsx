@@ -54,7 +54,7 @@ export default function DragNDrop() {
 
     const interval = setInterval(() => {
       setStepCount((prev) =>
-        prev >= steps.length - 1 ? (autoReset ? 0 : prev) : prev + 1
+        prev >= steps.length - 1 ? (autoReset ? 0 : prev) : prev + 1,
       );
     }, 100);
 
@@ -62,7 +62,7 @@ export default function DragNDrop() {
   }, [autoScroll, autoReset]);
 
   return (
-    <div className="grid grid-cols-[1fr_auto] h-full bg-background text-foreground p-4 gap-4">
+    <div className="bg-background text-foreground grid h-full grid-cols-[1fr_auto] gap-4 p-4">
       {/* Main Game Area */}
       <div className="flex flex-col gap-2">
         {/* Enemy Selection */}
@@ -87,11 +87,11 @@ export default function DragNDrop() {
         />
 
         {/* Enemy Skills */}
-        <div className="flex gap-1 h-12 items-center">
+        <div className="flex h-12 items-center gap-1">
           {Array.from({ length: 2 }).map((_, i) => (
             <div
               key={`enemy-skill-${i}`}
-              className="w-10 h-10 border border-border rounded-full bg-muted flex items-center justify-center text-xs text-muted-foreground"
+              className="border-border bg-muted text-muted-foreground flex h-10 w-10 items-center justify-center rounded-full border text-xs"
             >
               ES{i + 1}
             </div>
@@ -102,13 +102,13 @@ export default function DragNDrop() {
         <HealthBar gameState={currentGameState} playerId={0} />
 
         {/* Cards Area */}
-        <div className="flex-grow flex flex-col justify-center items-center gap-2 bg-card border border-border rounded p-4">
+        <div className="bg-card border-border flex flex-grow flex-col items-center justify-center gap-2 rounded border p-4">
           {/* Top Row Cards */}
-          <div className="flex gap-2 mb-4">
+          <div className="mb-4 flex gap-2">
             {Array.from({ length: 4 }).map((_, i) => (
               <div
                 key={`card-top-${i}`}
-                className="w-16 h-24 border border-primary rounded bg-secondary flex items-center justify-center text-xs text-secondary-foreground"
+                className="border-primary bg-secondary text-secondary-foreground flex h-24 w-16 items-center justify-center rounded border text-xs"
               >
                 Card {i + 1}
               </div>
@@ -119,7 +119,7 @@ export default function DragNDrop() {
             {Array.from({ length: 5 }).map((_, i) => (
               <div
                 key={`card-bottom-${i}`}
-                className="w-16 h-24 border border-primary rounded bg-secondary flex items-center justify-center text-xs text-secondary-foreground"
+                className="border-primary bg-secondary text-secondary-foreground flex h-24 w-16 items-center justify-center rounded border text-xs"
               >
                 Card {i + 5}
               </div>
@@ -131,11 +131,11 @@ export default function DragNDrop() {
         <HealthBar gameState={currentGameState} playerId={1} />
 
         {/* Player Skills */}
-        <div className="flex gap-1 h-12 items-center">
+        <div className="flex h-12 items-center gap-1">
           {Array.from({ length: 3 }).map((_, i) => (
             <div
               key={`player-skill-${i}`}
-              className="w-10 h-10 border border-border rounded-full bg-muted flex items-center justify-center text-xs text-muted-foreground"
+              className="border-border bg-muted text-muted-foreground flex h-10 w-10 items-center justify-center rounded-full border text-xs"
             >
               PS{i + 1}
             </div>
@@ -143,20 +143,24 @@ export default function DragNDrop() {
         </div>
 
         {/* Time Slider */}
-        <div className="flex items-center gap-2 mt-2">
+        <div className="mt-2 flex items-center gap-2">
           <Checkbox
             checked={autoScroll}
             onClick={() => setAutoScroll(!autoScroll)}
             id="autoAdvance"
           />
 
-          <label htmlFor="autoAdvance" className="text-sm">Auto Advance</label>
+          <label htmlFor="autoAdvance" className="text-sm">
+            Auto Advance
+          </label>
           <Checkbox
             checked={autoReset}
             onClick={() => setAutoReset(!autoReset)}
             id="autoRestart"
           />
-          <label htmlFor="autoRestart" className="text-sm">Auto Restart</label>
+          <label htmlFor="autoRestart" className="text-sm">
+            Auto Restart
+          </label>
           <Slider
             defaultValue={[0]}
             min={0}
@@ -183,12 +187,14 @@ export default function DragNDrop() {
           setPlayerCards([
             ...playerCards,
             { name: card.Localization.Title.Text, tier: card.StartingTier },
-          ])}
+          ])
+        }
         onSelectSkill={(card) =>
           setPlayerSkills([
             ...playerSkills,
             { name: card.Localization.Title.Text, tier: card.StartingTier },
-          ])}
+          ])
+        }
       />
     </div>
   );

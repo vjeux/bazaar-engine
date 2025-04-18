@@ -13,10 +13,7 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <head>
           <meta title="Bazaar Engine" />
-          <link
-            rel="stylesheet"
-            href="/src/styles.css"
-          />
+          <link rel="stylesheet" href="/src/styles.css" />
         </head>
 
         <body>
@@ -26,12 +23,10 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
-            <div className="flex flex-col h-screen">
+            <div className="flex h-screen flex-col">
               <Navbar />
               {/* NOTE: Children have to handle overflow themselves */}
-              <main className="flex-1 overflow-hidden">
-                {children}
-              </main>
+              <main className="flex-1 overflow-hidden">{children}</main>
             </div>
           </ThemeProvider>
         </body>

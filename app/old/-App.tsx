@@ -90,19 +90,18 @@ function BoardCardElement({
 }) {
   const card = boardCard.card;
   const tier = boardCard.tier;
-  const cardWidth = card.Size === "Small"
-    ? CARD_HEIGHT / 2
-    : card.Size === "Medium"
-    ? CARD_HEIGHT / 1
-    : CARD_HEIGHT * 1.5;
+  const cardWidth =
+    card.Size === "Small"
+      ? CARD_HEIGHT / 2
+      : card.Size === "Medium"
+        ? CARD_HEIGHT / 1
+        : CARD_HEIGHT * 1.5;
 
   const localeText = card.Localization.Title.Text;
-  const imgUrl = `https://www.howbazaar.gg/images/items/${
-    localeText.replace(
-      /[ '\-&]/g,
-      "",
-    )
-  }.avif`;
+  const imgUrl = `https://www.howbazaar.gg/images/items/${localeText.replace(
+    /[ '\-&]/g,
+    "",
+  )}.avif`;
 
   const paddingTop = 0.06;
   const paddingLeft = 0.03;
@@ -114,10 +113,9 @@ function BoardCardElement({
     Medium: "M",
     Small: "S",
   };
-  const frameUrl =
-    `https://www.bazaarplanner.com/images/fromBT/CardFrame_${tier}_${
-      sizesOneLetter[card.Size]
-    }_TUI.png`;
+  const frameUrl = `https://www.bazaarplanner.com/images/fromBT/CardFrame_${tier}_${
+    sizesOneLetter[card.Size]
+  }_TUI.png`;
 
   const DamageAmount = getCardAttribute(
     gameState,
@@ -243,42 +241,41 @@ function BoardCardElement({
           height="100%"
         />
         {/* Cooldown Indicator */}
-        {CooldownMax > 0
-          ? (
-            <div
+        {CooldownMax > 0 ? (
+          <div
+            style={{
+              position: "absolute",
+              left: CARD_HEIGHT * paddingLeft,
+              right: CARD_HEIGHT * paddingRight,
+              bottom:
+                CARD_HEIGHT * paddingBottom +
+                (boardCard.tick / CooldownMax) *
+                  (CARD_HEIGHT -
+                    CARD_HEIGHT * (paddingTop + paddingBottom) -
+                    2),
+              borderTop: "2px solid white",
+              color: "white",
+              textAlign: "right",
+              fontSize: "8pt",
+              boxSizing: "border-box",
+              height: 2,
+            }}
+          >
+            <span
               style={{
                 position: "absolute",
-                left: CARD_HEIGHT * paddingLeft,
-                right: CARD_HEIGHT * paddingRight,
-                bottom: CARD_HEIGHT * paddingBottom +
-                  (boardCard.tick / CooldownMax) *
-                    (CARD_HEIGHT -
-                      CARD_HEIGHT * (paddingTop + paddingBottom) -
-                      2),
-                borderTop: "2px solid white",
-                color: "white",
-                textAlign: "right",
-                fontSize: "8pt",
-                boxSizing: "border-box",
-                height: 2,
+                ...(boardCard.tick / boardCard.CooldownMax > 0.5
+                  ? { top: 1 }
+                  : { bottom: 3 }),
+                right: 2,
+                display: "inline-block",
               }}
             >
-              <span
-                style={{
-                  position: "absolute",
-                  ...(boardCard.tick / boardCard.CooldownMax > 0.5
-                    ? { top: 1 }
-                    : { bottom: 3 }),
-                  right: 2,
-                  display: "inline-block",
-                }}
-              >
-                {(boardCard.tick / 1000).toFixed(1)} /{" "}
-                {(CooldownMax / 1000).toFixed(1)}
-              </span>
-            </div>
-          )
-          : null}
+              {(boardCard.tick / 1000).toFixed(1)} /{" "}
+              {(CooldownMax / 1000).toFixed(1)}
+            </span>
+          </div>
+        ) : null}
         {/* Status effects container */}
         <div
           style={{
@@ -292,48 +289,42 @@ function BoardCardElement({
             whiteSpace: "preserve nowrap",
           }}
         >
-          {Freeze > 0
-            ? (
-              <div
-                style={{
-                  background: "rgba(0.2, 0.2, 0.2, 0.5)",
-                  padding: "2px 5px",
-                  borderRadius: 5,
-                  margin: 2,
-                }}
-              >
-                ❄️ {(Freeze / 1000).toFixed(1)}
-              </div>
-            )
-            : null}
-          {Slow > 0
-            ? (
-              <div
-                style={{
-                  background: "rgba(0.2, 0.2, 0.2, 0.5)",
-                  padding: "2px 5px",
-                  borderRadius: 5,
-                  margin: 2,
-                }}
-              >
-                🐌 {(Slow / 1000).toFixed(1)}
-              </div>
-            )
-            : null}
-          {Haste > 0
-            ? (
-              <div
-                style={{
-                  background: "rgba(0.2, 0.2, 0.2, 0.5)",
-                  padding: "2px 5px",
-                  borderRadius: 5,
-                  margin: 2,
-                }}
-              >
-                ⏱️ {(Haste / 1000).toFixed(1)}
-              </div>
-            )
-            : null}
+          {Freeze > 0 ? (
+            <div
+              style={{
+                background: "rgba(0.2, 0.2, 0.2, 0.5)",
+                padding: "2px 5px",
+                borderRadius: 5,
+                margin: 2,
+              }}
+            >
+              ❄️ {(Freeze / 1000).toFixed(1)}
+            </div>
+          ) : null}
+          {Slow > 0 ? (
+            <div
+              style={{
+                background: "rgba(0.2, 0.2, 0.2, 0.5)",
+                padding: "2px 5px",
+                borderRadius: 5,
+                margin: 2,
+              }}
+            >
+              🐌 {(Slow / 1000).toFixed(1)}
+            </div>
+          ) : null}
+          {Haste > 0 ? (
+            <div
+              style={{
+                background: "rgba(0.2, 0.2, 0.2, 0.5)",
+                padding: "2px 5px",
+                borderRadius: 5,
+                margin: 2,
+              }}
+            >
+              ⏱️ {(Haste / 1000).toFixed(1)}
+            </div>
+          ) : null}
         </div>
         {/* Amount container */}
         <div
@@ -348,9 +339,10 @@ function BoardCardElement({
           {DamageAmount !== undefined && (
             <div
               style={{
-                background: Lifesteal > 0
-                  ? "linear-gradient(to bottom right, purple, red)"
-                  : "red",
+                background:
+                  Lifesteal > 0
+                    ? "linear-gradient(to bottom right, purple, red)"
+                    : "red",
                 padding: "2px 5px",
                 margin: "0 2px",
                 borderRadius: 5,
@@ -474,44 +466,42 @@ function BoardCardElement({
               borderRadius: 5,
             }}
           >
-            {AmmoMax > 5
-              ? (
-                <div style={{ color: "orange", fontSize: "8pt" }}>
-                  {Ammo === undefined ? AmmoMax : Ammo}/{AmmoMax}&nbsp;
+            {AmmoMax > 5 ? (
+              <div style={{ color: "orange", fontSize: "8pt" }}>
+                {Ammo === undefined ? AmmoMax : Ammo}/{AmmoMax}&nbsp;
+                <div
+                  style={{
+                    width: 4,
+                    height: 4,
+                    borderRadius: 4,
+                    display: "inline-block",
+                    backgroundColor: "orange",
+                    margin: "1px 1px",
+                    border: "1px solid orange",
+                  }}
+                />
+              </div>
+            ) : (
+              [...new Array(AmmoMax)].map((_, i) => {
+                return (
+                  // Ammo indicator
                   <div
+                    key={"ammo" + i}
                     style={{
                       width: 4,
                       height: 4,
                       borderRadius: 4,
-                      display: "inline-block",
-                      backgroundColor: "orange",
+                      backgroundColor:
+                        (Ammo === undefined ? AmmoMax : Ammo) > i
+                          ? "orange"
+                          : "transparent",
                       margin: "1px 1px",
                       border: "1px solid orange",
                     }}
                   />
-                </div>
-              )
-              : (
-                [...new Array(AmmoMax)].map((_, i) => {
-                  return (
-                    // Ammo indicator
-                    <div
-                      key={"ammo" + i}
-                      style={{
-                        width: 4,
-                        height: 4,
-                        borderRadius: 4,
-                        backgroundColor:
-                          (Ammo === undefined ? AmmoMax : Ammo) > i
-                            ? "orange"
-                            : "transparent",
-                        margin: "1px 1px",
-                        border: "1px solid orange",
-                      }}
-                    />
-                  );
-                })
-              )}
+                );
+              })
+            )}
           </div>
         )}
       </div>
@@ -543,15 +533,12 @@ function BoardSkillElement({
   const borderSize = 0.1;
 
   const localeText = card.Localization.Title.Text;
-  const imgUrl = `https://www.howbazaar.gg/images/skills/${
-    localeText.replace(
-      /[ '\-&]/g,
-      "",
-    )
-  }.avif`;
+  const imgUrl = `https://www.howbazaar.gg/images/skills/${localeText.replace(
+    /[ '\-&]/g,
+    "",
+  )}.avif`;
 
-  const frameUrl =
-    `https://www.bazaarplanner.com/images/fromBT/skill_tier_${tier.toLowerCase()}.png`;
+  const frameUrl = `https://www.bazaarplanner.com/images/fromBT/skill_tier_${tier.toLowerCase()}.png`;
 
   return (
     <div
@@ -701,58 +688,50 @@ function GameStep({ gameState }: { gameState: GameState }) {
               >
                 {Math.floor(player.Health)}
               </span>
-              {Shield > 0
-                ? (
-                  <span
-                    style={{
-                      color: "#ffd62e",
-                      display: "inline-block",
-                      margin: "0 5px",
-                    }}
-                  >
-                    {Shield}
-                  </span>
-                )
-                : null}
-              {Poison > 0
-                ? (
-                  <span
-                    style={{
-                      color: "#1e976d",
-                      display: "inline-block",
-                      margin: "0 5px",
-                    }}
-                  >
-                    {Poison}
-                  </span>
-                )
-                : null}
-              {Burn > 0
-                ? (
-                  <span
-                    style={{
-                      color: "#d99c3e",
-                      display: "inline-block",
-                      margin: "0 5px",
-                    }}
-                  >
-                    {Burn}
-                  </span>
-                )
-                : null}
-              {HealthRegen > 0
-                ? (
-                  <span
-                    style={{
-                      color: "#96dd4b",
-                      display: "inline-block",
-                      margin: "0 5px",
-                    }}
-                  >
-                    {HealthRegen}
-                  </span>
-                )
-                : null}
+              {Shield > 0 ? (
+                <span
+                  style={{
+                    color: "#ffd62e",
+                    display: "inline-block",
+                    margin: "0 5px",
+                  }}
+                >
+                  {Shield}
+                </span>
+              ) : null}
+              {Poison > 0 ? (
+                <span
+                  style={{
+                    color: "#1e976d",
+                    display: "inline-block",
+                    margin: "0 5px",
+                  }}
+                >
+                  {Poison}
+                </span>
+              ) : null}
+              {Burn > 0 ? (
+                <span
+                  style={{
+                    color: "#d99c3e",
+                    display: "inline-block",
+                    margin: "0 5px",
+                  }}
+                >
+                  {Burn}
+                </span>
+              ) : null}
+              {HealthRegen > 0 ? (
+                <span
+                  style={{
+                    color: "#96dd4b",
+                    display: "inline-block",
+                    margin: "0 5px",
+                  }}
+                >
+                  {HealthRegen}
+                </span>
+              ) : null}
             </div>
             {/* Gold/Income container */}
             <div style={{ position: "absolute", right: 4, color: "yellow" }}>
@@ -799,9 +778,10 @@ function GameStep({ gameState }: { gameState: GameState }) {
               )}
           </div>
         );
-        const display = playerID === 0
-          ? [boardSkills, healthBar, board]
-          : [board, healthBar, boardSkills];
+        const display =
+          playerID === 0
+            ? [boardSkills, healthBar, board]
+            : [board, healthBar, boardSkills];
         return <div key={playerID}>{display}</div>;
       })}
     </div>
@@ -825,7 +805,7 @@ function Game({ steps }: { steps: GameState[] }) {
 
     const interval = setInterval(() => {
       setStepCount((prev) =>
-        prev >= steps.length - 1 ? (autoReset ? 0 : prev) : prev + 1
+        prev >= steps.length - 1 ? (autoReset ? 0 : prev) : prev + 1,
       );
     }, 100);
 
@@ -885,11 +865,11 @@ function TooltipWithoutGameState({
       health: 1000,
       cards: card
         ? [
-          {
-            name: card.Localization.Title.Text,
-            tier,
-          },
-        ]
+            {
+              name: card.Localization.Title.Text,
+              tier,
+            },
+          ]
         : [],
     },
     { type: "player", health: 1000 },
@@ -926,12 +906,10 @@ function CardSearch({
   onSelectSkill: (card: Card) => void;
 }) {
   const [search, setSearch] = useState("");
-  const [hoveredCard, setHoveredCard] = useState<
-    {
-      card: Card;
-      tier: Tier;
-    } | null
-  >(null);
+  const [hoveredCard, setHoveredCard] = useState<{
+    card: Card;
+    tier: Tier;
+  } | null>(null);
 
   const searchLower = search.toLowerCase();
   const filteredCards = Cards["0.1.9"].filter((card) => {
@@ -956,12 +934,12 @@ function CardSearch({
   const items = filteredCards
     .filter((card) => card.$type === "TCardItem")
     .sort((a, b) =>
-      a.Localization.Title.Text.localeCompare(b.Localization.Title.Text)
+      a.Localization.Title.Text.localeCompare(b.Localization.Title.Text),
     );
   const skills = filteredCards
     .filter((card) => card.$type === "TCardSkill")
     .sort((a, b) =>
-      a.Localization.Title.Text.localeCompare(b.Localization.Title.Text)
+      a.Localization.Title.Text.localeCompare(b.Localization.Title.Text),
     );
 
   const CONTAINER_SIZE = 70;
@@ -995,11 +973,12 @@ function CardSearch({
           <>
             <h3 style={{ marginBottom: 10 }}>Items</h3>
             {items.map((card) => {
-              const imgWidth = card.Size === "Small"
-                ? CONTAINER_SIZE / 2
-                : card.Size === "Large"
-                ? CONTAINER_SIZE * 1.5
-                : CONTAINER_SIZE;
+              const imgWidth =
+                card.Size === "Small"
+                  ? CONTAINER_SIZE / 2
+                  : card.Size === "Large"
+                    ? CONTAINER_SIZE * 1.5
+                    : CONTAINER_SIZE;
 
               const paddingTop = 0.06;
               const paddingLeft = 0.03;
@@ -1011,10 +990,9 @@ function CardSearch({
                 Medium: "M",
                 Small: "S",
               };
-              const frameUrl =
-                `https://www.bazaarplanner.com/images/fromBT/CardFrame_${card.StartingTier}_${
-                  sizesOneLetter[card.Size]
-                }_TUI.png`;
+              const frameUrl = `https://www.bazaarplanner.com/images/fromBT/CardFrame_${card.StartingTier}_${
+                sizesOneLetter[card.Size]
+              }_TUI.png`;
 
               return (
                 // Card container
@@ -1071,8 +1049,9 @@ function CardSearch({
                           bottom: paddingBottom * CONTAINER_SIZE,
                         }}
                         width={imgWidth * (1 - paddingLeft - paddingRight)}
-                        height={CONTAINER_SIZE *
-                          (1 - paddingTop - paddingBottom)}
+                        height={
+                          CONTAINER_SIZE * (1 - paddingTop - paddingBottom)
+                        }
                         alt={card.Localization.Title.Text}
                       />
                       <img
@@ -1105,8 +1084,7 @@ function CardSearch({
             {skills.map((card) => {
               const borderSize = 0.1;
 
-              const frameUrl =
-                `https://www.bazaarplanner.com/images/fromBT/skill_tier_${card.StartingTier.toLowerCase()}.png`;
+              const frameUrl = `https://www.bazaarplanner.com/images/fromBT/skill_tier_${card.StartingTier.toLowerCase()}.png`;
               return (
                 // Skill container
                 <div
@@ -1140,7 +1118,7 @@ function CardSearch({
                     <img
                       src={`https://www.howbazaar.gg/images/skills/${
                         card.Localization.Title.Text?.replace(/[ '\-&]/g, "") ??
-                          ""
+                        ""
                       }.avif`}
                       style={{
                         position: "absolute",
@@ -1244,12 +1222,14 @@ export default function App({
           setPlayerCards([
             ...playerCards,
             { name: card.Localization.Title.Text, tier: card.StartingTier },
-          ])}
+          ])
+        }
         onSelectSkill={(card) =>
           setPlayerSkills([
             ...playerSkills,
             { name: card.Localization.Title.Text, tier: card.StartingTier },
-          ])}
+          ])
+        }
       />
     </div>
   );

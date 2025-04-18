@@ -29,9 +29,12 @@ export interface ComboBoxProps {
   onChange: (value: string) => void;
 }
 
-export function ComboBox(
-  { items, searchPlaceholder, selectPlaceholder, onChange }: ComboBoxProps,
-) {
+export function ComboBox({
+  items,
+  searchPlaceholder,
+  selectPlaceholder,
+  onChange,
+}: ComboBoxProps) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
 

@@ -269,8 +269,7 @@ export enum ValueType {
   TFixedValue = "TFixedValue",
   TRangeValue = "TRangeValue",
   TReferenceValueCardAttribute = "TReferenceValueCardAttribute",
-  TReferenceValueCardAttributeAggregate =
-    "TReferenceValueCardAttributeAggregate",
+  TReferenceValueCardAttributeAggregate = "TReferenceValueCardAttributeAggregate",
   TReferenceValueCardCount = "TReferenceValueCardCount",
   TReferenceValueCardTagCount = "TReferenceValueCardTagCount",
   TReferenceValuePlayerAttribute = "TReferenceValuePlayerAttribute",
@@ -448,8 +447,7 @@ export enum TriggerType {
   TTriggerOnHourStarted = "TTriggerOnHourStarted",
   TTriggerOnItemUsed = "TTriggerOnItemUsed",
   TTriggerOnPlayerAttributeChanged = "TTriggerOnPlayerAttributeChanged",
-  TTriggerOnPlayerAttributePercentChange =
-    "TTriggerOnPlayerAttributePercentChange",
+  TTriggerOnPlayerAttributePercentChange = "TTriggerOnPlayerAttributePercentChange",
   TTriggerOnPlayerDied = "TTriggerOnPlayerDied",
 }
 

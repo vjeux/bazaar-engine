@@ -99,11 +99,10 @@ function _createBoardCardFromCard(
     attributes.TooltipIds = [
       ...attributes.TooltipIds,
       ...enchant.Localization.Tooltips.map((tooltip) =>
-        attributes.Localization.Tooltips.indexOf(tooltip)
+        attributes.Localization.Tooltips.indexOf(tooltip),
       ),
     ];
-    attributes.Localization.Title.Text =
-      `${enchantment} ${attributes.Localization.Title.Text}`;
+    attributes.Localization.Title.Text = `${enchantment} ${attributes.Localization.Title.Text}`;
   }
 
   const result = {
@@ -233,10 +232,10 @@ function getBoardPlayerFromMonsterCard(Cards: Cards, monsterCard: Group) {
         item.card.id,
         item.tierType,
         item.enchantmentType,
-      )
+      ),
     ),
     monsterCard.skills.map((item) =>
-      getBoardCardFromId(Cards, item.card.id, item.tierType, null)
+      getBoardCardFromId(Cards, item.card.id, item.tierType, null),
     ),
   );
 }
@@ -320,10 +319,10 @@ export function getInitialGameState(
             HealthRegen: player.healthRegen ?? 0,
           },
           (player.cards ?? []).map((c) =>
-            getBoardCard(Cards, c.name, c.tier, c.enchantment)
+            getBoardCard(Cards, c.name, c.tier, c.enchantment),
           ),
           (player.skills ?? []).map((s) =>
-            getBoardSkill(Cards, s.name, s.tier)
+            getBoardSkill(Cards, s.name, s.tier),
           ),
         );
       }

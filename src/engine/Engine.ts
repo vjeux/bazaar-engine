@@ -298,11 +298,12 @@ export function getCardAttribute(
             targetBoardCardID,
           );
 
-          value = action.Operation === "Add"
-            ? value + actionValue
-            : action.Operation === "Multiply"
-            ? value * actionValue
-            : value - actionValue;
+          value =
+            action.Operation === "Add"
+              ? value + actionValue
+              : action.Operation === "Multiply"
+                ? value * actionValue
+                : value - actionValue;
         });
     },
   );
@@ -353,11 +354,12 @@ export function getPlayerAttribute(
           targetBoardCardID,
         );
 
-        value = action.Operation === "Add"
-          ? value + actionValue
-          : action.Operation === "Multiply"
-          ? value * actionValue
-          : value - actionValue;
+        value =
+          action.Operation === "Add"
+            ? value + actionValue
+            : action.Operation === "Multiply"
+              ? value * actionValue
+              : value - actionValue;
       });
     },
   );
@@ -593,9 +595,10 @@ function testCardConditions(
 
   switch (conditions.$type) {
     case "TCardConditionalAttribute": {
-      const value = gameState.players[targetPlayerID].board[targetBoardCardID][
-        conditions.Attribute
-      ];
+      const value =
+        gameState.players[targetPlayerID].board[targetBoardCardID][
+          conditions.Attribute
+        ];
       const comparisonValue = getActionValue(
         gameState,
         conditions.ComparisonValue,
@@ -631,7 +634,7 @@ function testCardConditions(
     case "TCardConditionalId": {
       const is =
         gameState.players[targetPlayerID].board[targetBoardCardID].card.Id ===
-          conditions.Id;
+        conditions.Id;
       return conditions.IsNot ? !is : is;
     }
     case "TCardConditionalTier": {
@@ -647,8 +650,9 @@ function testCardConditions(
       return conditions.IsSameAsPlayerHero ? is : !is;
     }
     case "TCardConditionalHasEnchantment": {
-      const is = gameState.players[targetPlayerID].board[targetBoardCardID]
-        .Enchantment === conditions.Enchantment;
+      const is =
+        gameState.players[targetPlayerID].board[targetBoardCardID]
+          .Enchantment === conditions.Enchantment;
       return conditions.IsNot ? !is : is;
     }
     case "TCardConditionalHiddenTag":
@@ -706,7 +710,8 @@ function testCardConditions(
       return true;
     }
     case "TCardConditionalTriggerSource": {
-      const is = triggerPlayerID === targetPlayerID &&
+      const is =
+        triggerPlayerID === targetPlayerID &&
         triggerBoardCardID === targetBoardCardID;
       return conditions.IsNot ? !is : is;
     }
@@ -1233,9 +1238,10 @@ function runAction(
       targetCards
         .slice(0, targetCount)
         .forEach(([actionTargetPlayerID, actionTargetBoardCardID]) => {
-          const nextBoardCard = gameState.players[actionTargetPlayerID].board[
-            actionTargetBoardCardID
-          ];
+          const nextBoardCard =
+            gameState.players[actionTargetPlayerID].board[
+              actionTargetBoardCardID
+            ];
           nextBoardCard.isDisabled = true;
           triggerActions(
             gameState,
@@ -1305,26 +1311,26 @@ function runAction(
       const [amountKey, targetsKey, tickKey, triggerType] =
         action.$type === "TActionCardFreeze"
           ? [
-            "FreezeAmount",
-            "FreezeTargets",
-            "Freeze",
-            TriggerType.TTriggerOnCardPerformedFreeze,
-          ]
+              "FreezeAmount",
+              "FreezeTargets",
+              "Freeze",
+              TriggerType.TTriggerOnCardPerformedFreeze,
+            ]
           : action.$type === "TActionCardSlow"
-          ? [
-            "SlowAmount",
-            "SlowTargets",
-            "Slow",
-            TriggerType.TTriggerOnCardPerformedSlow,
-          ]
-          : action.$type === "TActionCardHaste"
-          ? [
-            "HasteAmount",
-            "HasteTargets",
-            "Haste",
-            TriggerType.TTriggerOnCardPerformedHaste,
-          ]
-          : [];
+            ? [
+                "SlowAmount",
+                "SlowTargets",
+                "Slow",
+                TriggerType.TTriggerOnCardPerformedSlow,
+              ]
+            : action.$type === "TActionCardHaste"
+              ? [
+                  "HasteAmount",
+                  "HasteTargets",
+                  "Haste",
+                  TriggerType.TTriggerOnCardPerformedHaste,
+                ]
+              : [];
       if (
         amountKey == null ||
         targetsKey == null ||
@@ -1439,9 +1445,10 @@ function runAction(
         })
         .slice(0, targetCount)
         .forEach(([actionTargetPlayerID, actionTargetBoardCardID]) => {
-          const nextBoardCard = gameState.players[actionTargetPlayerID].board[
-            actionTargetBoardCardID
-          ];
+          const nextBoardCard =
+            gameState.players[actionTargetPlayerID].board[
+              actionTargetBoardCardID
+            ];
           const cooldownMax = getCardAttribute(
             gameState,
             actionTargetPlayerID,
@@ -1485,32 +1492,35 @@ function runAction(
         targetBoardCardID,
       );
 
-      const targetCount = action.TargetCount == null
-        ? targetCards.length
-        : getActionValue(
-          gameState,
-          action.TargetCount,
-          triggerPlayerID,
-          triggerBoardCardID,
-          targetPlayerID,
-          targetBoardCardID,
-        );
+      const targetCount =
+        action.TargetCount == null
+          ? targetCards.length
+          : getActionValue(
+              gameState,
+              action.TargetCount,
+              triggerPlayerID,
+              triggerBoardCardID,
+              targetPlayerID,
+              targetBoardCardID,
+            );
 
       targetCards
         .slice(0, targetCount)
         .forEach(([actionTargetPlayerID, actionTargetBoardCardID]) => {
-          const oldValue = gameState.players[actionTargetPlayerID].board[
-            actionTargetBoardCardID
-          ][action.AttributeType as string];
+          const oldValue =
+            gameState.players[actionTargetPlayerID].board[
+              actionTargetBoardCardID
+            ][action.AttributeType as string];
           if (oldValue === undefined) {
             return;
           }
 
-          const newValue = action.Operation === "Add"
-            ? oldValue + actionValue
-            : action.Operation === "Multiply"
-            ? oldValue * actionValue
-            : oldValue - actionValue;
+          const newValue =
+            action.Operation === "Add"
+              ? oldValue + actionValue
+              : action.Operation === "Multiply"
+                ? oldValue * actionValue
+                : oldValue - actionValue;
 
           updateCardAttribute(
             gameState,
@@ -1539,13 +1549,14 @@ function runAction(
       ).forEach((playerID) => {
         const oldValue =
           gameState.players[playerID][action.AttributeType as string];
-        const newValue = action.Operation === "Add"
-          ? oldValue + actionValue
-          : action.Operation === "Subtract"
-          ? oldValue - actionValue
-          : action.Operation === "Multiply"
-          ? oldValue * actionValue
-          : oldValue;
+        const newValue =
+          action.Operation === "Add"
+            ? oldValue + actionValue
+            : action.Operation === "Subtract"
+              ? oldValue - actionValue
+              : action.Operation === "Multiply"
+                ? oldValue * actionValue
+                : oldValue;
 
         updatePlayerAttribute(
           gameState,
@@ -1589,7 +1600,8 @@ function getActionValue(
       );
       amount = value.DefaultValue;
       targetCards.forEach(([valueTargetPlayerID, valueTargetBoardCardID]) => {
-        amount = (amount ?? 0) +
+        amount =
+          (amount ?? 0) +
           (getCardAttribute(
             gameState,
             valueTargetPlayerID,
@@ -1608,7 +1620,8 @@ function getActionValue(
         targetPlayerID,
       );
       targetPlayers.forEach((valueTargetPlayerID) => {
-        amount = (amount ?? 0) +
+        amount =
+          (amount ?? 0) +
           (getPlayerAttribute(
             gameState,
             valueTargetPlayerID,

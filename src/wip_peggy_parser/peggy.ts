@@ -3,7 +3,13 @@ import { readFileSync } from "fs";
 import peggy, { type ParserOptions } from "peggy";
 import type { Item } from "./types/apiItems";
 import type { PartialDeep } from "type-fest";
-import { type Card, CardType, type Tooltip, Type, Version } from "./types/cardTypes";
+import {
+  type Card,
+  CardType,
+  type Tooltip,
+  Type,
+  Version,
+} from "./types/cardTypes";
 import _ from "lodash";
 
 export const parser = peggy.generate(
@@ -27,22 +33,21 @@ type DefaultCardRequired = {
 };
 
 // Combine required fields with the rest being partial
-const DEFAULT_CARD:
-  & DefaultCardRequired
-  & PartialDeep<Omit<Card, keyof DefaultCardRequired>> = {
-    $type: CardType.TCardItem,
-    Type: Type.Item,
-    Version: Version.The100,
-    AudioKey: "",
-    Localization: {
-      FlavorText: null,
-      Tooltips: [
-        {
-          Prerequisites: null,
-        },
-      ],
-    },
-  };
+const DEFAULT_CARD: DefaultCardRequired &
+  PartialDeep<Omit<Card, keyof DefaultCardRequired>> = {
+  $type: CardType.TCardItem,
+  Type: Type.Item,
+  Version: Version.The100,
+  AudioKey: "",
+  Localization: {
+    FlavorText: null,
+    Tooltips: [
+      {
+        Prerequisites: null,
+      },
+    ],
+  },
+};
 
 export function parseItem(item: Item): PartialDeep<Card> {
   let card = _.cloneDeep(DEFAULT_CARD);

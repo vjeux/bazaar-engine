@@ -20,15 +20,14 @@ export function SearchCardSkill({
   const filteredItems = useMemo(() => {
     return Cards["0.1.9"].filter((card) => {
       const cardName = card.Localization.Title.Text;
-      return ValidSkillNames.includes(cardName) ||
-        ValidItemNames.includes(cardName);
+      return (
+        ValidSkillNames.includes(cardName) || ValidItemNames.includes(cardName)
+      );
     });
   }, [Cards]);
 
   const fuse = new Fuse(filteredItems, {
-    keys: [
-      "Localization.Title.Text",
-    ],
+    keys: ["Localization.Title.Text"],
   });
 
   const searchResults = useMemo(() => {
@@ -39,22 +38,22 @@ export function SearchCardSkill({
   }, [search, filteredItems, fuse]);
 
   return (
-    <div className="w-64 flex flex-col gap-2 bg-background p-3 rounded border border-border overflow-auto">
-      <h2 className="text-lg font-semibold mb-2 text-card-foreground">
+    <div className="bg-background border-border flex w-64 flex-col gap-2 overflow-auto rounded border p-3">
+      <h2 className="text-card-foreground mb-2 text-lg font-semibold">
         Cards & Skills
       </h2>
       <input
         type="text"
         placeholder="Search cards & skills..."
-        className="bg-input border border-input rounded p-1 mb-2 text-sm text-foreground"
+        className="bg-input border-input text-foreground mb-2 rounded border p-1 text-sm"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-      <div className="flex-grow overflow-y-auto gap-1 pr-1">
+      <div className="flex-grow gap-1 overflow-y-auto pr-1">
         {searchResults.map((item) => (
           <div
             key={item.Id}
-            className="flex items-center gap-2 p-1 rounded hover:bg-accent cursor-pointer text-sm text-secondary-foreground"
+            className="hover:bg-accent text-secondary-foreground flex cursor-pointer items-center gap-2 rounded p-1 text-sm"
             onClick={() => {
               if (item.$type == CardType.TCardSkill) {
                 onSelectSkill(item);
@@ -65,8 +64,8 @@ export function SearchCardSkill({
           >
             <div
               className={cn(
-                "w-8 h-10 border border-border rounded bg-card flex items-center justify-center text-[8px] text-muted-foreground",
-                item.$type == CardType.TCardSkill && "rounded-full h-8",
+                "border-border bg-card text-muted-foreground flex h-10 w-8 items-center justify-center rounded border text-[8px]",
+                item.$type == CardType.TCardSkill && "h-8 rounded-full",
               )}
             />
             <span>{item.Localization.Title.Text}</span>

@@ -49,7 +49,7 @@ describe("Peggy-generated tooltip parser", () => {
             `Item ${item.name} has ${itemUnmatchedTooltips.length} unmatched tooltips:`,
           );
           itemUnmatchedTooltips.forEach((tooltip) =>
-            console.log(`- "${tooltip}"`)
+            console.log(`- "${tooltip}"`),
           );
         }
 
@@ -66,12 +66,14 @@ describe("Peggy-generated tooltip parser", () => {
       yellow(`
     Tooltip Parsing Statistics:
     - Total unique tooltips: ${allTooltips.size}
-    - Matched: ${matchedCount} (${
-        ((matchedCount / allTooltips.size) * 100).toFixed(2)
-      }%)
-    - Unmatched: ${unmatchedCount} (${
-        ((unmatchedCount / allTooltips.size) * 100).toFixed(2)
-      }%)
+    - Matched: ${matchedCount} (${(
+      (matchedCount / allTooltips.size) *
+      100
+    ).toFixed(2)}%)
+    - Unmatched: ${unmatchedCount} (${(
+      (unmatchedCount / allTooltips.size) *
+      100
+    ).toFixed(2)}%)
     `),
     );
 
@@ -135,26 +137,23 @@ describe("should build all partial cards correctly", () => {
         "VFXConfig",
       ];
       const omittedAbilities = expectedCard?.Abilities
-        ? _.mapValues(
-          expectedCard.Abilities,
-          (ability) => _.omit(ability, omitToplevelKeys),
-        )
+        ? _.mapValues(expectedCard.Abilities, (ability) =>
+            _.omit(ability, omitToplevelKeys),
+          )
         : undefined;
 
       const omitTierKeys = ["BuyPrice", "SellPrice"];
       const omittedTiers = expectedCard?.Tiers
-        ? _.mapValues(
-          expectedCard.Tiers,
-          (ti) => _.mapValues(ti, (tierInfo) => _.omit(tierInfo, omitTierKeys)),
-        )
+        ? _.mapValues(expectedCard.Tiers, (ti) =>
+            _.mapValues(ti, (tierInfo) => _.omit(tierInfo, omitTierKeys)),
+          )
         : undefined;
 
       const omitTooltipKeys = ["Content.Key", "TooltipType", "Prerequisites"]; // TODO dont care about these for now
       const omittedTooltips = expectedCard?.Localization?.Tooltips
-        ? _.map(
-          expectedCard.Localization.Tooltips,
-          (tooltip) => _.omit(tooltip, omitTooltipKeys),
-        )
+        ? _.map(expectedCard.Localization.Tooltips, (tooltip) =>
+            _.omit(tooltip, omitTooltipKeys),
+          )
         : undefined;
 
       expect(parsedCard).toEqual(

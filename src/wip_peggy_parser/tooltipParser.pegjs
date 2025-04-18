@@ -50,7 +50,7 @@
     Silver: 1,
     Gold: 2,
     Diamond: 3,
-    Legendary: 4
+    Legendary: 4,
   };
 
   function cfTier(item, values, construct_function) {
@@ -86,14 +86,14 @@
     values.forEach((value, index) => {
       tierInfos[tiers[index]] = {
         Attributes: {
-          [attribute_type]: value
-        }
+          [attribute_type]: value,
+        },
       };
     });
 
     // Return partial card object
     return {
-      Tiers: tierInfos
+      Tiers: tierInfos,
     };
   }
 }}
@@ -230,7 +230,7 @@ NormalActionTooltip
       // Append AbilityIds to the card object
       Object.keys(tiers_card.Tiers).forEach((tier) => {
         tiers_card.Tiers[tier].AbilityIds = {
-          [abilityIndex]: `${abilityIndex}`
+          [abilityIndex]: `${abilityIndex}`,
         };
       });
       // Set startingTier multicast to 1
@@ -242,7 +242,7 @@ NormalActionTooltip
       // Add tooltip
       Object.keys(tiers_card.Tiers).forEach((tier) => {
         tiers_card.Tiers[tier].TooltipIds = {
-          [abilityIndex]: abilityIndex
+          [abilityIndex]: abilityIndex,
         };
       });
       // Create card object with the action
@@ -256,22 +256,22 @@ NormalActionTooltip
                 $type: "TTargetPlayerRelative",
                 TargetMode: [
                   "TActionPlayerHeal",
-                  "TActionPlayerShieldApply"
+                  "TActionPlayerShieldApply",
                 ].includes(actionType)
                   ? "Self"
                   : "Opponent",
-                Conditions: null
-              }
+                Conditions: null,
+              },
             },
             ActiveIn: "HandOnly",
             Id: `${abilityIndex}`,
             Prerequisites: null,
             Trigger: {
-              $type: "TTriggerOnCardFired"
-            }
-          }
+              $type: "TTriggerOnCardFired",
+            },
+          },
         },
-        Auras: {}
+        Auras: {},
       };
 
       return _.merge(ability_card, tiers_card);
@@ -321,8 +321,8 @@ AdjacentTarget
       tiers = cfTier(ITEM, amount, (item, tier, values, index) => {
         const tierInfo = {
           Attributes: {
-            [`Custom_${index}`]: values[index]
-          }
+            [`Custom_${index}`]: values[index],
+          },
         };
       });
       // Now create the ability
