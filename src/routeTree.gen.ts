@@ -11,79 +11,105 @@
 // Import Routes
 
 import { Route as rootRoute } from './routes/__root'
-import { Route as DragndropImport } from './routes/dragndrop'
-import { Route as IndexImport } from './routes/index'
+import { Route as LayoutImport } from './routes/_layout'
+import { Route as LayoutIndexImport } from './routes/_layout.index'
+import { Route as LayoutDragndropImport } from './routes/_layout.dragndrop'
 
 // Create/Update Routes
 
-const DragndropRoute = DragndropImport.update({
-  id: '/dragndrop',
-  path: '/dragndrop',
+const LayoutRoute = LayoutImport.update({
+  id: '/_layout',
   getParentRoute: () => rootRoute,
 } as any)
 
-const IndexRoute = IndexImport.update({
+const LayoutIndexRoute = LayoutIndexImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRoute,
+  getParentRoute: () => LayoutRoute,
+} as any)
+
+const LayoutDragndropRoute = LayoutDragndropImport.update({
+  id: '/dragndrop',
+  path: '/dragndrop',
+  getParentRoute: () => LayoutRoute,
 } as any)
 
 // Populate the FileRoutesByPath interface
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexImport
+    '/_layout': {
+      id: '/_layout'
+      path: ''
+      fullPath: ''
+      preLoaderRoute: typeof LayoutImport
       parentRoute: typeof rootRoute
     }
-    '/dragndrop': {
-      id: '/dragndrop'
+    '/_layout/dragndrop': {
+      id: '/_layout/dragndrop'
       path: '/dragndrop'
       fullPath: '/dragndrop'
-      preLoaderRoute: typeof DragndropImport
-      parentRoute: typeof rootRoute
+      preLoaderRoute: typeof LayoutDragndropImport
+      parentRoute: typeof LayoutImport
+    }
+    '/_layout/': {
+      id: '/_layout/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof LayoutIndexImport
+      parentRoute: typeof LayoutImport
     }
   }
 }
 
 // Create and export the route tree
 
+interface LayoutRouteChildren {
+  LayoutDragndropRoute: typeof LayoutDragndropRoute
+  LayoutIndexRoute: typeof LayoutIndexRoute
+}
+
+const LayoutRouteChildren: LayoutRouteChildren = {
+  LayoutDragndropRoute: LayoutDragndropRoute,
+  LayoutIndexRoute: LayoutIndexRoute,
+}
+
+const LayoutRouteWithChildren =
+  LayoutRoute._addFileChildren(LayoutRouteChildren)
+
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/dragndrop': typeof DragndropRoute
+  '': typeof LayoutRouteWithChildren
+  '/dragndrop': typeof LayoutDragndropRoute
+  '/': typeof LayoutIndexRoute
 }
 
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/dragndrop': typeof DragndropRoute
+  '/dragndrop': typeof LayoutDragndropRoute
+  '/': typeof LayoutIndexRoute
 }
 
 export interface FileRoutesById {
   __root__: typeof rootRoute
-  '/': typeof IndexRoute
-  '/dragndrop': typeof DragndropRoute
+  '/_layout': typeof LayoutRouteWithChildren
+  '/_layout/dragndrop': typeof LayoutDragndropRoute
+  '/_layout/': typeof LayoutIndexRoute
 }
 
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dragndrop'
+  fullPaths: '' | '/dragndrop' | '/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dragndrop'
-  id: '__root__' | '/' | '/dragndrop'
+  to: '/dragndrop' | '/'
+  id: '__root__' | '/_layout' | '/_layout/dragndrop' | '/_layout/'
   fileRoutesById: FileRoutesById
 }
 
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  DragndropRoute: typeof DragndropRoute
+  LayoutRoute: typeof LayoutRouteWithChildren
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  DragndropRoute: DragndropRoute,
+  LayoutRoute: LayoutRouteWithChildren,
 }
 
 export const routeTree = rootRoute
@@ -96,15 +122,23 @@ export const routeTree = rootRoute
     "__root__": {
       "filePath": "__root.tsx",
       "children": [
-        "/",
-        "/dragndrop"
+        "/_layout"
       ]
     },
-    "/": {
-      "filePath": "index.tsx"
+    "/_layout": {
+      "filePath": "_layout.tsx",
+      "children": [
+        "/_layout/dragndrop",
+        "/_layout/"
+      ]
     },
-    "/dragndrop": {
-      "filePath": "dragndrop.tsx"
+    "/_layout/dragndrop": {
+      "filePath": "_layout.dragndrop.tsx",
+      "parent": "/_layout"
+    },
+    "/_layout/": {
+      "filePath": "_layout.index.tsx",
+      "parent": "/_layout"
     }
   }
 }

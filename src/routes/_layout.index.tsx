@@ -4,7 +4,7 @@ import { genCardsAndEncounters } from "../lib/Data.ts";
 
 const { Cards, Encounters } = await genCardsAndEncounters();
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_layout/")({
   component: Index,
 });
 

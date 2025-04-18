@@ -16,7 +16,7 @@ import { Toggle } from "@/components/ui/toggle.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { HealthBar } from "../components/HealthBar.tsx"; // Import the new HealthBar component
 
-export const Route = createFileRoute("/dragndrop")({
+export const Route = createFileRoute("/_layout/dragndrop")({
   component: RouteComponent,
 });
 
