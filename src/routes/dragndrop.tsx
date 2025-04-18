@@ -11,6 +11,9 @@ import {
 } from "../engine/GameState.ts";
 import { run } from "../engine/Engine.ts";
 import { SearchCardSkill } from "../components/SearchCardSkill.tsx";
+import { ComboBox } from "@/components/ui/combobox.tsx";
+import { Toggle } from "@/components/ui/toggle.tsx";
+import { Checkbox } from "@/components/ui/checkbox.tsx";
 
 export const Route = createFileRoute("/dragndrop")({
   component: RouteComponent,
@@ -19,8 +22,7 @@ export const Route = createFileRoute("/dragndrop")({
 const { Cards: CardsData, Encounters: EncounterData } =
   await genCardsAndEncounters();
 
-// Placeholder data
-const enemies = ["Giant Mosquito", "Slime", "Goblin"];
+const encounters = getFlattenedEncounters(EncounterData);
 
 function RouteComponent() {
   const [monsterConfig, setMonsterConfig] = useState<MonsterConfig | null>(
@@ -42,20 +44,38 @@ function RouteComponent() {
   ]);
   const steps = run(initialGameState, 100000);
 
-  const encounters = getFlattenedEncounters(EncounterData);
+  const [stepCount, setStepCount] = useState(0);
+  const [autoScroll, setAutoScroll] = useState(false);
+  const [autoReset, setAutoReset] = useState(false);
+
+  // If you live reload with a step higher than the length, it would throw.
+  const boundedStepCount = Math.min(steps.length - 1, stepCount);
 
   return (
     <div className="grid grid-cols-[1fr_auto] h-screen bg-gray-900 text-white p-4 gap-4">
       {/* Main Game Area */}
       <div className="flex flex-col gap-2">
         {/* Enemy Selection */}
-        <div className="flex items-center gap-2">
-          <select className="bg-gray-700 border border-gray-600 rounded p-1">
-            {enemies.map((enemy) => (
-              <option key={enemy} value={enemy}>{enemy}</option>
-            ))}
-          </select>
-        </div>
+        <ComboBox
+          items={encounters.map((encounter) => ({
+            value: encounter.card.cardId,
+            label: encounter.name,
+          }))}
+          searchPlaceholder="Search encounters..."
+          selectPlaceholder="Select encounter..."
+          onChange={(monsterId) => {
+            const encounter = encounters.find(
+              (encounter) => encounter.card.cardId === monsterId,
+            );
+            if (encounter) {
+              setMonsterConfig({
+                type: "monster",
+                name: encounter.name,
+              });
+            }
+          }}
+        >
+        </ComboBox>
 
         {/* Enemy Skills */}
         <div className="flex gap-1 h-12 items-center">
@@ -132,9 +152,18 @@ function RouteComponent() {
 
         {/* Time Slider */}
         <div className="flex items-center gap-2 mt-2">
-          <input type="checkbox" id="autoAdvance" />
+          <Checkbox
+            checked={autoScroll}
+            onClick={() => setAutoScroll(!autoScroll)}
+            id="autoAdvance"
+          />
+
           <label htmlFor="autoAdvance" className="text-sm">Auto Advance</label>
-          <input type="checkbox" id="autoRestart" />
+          <Checkbox
+            checked={autoReset}
+            onClick={() => setAutoReset(!autoReset)}
+            id="autoRestart"
+          />
           <label htmlFor="autoRestart" className="text-sm">Auto Restart</label>
           <input
             type="range"
