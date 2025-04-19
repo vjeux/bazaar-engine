@@ -135,7 +135,7 @@ export default function DragNDrop() {
             id="autoAdvance"
           />
 
-          <label htmlFor="autoAdvance" className="text-sm">
+          <label htmlFor="autoAdvance" className="text-sm text-nowrap">
             Auto Advance
           </label>
           <Checkbox
@@ -143,7 +143,7 @@ export default function DragNDrop() {
             onClick={() => setAutoReset(!autoReset)}
             id="autoRestart"
           />
-          <label htmlFor="autoRestart" className="text-sm">
+          <label htmlFor="autoRestart" className="text-sm text-nowrap">
             Auto Restart
           </label>
           <Slider
@@ -156,10 +156,10 @@ export default function DragNDrop() {
             }}
           />
 
-          <span className="text-sm">
+          <span className="w-28 text-sm text-nowrap">
             Time: {stepCountToSeconds(boundedStepCount).toFixed(1)}s
           </span>
-          <span className="text-sm">
+          <span className="w-42 text-sm text-nowrap">
             Steps: {boundedStepCount}/{steps.length - 1}
           </span>
         </div>
