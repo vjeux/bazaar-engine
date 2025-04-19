@@ -3,6 +3,7 @@ import { ThemeProvider } from "@/components/theme-provider.tsx";
 import "./globals.css";
 import Navbar from "./navbar";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
+import { ReactScan } from "@/components/ReactScan";
 
 export default function RootLayout({
   children,
@@ -12,13 +13,12 @@ export default function RootLayout({
   return (
     <StrictMode>
       <html lang="en" suppressHydrationWarning>
+        <ReactScan />
         <head>
           <meta title="Bazaar Engine" />
-          <script src="https://unpkg.com/react-scan/dist/auto.global.js" />
-          {/* React scan */}
         </head>
 
-        <body className="min-h-screen bg-red-500">
+        <body className="min-h-screen">
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
