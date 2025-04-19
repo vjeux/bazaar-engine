@@ -17,7 +17,7 @@ import {
   run,
   TICK_RATE,
 } from "@/engine/Engine.ts";
-import { SearchCardSkill } from "@/components/SearchCardSkill.tsx";
+import { SearchableCardSkillList } from "@/components/SearchableCardSkillList";
 import { ComboBox } from "@/components/ui/combobox.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { HealthBar } from "@/components/HealthBar.tsx"; // Import the new HealthBar component
@@ -155,7 +155,7 @@ export default function DragNDrop() {
       </div>
 
       {/* Right Sidebar - Card and skill search */}
-      <SearchCardSkill
+      <SearchableCardSkillList
         Cards={CardsData}
         onSelectCard={(card) =>
           setPlayerCards([

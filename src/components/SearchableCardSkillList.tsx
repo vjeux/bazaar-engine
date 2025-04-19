@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils.ts";
 import { Tier } from "@/types/shared.ts";
 import TooltipWithoutGameState from "./TooltipWithoutGameState.tsx";
 
-export function SearchCardSkill({
+export function SearchableCardSkillList({
   Cards,
   onSelectCard,
   onSelectSkill,
@@ -63,6 +63,7 @@ export function SearchCardSkill({
       />
 
       <div className="flex-grow gap-1 overflow-y-auto pr-1">
+        {/* Share tooltip element between all results for performance */}
         <Tooltip anchorSelect=".tooltip-anchor-class" place="left">
           <TooltipWithoutGameState
             card={hoveredCard}
@@ -76,27 +77,12 @@ export function SearchCardSkill({
             <hr />
             {filteredCards.map((item) => {
               return (
-                <div
-                  key={item.Id}
-                  className="hover:bg-accent text-secondary-foreground tooltip-anchor-class relative flex cursor-pointer items-center gap-2 rounded p-1 text-sm"
-                  onClick={() => {
-                    if (item.$type == CardType.TCardSkill) {
-                      onSelectSkill(item);
-                    } else {
-                      onSelectCard(item);
-                    }
-                  }}
-                  onMouseEnter={() => {
-                    setHoveredCard(item);
-                  }}
-                >
-                  <TriggerContent
-                    item={item}
-                    onSelectCard={onSelectCard}
-                    onSelectSkill={onSelectSkill}
-                    key={item.Id}
-                  />
-                </div>
+                <SearchResultItem
+                  item={item}
+                  onSelectSkill={onSelectSkill}
+                  onSelectCard={onSelectCard}
+                  setHoveredCard={setHoveredCard}
+                />
               );
             })}
           </>
@@ -107,32 +93,53 @@ export function SearchCardSkill({
             <hr />
             {filteredSkills.map((item) => {
               return (
-                <div
-                  key={item.Id}
-                  className="hover:bg-accent text-secondary-foreground tooltip-anchor-class relative flex cursor-pointer items-center gap-2 rounded p-1 text-sm"
-                  onClick={() => {
-                    if (item.$type == CardType.TCardSkill) {
-                      onSelectSkill(item);
-                    } else {
-                      onSelectCard(item);
-                    }
-                  }}
-                  onMouseEnter={() => {
-                    setHoveredCard(item);
-                  }}
-                >
-                  <TriggerContent
-                    item={item}
-                    onSelectCard={onSelectCard}
-                    onSelectSkill={onSelectSkill}
-                    key={item.Id}
-                  />
-                </div>
+                <SearchResultItem
+                  item={item}
+                  onSelectSkill={onSelectSkill}
+                  onSelectCard={onSelectCard}
+                  setHoveredCard={setHoveredCard}
+                />
               );
             })}
           </>
         ) : null}
       </div>
+    </div>
+  );
+}
+
+function SearchResultItem({
+  item,
+  onSelectSkill,
+  onSelectCard,
+  setHoveredCard,
+}: {
+  item: Card;
+  onSelectSkill: (card: Card) => void;
+  onSelectCard: (card: Card) => void;
+  setHoveredCard: (card: Card | null) => void;
+}) {
+  return (
+    <div
+      key={item.Id}
+      className="hover:bg-accent text-secondary-foreground tooltip-anchor-class relative flex cursor-pointer items-center gap-2 rounded p-1 text-sm"
+      onClick={() => {
+        if (item.$type == CardType.TCardSkill) {
+          onSelectSkill(item);
+        } else {
+          onSelectCard(item);
+        }
+      }}
+      onMouseEnter={() => {
+        setHoveredCard(item);
+      }}
+    >
+      <TriggerContent
+        item={item}
+        onSelectCard={onSelectCard}
+        onSelectSkill={onSelectSkill}
+        key={item.Id}
+      />
     </div>
   );
 }
