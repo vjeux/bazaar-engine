@@ -69,8 +69,8 @@ export function HealthBar({ gameState, playerId }: HealthBarProps) {
       {/* Main content */}
       <div className="absolute inset-0 flex items-center justify-center">
         {/* Health and status effects */}
-        <div className="flex items-center space-x-1 text-sm font-medium">
-          <span className="text-primary">{Math.round(Health)}</span>
+        <div className="flex items-center space-x-1 text-sm font-medium text-shadow-lg/100">
+          <span className="text-white">{Math.round(Health)}</span>
 
           {Shield > 0 && <span className="text-yellow-300">{Shield}</span>}
 
