@@ -33,6 +33,7 @@ export function SearchCardSkill({
 
   const fuse = new Fuse(filteredItems, {
     keys: ["Localization.Title.Text"],
+    threshold: 0.3,
   });
 
   const searchResults = useMemo(() => {
@@ -42,8 +43,14 @@ export function SearchCardSkill({
     return filteredItems;
   }, [search, filteredItems, fuse]);
 
+  // Filter results by type
+  const condition = (item: Card) => item.$type === CardType.TCardItem;
+
+  const filteredCards = searchResults.filter(condition);
+  const filteredSkills = searchResults.filter((item) => !condition(item));
+
   return (
-    <div className="bg-background border-border flex max-h-full w-64 flex-col gap-2 overflow-auto rounded border p-3">
+    <div className="bg-background border-border flex max-h-full min-w-96 flex-col gap-2 overflow-auto rounded border p-3">
       <h2 className="text-card-foreground mb-2 text-lg font-semibold">
         Cards & Skills
       </h2>
@@ -54,6 +61,7 @@ export function SearchCardSkill({
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
+
       <div className="flex-grow gap-1 overflow-y-auto pr-1">
         <Tooltip anchorSelect=".tooltip-anchor-class" place="left">
           <TooltipWithoutGameState
@@ -62,32 +70,68 @@ export function SearchCardSkill({
             Cards={Cards}
           />
         </Tooltip>
-        {searchResults.map((item) => {
-          return (
-            <div
-              key={item.Id}
-              className="hover:bg-accent text-secondary-foreground tooltip-anchor-class relative flex cursor-pointer items-center gap-2 rounded p-1 text-sm"
-              onClick={() => {
-                if (item.$type == CardType.TCardSkill) {
-                  onSelectSkill(item);
-                } else {
-                  onSelectCard(item);
-                }
-              }}
-              onMouseEnter={() => {
-                setHoveredCard(item);
-              }}
-              onMouseLeave={() => setHoveredCard(null)}
-            >
-              <TriggerContent
-                item={item}
-                onSelectCard={onSelectCard}
-                onSelectSkill={onSelectSkill}
-                key={item.Id}
-              />
-            </div>
-          );
-        })}
+        {filteredCards.length > 0 ? (
+          <>
+            <h4>Cards</h4>
+            <hr />
+            {filteredCards.map((item) => {
+              return (
+                <div
+                  key={item.Id}
+                  className="hover:bg-accent text-secondary-foreground tooltip-anchor-class relative flex cursor-pointer items-center gap-2 rounded p-1 text-sm"
+                  onClick={() => {
+                    if (item.$type == CardType.TCardSkill) {
+                      onSelectSkill(item);
+                    } else {
+                      onSelectCard(item);
+                    }
+                  }}
+                  onMouseEnter={() => {
+                    setHoveredCard(item);
+                  }}
+                >
+                  <TriggerContent
+                    item={item}
+                    onSelectCard={onSelectCard}
+                    onSelectSkill={onSelectSkill}
+                    key={item.Id}
+                  />
+                </div>
+              );
+            })}
+          </>
+        ) : null}
+        {filteredSkills.length > 0 ? (
+          <>
+            <h4>Skills</h4>
+            <hr />
+            {filteredSkills.map((item) => {
+              return (
+                <div
+                  key={item.Id}
+                  className="hover:bg-accent text-secondary-foreground tooltip-anchor-class relative flex cursor-pointer items-center gap-2 rounded p-1 text-sm"
+                  onClick={() => {
+                    if (item.$type == CardType.TCardSkill) {
+                      onSelectSkill(item);
+                    } else {
+                      onSelectCard(item);
+                    }
+                  }}
+                  onMouseEnter={() => {
+                    setHoveredCard(item);
+                  }}
+                >
+                  <TriggerContent
+                    item={item}
+                    onSelectCard={onSelectCard}
+                    onSelectSkill={onSelectSkill}
+                    key={item.Id}
+                  />
+                </div>
+              );
+            })}
+          </>
+        ) : null}
       </div>
     </div>
   );
@@ -103,22 +147,22 @@ function TriggerContent({
   onSelectSkill: (card: Card) => void;
 }) {
   const CONTAINER_SIZE = 70;
-  const isItem = item.$type === CardType.TCardItem;
+  const isCard = item.$type === CardType.TCardItem;
 
   // Common image properties
-  const imageUrl = `https://www.howbazaar.gg/images/${isItem ? "items" : "skills"}/${
+  const imageUrl = `https://www.howbazaar.gg/images/${isCard ? "items" : "skills"}/${
     item.Localization.Title.Text?.replace(/[ '\-&]/g, "") ?? ""
   }.avif`;
 
   // Determine frame URL based on card type
-  const frameUrl = isItem
+  const frameUrl = isCard
     ? `https://www.bazaarplanner.com/images/fromBT/CardFrame_${item.StartingTier}_${
         { Large: "L", Medium: "M", Small: "S" }[item.Size]
       }_TUI.png`
     : `https://www.bazaarplanner.com/images/fromBT/skill_tier_${item.StartingTier.toLowerCase()}.png`;
 
   // Item-specific properties
-  const imgWidth = isItem
+  const imgWidth = isCard
     ? item.Size === "Small"
       ? CONTAINER_SIZE / 2
       : item.Size === "Large"
@@ -127,7 +171,7 @@ function TriggerContent({
     : CONTAINER_SIZE;
 
   // Padding/border calculations
-  const padding = isItem
+  const padding = isCard
     ? { top: 0.06, left: 0.03, bottom: 0.08, right: 0.02 }
     : { top: 0.1, left: 0.1, bottom: 0.1, right: 0.1 };
 
@@ -142,11 +186,11 @@ function TriggerContent({
     right: padding.right * containerWidth,
     top: padding.top * containerHeight,
     bottom: padding.bottom * containerHeight,
-    ...(isItem ? {} : { borderRadius: "100%" }),
+    ...(isCard ? {} : { borderRadius: "100%" }),
   };
 
   // Image dimensions
-  const imageWidth = isItem
+  const imageWidth = isCard
     ? containerWidth * (1 - padding.left - padding.right)
     : containerWidth * (1 - 2 * padding.top);
   const imageHeight = containerHeight * (1 - padding.top - padding.bottom);
@@ -155,7 +199,7 @@ function TriggerContent({
     <div
       key={item.Id}
       className="hover:bg-accent text-secondary-foreground flex grow cursor-pointer items-center gap-2 rounded p-1 text-sm"
-      onClick={() => (isItem ? onSelectCard(item) : onSelectSkill(item))}
+      onClick={() => (isCard ? onSelectCard(item) : onSelectSkill(item))}
     >
       {/* Card image with frame */}
       <div
