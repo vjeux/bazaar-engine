@@ -14,7 +14,6 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <head>
           <meta title="Bazaar Engine" />
-          <link rel="stylesheet" href="/src/styles.css" />
           <script src="https://unpkg.com/react-scan/dist/auto.global.js" />
           {/* React scan */}
         </head>
