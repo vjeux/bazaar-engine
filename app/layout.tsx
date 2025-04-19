@@ -18,7 +18,7 @@ export default function RootLayout({
           {/* React scan */}
         </head>
 
-        <body>
+        <body className="min-h-screen bg-red-500">
           <ThemeProvider
             attribute="class"
             defaultTheme="system"
@@ -26,11 +26,8 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <NuqsAdapter>
-              <div className="flex h-screen flex-col">
-                <Navbar />
-                {/* NOTE: Children have to handle overflow themselves */}
-                <main className="flex-1 overflow-hidden">{children}</main>
-              </div>
+              <Navbar />
+              <main>{children}</main>
             </NuqsAdapter>
           </ThemeProvider>
         </body>

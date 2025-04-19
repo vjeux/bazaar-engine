@@ -1,14 +1,13 @@
-import { useMemo, useState } from "react";
+import { memo, useMemo, useState } from "react";
 import { Card, Cards, CardType } from "../types/cardTypes.ts";
 import Fuse from "fuse.js";
 import ValidSkillNames from "../json/ValidSkillNames.json";
 import ValidItemNames from "../json/ValidItemNames.json";
-import { Tooltip } from "react-tooltip";
-import { cn } from "@/lib/utils.ts";
-import { Tier } from "@/types/shared.ts";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip.tsx";
 import TooltipWithoutGameState from "./TooltipWithoutGameState.tsx";
 
-export function SearchableCardSkillList({
+export const SearchableCardSkillList = memo(SearchableCardSkillList_);
+function SearchableCardSkillList_({
   Cards,
   onSelectCard,
   onSelectSkill,
@@ -18,8 +17,6 @@ export function SearchableCardSkillList({
   onSelectSkill: (card: Card) => void;
 }) {
   const [search, setSearch] = useState("");
-
-  const [hoveredCard, setHoveredCard] = useState<Card | null>(null);
 
   // Filter for valid card and skill names
   const filteredItems = useMemo(() => {
@@ -31,10 +28,14 @@ export function SearchableCardSkillList({
     });
   }, [Cards]);
 
-  const fuse = new Fuse(filteredItems, {
-    keys: ["Localization.Title.Text"],
-    threshold: 0.3,
-  });
+  const fuse = useMemo(
+    () =>
+      new Fuse(filteredItems, {
+        keys: ["Localization.Title.Text"],
+        threshold: 0.3,
+      }),
+    [filteredItems],
+  );
 
   const searchResults = useMemo(() => {
     if (search.length > 0) {
@@ -50,27 +51,19 @@ export function SearchableCardSkillList({
   const filteredSkills = searchResults.filter((item) => !condition(item));
 
   return (
-    <div className="bg-background border-border flex max-h-full min-w-96 flex-col gap-2 overflow-auto rounded border p-3">
+    <div className="bg-background border-border min-w-96 overflow-x-visible overflow-y-scroll rounded border p-3">
       <h2 className="text-card-foreground mb-2 text-lg font-semibold">
         Cards & Skills
       </h2>
       <input
         type="text"
         placeholder="Search cards & skills..."
-        className="bg-input border-input text-foreground mb-2 rounded border p-1 text-sm"
+        className="bg-input border-input text-foreground mb-2 w-full rounded border p-1 text-sm"
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      <div className="flex-grow gap-1 overflow-y-auto pr-1">
-        {/* Share tooltip element between all results for performance */}
-        <Tooltip anchorSelect=".tooltip-anchor-class" place="left">
-          <TooltipWithoutGameState
-            card={hoveredCard}
-            tier={hoveredCard?.StartingTier ?? Tier.Bronze}
-            Cards={Cards}
-          />
-        </Tooltip>
+      <div className="flex flex-col gap-1 pr-1">
         {filteredCards.length > 0 ? (
           <>
             <h4>Cards</h4>
@@ -82,7 +75,6 @@ export function SearchableCardSkillList({
                   item={item}
                   onSelectSkill={onSelectSkill}
                   onSelectCard={onSelectCard}
-                  setHoveredCard={setHoveredCard}
                 />
               );
             })}
@@ -99,7 +91,6 @@ export function SearchableCardSkillList({
                   item={item}
                   onSelectSkill={onSelectSkill}
                   onSelectCard={onSelectCard}
-                  setHoveredCard={setHoveredCard}
                 />
               );
             })}
@@ -110,50 +101,43 @@ export function SearchableCardSkillList({
   );
 }
 
-function SearchResultItem({
+const SearchResultItem = memo(SearchResultItem_);
+function SearchResultItem_({
   item,
   onSelectSkill,
   onSelectCard,
-  setHoveredCard,
 }: {
   item: Card;
   onSelectSkill: (card: Card) => void;
   onSelectCard: (card: Card) => void;
-  setHoveredCard: (card: Card | null) => void;
 }) {
   return (
-    <div
-      className="hover:bg-accent text-secondary-foreground tooltip-anchor-class relative flex cursor-pointer items-center gap-2 rounded p-1 text-sm"
-      onClick={() => {
-        if (item.$type == CardType.TCardSkill) {
-          onSelectSkill(item);
-        } else {
-          onSelectCard(item);
-        }
-      }}
-      onMouseEnter={() => {
-        setHoveredCard(item);
-      }}
-    >
-      <TriggerContent
-        item={item}
-        onSelectCard={onSelectCard}
-        onSelectSkill={onSelectSkill}
-        key={item.Id}
-      />
-    </div>
+    <Tooltip placement="left">
+      <TooltipTrigger>
+        <div
+          className="hover:bg-accent text-secondary-foreground relative flex cursor-pointer items-center gap-2 rounded p-1 text-sm"
+          onClick={() => {
+            if (item.$type == CardType.TCardSkill) {
+              onSelectSkill(item);
+            } else {
+              onSelectCard(item);
+            }
+          }}
+        >
+          <TriggerContent item={item} key={item.Id} />
+        </div>
+      </TooltipTrigger>
+      <TooltipContent>
+        <div className="bg-card border-border rounded border p-4">
+          <TooltipWithoutGameState card={item} />
+        </div>
+      </TooltipContent>
+    </Tooltip>
   );
 }
 
-function TriggerContent({
-  item,
-  onSelectCard,
-  onSelectSkill,
-}: {
-  item: Card;
-  onSelectCard: (card: Card) => void;
-  onSelectSkill: (card: Card) => void;
-}) {
+const TriggerContent = memo(TriggerContent_);
+function TriggerContent_({ item }: { item: Card }) {
   const CONTAINER_SIZE = 70;
   const isCard = item.$type === CardType.TCardItem;
 
@@ -206,8 +190,7 @@ function TriggerContent({
   return (
     <div
       key={item.Id}
-      className="hover:bg-accent text-secondary-foreground flex grow cursor-pointer items-center gap-2 rounded p-1 text-sm"
-      onClick={() => (isCard ? onSelectCard(item) : onSelectSkill(item))}
+      className="hover:bg-accent text-secondary-foreground flex grow items-center gap-2 rounded p-1 text-sm"
     >
       {/* Card image with frame */}
       <div

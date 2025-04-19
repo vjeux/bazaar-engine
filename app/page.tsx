@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react"; // Import useState
+import { useCallback, useEffect, useState } from "react"; // Import useState
 import { genCardsAndEncounters } from "@/lib/Data.ts";
 import {
   getFlattenedEncounters,
@@ -10,22 +10,16 @@ import {
   PlayerConfig,
   PlayerSkillConfig,
 } from "@/engine/GameState.ts";
-import {
-  BoardCard,
-  BoardSkill,
-  Player,
-  run,
-  TICK_RATE,
-} from "@/engine/Engine.ts";
+import { run, TICK_RATE } from "@/engine/Engine.ts";
 import { SearchableCardSkillList } from "@/components/SearchableCardSkillList";
 import { ComboBox } from "@/components/ui/combobox.tsx";
 import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { HealthBar } from "@/components/HealthBar.tsx"; // Import the new HealthBar component
 import { Slider } from "@/components/ui/slider";
 import { parseAsJson, useQueryState } from "nuqs";
-import { BoardSkillElement } from "../src/components/BoardSkillElement";
 import { BoardSkills } from "@/components/BoardSkills";
 import { CardDeck } from "@/components/CardDeck"; // Import the new CardDeck component
+import { Card } from "@/types/cardTypes";
 
 const { Cards: CardsData, Encounters: EncounterData } =
   await genCardsAndEncounters();
@@ -71,12 +65,29 @@ export default function DragNDrop() {
     }, 100);
 
     return () => clearInterval(interval);
-  }, [autoScroll, autoReset]);
+  }, [autoScroll, autoReset, steps.length]);
 
+  const addPlayerCard = useCallback(
+    (card: Card): void =>
+      setPlayerCards((playercards) => [
+        ...playercards,
+        { name: card.Localization.Title.Text, tier: card.StartingTier },
+      ]),
+    [],
+  );
+
+  const addPlayerSkill = useCallback(
+    (card: Card): void =>
+      setPlayerSkills((playerSkills) => [
+        ...playerSkills,
+        { name: card.Localization.Title.Text, tier: card.StartingTier },
+      ]),
+    [],
+  );
   return (
-    <div className="bg-background text-foreground grid h-full grid-cols-[1fr_auto] gap-4 p-4">
+    <div className="bg-background text-foreground flex h-[calc(100dvh-64px)] max-h-[calc(100dvh-64px)] w-full flex-row gap-4 p-4">
       {/* Main Game Area */}
-      <div className="flex flex-col gap-2">
+      <div className="flex grow flex-col gap-2">
         {/* Enemy Selection */}
         <ComboBox
           items={encounters.map((encounter) => ({
@@ -105,7 +116,7 @@ export default function DragNDrop() {
         <HealthBar gameState={currentGameState} playerId={0} />
 
         {/* Cards Area */}
-        <div className="bg-card border-border flex flex-grow flex-col items-center justify-center gap-2 rounded border p-4">
+        <div className="bg-card border-border flex flex-col items-center justify-center gap-2 rounded border p-4">
           <CardDeck gameState={currentGameState} playerId={0} />
           <CardDeck gameState={currentGameState} playerId={1} />
         </div>
@@ -157,18 +168,8 @@ export default function DragNDrop() {
       {/* Right Sidebar - Card and skill search */}
       <SearchableCardSkillList
         Cards={CardsData}
-        onSelectCard={(card) =>
-          setPlayerCards([
-            ...playerCards,
-            { name: card.Localization.Title.Text, tier: card.StartingTier },
-          ])
-        }
-        onSelectSkill={(card) =>
-          setPlayerSkills([
-            ...playerSkills,
-            { name: card.Localization.Title.Text, tier: card.StartingTier },
-          ])
-        }
+        onSelectCard={addPlayerCard}
+        onSelectSkill={addPlayerSkill}
       />
     </div>
   );

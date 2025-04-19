@@ -8,7 +8,7 @@ export default function Navbar() {
   const pathname = usePathname();
 
   return (
-    <nav className="bg-background text-foreground flex h-16 items-center justify-between border-b px-4">
+    <nav className="bg-background text-foreground flex h-16 shrink-0 items-center justify-between border-b px-4">
       <div className="text-lg font-bold">Bazaar Engine</div>
       <div className="flex space-x-4">
         <Link
@@ -32,6 +32,17 @@ export default function Navbar() {
           )}
         >
           Old
+        </Link>
+        <Link
+          href="/frame"
+          className={cn(
+            "hover:text-primary text-sm font-medium transition-colors",
+            pathname === "/frame"
+              ? "text-primary font-bold"
+              : "text-muted-foreground",
+          )}
+        >
+          Frame
         </Link>
       </div>
     </nav>

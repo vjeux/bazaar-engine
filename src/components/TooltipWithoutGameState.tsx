@@ -1,35 +1,37 @@
-import { BoardCard, getTooltips } from "@/engine/Engine";
+import { getTooltips } from "@/engine/Engine";
 import { getInitialGameState } from "@/engine/GameState";
-import { Card, Cards } from "@/types/cardTypes";
+import { Card } from "@/types/cardTypes";
 import { EncounterDays } from "@/types/encounterTypes";
 import { Tier } from "@/types/shared";
 
 export default function TooltipWithoutGameState({
-  Cards,
   card,
-  tier,
 }: {
   card: Card | null;
-  Cards: Cards;
-  tier: Tier;
 }) {
   if (!card) return null;
 
-  const gameState = getInitialGameState(Cards, {} as EncounterDays, [
+  const gameState = getInitialGameState(
     {
-      type: "player",
-      health: 1000,
-      cards: card
-        ? [
-            {
-              name: card.Localization.Title.Text,
-              tier,
-            },
-          ]
-        : [],
+      "0.1.9": [card],
     },
-    { type: "player", health: 1000 },
-  ]);
+    {} as EncounterDays,
+    [
+      {
+        type: "player",
+        health: 1000,
+        cards: card
+          ? [
+              {
+                name: card.Localization.Title.Text,
+                tier: card?.StartingTier ?? Tier.Bronze,
+              },
+            ]
+          : [],
+      },
+      { type: "player", health: 1000 },
+    ],
+  );
 
   const Title = card.Localization.Title.Text;
 
@@ -38,11 +40,13 @@ export default function TooltipWithoutGameState({
       <div className="font-bold">{Title}</div>
 
       {getTooltips(gameState, 0, 0).map((tooltip, index) => (
-        <div key={"tooltip" + index} className="text-sm">
+        <div key={"tooltip" + index} className="">
           {tooltip}
         </div>
       ))}
-      <div>{[...card.Heroes, ...card.Tags, ...card.HiddenTags].join(", ")}</div>
+      <div className="text-muted-foreground text-sm">
+        {[...card.Heroes, ...card.Tags, ...card.HiddenTags].join(", ")}
+      </div>
     </div>
   );
 }
