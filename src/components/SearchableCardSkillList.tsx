@@ -78,6 +78,7 @@ export function SearchableCardSkillList({
             {filteredCards.map((item) => {
               return (
                 <SearchResultItem
+                  key={item.Id}
                   item={item}
                   onSelectSkill={onSelectSkill}
                   onSelectCard={onSelectCard}
@@ -94,6 +95,7 @@ export function SearchableCardSkillList({
             {filteredSkills.map((item) => {
               return (
                 <SearchResultItem
+                  key={item.Id}
                   item={item}
                   onSelectSkill={onSelectSkill}
                   onSelectCard={onSelectCard}
@@ -121,7 +123,6 @@ function SearchResultItem({
 }) {
   return (
     <div
-      key={item.Id}
       className="hover:bg-accent text-secondary-foreground tooltip-anchor-class relative flex cursor-pointer items-center gap-2 rounded p-1 text-sm"
       onClick={() => {
         if (item.$type == CardType.TCardSkill) {
