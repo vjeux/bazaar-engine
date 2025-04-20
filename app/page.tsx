@@ -159,7 +159,10 @@ const EncounterSelector = memo(function EncounterSelector() {
     <ComboBox
       items={encounters.map((encounter) => ({
         value: `${encounter.name}:${encounter.card.cardId}`,
-        label: `${encounter.day} ${encounter.name}`,
+        label:
+          typeof encounter.day === "number"
+            ? `Day ${encounter.day} - ${encounter.name}`
+            : `Event ${encounter.name}`,
       }))}
       searchPlaceholder="Search encounters..."
       selectPlaceholder="Select encounter..."
