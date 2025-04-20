@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useState } from "react"; // Import useState
+import { memo, useCallback, useEffect, useState } from "react"; // Import useState
 import { genCardsAndEncounters } from "@/lib/Data.ts";
 import {
   getFlattenedEncounters,
@@ -27,6 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { GoldIncomeDisplay } from "@/components/GoldIncomeDisplay";
 
 const { Cards: CardsData, Encounters: EncounterData } =
   await genCardsAndEncounters();
@@ -92,33 +93,24 @@ export default function DragNDrop() {
       ]),
     [],
   );
+
+  const handleBattleSpeedChange = useCallback(
+    (value: string) => setBattleSpeed(parseInt(value)),
+    [],
+  );
+
   return (
     <div className="bg-background text-foreground flex h-[calc(100dvh-64px)] max-h-[calc(100dvh-64px)] w-full flex-row gap-4 p-4">
       {/* Main Game Area */}
       <div className="flex grow flex-col gap-2">
         {/* Enemy Selection */}
-        <ComboBox
-          items={encounters.map((encounter) => ({
-            value: encounter.card.cardId,
-            label: encounter.name,
-          }))}
-          searchPlaceholder="Search encounters..."
-          selectPlaceholder="Select encounter..."
-          onChange={(monsterId) => {
-            const encounter = encounters.find(
-              (encounter) => encounter.card.cardId === monsterId,
-            );
-            if (encounter) {
-              setMonsterConfig({
-                type: "monster",
-                name: encounter.name,
-              });
-            }
-          }}
-        />
+        <EncounterSelector setMonsterConfig={setMonsterConfig} />
 
-        {/* Enemy Skills */}
-        <BoardSkills gameState={currentGameState} playerId={0} />
+        {/* Enemy Skills and Gold/Income */}
+        <div className="flex justify-between">
+          <BoardSkills gameState={currentGameState} playerId={0} />
+          <GoldIncomeDisplay gameState={currentGameState} playerId={0} />
+        </div>
 
         {/* Enemy Health Bar*/}
         <HealthBar gameState={currentGameState} playerId={0} />
@@ -132,26 +124,17 @@ export default function DragNDrop() {
         {/* Player Health Bar*/}
         <HealthBar gameState={currentGameState} playerId={1} />
 
-        {/* Player Skills */}
-        <BoardSkills gameState={currentGameState} playerId={1} />
+        {/* Player Skills and Gold/Income */}
+        <div className="flex justify-between">
+          <BoardSkills gameState={currentGameState} playerId={1} />
+          <GoldIncomeDisplay gameState={currentGameState} playerId={1} />
+        </div>
 
         {/* Time Slider */}
         <div className="mt-2 flex items-center gap-2">
-          <Select
-            value={battleSpeed.toString()}
-            onValueChange={(value) => setBattleSpeed(parseInt(value))}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Battle Speed" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1">1x</SelectItem>
-              <SelectItem value="2">2x</SelectItem>
-              <SelectItem value="3">3x</SelectItem>
-              <SelectItem value="5">5x</SelectItem>
-              <SelectItem value="10">10x</SelectItem>
-            </SelectContent>
-          </Select>
+          <BattleSpeedSelector
+            handleBattleSpeedChange={handleBattleSpeedChange}
+          />
           <Checkbox
             checked={autoScroll}
             onClick={() => setAutoScroll(!autoScroll)}
@@ -197,6 +180,55 @@ export default function DragNDrop() {
     </div>
   );
 }
+
+const BattleSpeedSelector = memo(function BattleSpeedSelector({
+  handleBattleSpeedChange,
+}: {
+  handleBattleSpeedChange: (value: string) => void;
+}) {
+  return (
+    <Select onValueChange={handleBattleSpeedChange}>
+      <SelectTrigger>
+        <SelectValue placeholder="Battle Speed" />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectItem value="1">1×</SelectItem>
+        <SelectItem value="2">2×</SelectItem>
+        <SelectItem value="3">3×</SelectItem>
+        <SelectItem value="5">5×</SelectItem>
+        <SelectItem value="10">10×</SelectItem>
+      </SelectContent>
+    </Select>
+  );
+});
+
+const EncounterSelector = memo(function EncounterSelector({
+  setMonsterConfig,
+}: {
+  setMonsterConfig: (monsterConfig: MonsterConfig) => void;
+}) {
+  return (
+    <ComboBox
+      items={encounters.map((encounter) => ({
+        value: encounter.card.cardId,
+        label: encounter.name,
+      }))}
+      searchPlaceholder="Search encounters..."
+      selectPlaceholder="Select encounter..."
+      onChange={(monsterId) => {
+        const encounter = encounters.find(
+          (encounter) => encounter.card.cardId === monsterId,
+        );
+        if (encounter) {
+          setMonsterConfig({
+            type: "monster",
+            name: encounter.name,
+          });
+        }
+      }}
+    />
+  );
+});
 
 function stepCountToSeconds(stepCount: number) {
   return (stepCount * TICK_RATE) / 1000;

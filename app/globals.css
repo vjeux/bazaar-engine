@@ -111,6 +111,12 @@
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
+  /* Custom colors taken from shadcn themes page primary colors */
+  --color-yellow: oklch(0.795 0.184 86.047);
+  --color-orange: oklch(0.705 0.213 47.604);
+  --color-red: oklch(0.637 0.237 25.331);
+  --color-green: oklch(0.723 0.219 149.579);
+  --color-blue: oklch(0.623 0.214 259.815);
 }
 
 @layer base {
