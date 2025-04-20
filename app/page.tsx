@@ -158,14 +158,14 @@ const EncounterSelector = memo(function EncounterSelector() {
   return (
     <ComboBox
       items={encounters.map((encounter) => ({
-        value: encounter.card.cardId,
-        label: encounter.name,
+        value: `${encounter.name}:${encounter.card.cardId}`,
+        label: `${encounter.day} ${encounter.name}`,
       }))}
       searchPlaceholder="Search encounters..."
       selectPlaceholder="Select encounter..."
-      onChange={(monsterId) => {
+      onChange={(value) => {
         const encounter = encounters.find(
-          (encounter) => encounter.card.cardId === monsterId,
+          (encounter) => encounter.card.cardId === value.split(":")[1],
         );
         if (encounter) {
           simulatorStoreActions.setMonsterConfig({
