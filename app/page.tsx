@@ -116,7 +116,7 @@ export default function DragNDrop() {
         <HealthBar gameState={currentGameState} playerId={0} />
 
         {/* Cards Area */}
-        <div className="bg-card border-border flex flex-col items-center justify-center gap-2 rounded border p-4">
+        <div className="bg-card border-border grid grid-rows-[190px_190px] items-center justify-center gap-2 rounded border p-4">
           <CardDeck gameState={currentGameState} playerId={0} />
           <CardDeck gameState={currentGameState} playerId={1} />
         </div>

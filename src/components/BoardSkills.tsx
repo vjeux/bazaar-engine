@@ -10,7 +10,7 @@ export function BoardSkills({
   playerId: number;
 }) {
   return (
-    <div className="flex h-12 items-center gap-1">
+    <div className="my-2 flex h-12 items-center gap-1">
       {gameState.players[playerId].board
         .filter((x): x is BoardSkill => x.card.$type === "TCardSkill")
         .map((boardSkill: BoardSkill, i: React.Key | null | undefined) => (
