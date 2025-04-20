@@ -1,9 +1,9 @@
-import { getInitialGameState } from "../GameState";
+import { getInitialGameState } from "../engine/GameState";
 import validItemNames from "../json/ValidItemNames.json";
 import validSkillNames from "../json/ValidSkillNames.json";
-import { getTooltips } from "../Engine";
-import { expect, it } from "vitest";
-import { genCardsAndEncounters } from "../Data";
+import { getTooltips } from "../engine/Engine";
+import { describe, expect, it } from "vitest";
+import { genCardsAndEncounters } from "../lib/Data";
 import { Tier } from "../types/shared";
 import fs from "fs";
 const { Cards, Encounters } = await genCardsAndEncounters();
@@ -27,16 +27,16 @@ function getTiers(startingTier: Tier): Tier[] {
   return [];
 }
 
-[...validItemNames, ...validSkillNames].forEach((cardName) => {
-  it(`Generate tooltips for "${cardName}"`, () => {
-    const card = Cards["0.1.9"].find(
-      (card) => card.Localization.Title.Text === cardName,
-    );
-    if (!card) {
-      throw new Error(`Card "${cardName}" not found`);
-    }
-    getTiers(card.StartingTier).forEach((tier) => {
-      try {
+describe("Tooltips should not throw", () => {
+  [...validItemNames, ...validSkillNames].forEach((cardName: string) => {
+    it(`Tooltip for "${cardName}" should not throw`, () => {
+      const card = Cards["0.1.9"].find(
+        (card) => card.Localization.Title.Text === cardName,
+      );
+      if (!card) {
+        throw new Error(`Card "${cardName}" not found`);
+      }
+      getTiers(card.StartingTier).forEach((tier) => {
         const extension = validItemNames.includes(cardName)
           ? { cards: [{ name: cardName, tier }] }
           : { skills: [{ name: cardName, tier }] };
@@ -44,18 +44,48 @@ function getTiers(startingTier: Tier): Tier[] {
           { type: "player", health: 1000, ...extension },
           { type: "player", health: 1000 },
         ]);
-        expect({
-          cardName,
-          tier,
-          tooltips: getTooltips(gameState, 0, 0),
-        }).toMatchSnapshot();
-      } catch (e) {
-        expect({
-          cardName,
-          tier,
-          error: (e as Error).message,
-        }).toMatchSnapshot();
+
+        // This should not throw
+        expect(() => {
+          getTooltips(gameState, 0, 0);
+        }).not.toThrow();
+      });
+    });
+  });
+});
+
+describe("Tooltip snapshots", () => {
+  [...validItemNames, ...validSkillNames].forEach((cardName: string) => {
+    it(`Snapshot equality for tooltips for "${cardName}"`, () => {
+      const card = Cards["0.1.9"].find(
+        (card) => card.Localization.Title.Text === cardName,
+      );
+      if (!card) {
+        throw new Error(`Card "${cardName}" not found`);
       }
+      getTiers(card.StartingTier).forEach((tier) => {
+        try {
+          const extension = validItemNames.includes(cardName)
+            ? { cards: [{ name: cardName, tier }] }
+            : { skills: [{ name: cardName, tier }] };
+          const gameState = getInitialGameState(Cards, Encounters, [
+            { type: "player", health: 1000, ...extension },
+            { type: "player", health: 1000 },
+          ]);
+          const tooltips = getTooltips(gameState, 0, 0);
+          expect({
+            cardName,
+            tier,
+            tooltips,
+          }).toMatchSnapshot();
+        } catch (error) {
+          expect({
+            cardName,
+            tier,
+            error: (error as Error).message,
+          }).toMatchSnapshot();
+        }
+      });
     });
   });
 });

@@ -4,7 +4,7 @@ import {
   getFlattenedEncounters,
   getInitialGameState,
 } from "../engine/GameState.ts";
-import { expect, test } from "npm:vitest";
+import { expect, test } from "vitest";
 
 function getOptimizedDiff(
   prev: any,
