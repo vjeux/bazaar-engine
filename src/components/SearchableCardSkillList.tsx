@@ -6,20 +6,33 @@ import ValidItemNames from "../json/ValidItemNames.json";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip.tsx";
 import TooltipWithoutGameState from "./TooltipWithoutGameState.tsx";
 import FramedCardOrSkill from "./FramedCardOrSkill.tsx";
+import { useSimulatorStore } from "@/lib/simulatorStore.ts";
+import { PlayerCardConfig, PlayerSkillConfig } from "@/engine/GameState.ts";
 
 const CARD_HEIGHT = 70;
 const SKILL_SIZE = 70;
 
 export const SearchableCardSkillList = memo(SearchableCardSkillList_);
-function SearchableCardSkillList_({
-  Cards,
-  onSelectCard,
-  onSelectSkill,
-}: {
-  Cards: Cards;
-  onSelectCard: (card: Card) => void;
-  onSelectSkill: (card: Card) => void;
-}) {
+function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
+  const addPlayerCard = useSimulatorStore((state) => state.addPlayerCard);
+  const addPlayerSkill = useSimulatorStore((state) => state.addPlayerSkill);
+
+  const handleCardSelect = (card: Card) => {
+    const cardConfig: PlayerCardConfig = {
+      name: card.Localization.Title.Text,
+      tier: card.StartingTier,
+    };
+    addPlayerCard(cardConfig);
+  };
+
+  const handleSkillSelect = (card: Card) => {
+    const skillConfig: PlayerSkillConfig = {
+      name: card.Localization.Title.Text,
+      tier: card.StartingTier,
+    };
+    addPlayerSkill(skillConfig);
+  };
+
   const [search, setSearch] = useState("");
 
   // Filter for valid card and skill names
@@ -79,8 +92,8 @@ function SearchableCardSkillList_({
                 <SearchResultItem
                   key={item.Id}
                   item={item}
-                  onSelectSkill={onSelectSkill}
-                  onSelectCard={onSelectCard}
+                  onSelectSkill={handleSkillSelect}
+                  onSelectCard={handleCardSelect}
                 />
               );
             })}
@@ -95,8 +108,8 @@ function SearchableCardSkillList_({
                 <SearchResultItem
                   key={item.Id}
                   item={item}
-                  onSelectSkill={onSelectSkill}
-                  onSelectCard={onSelectCard}
+                  onSelectSkill={handleSkillSelect}
+                  onSelectCard={handleCardSelect}
                 />
               );
             })}

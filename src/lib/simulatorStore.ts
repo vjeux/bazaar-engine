@@ -17,6 +17,10 @@ type State = {
   playerConfig: PlayerConfig;
   monsterConfig: MonsterConfig;
   steps: GameState[];
+  autoScroll: boolean;
+  autoReset: boolean;
+  battleSpeed: number;
+  stepCount: number;
 };
 
 type Actions = {
@@ -24,6 +28,10 @@ type Actions = {
   setMonsterConfig: (monsterConfig: MonsterConfig) => void;
   addPlayerCard: (card: PlayerCardConfig) => void;
   addPlayerSkill: (skill: PlayerSkillConfig) => void;
+  setAutoScroll: (autoScroll: boolean) => void;
+  setAutoReset: (autoReset: boolean) => void;
+  setBattleSpeed: (battleSpeed: number) => void;
+  setStepCount: (stepCount: number) => void;
 };
 
 const initialPlayer: PlayerConfig = {
@@ -56,6 +64,10 @@ const initialState: State = {
   playerConfig: initialPlayer,
   monsterConfig: initialMonster,
   steps: initialSteps,
+  autoScroll: false,
+  autoReset: false,
+  battleSpeed: 1,
+  stepCount: 0,
 };
 
 export const useSimulatorStore = create<State & Actions>()(
@@ -80,6 +92,22 @@ export const useSimulatorStore = create<State & Actions>()(
       set((state) => {
         (state.playerConfig.skills ??= []).push(skill);
         state.steps = runWrapper(state.monsterConfig, state.playerConfig);
+      }),
+    setAutoScroll: (autoScroll: boolean) =>
+      set((state) => {
+        state.autoScroll = autoScroll;
+      }),
+    setAutoReset: (autoReset: boolean) =>
+      set((state) => {
+        state.autoReset = autoReset;
+      }),
+    setBattleSpeed: (battleSpeed: number) =>
+      set((state) => {
+        state.battleSpeed = battleSpeed;
+      }),
+    setStepCount: (stepCount: number) =>
+      set((state) => {
+        state.stepCount = stepCount;
       }),
   })),
 );
