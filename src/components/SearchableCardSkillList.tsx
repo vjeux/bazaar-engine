@@ -130,9 +130,7 @@ function SearchResultItem_({
         </div>
       </TooltipTrigger>
       <TooltipContent>
-        <div className="bg-card border-border rounded border p-4">
-          <TooltipWithoutGameState card={item} />
-        </div>
+        <TooltipWithoutGameState card={item} />
       </TooltipContent>
     </Tooltip>
   );

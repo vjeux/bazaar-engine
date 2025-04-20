@@ -36,16 +36,17 @@ export default function TooltipWithoutGameState({
   const Title = card.Localization.Title.Text;
 
   return (
-    <div className="flex flex-col gap-1">
-      <div className="font-bold">{Title}</div>
-
-      {getTooltips(gameState, 0, 0).map((tooltip, index) => (
-        <div key={"tooltip" + index} className="">
-          {tooltip}
+    <div className="bg-card border-border rounded border p-4">
+      <div className="flex flex-col gap-1">
+        <div className="font-bold">{Title}</div>
+        {getTooltips(gameState, 0, 0).map((tooltip, index) => (
+          <div key={"tooltip" + index} className="">
+            {tooltip}
+          </div>
+        ))}
+        <div className="text-muted-foreground text-sm">
+          {[...card.Heroes, ...card.Tags, ...card.HiddenTags].join(", ")}
         </div>
-      ))}
-      <div className="text-muted-foreground text-sm">
-        {[...card.Heroes, ...card.Tags, ...card.HiddenTags].join(", ")}
       </div>
     </div>
   );

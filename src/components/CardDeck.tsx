@@ -1,4 +1,4 @@
-import { BoardCard, Player } from "@/engine/Engine.ts";
+import { BoardCard } from "@/engine/Engine.ts";
 import { BoardCardElement } from "@/components/BoardCardElement";
 import { GameState } from "@/engine/Engine.ts";
 
