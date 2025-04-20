@@ -51,6 +51,7 @@
     "@babel/plugin-syntax-import-attributes": "^7.26.0",
     "@eslint/eslintrc": "^3",
     "@types/node": "^20",
+    "@types/pako": "^2.0.3",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",

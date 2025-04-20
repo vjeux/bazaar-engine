@@ -129,6 +129,9 @@ importers:
       '@types/node':
         specifier: ^20
         version: 20.17.30
+      '@types/pako':
+        specifier: ^2.0.3
+        version: 2.0.3
       eslint:
         specifier: ^9
         version: 9.24.0(jiti@2.4.2)
@@ -1454,6 +1457,9 @@ packages:
 
   '@types/node@20.17.30':
     resolution: {integrity: sha512-7zf4YyHA+jvBNfVrk2Gtvs6x7E8V+YDW05bNfG2XkWDJfYRXrTiP/DsB2zSYTaHX0bGIujTBQdMVAhb+j7mwpg==}
+
+  '@types/pako@2.0.3':
+    resolution: {integrity: sha512-bq0hMV9opAcrmE0Byyo0fY3Ew4tgOevJmQ9grUhpXQhYfyLJ1Kqg3P33JT5fdbT2AjeAjR51zqqVjAL/HMkx7Q==}
 
   '@types/react-dom@19.1.2':
     resolution: {integrity: sha512-XGJkWF41Qq305SKWEILa1O8vzhb3aOo3ogBlSmiqNko/WmRb6QIaweuZCXjKygVDXpzXb5wyxKTSOsmkuqj+Qw==}
@@ -4240,6 +4246,8 @@ snapshots:
   '@types/node@20.17.30':
     dependencies:
       undici-types: 6.19.8
+
+  '@types/pako@2.0.3': {}
 
   '@types/react-dom@19.1.2(@types/react@19.1.2)':
     dependencies:
