@@ -5,6 +5,10 @@ import ValidSkillNames from "../json/ValidSkillNames.json";
 import ValidItemNames from "../json/ValidItemNames.json";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip.tsx";
 import TooltipWithoutGameState from "./TooltipWithoutGameState.tsx";
+import FramedCardOrSkill from "./FramedCardOrSkill.tsx";
+
+const CARD_HEIGHT = 70;
+const SKILL_SIZE = 70;
 
 export const SearchableCardSkillList = memo(SearchableCardSkillList_);
 function SearchableCardSkillList_({
@@ -138,86 +142,18 @@ function SearchResultItem_({
 
 const TriggerContent = memo(TriggerContent_);
 function TriggerContent_({ item }: { item: Card }) {
-  const CONTAINER_SIZE = 70;
-  const isCard = item.$type === CardType.TCardItem;
-
-  // Common image properties
-  const imageUrl = `https://www.howbazaar.gg/images/${isCard ? "items" : "skills"}/${
-    item.Localization.Title.Text?.replace(/[ '\-&]/g, "") ?? ""
-  }.avif`;
-
-  // Determine frame URL based on card type
-  const frameUrl = isCard
-    ? `https://www.bazaarplanner.com/images/fromBT/CardFrame_${item.StartingTier}_${
-        { Large: "L", Medium: "M", Small: "S" }[item.Size]
-      }_TUI.png`
-    : `https://www.bazaarplanner.com/images/fromBT/skill_tier_${item.StartingTier.toLowerCase()}.png`;
-
-  // Item-specific properties
-  const imgWidth = isCard
-    ? item.Size === "Small"
-      ? CONTAINER_SIZE / 2
-      : item.Size === "Large"
-        ? CONTAINER_SIZE * 1.5
-        : CONTAINER_SIZE
-    : CONTAINER_SIZE;
-
-  // Padding/border calculations
-  const padding = isCard
-    ? { top: 0.06, left: 0.03, bottom: 0.08, right: 0.02 }
-    : { top: 0.1, left: 0.1, bottom: 0.1, right: 0.1 };
-
-  // Calculate container dimensions
-  const containerWidth = imgWidth;
-  const containerHeight = CONTAINER_SIZE;
-
-  // Image style based on type
-  const imageStyle = {
-    position: "absolute" as const,
-    left: padding.left * containerWidth,
-    right: padding.right * containerWidth,
-    top: padding.top * containerHeight,
-    bottom: padding.bottom * containerHeight,
-    ...(isCard ? {} : { borderRadius: "100%" }),
-  };
-
-  // Image dimensions
-  const imageWidth = isCard
-    ? containerWidth * (1 - padding.left - padding.right)
-    : containerWidth * (1 - 2 * padding.top);
-  const imageHeight = containerHeight * (1 - padding.top - padding.bottom);
-
   return (
     <div
       key={item.Id}
-      className="hover:bg-accent text-secondary-foreground flex grow items-center gap-2 rounded p-1 text-sm"
+      className="hover:bg-accent text-secondary-foreground flex grow items-center justify-between gap-2 rounded p-1 text-sm"
     >
-      {/* Card image with frame */}
-      <div
-        style={{
-          width: imgWidth,
-          height: CONTAINER_SIZE,
-          position: "relative",
-          display: "inline-block",
-        }}
-      >
-        <img
-          src={imageUrl}
-          style={{
-            height: imageHeight,
-            width: imageWidth,
-            ...imageStyle,
-          }}
-          alt={item.Localization.Title.Text}
-        />
-        <img
-          src={frameUrl}
-          style={{ position: "absolute", top: 0, left: 0 }}
-          width="100%"
-          height="100%"
-        />
-      </div>
       <span>{item.Localization.Title.Text}</span>
+
+      <FramedCardOrSkill
+        card={item}
+        cardHeight={CARD_HEIGHT}
+        skillSize={SKILL_SIZE}
+      />
     </div>
   );
 }
