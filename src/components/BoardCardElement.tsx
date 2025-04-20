@@ -5,11 +5,12 @@ import {
   getCardAttribute,
 } from "@/engine/Engine";
 import React from "react";
-import { CARD_HEIGHT } from "../../app/old/-App";
 import { cn } from "@/lib/utils";
 import FramedCardOrSkill from "./FramedCardOrSkill";
 import TooltipWithGameState from "./TooltipWithGameState";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
+
+export const CARD_HEIGHT = 180;
 
 export function BoardCardElement({
   boardCard,

@@ -22,28 +22,6 @@ export default function Navbar() {
         >
           Home
         </Link>
-        <Link
-          href="/old"
-          className={cn(
-            "hover:text-primary text-sm font-medium transition-colors",
-            pathname === "/old"
-              ? "text-primary font-bold"
-              : "text-muted-foreground",
-          )}
-        >
-          Old
-        </Link>
-        <Link
-          href="/frame"
-          className={cn(
-            "hover:text-primary text-sm font-medium transition-colors",
-            pathname === "/frame"
-              ? "text-primary font-bold"
-              : "text-muted-foreground",
-          )}
-        >
-          Frame
-        </Link>
         <Link href="https://github.com/vjeux/bazaar-engine" target="_blank">
           <svg
             role="img"
