@@ -1,27 +1,31 @@
 import { Card, CardType } from "@/types/cardTypes";
+import { Tier } from "@/types/shared";
 
 interface FramedCardOrSkillProps {
   card: Card;
   cardHeight?: number;
   skillSize?: number;
+  tier?: Tier;
 }
 
 export default function FramedCardOrSkill({
   card,
   cardHeight = 100,
   skillSize = 60,
+  tier,
 }: FramedCardOrSkillProps) {
   const isCardItem = card.$type === CardType.TCardItem;
+  const displayTier = tier ?? card.StartingTier;
 
   const imageUrl = `https://www.howbazaar.gg/images/${isCardItem ? "items" : "skills"}/${
     card.Localization.Title.Text?.replace(/[ '\-&]/g, "") ?? ""
   }.avif`;
 
   const frameUrl = isCardItem
-    ? `https://www.bazaarplanner.com/images/fromBT/CardFrame_${card.StartingTier}_${
+    ? `https://www.bazaarplanner.com/images/fromBT/CardFrame_${displayTier}_${
         { Large: "L", Medium: "M", Small: "S" }[card.Size]
       }_TUI.png`
-    : `https://www.bazaarplanner.com/images/fromBT/skill_tier_${card.StartingTier.toLowerCase()}.png`;
+    : `https://www.bazaarplanner.com/images/fromBT/skill_tier_${displayTier.toLowerCase()}.png`;
 
   const cardWidth = isCardItem
     ? card.Size === "Small"

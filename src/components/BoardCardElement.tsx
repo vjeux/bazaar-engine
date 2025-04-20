@@ -7,6 +7,7 @@ import {
 import React from "react";
 import { CARD_HEIGHT, Tooltip } from "../../app/old/-App";
 import { cn } from "@/lib/utils";
+import FramedCardOrSkill from "./FramedCardOrSkill";
 
 export function BoardCardElement({
   boardCard,
@@ -20,31 +21,17 @@ export function BoardCardElement({
   boardCardID: number;
 }) {
   const card = boardCard.card;
-  const tier = boardCard.tier;
   const cardWidth =
     card.Size === "Small"
       ? CARD_HEIGHT / 2
       : card.Size === "Medium"
-        ? CARD_HEIGHT / 1
+        ? CARD_HEIGHT
         : CARD_HEIGHT * 1.5;
-
-  const localeText = card.Localization.Title.Text;
-  const imgUrl = `https://www.howbazaar.gg/images/items/${localeText.replace(
-    /[ '\-&]/g,
-    "",
-  )}.avif`;
 
   const paddingTop = 0.06;
   const paddingLeft = 0.03;
   const paddingBottom = 0.1;
   const paddingRight = 0.04;
-
-  const sizesOneLetter = {
-    Large: "L",
-    Medium: "M",
-    Small: "S",
-  };
-  const frameUrl = `https://www.bazaarplanner.com/images/fromBT/CardFrame_${tier}_${sizesOneLetter[card.Size]}_TUI.png`;
 
   const DamageAmount = getCardAttribute(
     gameState,
@@ -135,26 +122,12 @@ export function BoardCardElement({
           width: cardWidth,
         }}
       >
-        {/* Image container */}
-        <div
-          className="absolute"
-          style={{
-            top: CARD_HEIGHT * paddingTop,
-            left: CARD_HEIGHT * paddingLeft,
-            bottom: CARD_HEIGHT * paddingBottom,
-            right: CARD_HEIGHT * paddingRight,
-          }}
-        >
-          <img
-            src={imgUrl}
-            className={cn(
-              "h-full w-full rounded-[5px]",
-              boardCard.Freeze > 0 && "opacity-50 grayscale",
-            )}
-          />
-        </div>
-        {/* Frame image */}
-        <img src={frameUrl} className="absolute h-full w-full" />
+        <FramedCardOrSkill
+          card={card}
+          cardHeight={CARD_HEIGHT}
+          tier={boardCard.tier}
+        />
+
         {/* Cooldown Indicator */}
         {CooldownMax > 0 ? (
           <div
