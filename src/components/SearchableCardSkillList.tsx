@@ -45,10 +45,12 @@ function SearchableCardSkillList_({
   }, [search, filteredItems, fuse]);
 
   // Filter results by type
-  const condition = (item: Card) => item.$type === CardType.TCardItem;
-
-  const filteredCards = searchResults.filter(condition);
-  const filteredSkills = searchResults.filter((item) => !condition(item));
+  const filteredCards = searchResults.filter(
+    (item: Card) => item.$type === CardType.TCardItem,
+  );
+  const filteredSkills = searchResults.filter(
+    (item) => item.$type === CardType.TCardSkill,
+  );
 
   return (
     <div className="bg-background border-border min-w-96 overflow-x-visible overflow-y-scroll rounded border p-3">
