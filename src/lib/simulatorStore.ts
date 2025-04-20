@@ -6,10 +6,10 @@ import {
   PlayerConfig,
   PlayerSkillConfig,
 } from "@/engine/GameState";
-import { Card } from "@/types/cardTypes";
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { genCardsAndEncounters } from "./Data";
+import { persist, StateStorage, createJSONStorage } from "zustand/middleware";
 const { Cards: CardsData, Encounters: EncounterData } =
   await genCardsAndEncounters();
 
@@ -24,14 +24,17 @@ type State = {
 };
 
 type Actions = {
-  setPlayerConfig: (playerConfig: PlayerConfig) => void;
-  setMonsterConfig: (monsterConfig: MonsterConfig) => void;
-  addPlayerCard: (card: PlayerCardConfig) => void;
-  addPlayerSkill: (skill: PlayerSkillConfig) => void;
-  setAutoScroll: (autoScroll: boolean) => void;
-  setAutoReset: (autoReset: boolean) => void;
-  setBattleSpeed: (battleSpeed: number) => void;
-  setStepCount: (stepCount: number) => void;
+  actions: {
+    setPlayerConfig: (playerConfig: PlayerConfig) => void;
+    setMonsterConfig: (monsterConfig: MonsterConfig) => void;
+    addPlayerCard: (card: PlayerCardConfig) => void;
+    addPlayerSkill: (skill: PlayerSkillConfig) => void;
+    setAutoScroll: (autoScroll: boolean) => void;
+    setAutoReset: (autoReset: boolean) => void;
+    setBattleSpeed: (battleSpeed: number) => void;
+    setStepCount: (stepCount: number) => void;
+    recalculateSteps: () => void;
+  };
 };
 
 const initialPlayer: PlayerConfig = {
@@ -70,44 +73,104 @@ const initialState: State = {
   stepCount: 0,
 };
 
+// URL Persistance
+const persistentStorage: StateStorage = {
+  getItem: (key): string => {
+    const searchParams = new URLSearchParams(location.hash.slice(1));
+    const storedValue = searchParams.get(key) ?? "";
+    return JSON.parse(storedValue);
+  },
+  setItem: (key, newValue): void => {
+    const searchParams = new URLSearchParams(location.hash.slice(1));
+    searchParams.set(key, JSON.stringify(newValue));
+    location.hash = searchParams.toString();
+  },
+  removeItem: (key): void => {
+    const searchParams = new URLSearchParams(location.hash.slice(1));
+    searchParams.delete(key);
+    location.hash = searchParams.toString();
+  },
+};
+
 export const useSimulatorStore = create<State & Actions>()(
-  immer((set) => ({
-    ...initialState,
-    setPlayerConfig: (playerConfig: PlayerConfig) =>
-      set((state) => {
-        state.playerConfig = playerConfig;
-        state.steps = runWrapper(state.monsterConfig, playerConfig);
+  persist(
+    immer((set) => ({
+      ...initialState,
+      actions: {
+        setPlayerConfig: (playerConfig: PlayerConfig) =>
+          set((state) => {
+            state.playerConfig = playerConfig;
+            state.steps = runWrapper(state.monsterConfig, playerConfig);
+          }),
+        setMonsterConfig: (monsterConfig: MonsterConfig) =>
+          set((state) => {
+            state.monsterConfig = monsterConfig;
+            state.steps = runWrapper(monsterConfig, state.playerConfig);
+          }),
+        addPlayerCard: (card: PlayerCardConfig) =>
+          set((state) => {
+            (state.playerConfig.cards ??= []).push(card);
+            state.steps = runWrapper(state.monsterConfig, state.playerConfig);
+          }),
+        addPlayerSkill: (skill: PlayerSkillConfig) =>
+          set((state) => {
+            (state.playerConfig.skills ??= []).push(skill);
+            state.steps = runWrapper(state.monsterConfig, state.playerConfig);
+          }),
+        setAutoScroll: (autoScroll: boolean) =>
+          set((state) => {
+            state.autoScroll = autoScroll;
+          }),
+        setAutoReset: (autoReset: boolean) =>
+          set((state) => {
+            state.autoReset = autoReset;
+          }),
+        setBattleSpeed: (battleSpeed: number) =>
+          set((state) => {
+            state.battleSpeed = battleSpeed;
+          }),
+        setStepCount: (stepCount: number) =>
+          set((state) => {
+            state.stepCount = stepCount;
+          }),
+        recalculateSteps: () =>
+          set((state) => {
+            state.steps = runWrapper(state.monsterConfig, state.playerConfig);
+          }),
+      },
+    })),
+    {
+      name: "simulator",
+      storage: createJSONStorage(() => persistentStorage),
+      partialize: (state) => ({
+        playerConfig: state.playerConfig,
+        monsterConfig: state.monsterConfig,
+        autoScroll: state.autoScroll,
+        autoReset: state.autoReset,
+        battleSpeed: state.battleSpeed,
+        stepCount: state.stepCount,
       }),
-    setMonsterConfig: (monsterConfig: MonsterConfig) =>
-      set((state) => {
-        state.monsterConfig = monsterConfig;
-        state.steps = runWrapper(monsterConfig, state.playerConfig);
-      }),
-    addPlayerCard: (card: PlayerCardConfig) =>
-      set((state) => {
-        (state.playerConfig.cards ??= []).push(card);
-        state.steps = runWrapper(state.monsterConfig, state.playerConfig);
-      }),
-    addPlayerSkill: (skill: PlayerSkillConfig) =>
-      set((state) => {
-        (state.playerConfig.skills ??= []).push(skill);
-        state.steps = runWrapper(state.monsterConfig, state.playerConfig);
-      }),
-    setAutoScroll: (autoScroll: boolean) =>
-      set((state) => {
-        state.autoScroll = autoScroll;
-      }),
-    setAutoReset: (autoReset: boolean) =>
-      set((state) => {
-        state.autoReset = autoReset;
-      }),
-    setBattleSpeed: (battleSpeed: number) =>
-      set((state) => {
-        state.battleSpeed = battleSpeed;
-      }),
-    setStepCount: (stepCount: number) =>
-      set((state) => {
-        state.stepCount = stepCount;
-      }),
-  })),
+      merge: (persistedState: unknown, currentState: State & Actions) => {
+        const typedState = persistedState as Partial<State>;
+        // Simply recalculate steps
+        const newSteps = runWrapper(
+          typedState.monsterConfig as MonsterConfig,
+          typedState.playerConfig as PlayerConfig,
+        );
+        return {
+          ...currentState,
+          ...typedState,
+          steps: newSteps,
+        };
+      },
+    },
+  ),
 );
+
+export const useSteps = () => useSimulatorStore((state) => state.steps);
+export const useAutoScroll = () =>
+  useSimulatorStore((state) => state.autoScroll);
+export const useAutoReset = () => useSimulatorStore((state) => state.autoReset);
+export const useBattleSpeed = () =>
+  useSimulatorStore((state) => state.battleSpeed);
+export const useStepCount = () => useSimulatorStore((state) => state.stepCount);

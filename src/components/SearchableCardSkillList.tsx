@@ -14,8 +14,9 @@ const SKILL_SIZE = 70;
 
 export const SearchableCardSkillList = memo(SearchableCardSkillList_);
 function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
-  const addPlayerCard = useSimulatorStore((state) => state.addPlayerCard);
-  const addPlayerSkill = useSimulatorStore((state) => state.addPlayerSkill);
+  const simulatorStoreActions = useSimulatorStore((state) => state.actions);
+  const addPlayerCard = simulatorStoreActions.addPlayerCard;
+  const addPlayerSkill = simulatorStoreActions.addPlayerSkill;
 
   const handleCardSelect = (card: Card) => {
     const cardConfig: PlayerCardConfig = {

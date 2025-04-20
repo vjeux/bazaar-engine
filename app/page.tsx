@@ -31,9 +31,7 @@ export default function DragNDrop() {
   const autoReset = useSimulatorStore((state) => state.autoReset);
   const battleSpeed = useSimulatorStore((state) => state.battleSpeed);
   const stepCount = useSimulatorStore((state) => state.stepCount);
-  const setAutoScroll = useSimulatorStore((state) => state.setAutoScroll);
-  const setAutoReset = useSimulatorStore((state) => state.setAutoReset);
-  const setStepCount = useSimulatorStore((state) => state.setStepCount);
+  const simulatorStoreActions = useSimulatorStore((state) => state.actions);
 
   // If you live reload with a step higher than the length, it would throw.
   const boundedStepCount = Math.min(steps.length - 1, stepCount);
@@ -43,7 +41,7 @@ export default function DragNDrop() {
     if (!autoScroll) return;
 
     const interval = setInterval(() => {
-      setStepCount(
+      simulatorStoreActions.setStepCount(
         stepCount >= steps.length - 1
           ? autoReset
             ? 0
@@ -58,7 +56,7 @@ export default function DragNDrop() {
     autoReset,
     steps.length,
     battleSpeed,
-    setStepCount,
+    simulatorStoreActions,
     stepCount,
   ]);
 
@@ -98,7 +96,7 @@ export default function DragNDrop() {
           <BattleSpeedSelector />
           <Checkbox
             checked={autoScroll}
-            onClick={() => setAutoScroll(!autoScroll)}
+            onClick={() => simulatorStoreActions.setAutoScroll(!autoScroll)}
             id="autoAdvance"
           />
 
@@ -107,7 +105,7 @@ export default function DragNDrop() {
           </label>
           <Checkbox
             checked={autoReset}
-            onClick={() => setAutoReset(!autoReset)}
+            onClick={() => simulatorStoreActions.setAutoReset(!autoReset)}
             id="autoRestart"
           />
           <label htmlFor="autoRestart" className="text-sm text-nowrap">
@@ -119,7 +117,7 @@ export default function DragNDrop() {
             max={steps.length - 1}
             value={[boundedStepCount]}
             onValueChange={([value]) => {
-              setStepCount(value);
+              simulatorStoreActions.setStepCount(value);
             }}
           />
 
@@ -137,7 +135,7 @@ export default function DragNDrop() {
 
 const BattleSpeedSelector = memo(function BattleSpeedSelector() {
   const handleBattleSpeedChange = useSimulatorStore(
-    (state) => state.setBattleSpeed,
+    (state) => state.actions.setBattleSpeed,
   );
   return (
     <Select onValueChange={(val) => handleBattleSpeedChange(parseInt(val))}>
@@ -156,7 +154,7 @@ const BattleSpeedSelector = memo(function BattleSpeedSelector() {
 });
 
 const EncounterSelector = memo(function EncounterSelector() {
-  const setMonsterConfig = useSimulatorStore((state) => state.setMonsterConfig);
+  const simulatorStoreActions = useSimulatorStore((state) => state.actions);
   return (
     <ComboBox
       items={encounters.map((encounter) => ({
@@ -170,7 +168,7 @@ const EncounterSelector = memo(function EncounterSelector() {
           (encounter) => encounter.card.cardId === monsterId,
         );
         if (encounter) {
-          setMonsterConfig({
+          simulatorStoreActions.setMonsterConfig({
             type: "monster",
             name: encounter.name,
           });
