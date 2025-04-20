@@ -20,6 +20,13 @@ import { parseAsJson, useQueryState } from "nuqs";
 import { BoardSkills } from "@/components/BoardSkills";
 import { CardDeck } from "@/components/CardDeck"; // Import the new CardDeck component
 import { Card } from "@/types/cardTypes";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 const { Cards: CardsData, Encounters: EncounterData } =
   await genCardsAndEncounters();
@@ -50,6 +57,7 @@ export default function DragNDrop() {
   const [stepCount, setStepCount] = useState(0);
   const [autoScroll, setAutoScroll] = useState(false);
   const [autoReset, setAutoReset] = useState(false);
+  const [battleSpeed, setBattleSpeed] = useState(1);
 
   // If you live reload with a step higher than the length, it would throw.
   const boundedStepCount = Math.min(steps.length - 1, stepCount);
@@ -62,10 +70,10 @@ export default function DragNDrop() {
       setStepCount((prev) =>
         prev >= steps.length - 1 ? (autoReset ? 0 : prev) : prev + 1,
       );
-    }, 100);
+    }, 100 / battleSpeed);
 
     return () => clearInterval(interval);
-  }, [autoScroll, autoReset, steps.length]);
+  }, [autoScroll, autoReset, steps.length, battleSpeed]);
 
   const addPlayerCard = useCallback(
     (card: Card): void =>
@@ -129,6 +137,21 @@ export default function DragNDrop() {
 
         {/* Time Slider */}
         <div className="mt-2 flex items-center gap-2">
+          <Select
+            value={battleSpeed.toString()}
+            onValueChange={(value) => setBattleSpeed(parseInt(value))}
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Battle Speed" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="1">1x</SelectItem>
+              <SelectItem value="2">2x</SelectItem>
+              <SelectItem value="3">3x</SelectItem>
+              <SelectItem value="5">5x</SelectItem>
+              <SelectItem value="10">10x</SelectItem>
+            </SelectContent>
+          </Select>
           <Checkbox
             checked={autoScroll}
             onClick={() => setAutoScroll(!autoScroll)}

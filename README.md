@@ -13,10 +13,10 @@ A simulation engine for[The Bazaar](https://playthebazaar.com/).
 - [x] Fix weird skills that seem to be carditems instead.
       ![weird skill example](./docs/images/image.png)
 - [ ] Move gold/income to separate UI component
-- [ ] Set battle speed, 2x, 3x etc
+- [x] Set battle speed, 2x, 3x etc
 - [ ] Win percentage for RNG in battles
 - [ ] Show storm damage UI
 - [ ] Damage numbers above health
 - [x] Add github repo link to navbar
 - [ ] Implement TActionPlayerBurnRemove
-- [ ] Replace old tooltips with new floating UI tooltips
+- [x] Replace old tooltips with new floating UI tooltips
