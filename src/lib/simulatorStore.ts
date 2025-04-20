@@ -34,6 +34,8 @@ type Actions = {
     setBattleSpeed: (battleSpeed: number) => void;
     setStepCount: (stepCount: number) => void;
     recalculateSteps: () => void;
+    removePlayerCard: (cardIndex: number) => void;
+    removePlayerSkill: (skillIndex: number) => void;
   };
 };
 
@@ -135,6 +137,16 @@ export const useSimulatorStore = create<State & Actions>()(
           }),
         recalculateSteps: () =>
           set((state) => {
+            state.steps = runWrapper(state.monsterConfig, state.playerConfig);
+          }),
+        removePlayerCard: (cardIndex: number) =>
+          set((state) => {
+            state.playerConfig.cards?.splice(cardIndex, 1);
+            state.steps = runWrapper(state.monsterConfig, state.playerConfig);
+          }),
+        removePlayerSkill: (skillIndex: number) =>
+          set((state) => {
+            state.playerConfig.skills?.splice(skillIndex, 1);
             state.steps = runWrapper(state.monsterConfig, state.playerConfig);
           }),
       },

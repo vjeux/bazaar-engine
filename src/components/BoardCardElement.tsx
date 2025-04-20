@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import FramedCardOrSkill from "./FramedCardOrSkill";
 import TooltipWithGameState from "./TooltipWithGameState";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
+import { useSimulatorStore } from "@/lib/simulatorStore";
 
 export const CARD_HEIGHT = 180;
 
@@ -23,6 +24,8 @@ export function BoardCardElement({
   playerID: number;
   boardCardID: number;
 }) {
+  const simulatorStoreActions = useSimulatorStore((state) => state.actions);
+
   const card = boardCard.card;
   const cardWidth =
     card.Size === "Small"
@@ -115,6 +118,20 @@ export function BoardCardElement({
           <div className="tooltip absolute top-0.5 right-0.5 z-10">
             <button type="button">⚙️</button>
           </div>
+          {/* Remove button */}
+          {playerID == 1 && (
+            <div className="tooltip absolute top-0.5 left-0.5 z-50">
+              <button
+                type="button"
+                className="hover:cursor-pointer"
+                onClick={() =>
+                  simulatorStoreActions.removePlayerCard(boardCardID)
+                }
+              >
+                ❌
+              </button>
+            </div>
+          )}
           {/* Card container */}
           <div
             className={cn(
