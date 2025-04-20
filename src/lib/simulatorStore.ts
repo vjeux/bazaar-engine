@@ -157,10 +157,6 @@ export const useSimulatorStore = create<State & Actions>()(
       partialize: (state) => ({
         playerConfig: state.playerConfig,
         monsterConfig: state.monsterConfig,
-        autoScroll: state.autoScroll,
-        autoReset: state.autoReset,
-        battleSpeed: state.battleSpeed,
-        stepCount: state.stepCount,
       }),
       merge: (persistedState: unknown, currentState: State & Actions) => {
         const typedState = persistedState as Partial<State>;
