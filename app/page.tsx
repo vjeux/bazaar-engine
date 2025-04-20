@@ -165,9 +165,6 @@ export default function DragNDrop() {
           <span className="w-28 text-sm text-nowrap">
             Time: {stepCountToSeconds(boundedStepCount).toFixed(1)}s
           </span>
-          <span className="w-42 text-sm text-nowrap">
-            Steps: {boundedStepCount}/{steps.length - 1}
-          </span>
         </div>
       </div>
 
