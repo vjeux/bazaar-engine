@@ -1,5 +1,4 @@
-import { getTooltips } from "@/engine/Engine";
-import { GameState } from "@/engine/GameState";
+import { GameState, getTooltips } from "@/engine/Engine";
 import { Card } from "@/types/cardTypes";
 
 export default function TooltipWithGameState({
