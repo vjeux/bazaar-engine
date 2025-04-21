@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import { genCardsAndEncounters } from "../lib/Data";
 import { Tier } from "../types/shared";
 import fs from "fs";
-import { CARDS_VERSION } from "@/lib/constants";
+import { CARDS_VERSION } from "../lib/constants";
 const { Cards, Encounters } = await genCardsAndEncounters();
 
 function getTiers(startingTier: Tier): Tier[] {

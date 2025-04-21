@@ -25168,6 +25168,26 @@ exports[`Generate tooltips for "Zoarcid" 4`] = `
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "3D Printer" 1`] = `
+{
+  "cardName": "3D Printer",
+  "tier": "Gold",
+  "tooltips": [
+    "Transform into 3 Gold copies of the small, non-legendary item to the left of this for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "3D Printer" 2`] = `
+{
+  "cardName": "3D Printer",
+  "tier": "Diamond",
+  "tooltips": [
+    "Transform into 3 Diamond copies of the small, non-legendary item to the left of this for the fight.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "ATM" 1`] = `
 {
   "cardName": "ATM",
@@ -25386,6 +25406,39 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Alacrity" 2`] =
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Alembic" 1`] = `
+{
+  "cardName": "Alembic",
+  "tier": "Silver",
+  "tooltips": [
+    "At the start of each day, transform the small item to the left of this into a random Potion and get a Catalyst.",
+    "When you buy this, get a Small Reagent.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Alembic" 2`] = `
+{
+  "cardName": "Alembic",
+  "tier": "Gold",
+  "tooltips": [
+    "At the start of each day, transform the small item to the left of this into a random Potion and get a Catalyst.",
+    "When you buy this, get a Small Reagent.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Alembic" 3`] = `
+{
+  "cardName": "Alembic",
+  "tier": "Diamond",
+  "tooltips": [
+    "At the start of each day, transform the small item to the left of this into a random Potion and get a Catalyst.",
+    "When you buy this, get a Small Reagent.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "All Talk" 1`] = `
 {
   "cardName": "All Talk",
@@ -25446,6 +25499,54 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Alpha Ray" 4`] 
   "tooltips": [
     "Deal 20 damage.",
     "When you use the Core or another Ray, your Weapons gain +5 Damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Aludel" 1`] = `
+{
+  "cardName": "Aludel",
+  "tier": "Bronze",
+  "tooltips": [
+    "Poison 4.",
+    "This has +1 Multicast for each adjacent Potion or Reagent.",
+    "At the start of each day, get a Catalyst.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Aludel" 2`] = `
+{
+  "cardName": "Aludel",
+  "tier": "Silver",
+  "tooltips": [
+    "Poison 8.",
+    "This has +1 Multicast for each adjacent Potion or Reagent.",
+    "At the start of each day, get a Catalyst.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Aludel" 3`] = `
+{
+  "cardName": "Aludel",
+  "tier": "Gold",
+  "tooltips": [
+    "Poison 12.",
+    "This has +1 Multicast for each adjacent Potion or Reagent.",
+    "At the start of each day, get a Catalyst.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Aludel" 4`] = `
+{
+  "cardName": "Aludel",
+  "tier": "Diamond",
+  "tooltips": [
+    "Poison 16.",
+    "This has +1 Multicast for each adjacent Potion or Reagent.",
+    "At the start of each day, get a Catalyst.",
   ],
 }
 `;
@@ -25678,6 +25779,42 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Anything to Win
   "tier": "Diamond",
   "tooltips": [
     "When you use a non-weapon item, Burn 3 and Poison 3.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Apothecary" 1`] = `
+{
+  "cardName": "Apothecary",
+  "tier": "Silver",
+  "tooltips": [
+    "Gain 5 Regeneration for the fight.",
+    "When you Haste, Slow, Poison, or Burn, charge this 1 second(s).",
+    "At the start of each day, get a Reagent or Catalyst.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Apothecary" 2`] = `
+{
+  "cardName": "Apothecary",
+  "tier": "Gold",
+  "tooltips": [
+    "Gain 10 Regeneration for the fight.",
+    "When you Haste, Slow, Poison, or Burn, charge this 1 second(s).",
+    "At the start of each day, get a Reagent or Catalyst.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Apothecary" 3`] = `
+{
+  "cardName": "Apothecary",
+  "tier": "Diamond",
+  "tooltips": [
+    "Gain 15 Regeneration for the fight.",
+    "When you Haste, Slow, Poison, or Burn, charge this 1 second(s).",
+    "At the start of each day, get a Reagent or Catalyst.",
   ],
 }
 `;
@@ -26251,6 +26388,72 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Aurora Dome" 3`
   "tooltips": [
     "Shield 15.",
     "When you Freeze, your Shield items get +15 Shield for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "BLK-SP1D3R" 1`] = `
+{
+  "cardName": "BLK-SP1D3R",
+  "tier": "Silver",
+  "tooltips": [
+    "Slow 1 item(s) for 1 second(s).",
+    "When an adjacent item Poisons or Burns, charge this 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "BLK-SP1D3R" 2`] = `
+{
+  "cardName": "BLK-SP1D3R",
+  "tier": "Gold",
+  "tooltips": [
+    "Slow 2 item(s) for 1 second(s).",
+    "When an adjacent item Poisons or Burns, charge this 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "BLK-SP1D3R" 3`] = `
+{
+  "cardName": "BLK-SP1D3R",
+  "tier": "Diamond",
+  "tooltips": [
+    "Slow 3 item(s) for 1 second(s).",
+    "When an adjacent item Poisons or Burns, charge this 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "BLU-B33TL3" 1`] = `
+{
+  "cardName": "BLU-B33TL3",
+  "tier": "Silver",
+  "tooltips": [
+    "Freeze 1 item(s) for 0.5 second(s).",
+    "When an adjacent item Poisons, charge this 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "BLU-B33TL3" 2`] = `
+{
+  "cardName": "BLU-B33TL3",
+  "tier": "Gold",
+  "tooltips": [
+    "Freeze 2 item(s) for 0.5 second(s).",
+    "When an adjacent item Poisons, charge this 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "BLU-B33TL3" 3`] = `
+{
+  "cardName": "BLU-B33TL3",
+  "tier": "Diamond",
+  "tooltips": [
+    "Freeze 3 item(s) for 0.5 second(s).",
+    "When an adjacent item Poisons, charge this 1 second(s).",
   ],
 }
 `;
@@ -27078,6 +27281,16 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Billboard" 2`] 
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Biohazard" 1`] = `
+{
+  "cardName": "Biohazard",
+  "tier": "Diamond",
+  "tooltips": [
+    "The first time you fall below half health each fight, double your enemy's Poison.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Black Ice" 1`] = `
 {
   "cardName": "Black Ice",
@@ -27634,6 +27847,28 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Boar Market" 2`
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Boiling Flask" 1`] = `
+{
+  "cardName": "Boiling Flask",
+  "tier": "Gold",
+  "tooltips": [
+    "Reload adjacent Potions.",
+    "Adjacent potions have +1 Multicast and their cooldowns increased by 2 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Boiling Flask" 2`] = `
+{
+  "cardName": "Boiling Flask",
+  "tier": "Diamond",
+  "tooltips": [
+    "Reload adjacent Potions.",
+    "Adjacent potions have +1 Multicast and their cooldowns increased by 1 second(s).",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Bolas" 1`] = `
 {
   "cardName": "Bolas",
@@ -27869,6 +28104,39 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Bootstraps" 3`]
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Bottled Explosion" 1`] = `
+{
+  "cardName": "Bottled Explosion",
+  "tier": "Silver",
+  "tooltips": [
+    "Deal 5 Damage.",
+    "Double this item's damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Bottled Explosion" 2`] = `
+{
+  "cardName": "Bottled Explosion",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 10 Damage.",
+    "Double this item's damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Bottled Explosion" 3`] = `
+{
+  "cardName": "Bottled Explosion",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 15 Damage.",
+    "Double this item's damage for the fight.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Bottled Lightning" 1`] = `
 {
   "cardName": "Bottled Lightning",
@@ -27909,6 +28177,39 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Bottled Lightni
   "tooltips": [
     "Deal 120 damage.",
     "Burn 10.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Bottled Tornado" 1`] = `
+{
+  "cardName": "Bottled Tornado",
+  "tier": "Silver",
+  "tooltips": [
+    "The Sandstorm begins!",
+    "Slow 1 item for 3 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Bottled Tornado" 2`] = `
+{
+  "cardName": "Bottled Tornado",
+  "tier": "Gold",
+  "tooltips": [
+    "The Sandstorm begins!",
+    "Slow 2 item for 3 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Bottled Tornado" 3`] = `
+{
+  "cardName": "Bottled Tornado",
+  "tier": "Diamond",
+  "tooltips": [
+    "The Sandstorm begins!",
+    "Slow 3 item for 3 second(s).",
   ],
 }
 `;
@@ -27983,6 +28284,16 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Brawler" 3`] = 
   "tier": "Diamond",
   "tooltips": [
     "You have +300 Max Health for each Weapon you have. [0]",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Brewmaster" 1`] = `
+{
+  "cardName": "Brewmaster",
+  "tier": "Diamond",
+  "tooltips": [
+    "At the start of each fight, a random Potion gains +1 Multicast for the fight.",
   ],
 }
 `;
@@ -28533,6 +28844,122 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "CPU Throttling"
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Calcinator" 1`] = `
+{
+  "cardName": "Calcinator",
+  "tier": "Bronze",
+  "tooltips": [
+    "Burn 6.",
+    "When you transform a Reagent, this permanently gains +2 Burn.",
+    "At the start of each day, spend 3 Gold to get a Chunk of Lead.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Calcinator" 2`] = `
+{
+  "cardName": "Calcinator",
+  "tier": "Silver",
+  "tooltips": [
+    "Burn 6.",
+    "When you transform a Reagent, this permanently gains +4 Burn.",
+    "At the start of each day, spend 3 Gold to get a Chunk of Lead.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Calcinator" 3`] = `
+{
+  "cardName": "Calcinator",
+  "tier": "Gold",
+  "tooltips": [
+    "Burn 6.",
+    "When you transform a Reagent, this permanently gains +6 Burn.",
+    "At the start of each day, spend 3 Gold to get a Chunk of Lead.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Calcinator" 4`] = `
+{
+  "cardName": "Calcinator",
+  "tier": "Diamond",
+  "tooltips": [
+    "Burn 6.",
+    "When you transform a Reagent, this permanently gains +8 Burn.",
+    "At the start of each day, spend 3 Gold to get a Chunk of Lead.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Calico" 1`] = `
+{
+  "cardName": "Calico",
+  "tier": "Bronze",
+  "tooltips": [
+    "Deal 10 damage.",
+    "When you use another Weapon, this gains +5% Crit chance for the fight.",
+    "This deals double Crit damage.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Calico" 2`] = `
+{
+  "cardName": "Calico",
+  "tier": "Silver",
+  "tooltips": [
+    "Deal 20 damage.",
+    "When you use another Weapon, this gains +10% Crit chance for the fight.",
+    "This deals double Crit damage.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Calico" 3`] = `
+{
+  "cardName": "Calico",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 30 damage.",
+    "When you use another Weapon, this gains +15% Crit chance for the fight.",
+    "This deals double Crit damage.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Calico" 4`] = `
+{
+  "cardName": "Calico",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 40 damage.",
+    "When you use another Weapon, this gains +20% Crit chance for the fight.",
+    "This deals double Crit damage.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Calming Heals" 1`] = `
+{
+  "cardName": "Calming Heals",
+  "tier": "Gold",
+  "tooltips": [
+    "The first 5 times you Slow each fight, Charge 1 Heal item 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Calming Heals" 2`] = `
+{
+  "cardName": "Calming Heals",
+  "tier": "Diamond",
+  "tooltips": [
+    "The first 10 times you Slow each fight, Charge 1 Heal item 1 second(s).",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Caltrops" 1`] = `
 {
   "cardName": "Caltrops",
@@ -28549,6 +28976,50 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Caltrops" 2`] =
   "tier": "Diamond",
   "tooltips": [
     "When your enemy uses an item, deal 10 damage.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Candles" 1`] = `
+{
+  "cardName": "Candles",
+  "tier": "Bronze",
+  "tooltips": [
+    "Burn 8.",
+    "When you use a small item, Charge this 2 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Candles" 2`] = `
+{
+  "cardName": "Candles",
+  "tier": "Silver",
+  "tooltips": [
+    "Burn 12.",
+    "When you use a small item, Charge this 2 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Candles" 3`] = `
+{
+  "cardName": "Candles",
+  "tier": "Gold",
+  "tooltips": [
+    "Burn 16.",
+    "When you use a small item, Charge this 2 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Candles" 4`] = `
+{
+  "cardName": "Candles",
+  "tier": "Diamond",
+  "tooltips": [
+    "Burn 20.",
+    "When you use a small item, Charge this 2 second(s).",
   ],
 }
 `;
@@ -28763,6 +29234,48 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Captain's Charg
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Captain's Quarters" 1`] = `
+{
+  "cardName": "Captain's Quarters",
+  "tier": "Silver",
+  "tooltips": [
+    "Haste 1 Vehicle for 2 second(s).
+ 
+ Charge 1 Tool 1 second(s).",
+    "Reload 1 Ammo item 1 Ammo.",
+    "A Weapon gains +20 damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Captain's Quarters" 2`] = `
+{
+  "cardName": "Captain's Quarters",
+  "tier": "Gold",
+  "tooltips": [
+    "Haste 1 Vehicle for 3 second(s).
+ 
+ Charge 1 Tool 2 second(s).",
+    "Reload 1 Ammo item 2 Ammo.",
+    "A Weapon gains +30 damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Captain's Quarters" 3`] = `
+{
+  "cardName": "Captain's Quarters",
+  "tier": "Diamond",
+  "tooltips": [
+    "Haste 1 Vehicle for 4 second(s).
+ 
+ Charge 1 Tool 3 second(s).",
+    "Reload 1 Ammo item 3 Ammo.",
+    "A Weapon gains +40 damage for the fight.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Captain's Wheel" 1`] = `
 {
   "cardName": "Captain's Wheel",
@@ -28792,6 +29305,39 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Captain's Wheel
   "tooltips": [
     "Haste adjacent items for 3 second(s).",
     "If you have a Vehicle or Large item, reduce this item's cooldown by 50%.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Card Table" 1`] = `
+{
+  "cardName": "Card Table",
+  "tier": "Silver",
+  "tooltips": [
+    "A Friend gains +1 Multicast for the fight.",
+    "Increase this item's cooldown by 4 second(s) for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Card Table" 2`] = `
+{
+  "cardName": "Card Table",
+  "tier": "Gold",
+  "tooltips": [
+    "A Friend gains +1 Multicast for the fight.",
+    "Increase this item's cooldown by 3 second(s) for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Card Table" 3`] = `
+{
+  "cardName": "Card Table",
+  "tier": "Diamond",
+  "tooltips": [
+    "A Friend gains +1 Multicast for the fight.",
+    "Increase this item's cooldown by 2 second(s) for the fight.",
   ],
 }
 `;
@@ -29030,6 +29576,39 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Cauldron" 3`] =
   "tooltips": [
     "Burn 3 for each unique type you have.",
     "Poison 3 for each unique type you have.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Cellar" 1`] = `
+{
+  "cardName": "Cellar",
+  "tier": "Silver",
+  "tooltips": [
+    "Reload an item.",
+    "Gain 2 Regeneration for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Cellar" 2`] = `
+{
+  "cardName": "Cellar",
+  "tier": "Gold",
+  "tooltips": [
+    "Reload an item.",
+    "Gain 4 Regeneration for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Cellar" 3`] = `
+{
+  "cardName": "Cellar",
+  "tier": "Diamond",
+  "tooltips": [
+    "Reload an item.",
+    "Gain 6 Regeneration for the fight.",
   ],
 }
 `;
@@ -29362,6 +29941,86 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Chum" 4`] = `
   "tooltips": [
     "Your Aquatic items gain +10% Crit Chance for the fight.",
     "When you buy this, get a Piranha.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Chunk of Gold" 1`] = `
+{
+  "cardName": "Chunk of Gold",
+  "tier": "Bronze",
+  "tooltips": [
+    "Sells for gold.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Chunk of Gold" 2`] = `
+{
+  "cardName": "Chunk of Gold",
+  "tier": "Silver",
+  "tooltips": [
+    "Sells for gold.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Chunk of Gold" 3`] = `
+{
+  "cardName": "Chunk of Gold",
+  "tier": "Gold",
+  "tooltips": [
+    "Sells for gold.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Chunk of Gold" 4`] = `
+{
+  "cardName": "Chunk of Gold",
+  "tier": "Diamond",
+  "tooltips": [
+    "Sells for gold.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Chunk of Lead" 1`] = `
+{
+  "cardName": "Chunk of Lead",
+  "tier": "Bronze",
+  "tooltips": [
+    "When this is transformed, gain a Chunk of Gold.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Chunk of Lead" 2`] = `
+{
+  "cardName": "Chunk of Lead",
+  "tier": "Silver",
+  "tooltips": [
+    "When this is transformed, gain a Chunk of Gold.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Chunk of Lead" 3`] = `
+{
+  "cardName": "Chunk of Lead",
+  "tier": "Gold",
+  "tooltips": [
+    "When this is transformed, gain a Chunk of Gold.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Chunk of Lead" 4`] = `
+{
+  "cardName": "Chunk of Lead",
+  "tier": "Diamond",
+  "tooltips": [
+    "When this is transformed, gain a Chunk of Gold.",
   ],
 }
 `;
@@ -30546,6 +31205,39 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Cove" 4`] = `
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Covetous Raven" 1`] = `
+{
+  "cardName": "Covetous Raven",
+  "tier": "Silver",
+  "tooltips": [
+    "Deal 60 damage.",
+    "When you use another Relic or Enchanted item, Charge this 2 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Covetous Raven" 2`] = `
+{
+  "cardName": "Covetous Raven",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 80 damage.",
+    "When you use another Relic or Enchanted item, Charge this 2 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Covetous Raven" 3`] = `
+{
+  "cardName": "Covetous Raven",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 100 damage.",
+    "When you use another Relic or Enchanted item, Charge this 2 second(s).",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Crane" 1`] = `
 {
   "cardName": "Crane",
@@ -30636,6 +31328,16 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Creeping Toxins
   "tier": "Diamond",
   "tooltips": [
     "The first 10 times you Slow each fight, Charge 1 Poison item 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Crimson Dash" 1`] = `
+{
+  "cardName": "Crimson Dash",
+  "tier": "Diamond",
+  "tooltips": [
+    "Your Lifesteal weapons have their cooldowns reduced by 1000 second.",
   ],
 }
 `;
@@ -30838,6 +31540,39 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Critical Protec
   "tier": "Diamond",
   "tooltips": [
     "Your Shield items have +20% Crit chance.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Crocodile Tears" 1`] = `
+{
+  "cardName": "Crocodile Tears",
+  "tier": "Silver",
+  "tooltips": [
+    "Deal 1 Damage.",
+    "When your enemy takes damage, this gains +10 Damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Crocodile Tears" 2`] = `
+{
+  "cardName": "Crocodile Tears",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 1 Damage.",
+    "When your enemy takes damage, this gains +20 Damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Crocodile Tears" 3`] = `
+{
+  "cardName": "Crocodile Tears",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 1 Damage.",
+    "When your enemy takes damage, this gains +30 Damage for the fight.",
   ],
 }
 `;
@@ -31418,6 +32153,39 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Defense Grid" 4
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Defense Matrix" 1`] = `
+{
+  "cardName": "Defense Matrix",
+  "tier": "Silver",
+  "tooltips": [
+    "Haste adjacent items for 1 second(s).",
+    "When you use an adjacent item, Shield 5.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Defense Matrix" 2`] = `
+{
+  "cardName": "Defense Matrix",
+  "tier": "Gold",
+  "tooltips": [
+    "Haste adjacent items for 2 second(s).",
+    "When you use an adjacent item, Shield 10.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Defense Matrix" 3`] = `
+{
+  "cardName": "Defense Matrix",
+  "tier": "Diamond",
+  "tooltips": [
+    "Haste adjacent items for 3 second(s).",
+    "When you use an adjacent item, Shield 15.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Defensive Stance" 1`] = `
 {
   "cardName": "Defensive Stance",
@@ -31879,6 +32647,52 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Dooley's Scarf"
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Dooltron Mainframe" 1`] = `
+{
+  "cardName": "Dooltron Mainframe",
+  "tier": "Gold",
+  "tooltips": [
+    "When you use a friend, charge the Core 1 second(s) and Haste a Large item 1 second(s).",
+    "Your Dooltron has the Core type.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Dooltron Mainframe" 2`] = `
+{
+  "cardName": "Dooltron Mainframe",
+  "tier": "Diamond",
+  "tooltips": [
+    "When you use a friend, charge the Core 2 second(s) and Haste a Large item 2 second(s).",
+    "Your Dooltron has the Core type.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Dooltron" 1`] = `
+{
+  "cardName": "Dooltron",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 1000 damage.",
+    "When you Haste, Slow, Poison, Freeze, or Burn, charge this 1 second(s).",
+    "When you use a Friend, Shield 50.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Dooltron" 2`] = `
+{
+  "cardName": "Dooltron",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 2000 damage.",
+    "When you Haste, Slow, Poison, Freeze, or Burn, charge this 2 second(s).",
+    "When you use a Friend, Shield 100.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Double Barrel" 1`] = `
 {
   "cardName": "Double Barrel",
@@ -32144,6 +32958,46 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Duct Tape" 3`] 
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Dumpster Diving" 1`] = `
+{
+  "cardName": "Dumpster Diving",
+  "tier": "Bronze",
+  "tooltips": [
+    "At the start of each day, get a random Potion.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Dumpster Diving" 2`] = `
+{
+  "cardName": "Dumpster Diving",
+  "tier": "Silver",
+  "tooltips": [
+    "At the start of each day, get a random Potion.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Dumpster Diving" 3`] = `
+{
+  "cardName": "Dumpster Diving",
+  "tier": "Gold",
+  "tooltips": [
+    "At the start of each day, get a random Potion.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Dumpster Diving" 4`] = `
+{
+  "cardName": "Dumpster Diving",
+  "tier": "Diamond",
+  "tooltips": [
+    "At the start of each day, get a random Potion.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Eagle Talisman" 1`] = `
 {
   "cardName": "Eagle Talisman",
@@ -32302,6 +33156,39 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Electrified Hul
   "tier": "Diamond",
   "tooltips": [
     "The first 8 times you Shield each fight, Charge 1 item 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Elemental Depth Charge" 1`] = `
+{
+  "cardName": "Elemental Depth Charge",
+  "tier": "Silver",
+  "tooltips": [
+    "Poison 4, Burn 4, and Freeze 1 medium or small item for 1 second(s).",
+    "This has +1 Multicast for each other Aquatic item you have.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Elemental Depth Charge" 2`] = `
+{
+  "cardName": "Elemental Depth Charge",
+  "tier": "Gold",
+  "tooltips": [
+    "Poison 4, Burn 4, and Freeze 1 medium or small item for 1 second(s).",
+    "This has +1 Multicast for each other Aquatic item you have.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Elemental Depth Charge" 3`] = `
+{
+  "cardName": "Elemental Depth Charge",
+  "tier": "Diamond",
+  "tooltips": [
+    "Poison 4, Burn 4, and Freeze 1 medium or small item for 1 second(s).",
+    "This has +1 Multicast for each other Aquatic item you have.",
   ],
 }
 `;
@@ -32534,6 +33421,16 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Equivalent Exch
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Essence Overflow" 1`] = `
+{
+  "cardName": "Essence Overflow",
+  "tier": "Diamond",
+  "tooltips": [
+    "Your weapons have + damage equal to your Regeneration. [0]",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Exoskeleton" 1`] = `
 {
   "cardName": "Exoskeleton",
@@ -32596,6 +33493,26 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Expert Pilot" 2
   "tooltips": [
     "Your Shield Vehicles gain 60% Shield.",
     "Your Weapon Vehicles gain 60% Damage.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Explosive Potions" 1`] = `
+{
+  "cardName": "Explosive Potions",
+  "tier": "Gold",
+  "tooltips": [
+    "The first 4 times you use a potion each fight, charge 1 Weapon or Burn item 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Explosive Potions" 2`] = `
+{
+  "cardName": "Explosive Potions",
+  "tier": "Diamond",
+  "tooltips": [
+    "The first 8 times you use a potion each fight, charge 1 Weapon or Burn item 1 second(s).",
   ],
 }
 `;
@@ -33078,6 +33995,50 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Fire Potion" 4`
   "tier": "Diamond",
   "tooltips": [
     "Burn 15.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Fireflies" 1`] = `
+{
+  "cardName": "Fireflies",
+  "tier": "Bronze",
+  "tooltips": [
+    "Burn 3.",
+    "When you Slow, this gains +1 Burn for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Fireflies" 2`] = `
+{
+  "cardName": "Fireflies",
+  "tier": "Silver",
+  "tooltips": [
+    "Burn 4.",
+    "When you Slow, this gains +2 Burn for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Fireflies" 3`] = `
+{
+  "cardName": "Fireflies",
+  "tier": "Gold",
+  "tooltips": [
+    "Burn 5.",
+    "When you Slow, this gains +3 Burn for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Fireflies" 4`] = `
+{
+  "cardName": "Fireflies",
+  "tier": "Diamond",
+  "tooltips": [
+    "Burn 6.",
+    "When you Slow, this gains +4 Burn for the fight.",
   ],
 }
 `;
@@ -33835,6 +34796,42 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Flashy Reload" 
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Floor Spike" 1`] = `
+{
+  "cardName": "Floor Spike",
+  "tier": "Silver",
+  "tooltips": [
+    "Deal 20 damage.",
+    "Poison 2.",
+    "When either player uses a weapon, charge this 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Floor Spike" 2`] = `
+{
+  "cardName": "Floor Spike",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 40 damage.",
+    "Poison 4.",
+    "When either player uses a weapon, charge this 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Floor Spike" 3`] = `
+{
+  "cardName": "Floor Spike",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 60 damage.",
+    "Poison 6.",
+    "When either player uses a weapon, charge this 1 second(s).",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Flurry of Blows" 1`] = `
 {
   "cardName": "Flurry of Blows",
@@ -34195,6 +35192,42 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Frozen Bludgeon
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Frozen Flame" 1`] = `
+{
+  "cardName": "Frozen Flame",
+  "tier": "Silver",
+  "tooltips": [
+    "Burn 8.",
+    "When you Freeze, this gains +4 Burn for the fight.",
+    "The first time you fall below half health each fight, Freeze all enemy items for 1 seconds.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Frozen Flame" 2`] = `
+{
+  "cardName": "Frozen Flame",
+  "tier": "Gold",
+  "tooltips": [
+    "Burn 8.",
+    "When you Freeze, this gains +8 Burn for the fight.",
+    "The first time you fall below half health each fight, Freeze all enemy items for 2 seconds.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Frozen Flame" 3`] = `
+{
+  "cardName": "Frozen Flame",
+  "tier": "Diamond",
+  "tooltips": [
+    "Burn 8.",
+    "When you Freeze, this gains +12 Burn for the fight.",
+    "The first time you fall below half health each fight, Freeze all enemy items for 3 seconds.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Frozen Flames" 1`] = `
 {
   "cardName": "Frozen Flames",
@@ -34379,6 +35412,50 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "GPU" 4`] = `
   "tier": "Diamond",
   "tooltips": [
     "Haste the Core for 4 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "GRN-W4SP" 1`] = `
+{
+  "cardName": "GRN-W4SP",
+  "tier": "Bronze",
+  "tooltips": [
+    "Poison 4.",
+    "When an adjacent item Slows or Freezes, charge this 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "GRN-W4SP" 2`] = `
+{
+  "cardName": "GRN-W4SP",
+  "tier": "Silver",
+  "tooltips": [
+    "Poison 6.",
+    "When an adjacent item Slows or Freezes, charge this 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "GRN-W4SP" 3`] = `
+{
+  "cardName": "GRN-W4SP",
+  "tier": "Gold",
+  "tooltips": [
+    "Poison 8.",
+    "When an adjacent item Slows or Freezes, charge this 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "GRN-W4SP" 4`] = `
+{
+  "cardName": "GRN-W4SP",
+  "tier": "Diamond",
+  "tooltips": [
+    "Poison 10.",
+    "When an adjacent item Slows or Freezes, charge this 1 second(s).",
   ],
 }
 `;
@@ -34748,6 +35825,39 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Golf Clubs" 4`]
   "tooltips": [
     "Deal 160 damage.",
     "When you Heal, this gains 20 damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Goop Flail" 1`] = `
+{
+  "cardName": "Goop Flail",
+  "tier": "Silver",
+  "tooltips": [
+    "Deal 1 damage.",
+    "Poison equal to this item's damage.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Goop Flail" 2`] = `
+{
+  "cardName": "Goop Flail",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 1 damage.",
+    "Poison equal to this item's damage.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Goop Flail" 3`] = `
+{
+  "cardName": "Goop Flail",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 1 damage.",
+    "Poison equal to this item's damage.",
   ],
 }
 `;
@@ -35381,6 +36491,50 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Hardly Workin'"
   "tier": "Diamond",
   "tooltips": [
     "The first 15 times you slow each fight, Charge 1 Regeneration item 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Harkuvian Launcher" 1`] = `
+{
+  "cardName": "Harkuvian Launcher",
+  "tier": "Bronze",
+  "tooltips": [
+    "Deal 75 damage.",
+    "When this gains Haste, it also gains 5% Crit Chance for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Harkuvian Launcher" 2`] = `
+{
+  "cardName": "Harkuvian Launcher",
+  "tier": "Silver",
+  "tooltips": [
+    "Deal 150 damage.",
+    "When this gains Haste, it also gains 10% Crit Chance for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Harkuvian Launcher" 3`] = `
+{
+  "cardName": "Harkuvian Launcher",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 300 damage.",
+    "When this gains Haste, it also gains 15% Crit Chance for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Harkuvian Launcher" 4`] = `
+{
+  "cardName": "Harkuvian Launcher",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 600 damage.",
+    "When this gains Haste, it also gains 20% Crit Chance for the fight.",
   ],
 }
 `;
@@ -36194,6 +37348,46 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Hot Stones" 4`]
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Hourglass" 1`] = `
+{
+  "cardName": "Hourglass",
+  "tier": "Bronze",
+  "tooltips": [
+    "Adjacent items have their cooldowns reduced by 4%.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Hourglass" 2`] = `
+{
+  "cardName": "Hourglass",
+  "tier": "Silver",
+  "tooltips": [
+    "Adjacent items have their cooldowns reduced by 8%.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Hourglass" 3`] = `
+{
+  "cardName": "Hourglass",
+  "tier": "Gold",
+  "tooltips": [
+    "Adjacent items have their cooldowns reduced by 12%.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Hourglass" 4`] = `
+{
+  "cardName": "Hourglass",
+  "tier": "Diamond",
+  "tooltips": [
+    "Adjacent items have their cooldowns reduced by 16%.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Housewarming Gifts" 1`] = `
 {
   "cardName": "Housewarming Gifts",
@@ -36354,6 +37548,54 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Ice Bullets" 1`
   "tier": "Diamond",
   "tooltips": [
     "When you Freeze, Reload a Weapon 1 ammo.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Ice Claw" 1`] = `
+{
+  "cardName": "Ice Claw",
+  "tier": "Bronze",
+  "tooltips": [
+    "Deal 50 damage.",
+    "Freeze 1 item(s) for 1 second(s).",
+    "When you Freeze, this gains +20 damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Ice Claw" 2`] = `
+{
+  "cardName": "Ice Claw",
+  "tier": "Silver",
+  "tooltips": [
+    "Deal 50 damage.",
+    "Freeze 2 item(s) for 1 second(s).",
+    "When you Freeze, this gains +30 damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Ice Claw" 3`] = `
+{
+  "cardName": "Ice Claw",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 50 damage.",
+    "Freeze 3 item(s) for 1 second(s).",
+    "When you Freeze, this gains +40 damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Ice Claw" 4`] = `
+{
+  "cardName": "Ice Claw",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 50 damage.",
+    "Freeze 4 item(s) for 1 second(s).",
+    "When you Freeze, this gains +50 damage for the fight.",
   ],
 }
 `;
@@ -36973,6 +38215,36 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Incendiary Roun
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Incendiary Rounds" 2`] = `
+{
+  "cardName": "Incendiary Rounds",
+  "error": "Snapshot \`Tooltip snapshots > Snapshot equality for tooltips for "Incendiary Rounds" 1\` mismatched",
+  "tier": "Silver",
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Incendiary Rounds" 3`] = `
+{
+  "cardName": "Incendiary Rounds",
+  "tier": "Gold",
+  "tooltips": [
+    "When you use an adjacent item, Burn 2.",
+    "Adjacent items have +1 ammo.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Incendiary Rounds" 4`] = `
+{
+  "cardName": "Incendiary Rounds",
+  "tier": "Diamond",
+  "tooltips": [
+    "When you use an adjacent item, Burn 3.",
+    "Adjacent items have +1 ammo.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Incense" 1`] = `
 {
   "cardName": "Incense",
@@ -37119,6 +38391,39 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Infernal Greats
     "Deal 2 damage.",
     "Burn equal to this item's damage.",
     "This gains Damage equal to your enemy's Burn for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Infinite Potion" 1`] = `
+{
+  "cardName": "Infinite Potion",
+  "tier": "Silver",
+  "tooltips": [
+    "Gain 1 Regeneration for the fight.",
+    "Reload this.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Infinite Potion" 2`] = `
+{
+  "cardName": "Infinite Potion",
+  "tier": "Gold",
+  "tooltips": [
+    "Gain 2 Regeneration for the fight.",
+    "Reload this.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Infinite Potion" 3`] = `
+{
+  "cardName": "Infinite Potion",
+  "tier": "Diamond",
+  "tooltips": [
+    "Gain 3 Regeneration for the fight.",
+    "Reload this.",
   ],
 }
 `;
@@ -37303,6 +38608,28 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Invigorating Co
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Invulnerability Potion" 1`] = `
+{
+  "cardName": "Invulnerability Potion",
+  "tier": "Gold",
+  "tooltips": [
+    "You take no damage for 1 second(s).",
+    "The first time you fall below half health each fight, use this.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Invulnerability Potion" 2`] = `
+{
+  "cardName": "Invulnerability Potion",
+  "tier": "Diamond",
+  "tooltips": [
+    "You take no damage for 2 second(s).",
+    "The first time you fall below half health each fight, use this.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Iron Sharpens Iron" 1`] = `
 {
   "cardName": "Iron Sharpens Iron",
@@ -37359,6 +38686,83 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Isochoric Freez
   "tier": "Diamond",
   "tooltips": [
     "Freeze an item with a cooldown of 5 seconds or less for 3 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Jabalian Drum" 1`] = `
+{
+  "cardName": "Jabalian Drum",
+  "tier": "Silver",
+  "tooltips": [
+    "When you use a weapon, your weapons gain 5 Damage for the fight.",
+    "When you use a Weapon, Haste it for 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Jabalian Drum" 2`] = `
+{
+  "cardName": "Jabalian Drum",
+  "tier": "Gold",
+  "tooltips": [
+    "When you use a weapon, your weapons gain 10 Damage for the fight.",
+    "When you use a Weapon, Haste it for 2 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Jabalian Drum" 3`] = `
+{
+  "cardName": "Jabalian Drum",
+  "tier": "Diamond",
+  "tooltips": [
+    "When you use a weapon, your weapons gain 15 Damage for the fight.",
+    "When you use a Weapon, Haste it for 3 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Jabalian Longbow" 1`] = `
+{
+  "cardName": "Jabalian Longbow",
+  "tier": "Bronze",
+  "tooltips": [
+    "Deal 30 damage.",
+    "This has +1 Multicast if you have more health than your enemy.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Jabalian Longbow" 2`] = `
+{
+  "cardName": "Jabalian Longbow",
+  "tier": "Silver",
+  "tooltips": [
+    "Deal 60 damage.",
+    "This has +1 Multicast if you have more health than your enemy.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Jabalian Longbow" 3`] = `
+{
+  "cardName": "Jabalian Longbow",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 120 damage.",
+    "This has +1 Multicast if you have more health than your enemy.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Jabalian Longbow" 4`] = `
+{
+  "cardName": "Jabalian Longbow",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 240 damage.",
+    "This has +1 Multicast if you have more health than your enemy.",
   ],
 }
 `;
@@ -38057,6 +39461,30 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Kukri" 4`] = `
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Laboratory" 1`] = `
+{
+  "cardName": "Laboratory",
+  "tier": "Gold",
+  "tooltips": [
+    "Enchant another non-enchanted item for the fight.",
+    "Charge your other Relics and Enchanted items 1 second(s).",
+    "At the start of each day, get a Catalyst.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Laboratory" 2`] = `
+{
+  "cardName": "Laboratory",
+  "tier": "Diamond",
+  "tooltips": [
+    "Enchant another non-enchanted item for the fight.",
+    "Charge your other Relics and Enchanted items 2 second(s).",
+    "At the start of each day, get a Catalyst.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Landscraper" 1`] = `
 {
   "cardName": "Landscraper",
@@ -38590,6 +40018,50 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Lethargy" 3`] =
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Letter Opener" 1`] = `
+{
+  "cardName": "Letter Opener",
+  "tier": "Bronze",
+  "tooltips": [
+    "Deal 10 damage.",
+    "This loses 25% Crit Chance for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Letter Opener" 2`] = `
+{
+  "cardName": "Letter Opener",
+  "tier": "Silver",
+  "tooltips": [
+    "Deal 20 damage.",
+    "This loses 25% Crit Chance for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Letter Opener" 3`] = `
+{
+  "cardName": "Letter Opener",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 30 damage.",
+    "This loses 25% Crit Chance for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Letter Opener" 4`] = `
+{
+  "cardName": "Letter Opener",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 40 damage.",
+    "This loses 25% Crit Chance for the fight.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Letting off Steam" 1`] = `
 {
   "cardName": "Letting off Steam",
@@ -38606,6 +40078,28 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Letting off Ste
   "tier": "Diamond",
   "tooltips": [
     "The first 10 times you Burn each fight, Haste the Core for 2 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Library" 1`] = `
+{
+  "cardName": "Library",
+  "tier": "Gold",
+  "tooltips": [
+    "ALL Weapon cooldowns are increased by +1000 second(s).",
+    "Your non-weapon items' cooldowns are decreased by 1000 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Library" 2`] = `
+{
+  "cardName": "Library",
+  "tier": "Diamond",
+  "tooltips": [
+    "ALL Weapon cooldowns are increased by +2000 second(s).",
+    "Your non-weapon items' cooldowns are decreased by 2000 second(s).",
   ],
 }
 `;
@@ -39348,6 +40842,39 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Magnifying Glas
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Magnus' Femur" 1`] = `
+{
+  "cardName": "Magnus' Femur",
+  "tier": "Silver",
+  "tooltips": [
+    "Deal 300 damage.",
+    "When you Slow, Charge this 2 second(s) and this gains +25 Damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Magnus' Femur" 2`] = `
+{
+  "cardName": "Magnus' Femur",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 300 damage.",
+    "When you Slow, Charge this 2 second(s) and this gains +50 Damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Magnus' Femur" 3`] = `
+{
+  "cardName": "Magnus' Femur",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 300 damage.",
+    "When you Slow, Charge this 2 second(s) and this gains +75 Damage for the fight.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Makeshift Barricade" 1`] = `
 {
   "cardName": "Makeshift Barricade",
@@ -39750,6 +41277,26 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Medical Ward" 4
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Memento Mori" 1`] = `
+{
+  "cardName": "Memento Mori",
+  "tier": "Gold",
+  "tooltips": [
+    "The first time you would die each fight, Heal for 1 and take no damage for 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Memento Mori" 2`] = `
+{
+  "cardName": "Memento Mori",
+  "tier": "Diamond",
+  "tooltips": [
+    "The first time you would die each fight, Heal for 1 and take no damage for 2 second(s).",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Memory Card" 1`] = `
 {
   "cardName": "Memory Card",
@@ -39884,6 +41431,26 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Minimalist" 2`]
   "tier": "Diamond",
   "tooltips": [
     "If you have no weapons, your items' cooldowns are reduced by 20%.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Mirror" 1`] = `
+{
+  "cardName": "Mirror",
+  "tier": "Gold",
+  "tooltips": [
+    "Transform into a Gold copy of the medium, non-legendary item to the left of this for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Mirror" 2`] = `
+{
+  "cardName": "Mirror",
+  "tier": "Diamond",
+  "tooltips": [
+    "Transform into a Diamond copy of the medium, non-legendary item to the left of this for the fight.",
   ],
 }
 `;
@@ -40225,6 +41792,83 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Motherboard" 3`
   "tooltips": [
     "Haste the Core for 4 second(s).",
     "When the Core gains Haste, it gains +30 damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Mothmeal" 1`] = `
+{
+  "cardName": "Mothmeal",
+  "tier": "Bronze",
+  "tooltips": [
+    "Slow 1 item(s) for 1 second(s).",
+    "When this is transformed, enchant it with Heavy if able.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Mothmeal" 2`] = `
+{
+  "cardName": "Mothmeal",
+  "tier": "Silver",
+  "tooltips": [
+    "Slow 1 item(s) for 2 second(s).",
+    "When this is transformed, enchant it with Heavy if able.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Mothmeal" 3`] = `
+{
+  "cardName": "Mothmeal",
+  "tier": "Gold",
+  "tooltips": [
+    "Slow 1 item(s) for 3 second(s).",
+    "When this is transformed, enchant it with Heavy if able.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Mothmeal" 4`] = `
+{
+  "cardName": "Mothmeal",
+  "tier": "Diamond",
+  "tooltips": [
+    "Slow 1 item(s) for 4 second(s).",
+    "When this is transformed, enchant it with Heavy if able.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Mr. Richardson" 1`] = `
+{
+  "cardName": "Mr. Richardson",
+  "tier": "Silver",
+  "tooltips": [
+    "Shield 10.",
+    "When you Haste or Slow, this gains +5 Shield for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Mr. Richardson" 2`] = `
+{
+  "cardName": "Mr. Richardson",
+  "tier": "Gold",
+  "tooltips": [
+    "Shield 10.",
+    "When you Haste or Slow, this gains +10 Shield for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Mr. Richardson" 3`] = `
+{
+  "cardName": "Mr. Richardson",
+  "tier": "Diamond",
+  "tooltips": [
+    "Shield 10.",
+    "When you Haste or Slow, this gains +15 Shield for the fight.",
   ],
 }
 `;
@@ -40783,6 +42427,39 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Octopus" 1`] = 
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Oil Lantern" 1`] = `
+{
+  "cardName": "Oil Lantern",
+  "tier": "Silver",
+  "tooltips": [
+    "Burn 10.",
+    "When you gain Regeneration, charge this 2 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Oil Lantern" 2`] = `
+{
+  "cardName": "Oil Lantern",
+  "tier": "Gold",
+  "tooltips": [
+    "Burn 10.",
+    "When you gain Regeneration, charge this 2 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Oil Lantern" 3`] = `
+{
+  "cardName": "Oil Lantern",
+  "tier": "Diamond",
+  "tooltips": [
+    "Burn 10.",
+    "When you gain Regeneration, charge this 2 second(s).",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Oinkment" 1`] = `
 {
   "cardName": "Oinkment",
@@ -40809,6 +42486,39 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Oinkment" 3`] =
   "tier": "Diamond",
   "tooltips": [
     "Heal equal to 3 times your gold.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Old Saltclaw" 1`] = `
+{
+  "cardName": "Old Saltclaw",
+  "tier": "Silver",
+  "tooltips": [
+    "Damage 10.",
+    "When you Haste or Slow, this gains +5 Damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Old Saltclaw" 2`] = `
+{
+  "cardName": "Old Saltclaw",
+  "tier": "Gold",
+  "tooltips": [
+    "Damage 10.",
+    "When you Haste or Slow, this gains +10 Damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Old Saltclaw" 3`] = `
+{
+  "cardName": "Old Saltclaw",
+  "tier": "Diamond",
+  "tooltips": [
+    "Damage 10.",
+    "When you Haste or Slow, this gains +15 Damage for the fight.",
   ],
 }
 `;
@@ -40952,6 +42662,50 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Open for Busine
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Orange Julian" 1`] = `
+{
+  "cardName": "Orange Julian",
+  "tier": "Bronze",
+  "tooltips": [
+    "Your weapons gain +10 damage for the fight.",
+    "When you gain gold, increase the damage bonus of this item by the amount gained.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Orange Julian" 2`] = `
+{
+  "cardName": "Orange Julian",
+  "tier": "Silver",
+  "tooltips": [
+    "Your weapons gain +10 damage for the fight.",
+    "When you gain gold, increase the damage bonus of this item by the amount gained.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Orange Julian" 3`] = `
+{
+  "cardName": "Orange Julian",
+  "tier": "Gold",
+  "tooltips": [
+    "Your weapons gain +10 damage for the fight.",
+    "When you gain gold, increase the damage bonus of this item by the amount gained.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Orange Julian" 4`] = `
+{
+  "cardName": "Orange Julian",
+  "tier": "Diamond",
+  "tooltips": [
+    "Your weapons gain +10 damage for the fight.",
+    "When you gain gold, increase the damage bonus of this item by the amount gained.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Orbital Polisher" 1`] = `
 {
   "cardName": "Orbital Polisher",
@@ -41081,6 +42835,56 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Overclocked" 2`
   "tooltips": [
     "The Core has its cooldown reduced by 15%.",
     "While you have Burn, double this effect.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Overheal Haste" 1`] = `
+{
+  "cardName": "Overheal Haste",
+  "tier": "Gold",
+  "tooltips": [
+    "The first time you Over-heal each fight, Haste your items for 2 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Overheal Haste" 2`] = `
+{
+  "cardName": "Overheal Haste",
+  "tier": "Diamond",
+  "tooltips": [
+    "The first time you Over-heal each fight, Haste your items for 4 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Overheal Regeneration" 1`] = `
+{
+  "cardName": "Overheal Regeneration",
+  "tier": "Silver",
+  "tooltips": [
+    "When you Over-heal, gain 5 Regeneration for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Overheal Regeneration" 2`] = `
+{
+  "cardName": "Overheal Regeneration",
+  "tier": "Gold",
+  "tooltips": [
+    "When you Over-heal, gain 10 Regeneration for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Overheal Regeneration" 3`] = `
+{
+  "cardName": "Overheal Regeneration",
+  "tier": "Diamond",
+  "tooltips": [
+    "When you Over-heal, gain 15 Regeneration for the fight.",
   ],
 }
 `;
@@ -41564,6 +43368,54 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Petrifying Gaze
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Philosopher's Stone" 1`] = `
+{
+  "cardName": "Philosopher's Stone",
+  "tier": "Bronze",
+  "tooltips": [
+    "Gain 1 Regeneration for the fight.",
+    "When you transform a Reagent, this permanently gains +1 Regeneration.",
+    "When you buy this, get a Catalyst.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Philosopher's Stone" 2`] = `
+{
+  "cardName": "Philosopher's Stone",
+  "tier": "Silver",
+  "tooltips": [
+    "Gain 1 Regeneration for the fight.",
+    "When you transform a Reagent, this permanently gains +2 Regeneration.",
+    "When you buy this, get a Catalyst.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Philosopher's Stone" 3`] = `
+{
+  "cardName": "Philosopher's Stone",
+  "tier": "Gold",
+  "tooltips": [
+    "Gain 1 Regeneration for the fight.",
+    "When you transform a Reagent, this permanently gains +3 Regeneration.",
+    "When you buy this, get a Catalyst.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Philosopher's Stone" 4`] = `
+{
+  "cardName": "Philosopher's Stone",
+  "tier": "Diamond",
+  "tooltips": [
+    "Gain 1 Regeneration for the fight.",
+    "When you transform a Reagent, this permanently gains +4 Regeneration.",
+    "When you buy this, get a Catalyst.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Phonograph" 1`] = `
 {
   "cardName": "Phonograph",
@@ -41580,6 +43432,28 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Phonograph" 2`]
   "tier": "Diamond",
   "tooltips": [
     "The item to the left of this has its cooldown reduced by 50%.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Piano" 1`] = `
+{
+  "cardName": "Piano",
+  "tier": "Gold",
+  "tooltips": [
+    "When you use a Friend, Haste it for 1 second(s).",
+    "Adjacent items are Friends.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Piano" 2`] = `
+{
+  "cardName": "Piano",
+  "tier": "Diamond",
+  "tooltips": [
+    "When you use a Friend, Haste it for 2 second(s).",
+    "Adjacent items are Friends.",
   ],
 }
 `;
@@ -41653,6 +43527,25 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Pierre Conditio
   "tooltips": [
     "Freeze 1 medium or small item for 1 second(s).",
     "When you use the Core, Freeze 1 item for 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Pierre Conditioner" 2`] = `
+{
+  "cardName": "Pierre Conditioner",
+  "error": "Snapshot \`Tooltip snapshots > Snapshot equality for tooltips for "Pierre Conditioner" 1\` mismatched",
+  "tier": "Gold",
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Pierre Conditioner" 3`] = `
+{
+  "cardName": "Pierre Conditioner",
+  "tier": "Diamond",
+  "tooltips": [
+    "Freeze 2 item(s) for 1 second(s).",
+    "When you use a Friend or the Core, charge this 1 second(s).",
   ],
 }
 `;
@@ -41847,6 +43740,74 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Pistol Sword" 2
   "tooltips": [
     "Deal 32 damage.",
     "When you use an Ammo item, deal 32 damage.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Pitchfork" 1`] = `
+{
+  "cardName": "Pitchfork",
+  "tier": "Bronze",
+  "tooltips": [
+    "Deal 50 damage.",
+    "At the start of each day, get a Truffle. If you have a Property, get a second Truffle.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Pitchfork" 2`] = `
+{
+  "cardName": "Pitchfork",
+  "tier": "Silver",
+  "tooltips": [
+    "Deal 75 damage.",
+    "At the start of each day, get a Truffle. If you have a Property, get a second Truffle.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Pitchfork" 3`] = `
+{
+  "cardName": "Pitchfork",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 100 damage.",
+    "At the start of each day, get a Truffle. If you have a Property, get a second Truffle.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Pitchfork" 4`] = `
+{
+  "cardName": "Pitchfork",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 125 damage.",
+    "At the start of each day, get a Truffle. If you have a Property, get a second Truffle.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Plague Glaive" 1`] = `
+{
+  "cardName": "Plague Glaive",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 100 damage.",
+    "Your Poison items have +10 Poison.",
+    "For every 20 Poison on the enemy, this has +1 Multicast.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Plague Glaive" 2`] = `
+{
+  "cardName": "Plague Glaive",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 150 damage.",
+    "Your Poison items have +15 Poison.",
+    "For every 20 Poison on the enemy, this has +1 Multicast.",
   ],
 }
 `;
@@ -42111,6 +44072,115 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Port" 3`] = `
   "tooltips": [
     "Reload all your items 3 Ammo and charge them 1 second(s).",
     "At the start of each day, get a Small Ammo item from any hero.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Potent Potables" 1`] = `
+{
+  "cardName": "Potent Potables",
+  "tier": "Silver",
+  "tooltips": [
+    "Your Poison items have +1 Poison for each potion you have. [0]",
+    "Your Burn items have +1 Burn for each potion you have. [0]",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Potent Potables" 2`] = `
+{
+  "cardName": "Potent Potables",
+  "tier": "Gold",
+  "tooltips": [
+    "Your Poison items have +2 Poison for each potion you have. [0]",
+    "Your Burn items have +2 Burn for each potion you have. [0]",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Potent Potables" 3`] = `
+{
+  "cardName": "Potent Potables",
+  "tier": "Diamond",
+  "tooltips": [
+    "Your Poison items have +3 Poison for each potion you have. [0]",
+    "Your Burn items have +3 Burn for each potion you have. [0]",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Potion Distillery" 1`] = `
+{
+  "cardName": "Potion Distillery",
+  "tier": "Silver",
+  "tooltips": [
+    "Your Potions have +1 Ammo.",
+    "Your Potions have their cooldowns reduced by 10%.",
+    "When you visit a Merchant, transform the small item to the left of this into a random Potion.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Potion Distillery" 2`] = `
+{
+  "cardName": "Potion Distillery",
+  "tier": "Gold",
+  "tooltips": [
+    "Your Potions have +2 Ammo.",
+    "Your Potions have their cooldowns reduced by 15%.",
+    "When you visit a Merchant, transform the small item to the left of this into a random Potion.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Potion Distillery" 3`] = `
+{
+  "cardName": "Potion Distillery",
+  "tier": "Diamond",
+  "tooltips": [
+    "Your Potions have +3 Ammo.",
+    "Your Potions have their cooldowns reduced by 20%.",
+    "When you visit a Merchant, transform the small item to the left of this into a random Potion.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Potion Potion" 1`] = `
+{
+  "cardName": "Potion Potion",
+  "tier": "Bronze",
+  "tooltips": [
+    "Transform into 2 small potions for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Potion Potion" 2`] = `
+{
+  "cardName": "Potion Potion",
+  "tier": "Silver",
+  "tooltips": [
+    "Transform into 2 small potions for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Potion Potion" 3`] = `
+{
+  "cardName": "Potion Potion",
+  "tier": "Gold",
+  "tooltips": [
+    "Transform into 2 small potions for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Potion Potion" 4`] = `
+{
+  "cardName": "Potion Potion",
+  "tier": "Diamond",
+  "tooltips": [
+    "Transform into 2 small potions for the fight.",
   ],
 }
 `;
@@ -42838,6 +44908,128 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Quick Ignition"
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Quicksilver" 1`] = `
+{
+  "cardName": "Quicksilver",
+  "tier": "Silver",
+  "tooltips": [
+    "Transform into a Silver copy of another small, non-legendary item you have for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Quicksilver" 2`] = `
+{
+  "cardName": "Quicksilver",
+  "tier": "Gold",
+  "tooltips": [
+    "Transform into a Gold copy of another small, non-legendary item you have for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Quicksilver" 3`] = `
+{
+  "cardName": "Quicksilver",
+  "tier": "Diamond",
+  "tooltips": [
+    "Transform into a Diamond copy of another small, non-legendary item you have for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Quill and Ink" 1`] = `
+{
+  "cardName": "Quill and Ink",
+  "tier": "Bronze",
+  "tooltips": [
+    "Poison 1.",
+    "Gain 1 Regeneration for the fight.",
+    "If you have no other weapons, this has +1 Multicast.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Quill and Ink" 2`] = `
+{
+  "cardName": "Quill and Ink",
+  "tier": "Silver",
+  "tooltips": [
+    "Poison 2.",
+    "Gain 2 Regeneration for the fight.",
+    "If you have no other weapons, this has +1 Multicast.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Quill and Ink" 3`] = `
+{
+  "cardName": "Quill and Ink",
+  "tier": "Gold",
+  "tooltips": [
+    "Poison 3.",
+    "Gain 3 Regeneration for the fight.",
+    "If you have no other weapons, this has +1 Multicast.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Quill and Ink" 4`] = `
+{
+  "cardName": "Quill and Ink",
+  "tier": "Diamond",
+  "tooltips": [
+    "Poison 4.",
+    "Gain 4 Regeneration for the fight.",
+    "If you have no other weapons, this has +1 Multicast.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "RED-F1R3FLY" 1`] = `
+{
+  "cardName": "RED-F1R3FLY",
+  "tier": "Bronze",
+  "tooltips": [
+    "Burn 4.",
+    "When an adjacent item Hastes or Slows, charge this 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "RED-F1R3FLY" 2`] = `
+{
+  "cardName": "RED-F1R3FLY",
+  "tier": "Silver",
+  "tooltips": [
+    "Burn 6.",
+    "When an adjacent item Hastes or Slows, charge this 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "RED-F1R3FLY" 3`] = `
+{
+  "cardName": "RED-F1R3FLY",
+  "tier": "Gold",
+  "tooltips": [
+    "Burn 8.",
+    "When an adjacent item Hastes or Slows, charge this 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "RED-F1R3FLY" 4`] = `
+{
+  "cardName": "RED-F1R3FLY",
+  "tier": "Diamond",
+  "tooltips": [
+    "Burn 10.",
+    "When an adjacent item Hastes or Slows, charge this 1 second(s).",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Race Carl" 1`] = `
 {
   "cardName": "Race Carl",
@@ -43082,6 +45274,36 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Rear Shielding"
   "tier": "Diamond",
   "tooltips": [
     "Your rightmost Shield item has +50 Shield.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Recycling Bin" 1`] = `
+{
+  "cardName": "Recycling Bin",
+  "tier": "Silver",
+  "tooltips": [
+    "When you use a Potion, transform it into a Potion for the fight and gain 2 Regeneration for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Recycling Bin" 2`] = `
+{
+  "cardName": "Recycling Bin",
+  "tier": "Gold",
+  "tooltips": [
+    "When you use a Potion, transform it into a Potion for the fight and gain 3 Regeneration for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Recycling Bin" 3`] = `
+{
+  "cardName": "Recycling Bin",
+  "tier": "Diamond",
+  "tooltips": [
+    "When you use a Potion, transform it into a Potion for the fight and gain 4 Regeneration for the fight.",
   ],
 }
 `;
@@ -43443,6 +45665,36 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Regal Blade" 4`
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Regeneration Potion" 1`] = `
+{
+  "cardName": "Regeneration Potion",
+  "tier": "Silver",
+  "tooltips": [
+    "Gain 8 Regeneration for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Regeneration Potion" 2`] = `
+{
+  "cardName": "Regeneration Potion",
+  "tier": "Gold",
+  "tooltips": [
+    "Gain 16 Regeneration for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Regeneration Potion" 3`] = `
+{
+  "cardName": "Regeneration Potion",
+  "tier": "Diamond",
+  "tooltips": [
+    "Gain 24 Regeneration for the fight.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Regenerative" 1`] = `
 {
   "cardName": "Regenerative",
@@ -43652,6 +45904,54 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Retool" 1`] = `
   "tier": "Diamond",
   "tooltips": [
     "When you use a Tool, Reload an adjacent item.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Retort" 1`] = `
+{
+  "cardName": "Retort",
+  "tier": "Bronze",
+  "tooltips": [
+    "Poison 6.",
+    "When you transform a Reagent, this permanently gains +2 Poison.",
+    "At the start of each day, spend 3 Gold to get a Chunk of Lead.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Retort" 2`] = `
+{
+  "cardName": "Retort",
+  "tier": "Silver",
+  "tooltips": [
+    "Poison 6.",
+    "When you transform a Reagent, this permanently gains +4 Poison.",
+    "At the start of each day, spend 3 Gold to get a Chunk of Lead.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Retort" 3`] = `
+{
+  "cardName": "Retort",
+  "tier": "Gold",
+  "tooltips": [
+    "Poison 6.",
+    "When you transform a Reagent, this permanently gains +6 Poison.",
+    "At the start of each day, spend 3 Gold to get a Chunk of Lead.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Retort" 4`] = `
+{
+  "cardName": "Retort",
+  "tier": "Diamond",
+  "tooltips": [
+    "Poison 6.",
+    "When you transform a Reagent, this permanently gains +8 Poison.",
+    "At the start of each day, spend 3 Gold to get a Chunk of Lead.",
   ],
 }
 `;
@@ -44286,6 +46586,61 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Rune Axe" 4`] =
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Runic Blade" 1`] = `
+{
+  "cardName": "Runic Blade",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 20 damage.",
+    "When you Crit, double this item's damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Runic Blade" 2`] = `
+{
+  "cardName": "Runic Blade",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 20 damage.",
+    "When you Crit, double this item's damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Runic Daggers" 1`] = `
+{
+  "cardName": "Runic Daggers",
+  "tier": "Silver",
+  "tooltips": [
+    "Deal 10 damage.",
+    "When you Crit with another item, charge this 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Runic Daggers" 2`] = `
+{
+  "cardName": "Runic Daggers",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 15 damage.",
+    "When you Crit with another item, charge this 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Runic Daggers" 3`] = `
+{
+  "cardName": "Runic Daggers",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 20 damage.",
+    "When you Crit with another item, charge this 1 second(s).",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Runic Double Bow" 1`] = `
 {
   "cardName": "Runic Double Bow",
@@ -44359,6 +46714,39 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Runic Great Axe
   "tooltips": [
     "Deal 320 damage.",
     "Your Lifesteal weapons have double damage.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Runic Potion" 1`] = `
+{
+  "cardName": "Runic Potion",
+  "tier": "Silver",
+  "tooltips": [
+    "Haste your Lifesteal weapons for 1 second(s).",
+    "A Weapon gains Lifesteal for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Runic Potion" 2`] = `
+{
+  "cardName": "Runic Potion",
+  "tier": "Gold",
+  "tooltips": [
+    "Haste your Lifesteal weapons for 1 second(s).",
+    "A Weapon gains Lifesteal for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Runic Potion" 3`] = `
+{
+  "cardName": "Runic Potion",
+  "tier": "Diamond",
+  "tooltips": [
+    "Haste your Lifesteal weapons for 1 second(s).",
+    "A Weapon gains Lifesteal for the fight.",
   ],
 }
 `;
@@ -44610,6 +46998,50 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sapphire" 3`] =
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sat-Comm" 1`] = `
+{
+  "cardName": "Sat-Comm",
+  "tier": "Bronze",
+  "tooltips": [
+    "Haste the Friend to the right of this for 2 second(s).",
+    "At the start of each day, get a Small Friend from any Hero.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sat-Comm" 2`] = `
+{
+  "cardName": "Sat-Comm",
+  "tier": "Silver",
+  "tooltips": [
+    "Haste the Friend to the right of this for 2 second(s).",
+    "At the start of each day, get a Small Friend from any Hero.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sat-Comm" 3`] = `
+{
+  "cardName": "Sat-Comm",
+  "tier": "Gold",
+  "tooltips": [
+    "Haste the Friend to the right of this for 2 second(s).",
+    "At the start of each day, get a Small Friend from any Hero.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sat-Comm" 4`] = `
+{
+  "cardName": "Sat-Comm",
+  "tier": "Diamond",
+  "tooltips": [
+    "Haste the Friend to the right of this for 5 second(s).",
+    "At the start of each day, get a Small Friend from any Hero.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Satchel" 1`] = `
 {
   "cardName": "Satchel",
@@ -44675,6 +47107,28 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sauna" 3`] = `
   "tooltips": [
     "Burn 6.",
     "When you Burn, Heal 30 and gain 3 Regeneration for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Scales" 1`] = `
+{
+  "cardName": "Scales",
+  "tier": "Gold",
+  "tooltips": [
+    "Charge adjacent items 1 second(s).",
+    "If you have the same amount of items on both sides of this, Charge all other items instead.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Scales" 2`] = `
+{
+  "cardName": "Scales",
+  "tier": "Diamond",
+  "tooltips": [
+    "Charge adjacent items 2 second(s).",
+    "If you have the same amount of items on both sides of this, Charge all other items instead.",
   ],
 }
 `;
@@ -44811,6 +47265,105 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sea Shell" 4`] 
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Seadog's Saloon" 1`] = `
+{
+  "cardName": "Seadog's Saloon",
+  "tier": "Silver",
+  "tooltips": [
+    "Haste 1 item for 2 second(s).",
+    "Slow 1 item for 2 second(s).",
+    "This has +1 Multicast for each Friend you have.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Seadog's Saloon" 2`] = `
+{
+  "cardName": "Seadog's Saloon",
+  "tier": "Gold",
+  "tooltips": [
+    "Haste 1 item for 2 second(s).",
+    "Slow 1 item for 2 second(s).",
+    "This has +1 Multicast for each Friend you have.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Seadog's Saloon" 3`] = `
+{
+  "cardName": "Seadog's Saloon",
+  "tier": "Diamond",
+  "tooltips": [
+    "Haste 1 item for 2 second(s).",
+    "Slow 1 item for 2 second(s).",
+    "This has +1 Multicast for each Friend you have.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Searing Flames" 1`] = `
+{
+  "cardName": "Searing Flames",
+  "tier": "Silver",
+  "tooltips": [
+    "When one of your Burn items gains Haste, if it already has Haste, it gains 1 Burn for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Searing Flames" 2`] = `
+{
+  "cardName": "Searing Flames",
+  "tier": "Gold",
+  "tooltips": [
+    "When one of your Burn items gains Haste, if it already has Haste, it gains 2 Burn for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Searing Flames" 3`] = `
+{
+  "cardName": "Searing Flames",
+  "tier": "Diamond",
+  "tooltips": [
+    "When one of your Burn items gains Haste, if it already has Haste, it gains 3 Burn for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Seashadow" 1`] = `
+{
+  "cardName": "Seashadow",
+  "tier": "Silver",
+  "tooltips": [
+    "Reduce the cooldown of your other items by 10% for this fight.",
+    "Increase this item's cooldown by 4 second(s) for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Seashadow" 2`] = `
+{
+  "cardName": "Seashadow",
+  "tier": "Gold",
+  "tooltips": [
+    "Reduce the cooldown of your other items by 10% for this fight.",
+    "Increase this item's cooldown by 3 second(s) for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Seashadow" 3`] = `
+{
+  "cardName": "Seashadow",
+  "tier": "Diamond",
+  "tooltips": [
+    "Reduce the cooldown of your other items by 10% for this fight.",
+    "Increase this item's cooldown by 2 second(s) for the fight.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Seaweed" 1`] = `
 {
   "cardName": "Seaweed",
@@ -44921,6 +47474,30 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Second Wind" 3`
   "tier": "Diamond",
   "tooltips": [
     "The first time you use a Large item each fight, heal 60% of your max health.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Secret Formula" 1`] = `
+{
+  "cardName": "Secret Formula",
+  "tier": "Gold",
+  "tooltips": [
+    "Gain 5 Regeneration for the fight.",
+    "The Burn item to the left of this gains + Burn equal to your Regeneration for the fight.",
+    "The Poison item to the right of this gains + Poison equal to your Regeneration for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Secret Formula" 2`] = `
+{
+  "cardName": "Secret Formula",
+  "tier": "Diamond",
+  "tooltips": [
+    "Gain 10 Regeneration for the fight.",
+    "The Burn item to the left of this gains + Burn equal to your Regeneration for the fight.",
+    "The Poison item to the right of this gains + Poison equal to your Regeneration for the fight.",
   ],
 }
 `;
@@ -45038,6 +47615,50 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Shadowed Cloak"
   "tier": "Diamond",
   "tooltips": [
     "When you use the item to the right of this, Haste it for 4 second(s). If it is a weapon, it also gains +9 damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Shard of Obsidian" 1`] = `
+{
+  "cardName": "Shard of Obsidian",
+  "tier": "Bronze",
+  "tooltips": [
+    "Deal 5 damage.",
+    "When this is transformed, enchant it with Obsidian if able.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Shard of Obsidian" 2`] = `
+{
+  "cardName": "Shard of Obsidian",
+  "tier": "Silver",
+  "tooltips": [
+    "Deal 10 damage.",
+    "When this is transformed, enchant it with Obsidian if able.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Shard of Obsidian" 3`] = `
+{
+  "cardName": "Shard of Obsidian",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 15 damage.",
+    "When this is transformed, enchant it with Obsidian if able.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Shard of Obsidian" 4`] = `
+{
+  "cardName": "Shard of Obsidian",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 20 damage.",
+    "When this is transformed, enchant it with Obsidian if able.",
   ],
 }
 `;
@@ -45441,6 +48062,39 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Shored Up" 1`] 
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Shot Glasses" 1`] = `
+{
+  "cardName": "Shot Glasses",
+  "tier": "Silver",
+  "tooltips": [
+    "Haste your items for 1 second(s).",
+    "Slow your items for 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Shot Glasses" 2`] = `
+{
+  "cardName": "Shot Glasses",
+  "tier": "Gold",
+  "tooltips": [
+    "Haste your items for 1 second(s).",
+    "Slow your items for 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Shot Glasses" 3`] = `
+{
+  "cardName": "Shot Glasses",
+  "tier": "Diamond",
+  "tooltips": [
+    "Haste your items for 1 second(s).",
+    "Slow your items for 1 second(s).",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Shovel" 1`] = `
 {
   "cardName": "Shovel",
@@ -45485,6 +48139,72 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Shovel" 4`] = `
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Show Globe" 1`] = `
+{
+  "cardName": "Show Globe",
+  "tier": "Silver",
+  "tooltips": [
+    "Burn 3.",
+    "Gain 3 Regeneration for the fight.",
+    "When you use a potion, this gains +3 Burn and +3 Regeneration for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Show Globe" 2`] = `
+{
+  "cardName": "Show Globe",
+  "tier": "Gold",
+  "tooltips": [
+    "Burn 3.",
+    "Gain 3 Regeneration for the fight.",
+    "When you use a potion, this gains +6 Burn and +6 Regeneration for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Show Globe" 3`] = `
+{
+  "cardName": "Show Globe",
+  "tier": "Diamond",
+  "tooltips": [
+    "Burn 3.",
+    "Gain 3 Regeneration for the fight.",
+    "When you use a potion, this gains +9 Burn and +9 Regeneration for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Shrinking Potion" 1`] = `
+{
+  "cardName": "Shrinking Potion",
+  "tier": "Silver",
+  "tooltips": [
+    "Reduce your enemy's Max Health by 10% for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Shrinking Potion" 2`] = `
+{
+  "cardName": "Shrinking Potion",
+  "tier": "Gold",
+  "tooltips": [
+    "Reduce your enemy's Max Health by 15% for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Shrinking Potion" 3`] = `
+{
+  "cardName": "Shrinking Potion",
+  "tier": "Diamond",
+  "tooltips": [
+    "Reduce your enemy's Max Health by 20% for the fight.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sick Burn" 1`] = `
 {
   "cardName": "Sick Burn",
@@ -45501,6 +48221,39 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sick Burn" 2`] 
   "tier": "Diamond",
   "tooltips": [
     "The first 10 times you Poison each fight, charge 1 Burn item 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sifting Pan" 1`] = `
+{
+  "cardName": "Sifting Pan",
+  "tier": "Silver",
+  "tooltips": [
+    "At the start of each day, get a Catalyst.",
+    "When you sell Catalyst, gain 1 Regeneration.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sifting Pan" 2`] = `
+{
+  "cardName": "Sifting Pan",
+  "tier": "Gold",
+  "tooltips": [
+    "At the start of each day, get a Catalyst.",
+    "When you sell Catalyst, gain 2 Regeneration.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sifting Pan" 3`] = `
+{
+  "cardName": "Sifting Pan",
+  "tier": "Diamond",
+  "tooltips": [
+    "At the start of each day, get a Catalyst.",
+    "When you sell Catalyst, gain 3 Regeneration.",
   ],
 }
 `;
@@ -45943,6 +48696,50 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Small Refresh" 
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Smelling Salts" 1`] = `
+{
+  "cardName": "Smelling Salts",
+  "tier": "Bronze",
+  "tooltips": [
+    "Slow 1 item(s) for 1 second(s).",
+    "When this or an adjacent item Slows, Haste the item to the left of this for 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Smelling Salts" 2`] = `
+{
+  "cardName": "Smelling Salts",
+  "tier": "Silver",
+  "tooltips": [
+    "Slow 1 item(s) for 2 second(s).",
+    "When this or an adjacent item Slows, Haste the item to the left of this for 2 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Smelling Salts" 3`] = `
+{
+  "cardName": "Smelling Salts",
+  "tier": "Gold",
+  "tooltips": [
+    "Slow 1 item(s) for 3 second(s).",
+    "When this or an adjacent item Slows, Haste the item to the left of this for 3 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Smelling Salts" 4`] = `
+{
+  "cardName": "Smelling Salts",
+  "tier": "Diamond",
+  "tooltips": [
+    "Slow 1 item(s) for 4 second(s).",
+    "When this or an adjacent item Slows, Haste the item to the left of this for 4 second(s).",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sniper Rifle" 1`] = `
 {
   "cardName": "Sniper Rifle",
@@ -46323,6 +49120,50 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Spices" 1`] = `
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Spider Mace" 1`] = `
+{
+  "cardName": "Spider Mace",
+  "tier": "Bronze",
+  "tooltips": [
+    "Deal 10 Damage.",
+    "When you Slow or Poison, Charge this 2 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Spider Mace" 2`] = `
+{
+  "cardName": "Spider Mace",
+  "tier": "Silver",
+  "tooltips": [
+    "Deal 20 Damage.",
+    "When you Slow or Poison, Charge this 2 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Spider Mace" 3`] = `
+{
+  "cardName": "Spider Mace",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 30 Damage.",
+    "When you Slow or Poison, Charge this 2 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Spider Mace" 4`] = `
+{
+  "cardName": "Spider Mace",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 40 Damage.",
+    "When you Slow or Poison, Charge this 2 second(s).",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Spiked Buckler" 1`] = `
 {
   "cardName": "Spiked Buckler",
@@ -46433,6 +49274,42 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Spyglass" 2`] =
   "tooltips": [
     "Adjacent items have +50% Crit Chance.",
     "At the start of each fight, an enemy item has its cooldown increased by 6000 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Staff of the Moose" 1`] = `
+{
+  "cardName": "Staff of the Moose",
+  "tier": "Silver",
+  "tooltips": [
+    "Deal 200 damage.",
+    "The first time you fall below half Health each fight, you take no damage for 1 second(s) and gain 25 Regeneration for the fight.",
+    "Your Weapons have + Damage equal to your Regeneration.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Staff of the Moose" 2`] = `
+{
+  "cardName": "Staff of the Moose",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 200 damage.",
+    "The first time you fall below half Health each fight, you take no damage for 1.5 second(s) and gain 50 Regeneration for the fight.",
+    "Your Weapons have + Damage equal to your Regeneration.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Staff of the Moose" 3`] = `
+{
+  "cardName": "Staff of the Moose",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 200 damage.",
+    "The first time you fall below half Health each fight, you take no damage for 2 second(s) and gain 75 Regeneration for the fight.",
+    "Your Weapons have + Damage equal to your Regeneration.",
   ],
 }
 `;
@@ -46813,6 +49690,36 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Stinger" 4`] = 
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Stocked" 1`] = `
+{
+  "cardName": "Stocked",
+  "tier": "Silver",
+  "tooltips": [
+    "Your Potions have +1 Ammo.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Stocked" 2`] = `
+{
+  "cardName": "Stocked",
+  "tier": "Gold",
+  "tooltips": [
+    "Your Potions have +2 Ammo.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Stocked" 3`] = `
+{
+  "cardName": "Stocked",
+  "tier": "Diamond",
+  "tooltips": [
+    "Your Potions have +3 Ammo.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Stop That!" 1`] = `
 {
   "cardName": "Stop That!",
@@ -46859,6 +49766,66 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Stopwatch" 2`] 
   "tier": "Diamond",
   "tooltips": [
     "Freeze both players' items for 2 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Streamline Weapon" 1`] = `
+{
+  "cardName": "Streamline Weapon",
+  "tier": "Silver",
+  "tooltips": [
+    "When one of your Weapons gains Haste, if it already has Haste, it gains +5 damage.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Streamline Weapon" 2`] = `
+{
+  "cardName": "Streamline Weapon",
+  "tier": "Gold",
+  "tooltips": [
+    "When one of your Weapons gains Haste, if it already has Haste, it gains +10 damage.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Streamline Weapon" 3`] = `
+{
+  "cardName": "Streamline Weapon",
+  "tier": "Diamond",
+  "tooltips": [
+    "When one of your Weapons gains Haste, if it already has Haste, it gains +15 damage.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Strength Potion" 1`] = `
+{
+  "cardName": "Strength Potion",
+  "tier": "Silver",
+  "tooltips": [
+    "Your items gain +100% Crit Chance for 3 seconds.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Strength Potion" 2`] = `
+{
+  "cardName": "Strength Potion",
+  "tier": "Gold",
+  "tooltips": [
+    "Your items gain +100% Crit Chance for 4 seconds.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Strength Potion" 3`] = `
+{
+  "cardName": "Strength Potion",
+  "tier": "Diamond",
+  "tooltips": [
+    "Your items gain +100% Crit Chance for 5 seconds.",
   ],
 }
 `;
@@ -47131,6 +50098,50 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Succulents" 4`]
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sulphur" 1`] = `
+{
+  "cardName": "Sulphur",
+  "tier": "Bronze",
+  "tooltips": [
+    "Burn 2.",
+    "When this is transformed, enchant it with Fiery if able.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sulphur" 2`] = `
+{
+  "cardName": "Sulphur",
+  "tier": "Silver",
+  "tooltips": [
+    "Burn 3.",
+    "When this is transformed, enchant it with Fiery if able.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sulphur" 3`] = `
+{
+  "cardName": "Sulphur",
+  "tier": "Gold",
+  "tooltips": [
+    "Burn 4.",
+    "When this is transformed, enchant it with Fiery if able.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sulphur" 4`] = `
+{
+  "cardName": "Sulphur",
+  "tier": "Diamond",
+  "tooltips": [
+    "Burn 5.",
+    "When this is transformed, enchant it with Fiery if able.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sunderer" 1`] = `
 {
   "cardName": "Sunderer",
@@ -47317,6 +50328,66 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Switchblade" 4`
   "tooltips": [
     "Deal 75 damage.",
     "When you use an adjacent Weapon, it gains +12 damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sword Cane" 1`] = `
+{
+  "cardName": "Sword Cane",
+  "tier": "Bronze",
+  "tooltips": [
+    "Deal 10 damage.",
+    "If this is adjacent to a Regeneration item, gain 2 Regeneration for the fight.
+ 
+ If this is adjacent to a Burn item, Burn 2.
+ 
+ If this is adjacent to a Poison item, Poison 2.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sword Cane" 2`] = `
+{
+  "cardName": "Sword Cane",
+  "tier": "Silver",
+  "tooltips": [
+    "Deal 15 damage.",
+    "If this is adjacent to a Regeneration item, gain 4 Regeneration for the fight.
+ 
+ If this is adjacent to a Burn item, Burn 4.
+ 
+ If this is adjacent to a Poison item, Poison 4.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sword Cane" 3`] = `
+{
+  "cardName": "Sword Cane",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 20 damage.",
+    "If this is adjacent to a Regeneration item, gain 6 Regeneration for the fight.
+ 
+ If this is adjacent to a Burn item, Burn 6.
+ 
+ If this is adjacent to a Poison item, Poison 6.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sword Cane" 4`] = `
+{
+  "cardName": "Sword Cane",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 25 damage.",
+    "If this is adjacent to a Regeneration item, gain 8 Regeneration for the fight.
+ 
+ If this is adjacent to a Burn item, Burn 8.
+ 
+ If this is adjacent to a Poison item, Poison 8.",
   ],
 }
 `;
@@ -47743,6 +50814,36 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "The Right Tool"
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "The Tome of Yyahan" 1`] = `
+{
+  "cardName": "The Tome of Yyahan",
+  "tier": "Silver",
+  "tooltips": [
+    "When you transform a Reagent, permanently gain 5 Regeneration.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "The Tome of Yyahan" 2`] = `
+{
+  "cardName": "The Tome of Yyahan",
+  "tier": "Gold",
+  "tooltips": [
+    "When you transform a Reagent, permanently gain 10 Regeneration.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "The Tome of Yyahan" 3`] = `
+{
+  "cardName": "The Tome of Yyahan",
+  "tier": "Diamond",
+  "tooltips": [
+    "When you transform a Reagent, permanently gain 15 Regeneration.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Thermal Lance" 1`] = `
 {
   "cardName": "Thermal Lance",
@@ -47783,6 +50884,14 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Thick Hide" 1`]
   "tooltips": [
     "When you slow, charge 1 item 1 second(s).",
   ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Thick Hide" 2`] = `
+{
+  "cardName": "Thick Hide",
+  "error": "Snapshot \`Tooltip snapshots > Snapshot equality for tooltips for "Thick Hide" 1\` mismatched",
+  "tier": "Diamond",
 }
 `;
 
@@ -47832,6 +50941,26 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Third Degree Bu
   "tier": "Diamond",
   "tooltips": [
     "Your Large Burn items have +16 Burn.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Thirsty" 1`] = `
+{
+  "cardName": "Thirsty",
+  "tier": "Gold",
+  "tooltips": [
+    "The first 4 times you use a potion each fight, gain 20 Regeneration for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Thirsty" 2`] = `
+{
+  "cardName": "Thirsty",
+  "tier": "Diamond",
+  "tooltips": [
+    "The first 8 times you use a potion each fight, gain 20 Regeneration for the fight.",
   ],
 }
 `;
@@ -49048,6 +52177,42 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vanessa's Amule
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vat of Acid" 1`] = `
+{
+  "cardName": "Vat of Acid",
+  "tier": "Silver",
+  "tooltips": [
+    "Poison 3 for each type this has.",
+    "Burn 3 for each type this has.",
+    "When you sell an item, this gains that item's type(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vat of Acid" 2`] = `
+{
+  "cardName": "Vat of Acid",
+  "tier": "Gold",
+  "tooltips": [
+    "Poison 6 for each type this has.",
+    "Burn 6 for each type this has.",
+    "When you sell an item, this gains that item's type(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vat of Acid" 3`] = `
+{
+  "cardName": "Vat of Acid",
+  "tier": "Diamond",
+  "tooltips": [
+    "Poison 9 for each type this has.",
+    "Burn 9 for each type this has.",
+    "When you sell an item, this gains that item's type(s).",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vending Machine" 1`] = `
 {
   "cardName": "Vending Machine",
@@ -49215,6 +52380,39 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Venomous Vitali
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vial Launcher" 1`] = `
+{
+  "cardName": "Vial Launcher",
+  "tier": "Silver",
+  "tooltips": [
+    "When you use a potion, deal 10 damage.",
+    "When you Reload or transform a potion, this gains +10 damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vial Launcher" 2`] = `
+{
+  "cardName": "Vial Launcher",
+  "tier": "Gold",
+  "tooltips": [
+    "When you use a potion, deal 15 damage.",
+    "When you Reload or transform a potion, this gains +15 damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vial Launcher" 3`] = `
+{
+  "cardName": "Vial Launcher",
+  "tier": "Diamond",
+  "tooltips": [
+    "When you use a potion, deal 20 damage.",
+    "When you Reload or transform a potion, this gains +20 damage for the fight.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vial of Blood" 1`] = `
 {
   "cardName": "Vial of Blood",
@@ -49281,6 +52479,30 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vineyard" 3`] =
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Viper Cane" 1`] = `
+{
+  "cardName": "Viper Cane",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 25 damage.",
+    "A Poison item gains + Poison equal to 15% of this item's damage for the fight.",
+    "A Regeneration item gains + Regeneration equal to 15% of this item's damage for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Viper Cane" 2`] = `
+{
+  "cardName": "Viper Cane",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 25 damage.",
+    "A Poison item gains + Poison equal to 25% of this item's damage for the fight.",
+    "A Regeneration item gains + Regeneration equal to 25% of this item's damage for the fight.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Virus" 1`] = `
 {
   "cardName": "Virus",
@@ -49313,6 +52535,56 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Virus" 3`] = `
     "Poison 3.",
     "Destroy another small item on each player's board for the fight.",
     "When you destroy an item, this gains 15 Poison for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vital Renewal" 1`] = `
+{
+  "cardName": "Vital Renewal",
+  "tier": "Silver",
+  "tooltips": [
+    "When you Slow, Freeze, Poison or Burn with an item, a Regeneration item gains 1 Regeneration for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vital Renewal" 2`] = `
+{
+  "cardName": "Vital Renewal",
+  "tier": "Gold",
+  "tooltips": [
+    "When you Slow, Freeze, Poison or Burn with an item, a Regeneration item gains 2 Regeneration for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vital Renewal" 3`] = `
+{
+  "cardName": "Vital Renewal",
+  "tier": "Diamond",
+  "tooltips": [
+    "When you Slow, Freeze, Poison or Burn with an item, a Regeneration item gains 3 Regeneration for the fight.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vitality Potion" 1`] = `
+{
+  "cardName": "Vitality Potion",
+  "tier": "Gold",
+  "tooltips": [
+    "Heal equal to 50% of your Max Health.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vitality Potion" 2`] = `
+{
+  "cardName": "Vitality Potion",
+  "tier": "Diamond",
+  "tooltips": [
+    "Heal equal to 100% of your Max Health.",
   ],
 }
 `;
@@ -49745,6 +53017,39 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Weaponized Core
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Weaselpede" 1`] = `
+{
+  "cardName": "Weaselpede",
+  "tier": "Silver",
+  "tooltips": [
+    "Freeze 1 item(s) for 1 second(s).",
+    "While your enemy has poison, this has +1 Multicast.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Weaselpede" 2`] = `
+{
+  "cardName": "Weaselpede",
+  "tier": "Gold",
+  "tooltips": [
+    "Freeze 1 item(s) for 2 second(s).",
+    "While your enemy has poison, this has +1 Multicast.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Weaselpede" 3`] = `
+{
+  "cardName": "Weaselpede",
+  "tier": "Diamond",
+  "tooltips": [
+    "Freeze 1 item(s) for 3 second(s).",
+    "While your enemy has poison, this has +1 Multicast.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Weather Glass" 1`] = `
 {
   "cardName": "Weather Glass",
@@ -49996,6 +53301,39 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Wrench" 2`] = `
   "tooltips": [
     "Deal 20 damage.",
     "At the start of each day, upgrade a Tool of a lower tier.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "YLW-M4NT1S" 1`] = `
+{
+  "cardName": "YLW-M4NT1S",
+  "tier": "Silver",
+  "tooltips": [
+    "Haste 2 item(s) for 1 second(s).",
+    "When an adjacent item Burns, charge this 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "YLW-M4NT1S" 2`] = `
+{
+  "cardName": "YLW-M4NT1S",
+  "tier": "Gold",
+  "tooltips": [
+    "Haste 3 item(s) for 1 second(s).",
+    "When an adjacent item Burns, charge this 1 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "YLW-M4NT1S" 3`] = `
+{
+  "cardName": "YLW-M4NT1S",
+  "tier": "Diamond",
+  "tooltips": [
+    "Haste 4 item(s) for 1 second(s).",
+    "When an adjacent item Burns, charge this 1 second(s).",
   ],
 }
 `;
@@ -50284,6 +53622,84 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Yo-Yo" 4`] = `
   "tooltips": [
     "Deal 1 damage.",
     "When you use an adjacent item, charge this 4 second(s).",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Z-Shield" 1`] = `
+{
+  "cardName": "Z-Shield",
+  "tier": "Silver",
+  "tooltips": [
+    "Shield 75.",
+    "Freeze 1 item for 1 second(s).",
+    "Adjacent items have their cooldown reduced by 10%.",
+    "This has +1 Multicast if you have a Large item.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Z-Shield" 2`] = `
+{
+  "cardName": "Z-Shield",
+  "tier": "Gold",
+  "tooltips": [
+    "Shield 100.",
+    "Freeze 1 item for 2 second(s).",
+    "Adjacent items have their cooldown reduced by 15%.",
+    "This has +1 Multicast if you have a Large item.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Z-Shield" 3`] = `
+{
+  "cardName": "Z-Shield",
+  "tier": "Diamond",
+  "tooltips": [
+    "Shield 125.",
+    "Freeze 1 item for 3 second(s).",
+    "Adjacent items have their cooldown reduced by 20%.",
+    "This has +1 Multicast if you have a Large item.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Z-Sword" 1`] = `
+{
+  "cardName": "Z-Sword",
+  "tier": "Silver",
+  "tooltips": [
+    "Deal 75 damage.",
+    "Burn 12.",
+    "Adjacent items have their cooldown reduced by 10%.",
+    "This has +1 Multicast if you have a Large item.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Z-Sword" 2`] = `
+{
+  "cardName": "Z-Sword",
+  "tier": "Gold",
+  "tooltips": [
+    "Deal 100 damage.",
+    "Burn 16.",
+    "Adjacent items have their cooldown reduced by 20%.",
+    "This has +1 Multicast if you have a Large item.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Z-Sword" 3`] = `
+{
+  "cardName": "Z-Sword",
+  "tier": "Diamond",
+  "tooltips": [
+    "Deal 125 damage.",
+    "Burn 20.",
+    "Adjacent items have their cooldown reduced by 20%.",
+    "This has +1 Multicast if you have a Large item.",
   ],
 }
 `;

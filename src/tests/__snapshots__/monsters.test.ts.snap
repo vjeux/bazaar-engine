@@ -5708,6 +5708,931 @@ exports[`Encounter snapshots should match > Runs encounter "Day 3 - Frost Street
 ]
 `;
 
+exports[`Encounter snapshots should match > Runs encounter "Day 3 - Hooverbike Hooligan" 1`] = `
+[
+  {
+    "players.0.board.2.Ammo": 8,
+    "players.1.Health": 1990,
+    "step": 20,
+  },
+  {
+    "players.0.Health": 645,
+    "step": 30,
+  },
+  {
+    "players.0.board.2.Ammo": 7,
+    "players.1.Health": 1964,
+    "step": 40,
+  },
+  {
+    "players.0.board.3.Ammo": 2,
+    "players.1.Health": 1924,
+    "players.1.board.1.Slow": 2000,
+    "step": 50,
+  },
+  {
+    "players.0.board.1.DamageAmount": 26,
+    "players.0.board.2.DamageAmount": 20,
+    "players.0.board.3.DamageAmount": 50,
+    "players.0.board.5.DamageAmount": 28,
+    "players.1.board.1.Slow": 1900,
+    "step": 51,
+  },
+  {
+    "players.1.board.1.Slow": 1800,
+    "step": 52,
+  },
+  {
+    "players.1.board.1.Slow": 1700,
+    "step": 53,
+  },
+  {
+    "players.1.board.1.Slow": 1600,
+    "step": 54,
+  },
+  {
+    "players.1.board.1.Slow": 1500,
+    "step": 55,
+  },
+  {
+    "players.1.board.1.Slow": 1400,
+    "step": 56,
+  },
+  {
+    "players.1.board.1.Slow": 1300,
+    "step": 57,
+  },
+  {
+    "players.1.board.1.Slow": 1200,
+    "step": 58,
+  },
+  {
+    "players.1.board.1.Slow": 1100,
+    "step": 59,
+  },
+  {
+    "players.0.board.2.Ammo": 6,
+    "players.1.Health": 1904,
+    "players.1.board.1.Slow": 1000,
+    "step": 60,
+  },
+  {
+    "players.1.board.1.Slow": 900,
+    "step": 61,
+  },
+  {
+    "players.1.board.1.Slow": 800,
+    "step": 62,
+  },
+  {
+    "players.1.board.1.Slow": 700,
+    "step": 63,
+  },
+  {
+    "players.1.board.1.Slow": 600,
+    "step": 64,
+  },
+  {
+    "players.1.board.1.Slow": 500,
+    "step": 65,
+  },
+  {
+    "players.1.board.1.Slow": 400,
+    "step": 66,
+  },
+  {
+    "players.1.board.1.Slow": 300,
+    "step": 67,
+  },
+  {
+    "players.1.board.1.Slow": 200,
+    "step": 68,
+  },
+  {
+    "players.1.board.1.Slow": 100,
+    "step": 69,
+  },
+  {
+    "players.0.Health": 640,
+    "players.1.Health": 1876,
+    "players.1.board.1.Slow": 3000,
+    "step": 70,
+  },
+  {
+    "players.1.board.1.Slow": 2900,
+    "step": 71,
+  },
+  {
+    "players.1.board.1.Slow": 2800,
+    "step": 72,
+  },
+  {
+    "players.1.board.1.Slow": 2700,
+    "step": 73,
+  },
+  {
+    "players.1.board.1.Slow": 2600,
+    "step": 74,
+  },
+  {
+    "players.1.board.1.Slow": 2500,
+    "step": 75,
+  },
+  {
+    "players.1.board.1.Slow": 2400,
+    "step": 76,
+  },
+  {
+    "players.1.board.1.Slow": 2300,
+    "step": 77,
+  },
+  {
+    "players.1.board.1.Slow": 2200,
+    "step": 78,
+  },
+  {
+    "players.1.board.1.Slow": 2100,
+    "step": 79,
+  },
+  {
+    "players.0.board.2.Ammo": 5,
+    "players.1.Health": 1830,
+    "players.1.Shield": 10,
+    "players.1.board.1.Slow": 2000,
+    "step": 80,
+  },
+  {
+    "players.1.board.1.Slow": 1900,
+    "step": 81,
+  },
+  {
+    "players.1.board.1.Slow": 1800,
+    "step": 82,
+  },
+  {
+    "players.1.board.1.Slow": 1700,
+    "step": 83,
+  },
+  {
+    "players.1.board.1.Slow": 1600,
+    "step": 84,
+  },
+  {
+    "players.1.board.1.Slow": 1500,
+    "step": 85,
+  },
+  {
+    "players.1.board.1.Slow": 1400,
+    "step": 86,
+  },
+  {
+    "players.1.board.1.Slow": 1300,
+    "step": 87,
+  },
+  {
+    "players.1.board.1.Slow": 1200,
+    "step": 88,
+  },
+  {
+    "players.1.board.1.Slow": 1100,
+    "step": 89,
+  },
+  {
+    "players.1.board.1.Slow": 1000,
+    "step": 90,
+  },
+  {
+    "players.0.board.1.DamageAmount": 36,
+    "players.0.board.2.DamageAmount": 30,
+    "players.0.board.3.DamageAmount": 60,
+    "players.0.board.5.DamageAmount": 38,
+    "players.1.board.1.Slow": 900,
+    "step": 91,
+  },
+  {
+    "players.1.board.1.Slow": 800,
+    "step": 92,
+  },
+  {
+    "players.1.board.1.Slow": 700,
+    "step": 93,
+  },
+  {
+    "players.1.board.1.Slow": 600,
+    "step": 94,
+  },
+  {
+    "players.1.board.1.Slow": 500,
+    "step": 95,
+  },
+  {
+    "players.1.board.1.Slow": 400,
+    "step": 96,
+  },
+  {
+    "players.1.board.1.Slow": 300,
+    "step": 97,
+  },
+  {
+    "players.1.board.1.Slow": 200,
+    "step": 98,
+  },
+  {
+    "players.1.board.1.Slow": 100,
+    "step": 99,
+  },
+  {
+    "players.0.board.2.Ammo": 4,
+    "players.0.board.3.Ammo": 1,
+    "players.1.Health": 1750,
+    "players.1.Shield": 0,
+    "players.1.board.1.Slow": 2000,
+    "step": 100,
+  },
+  {
+    "players.1.board.1.Slow": 1900,
+    "step": 101,
+  },
+  {
+    "players.1.board.1.Slow": 1800,
+    "step": 102,
+  },
+  {
+    "players.1.board.1.Slow": 1700,
+    "step": 103,
+  },
+  {
+    "players.1.board.1.Slow": 1600,
+    "step": 104,
+  },
+  {
+    "players.1.board.1.Slow": 1500,
+    "step": 105,
+  },
+  {
+    "players.1.board.1.Slow": 1400,
+    "step": 106,
+  },
+  {
+    "players.1.board.1.Slow": 1300,
+    "step": 107,
+  },
+  {
+    "players.1.board.1.Slow": 1200,
+    "step": 108,
+  },
+  {
+    "players.1.board.1.Slow": 1100,
+    "step": 109,
+  },
+  {
+    "players.1.board.1.Slow": 1000,
+    "step": 110,
+  },
+  {
+    "players.1.board.1.Slow": 900,
+    "step": 111,
+  },
+  {
+    "players.1.board.1.Slow": 800,
+    "step": 112,
+  },
+  {
+    "players.1.board.1.Slow": 700,
+    "step": 113,
+  },
+  {
+    "players.1.board.1.Slow": 600,
+    "step": 114,
+  },
+  {
+    "players.1.board.1.Slow": 500,
+    "step": 115,
+  },
+  {
+    "players.1.board.1.Slow": 400,
+    "step": 116,
+  },
+  {
+    "players.1.board.1.Slow": 300,
+    "step": 117,
+  },
+  {
+    "players.1.board.1.Slow": 200,
+    "step": 118,
+  },
+  {
+    "players.1.board.1.Slow": 100,
+    "step": 119,
+  },
+  {
+    "players.0.board.2.Ammo": 3,
+    "players.1.Health": 1684,
+    "players.1.board.1.Slow": 0,
+    "step": 120,
+  },
+  {
+    "players.0.Health": 635,
+    "step": 125,
+  },
+  {
+    "players.0.board.1.DamageAmount": 46,
+    "players.0.board.2.DamageAmount": 40,
+    "players.0.board.3.DamageAmount": 70,
+    "players.0.board.5.DamageAmount": 48,
+    "step": 131,
+  },
+  {
+    "players.0.board.2.Ammo": 2,
+    "players.1.Health": 1596,
+    "players.1.board.1.Slow": 3000,
+    "step": 140,
+  },
+  {
+    "players.1.board.1.Slow": 2900,
+    "step": 141,
+  },
+  {
+    "players.1.board.1.Slow": 2800,
+    "step": 142,
+  },
+  {
+    "players.1.board.1.Slow": 2700,
+    "step": 143,
+  },
+  {
+    "players.1.board.1.Slow": 2600,
+    "step": 144,
+  },
+  {
+    "players.1.board.1.Slow": 2500,
+    "step": 145,
+  },
+  {
+    "players.1.board.1.Slow": 2400,
+    "step": 146,
+  },
+  {
+    "players.1.board.1.Slow": 2300,
+    "step": 147,
+  },
+  {
+    "players.1.board.1.Slow": 2200,
+    "step": 148,
+  },
+  {
+    "players.1.board.1.Slow": 2100,
+    "step": 149,
+  },
+  {
+    "players.0.board.3.Ammo": 0,
+    "players.1.Health": 1526,
+    "players.1.board.0.Slow": 2000,
+    "players.1.board.1.Slow": 2000,
+    "step": 150,
+  },
+  {
+    "players.0.board.1.DamageAmount": 56,
+    "players.0.board.2.DamageAmount": 50,
+    "players.0.board.3.DamageAmount": 80,
+    "players.0.board.5.DamageAmount": 58,
+    "players.1.board.0.Slow": 1900,
+    "players.1.board.1.Slow": 1900,
+    "step": 151,
+  },
+  {
+    "players.1.board.0.Slow": 1800,
+    "players.1.board.1.Slow": 1800,
+    "step": 152,
+  },
+  {
+    "players.1.board.0.Slow": 1700,
+    "players.1.board.1.Slow": 1700,
+    "step": 153,
+  },
+  {
+    "players.1.board.0.Slow": 1600,
+    "players.1.board.1.Slow": 1600,
+    "step": 154,
+  },
+  {
+    "players.1.board.0.Slow": 1500,
+    "players.1.board.1.Slow": 1500,
+    "step": 155,
+  },
+  {
+    "players.1.board.0.Slow": 1400,
+    "players.1.board.1.Slow": 1400,
+    "step": 156,
+  },
+  {
+    "players.1.board.0.Slow": 1300,
+    "players.1.board.1.Slow": 1300,
+    "step": 157,
+  },
+  {
+    "players.1.board.0.Slow": 1200,
+    "players.1.board.1.Slow": 1200,
+    "step": 158,
+  },
+  {
+    "players.1.board.0.Slow": 1100,
+    "players.1.board.1.Slow": 1100,
+    "step": 159,
+  },
+  {
+    "players.0.board.2.Ammo": 1,
+    "players.1.Health": 1420,
+    "players.1.board.0.Slow": 1000,
+    "players.1.board.1.Slow": 1000,
+    "step": 160,
+  },
+  {
+    "players.1.board.0.Slow": 900,
+    "players.1.board.1.Slow": 900,
+    "step": 161,
+  },
+  {
+    "players.1.board.0.Slow": 800,
+    "players.1.board.1.Slow": 800,
+    "step": 162,
+  },
+  {
+    "players.1.board.0.Slow": 700,
+    "players.1.board.1.Slow": 700,
+    "step": 163,
+  },
+  {
+    "players.1.board.0.Slow": 600,
+    "players.1.board.1.Slow": 600,
+    "step": 164,
+  },
+  {
+    "players.1.board.0.Slow": 500,
+    "players.1.board.1.Slow": 500,
+    "step": 165,
+  },
+  {
+    "players.1.board.0.Slow": 400,
+    "players.1.board.1.Slow": 400,
+    "step": 166,
+  },
+  {
+    "players.1.board.0.Slow": 300,
+    "players.1.board.1.Slow": 300,
+    "step": 167,
+  },
+  {
+    "players.1.board.0.Slow": 200,
+    "players.1.board.1.Slow": 200,
+    "step": 168,
+  },
+  {
+    "players.1.board.0.Slow": 100,
+    "players.1.board.1.Slow": 100,
+    "step": 169,
+  },
+  {
+    "players.0.Health": 630,
+    "players.1.Shield": 10,
+    "players.1.board.0.Slow": 0,
+    "players.1.board.1.Slow": 0,
+    "step": 170,
+  },
+  {
+    "players.0.board.2.Ammo": 0,
+    "players.1.Health": 1380,
+    "players.1.Shield": 0,
+    "step": 180,
+  },
+  {
+    "players.0.Health": 625,
+    "players.1.Health": 1324,
+    "step": 200,
+  },
+  {
+    "players.1.Health": 1266,
+    "players.1.board.1.Slow": 3000,
+    "step": 210,
+  },
+  {
+    "players.0.board.1.DamageAmount": 66,
+    "players.0.board.2.DamageAmount": 60,
+    "players.0.board.3.DamageAmount": 90,
+    "players.0.board.5.DamageAmount": 68,
+    "players.1.board.1.Slow": 2900,
+    "step": 211,
+  },
+  {
+    "players.1.board.1.Slow": 2800,
+    "step": 212,
+  },
+  {
+    "players.1.board.1.Slow": 2700,
+    "step": 213,
+  },
+  {
+    "players.1.board.1.Slow": 2600,
+    "step": 214,
+  },
+  {
+    "players.1.board.1.Slow": 2500,
+    "step": 215,
+  },
+  {
+    "players.1.board.1.Slow": 2400,
+    "step": 216,
+  },
+  {
+    "players.1.board.1.Slow": 2300,
+    "step": 217,
+  },
+  {
+    "players.1.board.1.Slow": 2200,
+    "step": 218,
+  },
+  {
+    "players.1.board.1.Slow": 2100,
+    "step": 219,
+  },
+  {
+    "players.1.board.1.Slow": 2000,
+    "step": 220,
+  },
+  {
+    "players.1.board.1.Slow": 1900,
+    "step": 221,
+  },
+  {
+    "players.1.board.1.Slow": 1800,
+    "step": 222,
+  },
+  {
+    "players.1.board.1.Slow": 1700,
+    "step": 223,
+  },
+  {
+    "players.1.board.1.Slow": 1600,
+    "step": 224,
+  },
+  {
+    "players.1.board.1.Slow": 1500,
+    "step": 225,
+  },
+  {
+    "players.1.board.1.Slow": 1400,
+    "step": 226,
+  },
+  {
+    "players.1.board.1.Slow": 1300,
+    "step": 227,
+  },
+  {
+    "players.1.board.1.Slow": 1200,
+    "step": 228,
+  },
+  {
+    "players.1.board.1.Slow": 1100,
+    "step": 229,
+  },
+  {
+    "players.1.board.1.Slow": 1000,
+    "step": 230,
+  },
+  {
+    "players.1.board.1.Slow": 900,
+    "step": 231,
+  },
+  {
+    "players.1.board.1.Slow": 800,
+    "step": 232,
+  },
+  {
+    "players.1.board.1.Slow": 700,
+    "step": 233,
+  },
+  {
+    "players.1.board.1.Slow": 600,
+    "step": 234,
+  },
+  {
+    "players.1.board.1.Slow": 500,
+    "step": 235,
+  },
+  {
+    "players.1.board.1.Slow": 400,
+    "step": 236,
+  },
+  {
+    "players.1.board.1.Slow": 300,
+    "step": 237,
+  },
+  {
+    "players.1.board.1.Slow": 200,
+    "step": 238,
+  },
+  {
+    "players.1.board.1.Slow": 100,
+    "step": 239,
+  },
+  {
+    "players.1.Health": 1200,
+    "players.1.board.1.Slow": 0,
+    "step": 240,
+  },
+  {
+    "players.0.Health": 620,
+    "step": 245,
+  },
+  {
+    "players.1.Shield": 10,
+    "step": 250,
+  },
+  {
+    "players.0.board.1.DamageAmount": 76,
+    "players.0.board.2.DamageAmount": 70,
+    "players.0.board.3.DamageAmount": 100,
+    "players.0.board.5.DamageAmount": 78,
+    "step": 271,
+  },
+  {
+    "players.0.Health": 615,
+    "step": 275,
+  },
+  {
+    "players.1.Health": 1056,
+    "players.1.Shield": 0,
+    "players.1.board.0.Slow": 3000,
+    "step": 280,
+  },
+  {
+    "players.1.board.0.Slow": 2900,
+    "step": 281,
+  },
+  {
+    "players.1.board.0.Slow": 2800,
+    "step": 282,
+  },
+  {
+    "players.1.board.0.Slow": 2700,
+    "step": 283,
+  },
+  {
+    "players.1.board.0.Slow": 2600,
+    "step": 284,
+  },
+  {
+    "players.1.board.0.Slow": 2500,
+    "step": 285,
+  },
+  {
+    "players.1.board.0.Slow": 2400,
+    "step": 286,
+  },
+  {
+    "players.1.board.0.Slow": 2300,
+    "step": 287,
+  },
+  {
+    "players.1.board.0.Slow": 2200,
+    "step": 288,
+  },
+  {
+    "players.1.board.0.Slow": 2100,
+    "step": 289,
+  },
+  {
+    "players.1.board.0.Slow": 2000,
+    "step": 290,
+  },
+  {
+    "players.1.board.0.Slow": 1900,
+    "step": 291,
+  },
+  {
+    "players.1.board.0.Slow": 1800,
+    "step": 292,
+  },
+  {
+    "players.1.board.0.Slow": 1700,
+    "step": 293,
+  },
+  {
+    "players.1.board.0.Slow": 1600,
+    "step": 294,
+  },
+  {
+    "players.1.board.0.Slow": 1500,
+    "step": 295,
+  },
+  {
+    "players.1.board.0.Slow": 1400,
+    "step": 296,
+  },
+  {
+    "players.1.board.0.Slow": 1300,
+    "step": 297,
+  },
+  {
+    "players.1.board.0.Slow": 1200,
+    "step": 298,
+  },
+  {
+    "players.1.board.0.Slow": 1100,
+    "step": 299,
+  },
+  {
+    "players.1.board.0.Slow": 1000,
+    "step": 300,
+  },
+  {
+    "players.0.Health": 614,
+    "players.1.Health": 1055,
+    "players.1.board.0.Slow": 900,
+    "step": 301,
+  },
+  {
+    "players.0.Health": 613,
+    "players.1.Health": 1054,
+    "players.1.board.0.Slow": 800,
+    "step": 302,
+  },
+  {
+    "players.0.Health": 612,
+    "players.1.Health": 1053,
+    "players.1.board.0.Slow": 700,
+    "step": 303,
+  },
+  {
+    "players.0.Health": 611,
+    "players.1.Health": 1052,
+    "players.1.board.0.Slow": 600,
+    "step": 304,
+  },
+  {
+    "players.0.Health": 605,
+    "players.1.Health": 1051,
+    "players.1.board.0.Slow": 500,
+    "step": 305,
+  },
+  {
+    "players.0.Health": 604,
+    "players.1.Health": 1050,
+    "players.1.board.0.Slow": 400,
+    "step": 306,
+  },
+  {
+    "players.0.Health": 603,
+    "players.1.Health": 1049,
+    "players.1.board.0.Slow": 300,
+    "step": 307,
+  },
+  {
+    "players.0.Health": 602,
+    "players.1.Health": 1048,
+    "players.1.board.0.Slow": 200,
+    "step": 308,
+  },
+  {
+    "players.0.Health": 601,
+    "players.1.Health": 1047,
+    "players.1.board.0.Slow": 100,
+    "step": 309,
+  },
+  {
+    "players.0.Health": 600,
+    "players.1.Health": 1046,
+    "players.1.board.0.Slow": 0,
+    "step": 310,
+  },
+  {
+    "players.0.Health": 597,
+    "players.0.board.1.DamageAmount": 86,
+    "players.0.board.2.DamageAmount": 80,
+    "players.0.board.3.DamageAmount": 110,
+    "players.0.board.5.DamageAmount": 88,
+    "players.1.Health": 1043,
+    "step": 311,
+  },
+  {
+    "players.0.Health": 592,
+    "players.1.Health": 1038,
+    "step": 312,
+  },
+  {
+    "players.0.Health": 585,
+    "players.1.Health": 1031,
+    "step": 313,
+  },
+  {
+    "players.0.Health": 576,
+    "players.1.Health": 1022,
+    "step": 314,
+  },
+  {
+    "players.0.Health": 565,
+    "players.1.Health": 1011,
+    "step": 315,
+  },
+  {
+    "players.0.Health": 552,
+    "players.1.Health": 998,
+    "step": 316,
+  },
+  {
+    "players.0.Health": 537,
+    "players.1.Health": 983,
+    "step": 317,
+  },
+  {
+    "players.0.Health": 520,
+    "players.1.Health": 966,
+    "step": 318,
+  },
+  {
+    "players.0.Health": 501,
+    "players.1.Health": 947,
+    "step": 319,
+  },
+  {
+    "players.0.Health": 480,
+    "players.1.Health": 840,
+    "step": 320,
+  },
+  {
+    "players.0.Health": 457,
+    "players.1.Health": 817,
+    "step": 321,
+  },
+  {
+    "players.0.Health": 432,
+    "players.1.Health": 792,
+    "step": 322,
+  },
+  {
+    "players.0.Health": 405,
+    "players.1.Health": 765,
+    "step": 323,
+  },
+  {
+    "players.0.Health": 376,
+    "players.1.Health": 736,
+    "step": 324,
+  },
+  {
+    "players.0.Health": 345,
+    "players.1.Health": 705,
+    "step": 325,
+  },
+  {
+    "players.0.Health": 312,
+    "players.1.Health": 672,
+    "step": 326,
+  },
+  {
+    "players.0.Health": 277,
+    "players.1.Health": 637,
+    "step": 327,
+  },
+  {
+    "players.0.Health": 240,
+    "players.1.Health": 600,
+    "step": 328,
+  },
+  {
+    "players.0.Health": 201,
+    "players.1.Health": 561,
+    "step": 329,
+  },
+  {
+    "players.0.Health": 160,
+    "players.1.Health": 520,
+    "step": 330,
+  },
+  {
+    "players.0.Health": 117,
+    "players.1.Health": 477,
+    "step": 331,
+  },
+  {
+    "players.0.Health": 72,
+    "players.1.Health": 432,
+    "step": 332,
+  },
+  {
+    "players.0.Health": 25,
+    "players.1.Health": 385,
+    "step": 333,
+  },
+  {
+    "isPlaying": false,
+    "players.0.Health": -24,
+    "players.1.Health": 336,
+    "step": 334,
+  },
+]
+`;
+
 exports[`Encounter snapshots should match > Runs encounter "Day 3 - Rogue Scrapper" 1`] = `
 [
   {
@@ -14980,6 +15905,1090 @@ exports[`Encounter snapshots should match > Runs encounter "Day 5 - Gorgon Noble
 `;
 
 exports[`Encounter snapshots should match > Runs encounter "Day 5 - Hakurvian Rocket Trooper" 1`] = `
+[
+  {
+    "players.0.Health": 895,
+    "step": 30,
+  },
+  {
+    "players.0.board.2.CritChance": 16,
+    "players.0.board.2.Haste": 2000,
+    "players.0.board.4.CritChance": 6,
+    "players.0.board.4.Haste": 2000,
+    "step": 50,
+  },
+  {
+    "players.0.board.2.Haste": 1900,
+    "players.0.board.4.Haste": 1900,
+    "step": 51,
+  },
+  {
+    "players.0.board.2.Haste": 1800,
+    "players.0.board.4.Haste": 1800,
+    "step": 52,
+  },
+  {
+    "players.0.board.2.Haste": 1700,
+    "players.0.board.4.Haste": 1700,
+    "step": 53,
+  },
+  {
+    "players.0.board.2.Haste": 1600,
+    "players.0.board.4.Haste": 1600,
+    "step": 54,
+  },
+  {
+    "players.0.board.2.Haste": 1500,
+    "players.0.board.4.Haste": 1500,
+    "step": 55,
+  },
+  {
+    "players.0.board.2.Haste": 1400,
+    "players.0.board.4.Haste": 1400,
+    "step": 56,
+  },
+  {
+    "players.0.board.2.Haste": 1300,
+    "players.0.board.4.Haste": 1300,
+    "step": 57,
+  },
+  {
+    "players.0.board.2.Haste": 1200,
+    "players.0.board.4.Haste": 1200,
+    "step": 58,
+  },
+  {
+    "players.0.board.2.Haste": 1100,
+    "players.0.board.4.Haste": 1100,
+    "step": 59,
+  },
+  {
+    "players.0.Health": 890,
+    "players.0.board.2.Haste": 1000,
+    "players.0.board.4.Haste": 1000,
+    "step": 60,
+  },
+  {
+    "players.0.board.2.Haste": 900,
+    "players.0.board.4.Haste": 900,
+    "step": 61,
+  },
+  {
+    "players.0.board.2.Haste": 800,
+    "players.0.board.4.Haste": 800,
+    "step": 62,
+  },
+  {
+    "players.0.board.2.Haste": 700,
+    "players.0.board.4.Haste": 700,
+    "step": 63,
+  },
+  {
+    "players.0.board.2.Haste": 600,
+    "players.0.board.4.Haste": 600,
+    "step": 64,
+  },
+  {
+    "players.0.Shield": 60,
+    "players.0.board.2.Haste": 500,
+    "players.0.board.4.Haste": 500,
+    "step": 65,
+  },
+  {
+    "players.0.board.2.Haste": 400,
+    "players.0.board.4.Haste": 400,
+    "step": 66,
+  },
+  {
+    "players.0.board.2.Haste": 300,
+    "players.0.board.4.Haste": 300,
+    "step": 67,
+  },
+  {
+    "players.0.board.2.Haste": 200,
+    "players.0.board.4.Haste": 200,
+    "step": 68,
+  },
+  {
+    "players.0.board.2.Haste": 100,
+    "players.0.board.4.Haste": 100,
+    "step": 69,
+  },
+  {
+    "players.0.board.2.Ammo": 1,
+    "players.0.board.2.CritChance": 26,
+    "players.0.board.2.DamageAmount": 157,
+    "players.0.board.2.Haste": 3000,
+    "players.0.board.4.Haste": 0,
+    "players.1.Health": 1843,
+    "step": 70,
+  },
+  {
+    "players.0.board.2.Haste": 2900,
+    "step": 71,
+  },
+  {
+    "players.0.board.2.Haste": 2800,
+    "step": 72,
+  },
+  {
+    "players.0.board.2.Haste": 2700,
+    "step": 73,
+  },
+  {
+    "players.0.board.2.Haste": 2600,
+    "step": 74,
+  },
+  {
+    "players.0.board.2.Haste": 2500,
+    "step": 75,
+  },
+  {
+    "players.0.board.2.Haste": 2400,
+    "step": 76,
+  },
+  {
+    "players.0.board.2.Haste": 2300,
+    "step": 77,
+  },
+  {
+    "players.0.board.2.Haste": 2200,
+    "step": 78,
+  },
+  {
+    "players.0.board.2.Haste": 2100,
+    "step": 79,
+  },
+  {
+    "players.0.board.2.Haste": 2000,
+    "players.1.Shield": 10,
+    "step": 80,
+  },
+  {
+    "players.0.board.2.Haste": 1900,
+    "step": 81,
+  },
+  {
+    "players.0.board.2.Haste": 1800,
+    "step": 82,
+  },
+  {
+    "players.0.board.2.Haste": 1700,
+    "step": 83,
+  },
+  {
+    "players.0.board.2.Haste": 1600,
+    "step": 84,
+  },
+  {
+    "players.0.board.2.Haste": 1500,
+    "step": 85,
+  },
+  {
+    "players.0.board.2.Haste": 1400,
+    "step": 86,
+  },
+  {
+    "players.0.board.2.Haste": 1300,
+    "step": 87,
+  },
+  {
+    "players.0.board.2.Haste": 1200,
+    "step": 88,
+  },
+  {
+    "players.0.board.2.Haste": 1100,
+    "step": 89,
+  },
+  {
+    "players.0.Shield": 55,
+    "players.0.board.2.Haste": 1000,
+    "step": 90,
+  },
+  {
+    "players.0.board.2.Haste": 900,
+    "step": 91,
+  },
+  {
+    "players.0.board.2.Haste": 800,
+    "step": 92,
+  },
+  {
+    "players.0.board.2.Haste": 700,
+    "step": 93,
+  },
+  {
+    "players.0.board.2.Haste": 600,
+    "step": 94,
+  },
+  {
+    "players.0.board.2.Haste": 500,
+    "step": 95,
+  },
+  {
+    "players.0.board.2.Haste": 400,
+    "step": 96,
+  },
+  {
+    "players.0.board.2.Haste": 300,
+    "step": 97,
+  },
+  {
+    "players.0.board.2.Haste": 200,
+    "step": 98,
+  },
+  {
+    "players.0.board.2.Haste": 100,
+    "step": 99,
+  },
+  {
+    "players.0.board.2.CritChance": 42,
+    "players.0.board.2.Haste": 2000,
+    "players.0.board.4.CritChance": 12,
+    "players.0.board.4.Haste": 2000,
+    "step": 100,
+  },
+  {
+    "players.0.board.2.Haste": 1900,
+    "players.0.board.4.Haste": 1900,
+    "step": 101,
+  },
+  {
+    "players.0.board.2.Haste": 1800,
+    "players.0.board.4.Haste": 1800,
+    "step": 102,
+  },
+  {
+    "players.0.board.2.Haste": 1700,
+    "players.0.board.4.Haste": 1700,
+    "step": 103,
+  },
+  {
+    "players.0.board.2.Haste": 1600,
+    "players.0.board.4.Haste": 1600,
+    "step": 104,
+  },
+  {
+    "players.0.board.2.Haste": 1500,
+    "players.0.board.4.Haste": 1500,
+    "step": 105,
+  },
+  {
+    "players.0.board.2.Haste": 1400,
+    "players.0.board.4.Haste": 1400,
+    "step": 106,
+  },
+  {
+    "players.0.board.2.Haste": 1300,
+    "players.0.board.4.Haste": 1300,
+    "step": 107,
+  },
+  {
+    "players.0.board.2.Haste": 1200,
+    "players.0.board.4.Haste": 1200,
+    "step": 108,
+  },
+  {
+    "players.0.board.2.Haste": 1100,
+    "players.0.board.4.Haste": 1100,
+    "step": 109,
+  },
+  {
+    "players.0.board.2.Haste": 1000,
+    "players.0.board.4.Haste": 1000,
+    "step": 110,
+  },
+  {
+    "players.0.board.2.Haste": 900,
+    "players.0.board.4.Haste": 900,
+    "step": 111,
+  },
+  {
+    "players.0.board.2.Haste": 800,
+    "players.0.board.4.Haste": 800,
+    "step": 112,
+  },
+  {
+    "players.0.board.2.Haste": 700,
+    "players.0.board.4.Haste": 700,
+    "step": 113,
+  },
+  {
+    "players.0.board.2.Haste": 600,
+    "players.0.board.4.Haste": 600,
+    "step": 114,
+  },
+  {
+    "players.0.board.2.Ammo": 0,
+    "players.0.board.2.CritChance": 52,
+    "players.0.board.2.DamageAmount": 164,
+    "players.0.board.2.Haste": 3500,
+    "players.0.board.4.Haste": 500,
+    "players.1.Health": 1689,
+    "players.1.Shield": 0,
+    "step": 115,
+  },
+  {
+    "players.0.board.2.Haste": 3400,
+    "players.0.board.4.Haste": 400,
+    "step": 116,
+  },
+  {
+    "players.0.board.2.Haste": 3300,
+    "players.0.board.4.Haste": 300,
+    "step": 117,
+  },
+  {
+    "players.0.board.2.Haste": 3200,
+    "players.0.board.4.Haste": 200,
+    "step": 118,
+  },
+  {
+    "players.0.board.2.Haste": 3100,
+    "players.0.board.4.Haste": 100,
+    "step": 119,
+  },
+  {
+    "players.0.Shield": 110,
+    "players.0.board.2.Haste": 3000,
+    "players.0.board.4.Haste": 0,
+    "step": 120,
+  },
+  {
+    "players.0.board.2.Haste": 2900,
+    "step": 121,
+  },
+  {
+    "players.0.board.2.Haste": 2800,
+    "step": 122,
+  },
+  {
+    "players.0.board.2.Haste": 2700,
+    "step": 123,
+  },
+  {
+    "players.0.board.2.Haste": 2600,
+    "step": 124,
+  },
+  {
+    "players.0.board.2.Haste": 2500,
+    "step": 125,
+  },
+  {
+    "players.0.board.2.Haste": 2400,
+    "step": 126,
+  },
+  {
+    "players.0.board.2.Haste": 2300,
+    "step": 127,
+  },
+  {
+    "players.0.board.2.Haste": 2200,
+    "step": 128,
+  },
+  {
+    "players.0.board.2.Haste": 2100,
+    "step": 129,
+  },
+  {
+    "players.0.board.2.Haste": 2000,
+    "step": 130,
+  },
+  {
+    "players.0.board.2.Haste": 1900,
+    "step": 131,
+  },
+  {
+    "players.0.board.2.Haste": 1800,
+    "step": 132,
+  },
+  {
+    "players.0.board.2.Haste": 1700,
+    "step": 133,
+  },
+  {
+    "players.0.board.2.Haste": 1600,
+    "step": 134,
+  },
+  {
+    "players.0.board.2.Haste": 1500,
+    "step": 135,
+  },
+  {
+    "players.0.board.2.Haste": 1400,
+    "step": 136,
+  },
+  {
+    "players.0.board.2.Haste": 1300,
+    "step": 137,
+  },
+  {
+    "players.0.board.2.Haste": 1200,
+    "step": 138,
+  },
+  {
+    "players.0.board.2.Haste": 1100,
+    "step": 139,
+  },
+  {
+    "players.0.board.2.Haste": 1000,
+    "step": 140,
+  },
+  {
+    "players.0.board.2.Haste": 900,
+    "step": 141,
+  },
+  {
+    "players.0.board.2.Haste": 800,
+    "step": 142,
+  },
+  {
+    "players.0.board.2.Haste": 700,
+    "step": 143,
+  },
+  {
+    "players.0.board.2.Haste": 600,
+    "step": 144,
+  },
+  {
+    "players.0.board.2.Haste": 500,
+    "step": 145,
+  },
+  {
+    "players.0.board.2.Haste": 400,
+    "step": 146,
+  },
+  {
+    "players.0.board.2.Haste": 300,
+    "step": 147,
+  },
+  {
+    "players.0.board.2.Haste": 200,
+    "step": 148,
+  },
+  {
+    "players.0.board.2.Haste": 100,
+    "step": 149,
+  },
+  {
+    "players.0.Shield": 105,
+    "players.0.board.2.CritChance": 68,
+    "players.0.board.2.Haste": 2000,
+    "players.0.board.4.CritChance": 18,
+    "players.0.board.4.Haste": 2000,
+    "step": 150,
+  },
+  {
+    "players.0.board.2.Haste": 1900,
+    "players.0.board.4.Haste": 1900,
+    "step": 151,
+  },
+  {
+    "players.0.board.2.Haste": 1800,
+    "players.0.board.4.Haste": 1800,
+    "step": 152,
+  },
+  {
+    "players.0.board.2.Haste": 1700,
+    "players.0.board.4.Haste": 1700,
+    "step": 153,
+  },
+  {
+    "players.0.board.2.Haste": 1600,
+    "players.0.board.4.Haste": 1600,
+    "step": 154,
+  },
+  {
+    "players.0.board.2.Haste": 1500,
+    "players.0.board.4.Haste": 1500,
+    "step": 155,
+  },
+  {
+    "players.0.board.2.Haste": 1400,
+    "players.0.board.4.Haste": 1400,
+    "step": 156,
+  },
+  {
+    "players.0.board.2.Haste": 1300,
+    "players.0.board.4.Haste": 1300,
+    "step": 157,
+  },
+  {
+    "players.0.board.2.Haste": 1200,
+    "players.0.board.4.Haste": 1200,
+    "step": 158,
+  },
+  {
+    "players.0.board.2.Haste": 1100,
+    "players.0.board.4.Haste": 1100,
+    "step": 159,
+  },
+  {
+    "players.0.board.2.Haste": 1000,
+    "players.0.board.4.Haste": 1000,
+    "players.1.Shield": 10,
+    "step": 160,
+  },
+  {
+    "players.0.board.2.Haste": 900,
+    "players.0.board.4.Haste": 900,
+    "step": 161,
+  },
+  {
+    "players.0.board.2.Haste": 800,
+    "players.0.board.4.Haste": 800,
+    "step": 162,
+  },
+  {
+    "players.0.board.2.Haste": 700,
+    "players.0.board.4.Haste": 700,
+    "step": 163,
+  },
+  {
+    "players.0.board.2.Haste": 600,
+    "players.0.board.4.Haste": 600,
+    "step": 164,
+  },
+  {
+    "players.0.board.2.Haste": 500,
+    "players.0.board.4.Haste": 500,
+    "step": 165,
+  },
+  {
+    "players.0.board.2.Haste": 400,
+    "players.0.board.4.Haste": 400,
+    "step": 166,
+  },
+  {
+    "players.0.board.2.Haste": 300,
+    "players.0.board.4.Haste": 300,
+    "step": 167,
+  },
+  {
+    "players.0.board.2.Haste": 200,
+    "players.0.board.4.Haste": 200,
+    "step": 168,
+  },
+  {
+    "players.0.board.2.Haste": 100,
+    "players.0.board.4.Haste": 100,
+    "step": 169,
+  },
+  {
+    "players.0.board.2.Haste": 0,
+    "players.0.board.4.Haste": 0,
+    "step": 170,
+  },
+  {
+    "players.0.Shield": 220,
+    "step": 180,
+  },
+  {
+    "players.0.board.2.CritChance": 84,
+    "players.0.board.2.Haste": 2000,
+    "players.0.board.4.CritChance": 24,
+    "players.0.board.4.Haste": 2000,
+    "step": 200,
+  },
+  {
+    "players.0.board.2.Haste": 1900,
+    "players.0.board.4.Haste": 1900,
+    "step": 201,
+  },
+  {
+    "players.0.board.2.Haste": 1800,
+    "players.0.board.4.Haste": 1800,
+    "step": 202,
+  },
+  {
+    "players.0.board.2.Haste": 1700,
+    "players.0.board.4.Haste": 1700,
+    "step": 203,
+  },
+  {
+    "players.0.board.2.Haste": 1600,
+    "players.0.board.4.Haste": 1600,
+    "step": 204,
+  },
+  {
+    "players.0.board.2.Haste": 1500,
+    "players.0.board.4.Haste": 1500,
+    "step": 205,
+  },
+  {
+    "players.0.board.2.Haste": 1400,
+    "players.0.board.4.Haste": 1400,
+    "step": 206,
+  },
+  {
+    "players.0.board.2.Haste": 1300,
+    "players.0.board.4.Haste": 1300,
+    "step": 207,
+  },
+  {
+    "players.0.board.2.Haste": 1200,
+    "players.0.board.4.Haste": 1200,
+    "step": 208,
+  },
+  {
+    "players.0.board.2.Haste": 1100,
+    "players.0.board.4.Haste": 1100,
+    "step": 209,
+  },
+  {
+    "players.0.Shield": 215,
+    "players.0.board.2.Haste": 1000,
+    "players.0.board.4.Haste": 1000,
+    "step": 210,
+  },
+  {
+    "players.0.board.2.Haste": 900,
+    "players.0.board.4.Haste": 900,
+    "step": 211,
+  },
+  {
+    "players.0.board.2.Haste": 800,
+    "players.0.board.4.Haste": 800,
+    "step": 212,
+  },
+  {
+    "players.0.board.2.Haste": 700,
+    "players.0.board.4.Haste": 700,
+    "step": 213,
+  },
+  {
+    "players.0.board.2.Haste": 600,
+    "players.0.board.4.Haste": 600,
+    "step": 214,
+  },
+  {
+    "players.0.board.2.Haste": 500,
+    "players.0.board.4.Haste": 500,
+    "step": 215,
+  },
+  {
+    "players.0.board.2.Haste": 400,
+    "players.0.board.4.Haste": 400,
+    "step": 216,
+  },
+  {
+    "players.0.board.2.Haste": 300,
+    "players.0.board.4.Haste": 300,
+    "step": 217,
+  },
+  {
+    "players.0.board.2.Haste": 200,
+    "players.0.board.4.Haste": 200,
+    "step": 218,
+  },
+  {
+    "players.0.board.2.Haste": 100,
+    "players.0.board.4.Haste": 100,
+    "step": 219,
+  },
+  {
+    "players.0.board.2.Haste": 0,
+    "players.0.board.4.Haste": 0,
+    "step": 220,
+  },
+  {
+    "players.0.Shield": 330,
+    "players.1.Shield": 20,
+    "step": 240,
+  },
+  {
+    "players.0.board.2.CritChance": 100,
+    "players.0.board.2.Haste": 2000,
+    "players.0.board.4.CritChance": 30,
+    "players.0.board.4.Haste": 2000,
+    "step": 250,
+  },
+  {
+    "players.0.board.2.Haste": 1900,
+    "players.0.board.4.Haste": 1900,
+    "step": 251,
+  },
+  {
+    "players.0.board.2.Haste": 1800,
+    "players.0.board.4.Haste": 1800,
+    "step": 252,
+  },
+  {
+    "players.0.board.2.Haste": 1700,
+    "players.0.board.4.Haste": 1700,
+    "step": 253,
+  },
+  {
+    "players.0.board.2.Haste": 1600,
+    "players.0.board.4.Haste": 1600,
+    "step": 254,
+  },
+  {
+    "players.0.board.2.Haste": 1500,
+    "players.0.board.4.Haste": 1500,
+    "step": 255,
+  },
+  {
+    "players.0.board.2.Haste": 1400,
+    "players.0.board.4.Haste": 1400,
+    "step": 256,
+  },
+  {
+    "players.0.board.2.Haste": 1300,
+    "players.0.board.4.Haste": 1300,
+    "step": 257,
+  },
+  {
+    "players.0.board.2.Haste": 1200,
+    "players.0.board.4.Haste": 1200,
+    "step": 258,
+  },
+  {
+    "players.0.board.2.Haste": 1100,
+    "players.0.board.4.Haste": 1100,
+    "step": 259,
+  },
+  {
+    "players.0.board.2.Haste": 1000,
+    "players.0.board.4.Haste": 1000,
+    "step": 260,
+  },
+  {
+    "players.0.board.2.Haste": 900,
+    "players.0.board.4.Haste": 900,
+    "step": 261,
+  },
+  {
+    "players.0.board.2.Haste": 800,
+    "players.0.board.4.Haste": 800,
+    "step": 262,
+  },
+  {
+    "players.0.board.2.Haste": 700,
+    "players.0.board.4.Haste": 700,
+    "step": 263,
+  },
+  {
+    "players.0.board.2.Haste": 600,
+    "players.0.board.4.Haste": 600,
+    "step": 264,
+  },
+  {
+    "players.0.board.2.Haste": 500,
+    "players.0.board.4.Haste": 500,
+    "step": 265,
+  },
+  {
+    "players.0.board.2.Haste": 400,
+    "players.0.board.4.Haste": 400,
+    "step": 266,
+  },
+  {
+    "players.0.board.2.Haste": 300,
+    "players.0.board.4.Haste": 300,
+    "step": 267,
+  },
+  {
+    "players.0.board.2.Haste": 200,
+    "players.0.board.4.Haste": 200,
+    "step": 268,
+  },
+  {
+    "players.0.board.2.Haste": 100,
+    "players.0.board.4.Haste": 100,
+    "step": 269,
+  },
+  {
+    "players.0.Shield": 325,
+    "players.0.board.2.Haste": 0,
+    "players.0.board.4.Haste": 0,
+    "step": 270,
+  },
+  {
+    "players.0.Shield": 440,
+    "players.0.board.2.CritChance": 116,
+    "players.0.board.2.Haste": 2000,
+    "players.0.board.4.CritChance": 36,
+    "players.0.board.4.Haste": 2000,
+    "step": 300,
+  },
+  {
+    "players.0.Shield": 439,
+    "players.0.board.2.Haste": 1900,
+    "players.0.board.4.Haste": 1900,
+    "players.1.Shield": 19,
+    "step": 301,
+  },
+  {
+    "players.0.Shield": 438,
+    "players.0.board.2.Haste": 1800,
+    "players.0.board.4.Haste": 1800,
+    "players.1.Shield": 18,
+    "step": 302,
+  },
+  {
+    "players.0.Shield": 437,
+    "players.0.board.2.Haste": 1700,
+    "players.0.board.4.Haste": 1700,
+    "players.1.Shield": 17,
+    "step": 303,
+  },
+  {
+    "players.0.Shield": 436,
+    "players.0.board.2.Haste": 1600,
+    "players.0.board.4.Haste": 1600,
+    "players.1.Shield": 16,
+    "step": 304,
+  },
+  {
+    "players.0.Shield": 435,
+    "players.0.board.2.Haste": 1500,
+    "players.0.board.4.Haste": 1500,
+    "players.1.Shield": 15,
+    "step": 305,
+  },
+  {
+    "players.0.Shield": 434,
+    "players.0.board.2.Haste": 1400,
+    "players.0.board.4.Haste": 1400,
+    "players.1.Shield": 14,
+    "step": 306,
+  },
+  {
+    "players.0.Shield": 433,
+    "players.0.board.2.Haste": 1300,
+    "players.0.board.4.Haste": 1300,
+    "players.1.Shield": 13,
+    "step": 307,
+  },
+  {
+    "players.0.Shield": 432,
+    "players.0.board.2.Haste": 1200,
+    "players.0.board.4.Haste": 1200,
+    "players.1.Shield": 12,
+    "step": 308,
+  },
+  {
+    "players.0.Shield": 431,
+    "players.0.board.2.Haste": 1100,
+    "players.0.board.4.Haste": 1100,
+    "players.1.Shield": 11,
+    "step": 309,
+  },
+  {
+    "players.0.Shield": 430,
+    "players.0.board.2.Haste": 1000,
+    "players.0.board.4.Haste": 1000,
+    "players.1.Shield": 10,
+    "step": 310,
+  },
+  {
+    "players.0.Shield": 427,
+    "players.0.board.2.Haste": 900,
+    "players.0.board.4.Haste": 900,
+    "players.1.Shield": 7,
+    "step": 311,
+  },
+  {
+    "players.0.Shield": 422,
+    "players.0.board.2.Haste": 800,
+    "players.0.board.4.Haste": 800,
+    "players.1.Shield": 2,
+    "step": 312,
+  },
+  {
+    "players.0.Shield": 415,
+    "players.0.board.2.Haste": 700,
+    "players.0.board.4.Haste": 700,
+    "players.1.Health": 1684,
+    "players.1.Shield": 0,
+    "step": 313,
+  },
+  {
+    "players.0.Shield": 406,
+    "players.0.board.2.Haste": 600,
+    "players.0.board.4.Haste": 600,
+    "players.1.Health": 1675,
+    "step": 314,
+  },
+  {
+    "players.0.Shield": 395,
+    "players.0.board.2.Haste": 500,
+    "players.0.board.4.Haste": 500,
+    "players.1.Health": 1664,
+    "step": 315,
+  },
+  {
+    "players.0.Shield": 382,
+    "players.0.board.2.Haste": 400,
+    "players.0.board.4.Haste": 400,
+    "players.1.Health": 1651,
+    "step": 316,
+  },
+  {
+    "players.0.Shield": 367,
+    "players.0.board.2.Haste": 300,
+    "players.0.board.4.Haste": 300,
+    "players.1.Health": 1636,
+    "step": 317,
+  },
+  {
+    "players.0.Shield": 350,
+    "players.0.board.2.Haste": 200,
+    "players.0.board.4.Haste": 200,
+    "players.1.Health": 1619,
+    "step": 318,
+  },
+  {
+    "players.0.Shield": 331,
+    "players.0.board.2.Haste": 100,
+    "players.0.board.4.Haste": 100,
+    "players.1.Health": 1600,
+    "step": 319,
+  },
+  {
+    "players.0.Shield": 310,
+    "players.0.board.2.Haste": 0,
+    "players.0.board.4.Haste": 0,
+    "players.1.Health": 1589,
+    "step": 320,
+  },
+  {
+    "players.0.Shield": 287,
+    "players.1.Health": 1566,
+    "step": 321,
+  },
+  {
+    "players.0.Shield": 262,
+    "players.1.Health": 1541,
+    "step": 322,
+  },
+  {
+    "players.0.Shield": 235,
+    "players.1.Health": 1514,
+    "step": 323,
+  },
+  {
+    "players.0.Shield": 206,
+    "players.1.Health": 1485,
+    "step": 324,
+  },
+  {
+    "players.0.Shield": 175,
+    "players.1.Health": 1454,
+    "step": 325,
+  },
+  {
+    "players.0.Shield": 142,
+    "players.1.Health": 1421,
+    "step": 326,
+  },
+  {
+    "players.0.Shield": 107,
+    "players.1.Health": 1386,
+    "step": 327,
+  },
+  {
+    "players.0.Shield": 70,
+    "players.1.Health": 1349,
+    "step": 328,
+  },
+  {
+    "players.0.Shield": 31,
+    "players.1.Health": 1310,
+    "step": 329,
+  },
+  {
+    "players.0.Health": 875,
+    "players.0.Shield": 0,
+    "players.1.Health": 1269,
+    "step": 330,
+  },
+  {
+    "players.0.Health": 832,
+    "players.1.Health": 1226,
+    "step": 331,
+  },
+  {
+    "players.0.Health": 787,
+    "players.1.Health": 1181,
+    "step": 332,
+  },
+  {
+    "players.0.Health": 740,
+    "players.1.Health": 1134,
+    "step": 333,
+  },
+  {
+    "players.0.Health": 691,
+    "players.1.Health": 1085,
+    "step": 334,
+  },
+  {
+    "players.0.Health": 640,
+    "players.1.Health": 1034,
+    "step": 335,
+  },
+  {
+    "players.0.Health": 587,
+    "players.1.Health": 981,
+    "step": 336,
+  },
+  {
+    "players.0.Health": 532,
+    "players.1.Health": 926,
+    "step": 337,
+  },
+  {
+    "players.0.Health": 475,
+    "players.1.Health": 869,
+    "step": 338,
+  },
+  {
+    "players.0.Health": 416,
+    "players.1.Health": 810,
+    "step": 339,
+  },
+  {
+    "players.0.Health": 355,
+    "players.1.Health": 749,
+    "step": 340,
+  },
+  {
+    "players.0.Health": 292,
+    "players.1.Health": 686,
+    "step": 341,
+  },
+  {
+    "players.0.Health": 227,
+    "players.1.Health": 621,
+    "step": 342,
+  },
+  {
+    "players.0.Health": 160,
+    "players.1.Health": 554,
+    "step": 343,
+  },
+  {
+    "players.0.Health": 91,
+    "players.1.Health": 485,
+    "step": 344,
+  },
+  {
+    "players.0.Health": 20,
+    "players.1.Health": 414,
+    "step": 345,
+  },
+  {
+    "isPlaying": false,
+    "players.0.Health": -53,
+    "players.1.Health": 341,
+    "step": 346,
+  },
+]
+`;
+
+exports[`Encounter snapshots should match > Runs encounter "Day 5 - Harkuvian Rocket Trooper" 1`] = `
 [
   {
     "players.0.Health": 895,
