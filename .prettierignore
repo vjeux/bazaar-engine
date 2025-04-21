@@ -1,6 +1,9 @@
 # Ignore artifacts:
 build
 coverage
+.next
+
+node_modules
 
 # Ignore pnpm
 pnpm-lock.yaml

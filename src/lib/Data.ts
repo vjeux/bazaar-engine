@@ -1,6 +1,7 @@
 import pako from "pako";
 import type { Cards } from "../types/cardTypes.ts";
 import type { EncounterDays } from "../types/encounterTypes.ts";
+import { CARDS_VERSION } from "./constants.ts";
 
 function genDataFromLocalStorage(
   localStorageKey: string,
@@ -52,7 +53,7 @@ export async function genCardsAndEncounters(): Promise<{
 }
 
 export function getCardId(cardName: string, Cards: Cards): string {
-  const card = Cards["0.1.9"].find(
+  const card = Cards[CARDS_VERSION].find(
     (card) => card.Localization.Title.Text === cardName,
   );
   if (!card) {

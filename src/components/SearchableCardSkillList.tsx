@@ -8,6 +8,7 @@ import TooltipWithoutGameState from "./TooltipWithoutGameState.tsx";
 import FramedCardOrSkill from "./FramedCardOrSkill.tsx";
 import { useSimulatorStore } from "@/lib/simulatorStore.ts";
 import { PlayerCardConfig, PlayerSkillConfig } from "@/engine/GameState.ts";
+import { CARDS_VERSION } from "@/lib/constants.ts";
 
 const CARD_HEIGHT = 70;
 const SKILL_SIZE = 70;
@@ -38,7 +39,7 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
 
   // Filter for valid card and skill names
   const filteredItems = useMemo(() => {
-    return Cards["0.1.9"].filter((card) => {
+    return Cards[CARDS_VERSION].filter((card) => {
       const cardName = card.Localization.Title.Text;
       return (
         ValidSkillNames.includes(cardName) || ValidItemNames.includes(cardName)

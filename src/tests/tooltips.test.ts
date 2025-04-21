@@ -6,6 +6,7 @@ import { describe, expect, it } from "vitest";
 import { genCardsAndEncounters } from "../lib/Data";
 import { Tier } from "../types/shared";
 import fs from "fs";
+import { CARDS_VERSION } from "@/lib/constants";
 const { Cards, Encounters } = await genCardsAndEncounters();
 
 function getTiers(startingTier: Tier): Tier[] {
@@ -30,7 +31,7 @@ function getTiers(startingTier: Tier): Tier[] {
 describe("Tooltips should not throw", () => {
   [...validItemNames, ...validSkillNames].forEach((cardName: string) => {
     it(`Tooltip for "${cardName}" should not throw`, () => {
-      const card = Cards["0.1.9"].find(
+      const card = Cards[CARDS_VERSION].find(
         (card) => card.Localization.Title.Text === cardName,
       );
       const cardId = card?.Id;
@@ -58,7 +59,7 @@ describe("Tooltips should not throw", () => {
 describe("Tooltip snapshots", () => {
   [...validItemNames, ...validSkillNames].forEach((cardName: string) => {
     it(`Snapshot equality for tooltips for "${cardName}"`, () => {
-      const card = Cards["0.1.9"].find(
+      const card = Cards[CARDS_VERSION].find(
         (card) => card.Localization.Title.Text === cardName,
       );
       const cardId = card?.Id;

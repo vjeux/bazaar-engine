@@ -1,5 +1,6 @@
 import { getTooltips } from "@/engine/Engine";
 import { getInitialGameState } from "@/engine/GameState";
+import { CARDS_VERSION } from "@/lib/constants";
 import { Card } from "@/types/cardTypes";
 import { EncounterDays } from "@/types/encounterTypes";
 import { Tier } from "@/types/shared";
@@ -13,7 +14,7 @@ export default function TooltipWithoutGameState({
 
   const gameState = getInitialGameState(
     {
-      "0.1.9": [card],
+      [CARDS_VERSION]: [card],
     },
     {} as EncounterDays,
     [
