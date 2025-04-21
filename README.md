@@ -21,4 +21,4 @@ A simulation engine for[The Bazaar](https://playthebazaar.com/).
 - [ ] Damage numbers above health
 - [ ] Implement TActionPlayerBurnRemove
 - [ ] Change the code to support custom monsters/encounters
-- [ ] Fix bug: having to doubleclick the red X to remove a card.
+- [ ] Fix bug: having to doubleclick the red X to remove a card
