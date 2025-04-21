@@ -37,7 +37,7 @@ export function HealthBar({ gameState, playerId }: HealthBarProps) {
   const ticks = Math.floor(HealthMax / 50);
 
   return (
-    <div className="bg-muted border-border relative h-8 w-full overflow-hidden rounded border">
+    <div className="bg-muted border-border relative h-8 min-h-8 w-full overflow-hidden rounded border">
       {/* Health bar */}
       <div
         className={`${healthBarColor} h-full`}
