@@ -5,7 +5,7 @@ export enum Tier {
   Silver = "Silver",
   Gold = "Gold",
   Diamond = "Diamond",
-  Legendary = "Legendary"
+  Legendary = "Legendary",
 }
 
 export enum TierInt {
@@ -13,13 +13,13 @@ export enum TierInt {
   Silver = 1,
   Gold = 2,
   Diamond = 3,
-  Legendary = 4
+  Legendary = 4,
 }
 
 export enum Size {
   Large = "Large",
   Medium = "Medium",
-  Small = "Small"
+  Small = "Small",
 }
 
 export enum Hero {
@@ -29,7 +29,7 @@ export enum Hero {
   Mak = "Mak",
   Pygmalien = "Pygmalien",
   Stelle = "Stelle",
-  Vanessa = "Vanessa"
+  Vanessa = "Vanessa",
 }
 
 export enum EnchantmentType {
@@ -44,7 +44,7 @@ export enum EnchantmentType {
   Shielded = "Shielded",
   Shiny = "Shiny",
   Toxic = "Toxic",
-  Turbo = "Turbo"
+  Turbo = "Turbo",
 }
 
 export enum Tag {
@@ -74,7 +74,7 @@ export enum Tag {
   Toy = "Toy",
   Unsellable = "Unsellable",
   Vehicle = "Vehicle",
-  Weapon = "Weapon"
+  Weapon = "Weapon",
 }
 
 export enum HiddenTag {
@@ -118,5 +118,5 @@ export enum HiddenTag {
   SlowReference = "SlowReference",
   Toughness = "Toughness",
   Value = "Value",
-  Economy = "Economy"
+  Economy = "Economy",
 }

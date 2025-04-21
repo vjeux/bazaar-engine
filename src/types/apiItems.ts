@@ -1,5 +1,12 @@
 // howbazaar api items schema
-import { EnchantmentType, Hero, HiddenTag, Size, Tag, Tier } from "./shared";
+import type {
+  EnchantmentType,
+  Hero,
+  HiddenTag,
+  Size,
+  Tag,
+  Tier,
+} from "./shared.ts";
 
 export interface Items {
   data: Item[];

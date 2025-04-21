@@ -1,0 +1,781 @@
+Adjacent Heal items gain (10/15/20/25) Heal for the fight.
+Adjacent Potions have +1 Ammo.
+Adjacent Shield items (+2/+4/+6/+8) Shield for the fight.
+Adjacent Shield items gain (10/15/20/25) Shield for the fight.
+Adjacent Shield items gain (3/6/9/12) Shield for the fight.
+Adjacent Shield items gain (5/10) Shield for the fight.
+Adjacent Shield items permanently gain (+1/+2/+3/+4) Shield.
+Adjacent Toys have +1 Multicast.
+Adjacent Vehicles have their cooldowns reduced by (5%/10%/15%/20%).
+Adjacent Weapons gain (5/10) Damage for the fight.
+Adjacent Weapons have (+5/+10/+20/+40) damage.
+Adjacent Weapons permanently gain (+1/+2/+3/+4) Damage.
+Adjacent items gain (+10%/+15%/+20%) crit chance for the fight.
+Adjacent items gain (2%/4%/6%/8%) Crit Chance for the fight.
+Adjacent items gain (2%/4%/6%/8%) Crit chance for the fight.
+Adjacent items have (+1/+2/+3/+4) Max Ammo.
+Adjacent items have (+10%/+15%/+20%/+25%) Crit Chance.
+Adjacent items have (+15%/+30%/+50%) Crit Chance.
+Adjacent items have (+20%/+30%/+40%/+50%) Crit Chance.
+Adjacent items have (+25%/+50%) Crit Chance.
+Adjacent items have (+3%/+6%/+9%/+12%) Crit chance.
+Adjacent items have +1 ammo.
+Adjacent items have bonus damage, heal, or shield equal to their Crit Chance.
+Adjacent items have their cooldown reduced by (10%/15%/20%/25%).
+Adjacent items have their cooldowns reduced by (6%/9%/12%/15%).
+Adjacent items permanently gain (1%/2%/3%/4%) Crit chance.
+Adjacent weapons (+3/+6/+9/+12) damage for the fight.
+Adjacent weapons gain (10/15/20/25) Damage for the fight.
+Adjacent weapons gain (3/6/9/12) damage for the fight.
+After you fight a player with this in play, permanently gain (100/200/300/400) Max Health.
+All item cooldowns are increased by (1/2) second(s).
+Ammo 0
+Ammo 1
+Ammo 10
+Ammo 12
+Ammo 2
+Ammo 3
+Ammo 4
+Ammo 50
+Ammo 6
+Ammo 8
+Aquatic items to the left of this have their cooldowns reduced by (10%/20%/30%).
+At the start of each day, get 2 Spare Change.
+At the start of each day, get 3 Chocolate Bars or Spare Changes.
+At the start of each day, get a Piranha.
+At the start of each day, get a Small Ammo item from any hero.
+At the start of each day, get a Small Potion item.
+At the start of each day, get a Small aquatic item.
+At the start of each day, get a small item from any hero.
+At the start of each day, permanently gain (100/200/300) Max Health.
+At the start of each day, this gains (1/2/3) Max Ammo.
+At the start of each day, upgrade a Tool of a lower tier.
+At the start of each day, your Properties gain (+2/+4/+6) Value.
+At the start of each day, your items gain (1/2) value.
+At the start of each fight with Crystal Bonsai, this gains (6/9/12) value.
+At the start of each fight with Dragon Tooth, spend 3 gold and your weapons permanently gain (5/10) damage.
+At the start of each fight, Burn (6/9/12/15).
+At the start of each fight, an enemy item has its cooldown increased by (3/6) second(s).
+At the start of each fight, freeze 1 item for (3/4/5/6) second(s).
+At the start of each fight, use this.
+At the start of each fight, your Small items gain Haste for (1/2/3) second(s).
+At the start of each fight, your other items gain Value equal to this item's Value for the fight.
+At the start of each hour, get a Coconut or Citrus.
+At the start of each hour, permanently gain (10/20/30) Max Health.
+At the start of each hour, set this item's value to a number between 0 and (5/10/20/40).
+At the start of each hour, spend 2 gold to gain 1 value.
+At the start of each hour, spend 2 gold to get a Gumball.
+At the start of each hour, this gains (+1/+2/+3) value.
+At the start of each hour, this gains (1/2/3) value.
+Burn (1/2/3) for each unique type you have.
+Burn (1/2/3).
+Burn (1/2/3/4).
+Burn (1/2/3/5).
+Burn (10/20).
+Burn (12/16/20).
+Burn (2/3/4).
+Burn (2/3/4/5).
+Burn (2/4/6).
+Burn (2/4/6/8).
+Burn (3/6/9). Poison (3/6/9).
+Burn (3/6/9/12).
+Burn (4/5/6/7).
+Burn (4/6).
+Burn (4/6/8).
+Burn (4/6/8/10).
+Burn (4/7/10/13).
+Burn (5/10).
+Burn (6/8/10).
+Burn (6/8/10/12).
+Burn (6/9/12/15).
+Burn 1.
+Burn 8.
+Burn both players (2/3/4/5).
+Burn both players (4/6/8).
+Burn both players (5/10/15/20).
+Burn equal to (1/2) times this item's damage.
+Burn equal to this item's damage.
+Burn items to the right of this gain (1/2/3/4) Burn for the fight.
+Charge 1 item (1/2/3) second(s).
+Charge adjacent Large items (2/3/4) second(s).
+Charge adjacent Small items (1/2/3/4) second(s).
+Charge adjacent items (1/2/3) second(s).
+Charge adjacent items 1 second(s).
+Charge all items to the right of this 1 second(s).
+Charge another small item (3/4/5) second(s).
+Charge the item to the left of this (1/2/3/4) second(s).
+Charge your other non-weapon items (1/2) second(s).
+Cleanse half your Burn.
+Cooldown (10/8/6) seconds
+Cooldown (10/9/8) seconds
+Cooldown (12/8) seconds
+Cooldown (20/16) seconds
+Cooldown (6/5/4) seconds
+Cooldown (7/6/5) seconds
+Cooldown (8/6) seconds
+Cooldown (8/7/6/5) seconds
+Cooldown (9/8/7) seconds
+Cooldown 1 seconds
+Cooldown 10 seconds
+Cooldown 12 seconds
+Cooldown 15 seconds
+Cooldown 2 seconds
+Cooldown 20 seconds
+Cooldown 24 seconds
+Cooldown 3 seconds
+Cooldown 4 seconds
+Cooldown 5 seconds
+Cooldown 6 seconds
+Cooldown 7 seconds
+Cooldown 8 seconds
+Cooldown 9 seconds
+Crit Chance (15%/30%/50%/100%)
+Crit Chance 10%
+Crit Chance 100%
+Crit Chance 20%
+Crit Chance 25%
+Deal (10/15/20/25) damage.
+Deal (10/15/20/40) Damage.
+Deal (10/20) damage.
+Deal (10/20/30/40) damage.
+Deal (10/20/40) damage.
+Deal (10/20/40/80) Damage
+Deal (10/20/40/80) Damage.
+Deal (10/20/40/80) damage.
+Deal (100/150/200) damage.
+Deal (100/200) damage.
+Deal (100/200/300) damage.
+Deal (12/18/24/30) damage.
+Deal (12/18/24/32) damage.
+Deal (120/180/240) damage.
+Deal (15/25/35/50) damage.
+Deal (15/30/60) damage for each Weapon or Tech item you have.
+Deal (15/30/60) damage.
+Deal (15/30/60/100) damage for each Small item you have (including Stash).
+Deal (15/30/60/120) damage.
+Deal (150/200) damage.
+Deal (160/200) Damage.
+Deal (2/4) damage.
+Deal (2/4/8/16) damage.
+Deal (20/30/40) damage.
+Deal (20/30/40/50) Damage.
+Deal (20/30/40/50) damage.
+Deal (20/40) Damage.
+Deal (20/40/60/80) damage.
+Deal (20/40/80) damage.
+Deal (20/40/80/160) damage.
+Deal (24/32) damage.
+Deal (25/50) damage.
+Deal (25/50/100) damage.
+Deal (25/50/75/100) damage.
+Deal (30/20/40) damage.
+Deal (30/40/50) damage.
+Deal (30/40/60) damage.
+Deal (30/45/60/75) damage.
+Deal (30/60/120) damage.
+Deal (30/60/120/240) damage.
+Deal (30/60/90/120) damage.
+Deal (300/400/500) damage.
+Deal (36/48/60) damage.
+Deal (4/20) damage.
+Deal (4/8/16/32) damage.
+Deal (40/60/80/100) damage.
+Deal (5/10/15) damage.
+Deal (5/10/15/20) damage.
+Deal (5/10/20) damage.
+Deal (5/10/20/40) damage.
+Deal (5/15/30/50) damage for each Small Friend you have.
+Deal (5/15/30/50) damage.
+Deal (50/100) damage for each item to the left of this.
+Deal (50/100) damage.
+Deal (50/100/150/200) damage.
+Deal (50/100/200) damage.
+Deal (50/75/100) damage.
+Deal (50/75/100/125) damage.
+Deal (500/1000) damage to the player with less health.
+Deal (6/12/18/24) damage.
+Deal (6/12/24/48) damage.
+Deal (60/90/120) damage.
+Deal (75/150/300/600) damage.
+Deal (8/12/16/20) damage.
+Deal (8/16/24/32) damage.
+Deal (80/120/160) damage.
+Deal (90/120/150) damage
+Deal 1 damage.
+Deal 10 Damage.
+Deal 10 damage.
+Deal 100 damage.
+Deal 1000 damage.
+Deal 16 damage.
+Deal 2 damage.
+Deal 20 Damage.
+Deal 20 damage.
+Deal 200 damage.
+Deal 30 damage.
+Deal 300 damage.
+Deal 33 damage.
+Deal 40 damage.
+Deal 5 damage.
+Deal 50 damage.
+Deal 60 damage.
+Deal 8 damage.
+Deal 80 damage.
+Deal damage equal to (10%/15%/20%) of your Max Health.
+Deal damage equal to (10%/20%) of your Max Health.
+Deal damage equal to (1x/2x) this item's value.
+Deal damage equal to (20%/30%) of your enemy's Max Health.
+Deal damage equal to (30%/40%/50%) of your enemy's Max Health and destroy this.
+Deal damage equal to 3 times the value of your items.
+Deal damage equal to a third of your enemy's max health.
+Deal damage equal to the highest Shield value of items you have.
+Deal damage equal to this item's ammo.
+Deal damage equal to your enemy's max health.
+Deal damage equal to your shield.
+Destroy a small enemy item for the fight.
+Destroy a small item.
+Destroy an enemy item for the fight.
+Destroy another small item on each player's board for the fight.
+Destroy this and 3 small enemy items for the fight.
+Destroy this and all smaller items for the fight.
+Double the Burn of an item for the fight.
+Double this item's damage for the fight.
+Every 50 you spend, upgrade an item of a lower tier. [Gold Spent: 0]
+Every 50 you spend, upgrade this. [Gold Spent: 0]
+Farai will return for this
+For each adjacent Food, this has +1 Multicast.
+For each adjacent Friend or Property, this gains (+4/+8) Burn.
+For each adjacent Friend or Ray, this has +1 Multicast.
+For each adjacent Tool or Food item, this gains +1 Multicast.
+For each adjacent Vehicle, this has +1 Multicast.
+For every 5 Merchants you visit, upgrade this. [Merchants Visited: 0]
+Freeze (1/2/2) medum or small item(s) for 1 second(s).
+Freeze (1/2/3/4) small item(s) for 2 second(s).
+Freeze 1 item for (1/2) second(s).
+Freeze 1 item for (1/2/3) second(s).
+Freeze 1 item for (1/2/3/4) second(s).
+Freeze 1 medium or small item for (1/2) second(s).
+Freeze 1 medium or small item for (1/2/3) second(s).
+Freeze 1 medium or small item for 1 second(s).
+Freeze 1 small item for (1/2) second(s).
+Freeze 1 small item for (1/2/3) second(s).
+Freeze 1 small item for (1/2/3/4) second(s).
+Freeze 2 items for (1/2/3) second(s).
+Freeze 3 small items for (1/2) second(s).
+Freeze all items other than The Core for (2/3) second(s).
+Freeze an item with a cooldown of 4 seconds or less for (1/2/3/4) second(s).
+Freeze both players' items for (1/2) second(s).
+Freeze this and adjacent items for 1 second(s).
+Gain (1/2/3) gold.
+Gain (1/2/3/4) Regeneration for the fight.
+Gain (2/4/6/8) Regeneration for the fight.
+Gain (20/30/40) Max Health for the fight.
+Gain (6/9/12) Regeneration for the fight.
+Gain 10 Regeneration for the fight.
+Gain Regeneration for the fight equal to this item's damage.
+Gain Shield equal to this item's damage.
+Gain Shield equal to your enemy's burn.
+Haste (1/2/3/4) Aquatic or Toy item(s) for 2 second(s).
+Haste (1/2/3/4) items for 3 second(s).
+Haste 1 adjacent item for (1/2/3) second(s).
+Haste 1 item for (1/2/3) second(s).
+Haste 1 item for (1/2/3/4) second(s).
+Haste 1 item for (2/3/4) second(s).
+Haste a non-weapon item for 2 second(s).
+Haste adjacent items (2/3/4/5) second(s).
+Haste adjacent items for (1/2/3) second(s).
+Haste adjacent items for (1/2/3/4) second(s).
+Haste another item for (1/2/3/4) second(s).
+Haste the Aquatic item to the right for (2/3/4/5) second(s).
+Haste the Core for (1/2/3/4) second(s).
+Haste the Core for (2/3/4) second(s).
+Haste this and the items on the right of this for (2/4) second(s).
+Haste your Friends for (1/2/3) second(s).
+Haste your Vehicles for (3/4/5) second(s).
+Haste your items for (1/2/3/4) second(s).
+Haste your other items for (1/2/3) second(s).
+Haste your other items for 2 second(s).
+Haste your tools for (1/2/3/4) second(s).
+Heal (1/2/3/4).
+Heal (10/20/40/80).
+Heal (100/200).
+Heal (20/30/40/50).
+Heal (25/50/100/200).
+Heal (30/60/120).
+Heal (30/60/120/240).
+Heal (40/80/120/160).
+Heal (5/10/20/40).
+Heal 20.
+Heal 40.
+Heal equal to (1/2/3) times the value of your highest value item.
+Heal equal to (1/2/3) times your gold.
+Heal equal to (1x/2x/3x/4x) this item's value.
+Heal equal to (2/3/4) times this item's value.
+Heal equal to (4%/8%/12%) of your Max Health.
+Heal equal to (4/6) times the value of your items.
+Heal equal to (5%/10%) of your Max Health.
+Heal equal to (5%/10%/15%) of your Max Health.
+Heal equal to this item's value.
+Heal equal to your Shield.
+Heal equal to your opponent's Poison.
+If both adjacent items are food, this has +1 Multicast.
+If the item is Large, Reload 1 Ammo.
+If this is your only friend, your items have (+10%/+15%/+20%/+25%) Crit Chance.
+If you have 5 or fewer items in play, their cooldowns are reduced by (10%/20%).
+If you have 5 or fewer items in play, this has +1 Multicast.
+If you have 5 or more unique Types, reduce this item's cooldown by 50%.
+If you have a Vehicle or Large item, reduce this item's cooldown by 50%.
+If you have a Vehicle, at the start of each fight, use this.
+If you have another Apparel item in play, this item's cooldown is reduced by 50%.
+If you have another Tool, Ammo, Property or Friend this has +1 Multicast for each.
+If you have another Tool, Weapon, Property or Apparel this has +1 Multicast for each.
+If you have another item with Burn, Poison, Slow, or Freeze, this has +1 Multicast for each.
+If you have exactly one weapon, reduce its cooldown by (15%/20%/25%/30%).
+If you have exactly one weapon, that Weapon has lifesteal.
+If you have no weapons, your items have their cooldowns reduced by (5%/10%/15%/20%).
+If your enemy has at least (5/4) items, destroy a small or medium enemy item for the fight.
+If your enemy has at least (6/5/4) items, destroy a small enemy item for the fight.
+Increase an enemy item's cooldown by (1/2/3) second(s) for the fight.
+Lifesteal
+Multicast (2/3/4)
+Multicast 2
+Multicast 3
+Multicast 8
+Non-tech item cooldowns are increased by (1/2) second(s).
+Permanently gain (10/15/20) Max Health.
+Permanently gain (5/10) Max Health.
+Poison (1/2).
+Poison (1/2/3) for each unique type you have.
+Poison (1/2/3).
+Poison (1/2/3/4).
+Poison (2/3/4).
+Poison (2/3/4/5).
+Poison (2/4/6/8).
+Poison (3/4/5/6).
+Poison (3/6/9/12).
+Poison (4/5/6).
+Poison (4/6/8)
+Poison (6/8/10/12).
+Poison 10.
+Poison 3.
+Poison both players (4/6/8/10).
+Poison equal to this item's damage.
+Poison equal to your Regeneration.
+Reduce this item's cooldown by (10%/20%) for the fight.
+Reload a potion.
+Reload adjacent Ammo items (1/2/3) Ammo.
+Reload all your items (1/2/3) Ammo and charge them 1 second(s).
+Reload the item to the right of this (1/2/3/4) Ammo.
+Reload your Potions 1 Ammo and Charge them 1 second(s).
+Remove Freeze from your items.
+Sells for gold
+Shield (10/15/20/25) for each Aquatic item you have in play.
+Shield (10/15/20/25).
+Shield (10/20).
+Shield (10/20/30).
+Shield (10/20/30/40).
+Shield (10/20/40/80).
+Shield (10/30/50/100).
+Shield (100/150).
+Shield (100/200/300/400).
+Shield (15/30/60/120).
+Shield (20/30/40).
+Shield (20/30/40/50).
+Shield (20/40/80/160).
+Shield (20/60/120/200).
+Shield (30/40/50).
+Shield (30/60/90/120).
+Shield (40/60/80).
+Shield (40/80/150/300).
+Shield (5/10/15/20).
+Shield (5/10/20/40) for each small item you have (including Stash).
+Shield (5/10/20/40).
+Shield (50/100).
+Shield (50/100/200).
+Shield (50/75/100/125).
+Shield (6/12/18/24).
+Shield (75/100).
+Shield (75/100/125).
+Shield (75/150).
+Shield 10.
+Shield 20.
+Shield 25.
+Shield 30.
+Shield 50.
+Shield Properties adjacent to this have + Shield equal to (1x/2x) the value of your highest value item. [0]
+Shield equal to (1/2/3/4) times this item's value.
+Shield equal to (1/2/3/4) times your Income.
+Shield equal to (1x/2x) the value of the adjacent items.
+Shield equal to (1x/2x/3x) your gold.
+Shield equal to (1x/2x/3x/4x) this item's value.
+Shield equal to (2/3) times the value of your items.
+Shield equal to this item's Ammo.
+Shield equal to this item's value.
+Shield equal to your current Health.
+Shield items to the right of this gain (+10/+15/+20/+25) Shield for the fight.
+Slow (1/2/3) items for 3 second(s).
+Slow (1/2/3/4) item for 3 second(s).
+Slow (1/2/3/4) item(s) for 1 second(s).
+Slow (2/3/4) item(s) for 3 second(s).
+Slow 1 item for (1/2/3) second(s).
+Slow 1 item for (1/2/3/4) second(s).
+Slow 1 item for (2/3) second(s).
+Slow 1 item for (2/3/4) second(s).
+Slow 1 item for (2/3/4/5) second(s).
+Slow 1 item for (3/4/5/6) second(s).
+Slow 1 item for 2 second(s).
+Slow 1 items for (1/2/3/4) second(s).
+Slow 2 items for (2/3) second(s).
+Slow 2 items for (3/4/5/6) second(s).
+Slow 2 items for (4/6/8/10) second(s).
+Slow all enemy items for (1/2/3/4) second(s).
+Slow all enemy items for (3/4/5) second(s).
+The Core gains (+5%/+10%/+15%) Crit Chance for the fight.
+The Core gains (+5/+10) damage for the fight.
+The Property to the left of this has double value in combat and has its cooldown reduced by (5%/10%/15%).
+The first time you fall below half health each fight, Freeze 1 item(s) for 99 second(s).
+The first time you fall below half health each fight, slow all enemy items for (1/2/3/4) second(s).
+The first time you fall below half health each fight, use this.
+The first time you use this each fight, destroy a small enemy item for the fight.
+The first time you would die each fight, Heal (200/600/1200/2000).
+The first time you would die each fight, Heal for (25%/50%) of your Max Health.
+The item to the left of this gains (4%/8%/12%/16%) Crit Chance for the fight.
+The item to the left of this has its cooldown reduced by (25%/50%).
+The item to the right of this gains (4%/8%/12%/16%) Crit Chance for the fight.
+The weapon to the left of this gains (+10/+20/+30) damage for the fight.
+The weapon to the left of this gains (+4/+8/+12/+16) damage for the fight.
+The weapon to the left of this has (+10/+20/+30/+50) damage.
+The weapon to the left of this has lifesteal.
+The weapon to the right of this gains (+4/+8/+12/+16) damage for the fight.
+The weapon to the right of this gains (+8/+12/+16/+20) damage for the fight.
+The weapon to the right of this has Lifesteal.
+This and items to the right of this have (+15%/+20%/+25%/+30%) Crit Chance.
+This deals (2/3/4) times damage if it is your only friend.
+This deals (3/5/10) times more damage if it is your only weapon.
+This deals double Crit damage.
+This deals quadruple crit damage.
+This gains (10/15/20/25) Shield for the fight.
+This gains 1 Value.
+This gains Damage equal to your enemy's Burn for the fight.
+This has (+1/+2/+3/+4) Max Ammo for each Toy you have. [0]
+This has + Burn equal to the Burn of your non-Fire Claw items. [0]
+This has +1 Multicast for each Property you have. [0]
+This has +1 Multicast for each adjacent Property.
+This has +1 Multicast for each of its Types. [0]
+This has +1 Multicast if it is adjacent to a Friend.
+This has +1 Multicast if it is adjacent to a Friend. Double this if it is your only Friend.
+This has +1 Multicast if it is adjacent to a Tool.
+This has +1 Multicast if you have more health than your enemy.
+This has double damage.
+This has double value in combat.
+This has triple value in combat.
+This item's cooldown is reduced by 1% for every 2 damage it has.
+This item's cooldown is reduced by 5 seconds for each adjacent large item.
+This item's value is equal to your highest value Property.
+This permanently gains (+1/+2/+3/+4) Heal.
+This permanently loses 1 Max Ammo and destroy this if it has 0 Max Ammo.
+Use a property.
+Use all your other items.
+Use the Core.
+Weapon Properties adjacent to this have + Damage equal to (1x/2x) the value of your highest value item. [0]
+Weapons to the right of this gain (+10/+15/+20/+25) damage for the fight.
+Weapons to the right of this have (+25/+50/+100) damage.
+When ANY item gains Freeze, Shield (50/75/100).
+When any item gains Freeze, Charge this (3/6) second(s).
+When any item gains freeze, charge this (1/2/3) second(s).
+When any non-weapon is used, Charge this 1 second(s).
+When any player uses an item, this gains (10/20) damage and (10/20) shield for the fight.
+When one of your items gains Freeze, reduce the duration by half.
+When one of your items run out of ammo, Charge this 1 second(s).
+When the Core gains Haste, it gains (+10/+20/+30) damage for the fight.
+When this gains Haste, charge it 2 second(s).
+When this gains Haste, it also gains (5%/10%/15%/20%) Crit Chance for the fight.
+When this gains Haste, this and the weapon to the left gains (20/25) damage for the fight.
+When this gains Haste, this gains (+1/+2/+3/+4) Poison for the fight.
+When this gains Haste, this gains (2/4/6) Burn for the fight.
+When this gains Haste, your Shield items gain (4/6/8) shield for the fight.
+When this gains Haste, your items gain (+2%/+4%/+6%/+8%) Crit chance for the fight.
+When this gains Haste, your weapons gain (4/6/8) damage for the fight.
+When this gains haste, charge it (1/2) second(s).
+When this gains haste, it gains (+10/+20/+40/+80) damage for the fight.
+When this gains haste, your items gain (+3%/+5%) crit chance for the fight.
+When this item gains Freeze, remove Freeze from it.
+When this or an adjacent item gains Freeze, remove it.
+When you Burn or use a Dragon item, charge this 2 seconds.
+When you Burn, Reload this 1 ammo.
+When you Burn, charge this (1/2) second(s).
+When you Burn, charge this 2 second(s).
+When you Burn, charge this for 2 seconds.
+When you Burn, this gains (25/50/75) damage for the fight.
+When you Burn, this gains (5/10) Burn for the fight.
+When you Crit with an item, reduce its cooldown by (5%/10%) for the fight.
+When you Crit with another item, Charge this (1/2/3) second(s).
+When you Crit with any item, Charge this 1 second(s).
+When you Crit, Charge this 2 second(s).
+When you Crit, Haste 1 item for (1/2/3) second(s).
+When you Crit, Reload this 2 Ammo.
+When you Crit, reduce this item's cooldown by 10% for the fight.
+When you Freeze, Poison (6/8/10).
+When you Freeze, this gains (1/2/3/4) Poison for the fight.
+When you Freeze, this gains (10/15/20) damage for the fight.
+When you Freeze, your weapons gain (4/6/8/10) damage for the fight.
+When you Haste or Slow, Charge this 1 second(s).
+When you Haste, Reload this 1 Ammo.
+When you Haste, Slow, Freeze, Burn or Poison, charge this 2 second(s).
+When you Haste, charge this 2 second(s).
+When you Haste, charge this 2 seconds.
+When you Haste, this gains (+1/+2/+3/+4) Poison for the fight.
+When you Haste, this gains (10/20/30) damage for the fight.
+When you Haste, this gains (20/30/40) damage for the fight.
+When you Haste, this gains (60/80/100) damage for the fight.
+When you Heal, gain (10/20/40) Max Health for the fight.
+When you Heal, this gains (+1/+2/+3/+4) Poison for the fight.
+When you Heal, this gains (2/4/6) Burn for the fight.
+When you Heal, this gains (5/10/15/20) damage for the fight.
+When you Level Up, get a Spare Change.
+When you Level Up, get a Tech item.
+When you Level Up, if you have at least 3 tools, upgrade an item of a lower tier.
+When you Level Up, permanently gain (100/200) Max Health.
+When you Over-heal, charge this 1 second(s).
+When you Poison, gain (+2/+4/+6) Regeneration for the fight.
+When you Poison, this gains (+10/+15/+20/+25) Heal for the fight.
+When you Shield, Charge this 2 second(s).
+When you Shield, charge this 1 second(s).
+When you Shield, this gains (1/2) Burn for the fight.
+When you Shield, this gains (5/10/15) Damage for the fight.
+When you Slow, Charge this 2 second(s) and this gains (+25/+50/+75) Damage for the fight.
+When you Slow, Freeze, Burn or Poison, this gains (10/20/30) damage for the fight.
+When you Slow, Haste 1 item for (1/2/3) second(s).
+When you Slow, charge this 1 second(s).
+When you Slow, charge this 2 second(s).
+When you Slow, deal (4/8/12/16) damage.
+When you Slow, gain (2/4) Regeneration for the fight.
+When you buy a Potion, increase this item's +Regeneration by (+1/+2/+3).
+When you buy a Property, get a Busy Bee and your Busy Bees gain (+5/+10/+15) damage.
+When you buy a weapon, this gains (1/2/3) value and you gain (20/50/100) max health.
+When you buy an Aquatic item, this gains Heal (3/6/9/12).
+When you buy another Aquatic item, this gains (1/2/3/4) Value.
+When you buy another Aquatic item, this gains (5/10/15/20) Shield.
+When you buy another item, this gains that item's Types.
+When you buy this, gain (+1/+2/+3/+5) Income.
+When you buy this, get 3 Nanobots.
+When you buy this, get a Piranha.
+When you buy this, get a Spare Change.
+When you buy this, get a non-Vanessa item.
+When you crit, charge this 1 second(s).
+When you destroy an item during combat, your Dinosaurs permanently gain (10/15/20) damage.
+When you destroy an item during combat, your Dinosaurs permanently gain (30/40) damage.
+When you destroy an item, this gains (5/10/15) Poison for the fight.
+When you freeze, this gains (40/50) damage for the fight.
+When you gain Burn, Haste your items (1/2) second(s).
+When you gain gold, this gains + damage equal to (1x/2x/3x) the amount of gold gained.
+When you heal, this gains (3/6/9/12) damage for the fight.
+When you lose Shield, this gains damage equal to (10%/20%/40%) of the Shield lost.
+When you lose a fight with Crystal Bonsai, permanently destroy this.
+When you lose a fight with Stained Glass Window in play, permanently destroy this.
+When you poison, this gains (10/15/20/25) damage for the fight.
+When you sell a Small item, permanently gain (+10/+20/+40) Max Health.
+When you sell a Small item, this gains (5/10/15/20) Shield.
+When you sell a Spare Change, this gains (+10/+20/+30/+40) Heal.
+When you sell a Tool, this gains +1 Max Ammo.
+When you sell a Weapon, this gains (10/20/30/40) damage.
+When you sell a small item, this gains (3/6/9/12) damage.
+When you sell an item, this gains (1/1/1/2) value.
+When you sell an item, this gains (1/2) value.
+When you sell an item, this gains (1/2/3) value.
+When you sell another non-weapon item, this gains Shield (4/8/12/16).
+When you sell this, The Core gains + Damage equal to (1x/2x/3x/4x) this item's value. (1/4/12/32)
+When you sell this, Your leftmost Freeze item gains +1 second to Freeze.
+When you sell this, gain (1/2/3) XP.
+When you sell this, gain 2 Icicles.
+When you sell this, gain access to the Thieves Guild.
+When you sell this, gain access to the genie Rit.
+When you sell this, get 2 Spare Change.
+When you sell this, get 3 Chocolate Bars.
+When you sell this, get 3 Small items from any hero.
+When you sell this, get 3 Spare Change.
+When you sell this, get Spare Change equal to its value.
+When you sell this, permanently gain (1/2/3/4) Regeneration.
+When you sell this, permanently gain (10/20/30/40) Max Health.
+When you sell this, permanently gain (20/60/120/200) Max Health.
+When you sell this, recover 5 Prestige.
+When you sell this, reduce your items' cooldown by (1%/2%/3%/4%).
+When you sell this, reduce your items' cooldowns by (2%/4%/6%/8%).
+When you sell this, reduce your leftmost item's cooldown by (3%/6%/9%/12%).
+When you sell this, upgrade The Core. (/and reduce its cooldown by 1 second(s).)
+When you sell this, upgrade your leftmost (Bronzer-tier/Silver/item). (item/or). (/lower tier item).
+When you sell this, upgrade your leftmost item.
+When you sell this, you lose (10/20/30/40) Max Health.
+When you sell this, your Heal items gain (+10/+20/+30/+40) Heal.
+When you sell this, your Shield items gain (1/2/3/4) Shield.
+When you sell this, your Shield items gain (3/6/9/12) Shield.
+When you sell this, your items gain (+1%/+2%/+3%/+4%) Crit Chance.
+When you sell this, your items gain (+1/+2/+3/+4) value.
+When you sell this, your leftmost Ammo item gains (1/2/3) Max Ammo.
+When you sell this, your leftmost Burn item gains (+1/+2/+4) Burn.
+When you sell this, your leftmost Burn item gains (+3/+4/+5/+6) Burn.
+When you sell this, your leftmost Haste item gains +1 Haste duration.
+When you sell this, your leftmost Heal item gains (+5/+15/+30/+50) Heal.
+When you sell this, your leftmost Heal item gains (5/10/20/40) Heal.
+When you sell this, your leftmost Poison item gains (+1/+2/+3/+4) Poison.
+When you sell this, your leftmost Poison item gains (+1/+2/+4) Poison.
+When you sell this, your leftmost Shield item gains (+3/+6/+12/+24) Shield.
+When you sell this, your leftmost Slow item gains (+1/+2/+3/+4) Slow.
+When you sell this, your leftmost Slow item gains (1/2/3/4) second to Slow.
+When you sell this, your leftmost Weapon gains (5/10/15) Damage.
+When you sell this, your leftmost item gains (+4/+6/+8/+10) Damage if it is a Weapon and (+4/+6/+8/+10) Shield if it is a Shield item.
+When you sell this, your leftmost item gains (5%/10%/15%/20%) Crit Chance.
+When you sell this, your leftmost item gains value equal to this item's value.
+When you sell this, your leftmost weapon gains (+4/+6/+8/+10) Damage.
+When you sell this, your leftmost weapon gains (+5/+15/+30/+50) damage.
+When you sell this, your weapons gain (+1/+2/+3/+4) Damage.
+When you sell this, your weapons gain (1/2/3/4) damage.
+When you sell this, your weapons gain (2/4/6/8) damage.
+When you sell this, your weapons gain (3/6/9/12) damage.
+When you sell this, your weapons gain (4/6/8/10) damage.
+When you slow, charge this 2 second(s).
+When you slow, this gains (5/10/20) damage for the fight.
+When you use a Friend, this gains (15/20/25) damage for the fight.
+When you use a Property, Charge this 1 second(s).
+When you use a Small item, this gains (20/30/40) damage for the fight.
+When you use a Weapon, Haste it for (1/2/3) second(s).
+When you use a Weapon, charge this 1 second(s).
+When you use a Weapon, this gains (10/15/20) Shield for the fight.
+When you use a non-weapon item, Charge this 1 second(s).
+When you use a property, this gains (10/20/30/40) damage for the fight.
+When you use a small item, charge this 1 second(s).
+When you use a weapon, your weapons gain (1/2/3) Damage for the fight.
+When you use an Ammo item, deal (24/32) damage.
+When you use an Aquatic item, this gains (+5/+10/+15/+20) Heal for the fight.
+When you use an adjacent Aquatic item, this gains Haste for (1/2/3/4) second(s).
+When you use an adjacent Friend, this gains (10/15/20/25) Shield for the fight.
+When you use an adjacent Large item, this gains (30%/60%) damage for the fight.
+When you use an adjacent Medium item, this gains (20%/40%) damage for the fight.
+When you use an adjacent Tech, charge 1 item 1 second(s).
+When you use an adjacent Weapon, Slow 1 item for (1/2/3) second(s).
+When you use an adjacent Weapon, it gains (+3/+6/+9/+12) damage for the fight.
+When you use an adjacent Weapon, this gains (+1/+2/+3) Poison for the fight.
+When you use an adjacent friend, Haste this (1/2/3/4) second(s).
+When you use an adjacent friend, charge this 1 second(s).
+When you use an adjacent item, Burn 2.
+When you use an adjacent item, Haste the other adjacent item for (1/2/3) second(s).
+When you use an adjacent item, Shield (5/10/15).
+When you use an adjacent item, charge this (1/2/3/4) second(s).
+When you use an adjacent item, charge this 1 second(s).
+When you use an adjacent item, charge this 2 second(s).
+When you use an adjacent item, this gains Haste for (2/4) second(s).
+When you use an adjacent non-weapon item, this gains (10/15/20/25) Shield for the fight.
+When you use an adjacent or Dragon item, this gains (+2/+3/+4) Burn for the fight.
+When you use an item, deal 100 damage.
+When you use another Ammo item, Reload 1 ammo.
+When you use another Ammo item, charge this (1/2/3) second(s).
+When you use another Ammo item, this gains 1 Multicast for the fight.
+When you use another Aquatic item, Charge this 1 second(s).
+When you use another Aquatic item, charge this (1/2) second(s).
+When you use another Aquatic or Ammo item, this gains (25/50/75) damage for the fight.
+When you use another Friend, Charge this 1 second(s).
+When you use another Friend, this gains (10/20/30) damage for the fight.
+When you use another Tech, charge this 1 second(s).
+When you use another Tech, charge this 2 second(s).
+When you use another Tool, Charge this 1 second(s).
+When you use another Toy, Friend or Ammo item, charge this 1 second(s).
+When you use another Weapon or Haste, charge this 2 second(s).
+When you use another Weapon, Charge this 2 second(s).
+When you use another friend, this gains (1/2/3) Burn for the fight.
+When you use another item, Charge this 1 second(s).
+When you use another item, this gains +Shield equal to the value of that item for the fight.
+When you use another item, this gains Heal equal to the value of that item for the fight.
+When you use another non-weapon item, Charge this 1 second(s).
+When you use another non-weapon item, charge this 1 second(s).
+When you use another weapon, charge this 2 second(s).
+When you use any item to the left of this, Charge this 1 second(s).
+When you use any item to the left of this, this gains (10/20/30) Damage for the fight.
+When you use any item to the right of this, this gains (10/20/30) Shield for the fight.
+When you use the Core or another Ray, charge this 1 second(s).
+When you use the Core or another Ray, this and adjacent Burn items gain (2/3/4) Burn for the fight.
+When you use the Core or another Ray, this and adjacent Poison items gain (1/2/3) Poison for the fight.
+When you use the Core or another Ray, your Weapons gain (+2/+3/+4/+5) Damage for the fight.
+When you use the Core, Freeze 1 item for 1 second(s).
+When you use the Core, Reload this.
+When you use the Core, charge this 1 second(s).
+When you use the Core, it gains (+20/+40) damage for the fight.
+When you use the Weapon to the left of this, deal (10/15/20/25) damage.
+When you use the item to the left of this, charge the item to the right for (1/2) second(s).
+When you use the item to the left of this, haste the item to the right of this for (1/2/3) second(s).
+When you use the item to the right of this, Charge the item to the left of this (1/2) second(s).
+When you use the item to the right of this, Haste it for (1/2/3/4) second(s). If it is a weapon, it also gains (+3/+5/+7/+9) damage for the fight.
+When you use this, Reload this 1 Ammo if it is your only weapon with a cooldown.
+When you use your leftmost item, charge your rightmost item (1/2) second(s).
+When you visit a Merchant, this and the item to the left of this gains (1/2/3/4) value.
+When you visit a Merchant, this gains (1/2/3) value.
+When you win a fight against a Monster with this, get a random Loot item.
+When you win a fight against a player, gain (1/2/3) XP. If you had Wanted Poster in play, gain 1 additional XP.
+When you win a fight with Langxian in play, this gains (40/60/80/100) damage.
+When you win a fight with Stained Glass Window in play, your Properties in play gain (5/10) value.
+When you win a fight, get a Piggle.
+When you win a fight, this gains 2 value.
+When your enemy uses a weapon, charge your Busy Bees 2 second(s).
+When your enemy uses an item, Burn 1.
+When your enemy uses an item, Charge this (1/2/3) second(s).
+When your enemy uses an item, Freeze it for 1 second(s).
+When your enemy uses an item, Slow it for (1/2) second(s).
+When your enemy uses an item, deal (1/10) damage.
+When your opponent uses a Weapon or Burn item, Charge this 2 second(s).
+While either player has Burn, this item's cooldown is reduced by 50%.
+While you have Shield, this item's cooldown is reduced by 50%.
+While your enemy has Poison, this has (+50%/+100%) Crit Chance.
+You have (+1/+2/+3) Income.
+You have (+1/+2/+3) Regeneration.
+You have (+50%/+75%/+100%) Max Health.
+You have (4/8/12) Regeneration.
+You have Regeneration equal to (1x/2x) adjacent properties' values. [0]
+You have increased max health equal to (10/15/20) times this item's value. ([60]/[180]/[480])
+You take (20%/30%/40%) less damage.
+Your Ammo items have (+20%/+30%/+40%) Crit Chance.
+Your Aquatic items gain (+4%/+6%/+8%/+10%) Crit Chance for the fight.
+Your Aquatic items have +1 Multicast.
+Your Friends have +1 Multicast.
+Your Heal items gain (6/9/12) Heal for the fight.
+Your Heal items have +1 Multicast.
+Your Lifesteal Weapons gain (+10/+15/+20/+25) damage for the fight.
+Your Lifesteal weapons have double damage.
+Your Medium Weapons have (+8/+16/+24) Damage for each Medium item you have. [0]
+Your Poison items gain (+1/+2) Poison for the fight.
+Your Properties have (+25%/+50%) Crit Chance.
+Your Shield item to the left of this gains (+4/+8/+12/+16) Shield for the fight.
+Your Shield item to the right of this gains (+4/+8/+12/+16) Shield for the fight.
+Your Shield items gain (+10/+15) Shield for the fight.
+Your Shield items gain (+2/+4/+6/+8) Shield for the fight.
+Your Shield items gain (+4/+8/+12) Shield and your Weapons (+4/+8/+12) damage for the fight.
+Your Shield items gain (1/2/3/4) Shield for the fight.
+Your Shield items gain (5/10/15) Shield for the fight.
+Your Shield items gain (6/9/12) Shield for the fight.
+Your Shield items have (+20%/+30%/+40%/+50%) Crit Chance.
+Your Small items have (+1/+2) value.
+Your Weapons gain (+10/+20/+40/+80) damage for the fight.
+Your Weapons gain (+3/+6/+9/+12) damage for the fight.
+Your Weapons gain (2/3/4) damage for the fight and your opponent's Weapons lose (2/3/4) damage for the fight.
+Your enemy's Shield items lose (5/10/15/20) Shield for the fight.
+Your items from other Heroes have (+15%/+30%/+50%) Crit Chance.
+Your items gain (+1%/+2%/+3%/+4%) Crit Chance for the fight.
+Your items have (+10%/+20%/+30%/+40%) Crit Chance.
+Your items have (+20%/+40%) Crit Chance.
+Your items have (10%/20%/30%) Crit Chance.
+Your items with a cooldown of 8 seconds or greater have +1 Multicast.
+Your other Burn items have (+3/+4/+5/+6) Burn.
+Your other Freeze items have +1 Freeze duration.
+Your other Friends' cooldowns are reduced by (10%/20%/30%).
+Your other Poison items have (+3/+4/+5/+6) Poison.
+Your other Slow items have +1 Slow.
+Your other tools have their cooldowns reduced by (5%/10%/15%/20%).
+Your weapons gain (+10/+15/+20/+25) Damage and your Heal items gain (+10/+15/+20/+25) Heal for the fight.
+Your weapons gain (+3/+6/+9/+12) damage for the fight.
+Your weapons gain (1/2/3/4) damage for the fight.
+Your weapons gain (2/4/6/8) damage for the fight.
+Your weapons gain (2/4/8) damage for the fight.
+Your weapons gain (3/6/9) damage for the fight.
+Your weapons gain (6/9/12) Damage for the fight.
+Your weapons gain Damage equal to this item's value for the fight. [0]
+Your weapons gain damage equal to your weakest weapon's damage for the fight. [0]
+Your weapons have (+20%/+40%/+60%/+80%) Crit Chance.
+Your weapons have (+6/+9/+12/+15) damage.
+Your weapons have + damage equal to this item's value. [0]

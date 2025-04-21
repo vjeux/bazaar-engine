@@ -1,5 +1,12 @@
 // Type of scraped items.ts file
-import { Tier, Size, Tag, EnchantmentType, Hero, HiddenTag } from "./shared";
+import type {
+  EnchantmentType,
+  Hero,
+  HiddenTag,
+  Size,
+  Tag,
+  Tier,
+} from "./shared.ts";
 
 export interface Items {
   [key: string]: Item;

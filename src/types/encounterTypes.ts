@@ -1,4 +1,4 @@
-import { EnchantmentType, Tag, Tier } from "./shared";
+import type { EnchantmentType, Tag, Tier } from "./shared.ts";
 
 export interface EncounterDays {
   data: Datum[];
@@ -54,13 +54,13 @@ export enum Hero {
   Mak = "Mak",
   Pygmalien = "Pygmalien",
   Stelle = "Stelle",
-  Vanessa = "Vanessa"
+  Vanessa = "Vanessa",
 }
 
 export enum Size {
   Large = "Large",
   Medium = "Medium",
-  Small = "Small"
+  Small = "Small",
 }
 
 export interface Tiers {
