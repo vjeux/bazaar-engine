@@ -1,4 +1,4 @@
-import { genCardsAndEncounters } from "../lib/Data.ts";
+import { genCardsAndEncounters, getCardId } from "../lib/Data.ts";
 import { run } from "../engine/Engine.ts";
 import {
   getFlattenedEncounters,
@@ -53,9 +53,9 @@ describe("Encounter snapshots should match", () => {
           type: "player",
           health: 2000,
           cards: [
-            { name: "Silk Scarf" },
-            { name: "Fang" },
-            { name: "Bag of Jewels" },
+            { cardId: getCardId("Silk Scarf", Cards) },
+            { cardId: getCardId("Fang", Cards) },
+            { cardId: getCardId("Bag of Jewels", Cards) },
           ],
         },
       ]);
@@ -90,9 +90,9 @@ describe("Encounters should not throw", () => {
           type: "player",
           health: 2000,
           cards: [
-            { name: "Silk Scarf" },
-            { name: "Fang" },
-            { name: "Bag of Jewels" },
+            { cardId: getCardId("Silk Scarf", Cards) },
+            { cardId: getCardId("Fang", Cards) },
+            { cardId: getCardId("Bag of Jewels", Cards) },
           ],
         },
       ]);

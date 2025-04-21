@@ -33,13 +33,14 @@ describe("Tooltips should not throw", () => {
       const card = Cards["0.1.9"].find(
         (card) => card.Localization.Title.Text === cardName,
       );
-      if (!card) {
-        throw new Error(`Card "${cardName}" not found`);
+      const cardId = card?.Id;
+      if (!card || !cardId) {
+        throw new Error(`Card "${cardName}" not found or it's Id is missing`);
       }
       getTiers(card.StartingTier).forEach((tier) => {
         const extension = validItemNames.includes(cardName)
-          ? { cards: [{ name: cardName, tier }] }
-          : { skills: [{ name: cardName, tier }] };
+          ? { cards: [{ cardId, tier }] }
+          : { skills: [{ cardId, tier }] };
         const gameState = getInitialGameState(Cards, Encounters, [
           { type: "player", health: 1000, ...extension },
           { type: "player", health: 1000 },
@@ -60,14 +61,15 @@ describe("Tooltip snapshots", () => {
       const card = Cards["0.1.9"].find(
         (card) => card.Localization.Title.Text === cardName,
       );
-      if (!card) {
-        throw new Error(`Card "${cardName}" not found`);
+      const cardId = card?.Id;
+      if (!card || !cardId) {
+        throw new Error(`Card "${cardName}" not found or it's Id is missing`);
       }
       getTiers(card.StartingTier).forEach((tier) => {
         try {
           const extension = validItemNames.includes(cardName)
-            ? { cards: [{ name: cardName, tier }] }
-            : { skills: [{ name: cardName, tier }] };
+            ? { cards: [{ cardId: cardId, tier }] }
+            : { skills: [{ cardId: cardId, tier }] };
           const gameState = getInitialGameState(Cards, Encounters, [
             { type: "player", health: 1000, ...extension },
             { type: "player", health: 1000 },

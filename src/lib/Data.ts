@@ -50,3 +50,13 @@ export async function genCardsAndEncounters(): Promise<{
   ]);
   return { Cards: Cards as Cards, Encounters: Encounters as EncounterDays };
 }
+
+export function getCardId(cardName: string, Cards: Cards): string {
+  const card = Cards["0.1.9"].find(
+    (card) => card.Localization.Title.Text === cardName,
+  );
+  if (!card) {
+    throw new Error(`Card "${cardName}" not found`);
+  }
+  return card.Id;
+}
