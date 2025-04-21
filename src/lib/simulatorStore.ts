@@ -10,6 +10,7 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { genCardsAndEncounters } from "./Data";
 import { persist, StateStorage, createJSONStorage } from "zustand/middleware";
+import { arrayMove } from "@dnd-kit/sortable";
 const { Cards: CardsData, Encounters: EncounterData } =
   await genCardsAndEncounters();
 
@@ -36,6 +37,8 @@ type Actions = {
     recalculateSteps: () => void;
     removePlayerCard: (cardIndex: number) => void;
     removePlayerSkill: (skillIndex: number) => void;
+    reset: () => void;
+    movePlayerCard: (oldIndex: number, newIndex: number) => void;
   };
 };
 
@@ -50,11 +53,6 @@ const initialMonster: MonsterConfig = {
   type: "monster",
   name: "Pyro",
 };
-const initialGameState = getInitialGameState(CardsData, EncounterData, [
-  initialMonster,
-  initialPlayer,
-]);
-const initialSteps = run(initialGameState, 100000);
 
 const runWrapper = (monsterConfig: MonsterConfig, playerConfig: PlayerConfig) =>
   run(
@@ -64,6 +62,8 @@ const runWrapper = (monsterConfig: MonsterConfig, playerConfig: PlayerConfig) =>
     ]),
     100000,
   );
+
+const initialSteps = runWrapper(initialMonster, initialPlayer);
 
 const initialState: State = {
   playerConfig: initialPlayer,
@@ -147,6 +147,19 @@ export const useSimulatorStore = create<State & Actions>()(
         removePlayerSkill: (skillIndex: number) =>
           set((state) => {
             state.playerConfig.skills?.splice(skillIndex, 1);
+            state.steps = runWrapper(state.monsterConfig, state.playerConfig);
+          }),
+        reset: () => {
+          set(initialState);
+        },
+        movePlayerCard: (oldIndex: number, newIndex: number) =>
+          set((state) => {
+            const newCards = arrayMove(
+              state.playerConfig.cards ?? [],
+              oldIndex,
+              newIndex,
+            );
+            state.playerConfig.cards = newCards;
             state.steps = runWrapper(state.monsterConfig, state.playerConfig);
           }),
       },

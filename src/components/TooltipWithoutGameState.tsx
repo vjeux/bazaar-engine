@@ -23,7 +23,7 @@ export default function TooltipWithoutGameState({
         cards: card
           ? [
               {
-                name: card.Localization.Title.Text,
+                cardId: card.Id,
                 tier: card?.StartingTier ?? Tier.Bronze,
               },
             ]

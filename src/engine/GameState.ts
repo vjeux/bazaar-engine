@@ -5,6 +5,7 @@ import type { Card, Cards, Enchantments } from "../types/cardTypes.ts";
 import type { Tier } from "../types/shared.ts";
 import type { EncounterDays, Group } from "../types/encounterTypes.ts";
 import { z } from "zod";
+import { v7 as uuidv7 } from "uuid";
 /* Bugs
 
 // Day 1 - Viper
@@ -105,8 +106,13 @@ function _createBoardCardFromCard(
     attributes.Localization.Title.Text = `${enchantment} ${attributes.Localization.Title.Text}`;
   }
 
+  // Generate UUID used to identify the card in the game state
+  // Need to know which card is which to do drag and drop
+  const uuid = uuidv7();
+
   const result = {
     card: card,
+    uuid: uuid,
     tick: 0,
     Slow: 0,
     Freeze: 0,
@@ -122,7 +128,7 @@ function _createBoardCardFromCard(
   return result;
 }
 
-function getBoardCard(
+function createBoardCardFromName(
   Cards: Cards,
   name: string,
   tier: Tier | null = null,
@@ -136,7 +142,7 @@ function getBoardCard(
   return _createBoardCardFromCard(card, tier ?? card.StartingTier, enchantment);
 }
 
-function getBoardCardFromId(
+function createBoardCardFromId(
   Cards: Cards,
   cardId: string,
   tier: Tier,
@@ -149,19 +155,17 @@ function getBoardCardFromId(
   return _createBoardCardFromCard(card, tier, enchantment);
 }
 
-function getBoardSkill(
+function createBoardSkillFromId(
   Cards: Cards,
-  name: string,
-  tier: Tier | null = null,
-  modifiers: any = {},
+  cardId: string,
+  tier: Tier,
+  modifiers?: any = {},
 ): BoardSkill {
-  const CardsValues = Cards["0.1.9"];
-  const card = CardsValues.find(
-    (card) => card.Localization.Title.Text === name,
-  );
+  const card = Cards["0.1.9"].find((card) => card.Id === cardId);
   if (!card) {
-    throw new Error(`Card for Skill ${name} not found`);
+    throw new Error(`Skill card from id ${cardId} not found`);
   }
+
   let attributes: Partial<BoardSkill> = {
     Abilities: card.Abilities,
     Auras: card.Auras,
@@ -204,7 +208,23 @@ function getBoardSkill(
   return result;
 }
 
-function getBoardPlayer(
+function createBoardSkillFromName(
+  Cards: Cards,
+  name: string,
+  tier: Tier | null = null,
+  modifiers: any = {},
+): BoardSkill {
+  const CardsValues = Cards["0.1.9"];
+  const card = CardsValues.find(
+    (card) => card.Localization.Title.Text === name,
+  );
+  if (!card) {
+    throw new Error(`Card for Skill ${name} not found`);
+  }
+  return createBoardSkillFromId(Cards, card.Id, tier, modifiers);
+}
+
+function createBoardPlayer(
   stats: Omit<Partial<Player>, "board"> & { HealthMax: number },
   boardCards: BoardCard[],
   boardSkills: BoardSkill[],
@@ -223,11 +243,11 @@ function getBoardPlayer(
   };
 }
 
-function getBoardPlayerFromMonsterCard(Cards: Cards, monsterCard: Group) {
-  return getBoardPlayer(
+function createBoardPlayerFromMonsterCard(Cards: Cards, monsterCard: Group) {
+  return createBoardPlayer(
     { HealthMax: monsterCard.health },
     monsterCard.items.map((item) =>
-      getBoardCardFromId(
+      createBoardCardFromId(
         Cards,
         item.card.id,
         item.tierType,
@@ -235,12 +255,12 @@ function getBoardPlayerFromMonsterCard(Cards: Cards, monsterCard: Group) {
       ),
     ),
     monsterCard.skills.map((item) =>
-      getBoardCardFromId(Cards, item.card.id, item.tierType, null),
+      createBoardCardFromId(Cards, item.card.id, item.tierType, null),
     ),
   );
 }
 
-function getBoardMonster(
+function createBoardPlayerFromMonsterName(
   Cards: Cards,
   Encounters: EncounterDays,
   name: string,
@@ -252,7 +272,7 @@ function getBoardMonster(
       for (let k = 0; k < group.length; ++k) {
         const monsterCard = group[k];
         if (monsterCard.cardName === name) {
-          return getBoardPlayerFromMonsterCard(Cards, monsterCard);
+          return createBoardPlayerFromMonsterCard(Cards, monsterCard);
         }
       }
     }
@@ -286,13 +306,13 @@ export const MonsterConfigSchema = z.object({
 export type MonsterConfig = z.infer<typeof MonsterConfigSchema>;
 
 export interface PlayerCardConfig {
-  name: string;
+  cardId: string;
   tier?: Tier;
   enchantment?: keyof Enchantments | null;
 }
 
 export interface PlayerSkillConfig {
-  name: string;
+  cardId: string;
   tier?: Tier;
 }
 
@@ -315,18 +335,18 @@ export function getInitialGameState(
     players: config.map((player) => {
       if (player.type === "monster") {
         if (!player.name) throw new Error("Monster name is required");
-        return getBoardMonster(Cards, Encounters, player.name);
+        return createBoardPlayerFromMonsterName(Cards, Encounters, player.name);
       } else {
-        return getBoardPlayer(
+        return createBoardPlayer(
           {
             HealthMax: player.health ?? 3500,
             HealthRegen: player.healthRegen ?? 0,
           },
           (player.cards ?? []).map((c) =>
-            getBoardCard(Cards, c.name, c.tier, c.enchantment),
+            createBoardCardFromId(Cards, c.cardId, c.tier, c.enchantment),
           ),
           (player.skills ?? []).map((s) =>
-            getBoardSkill(Cards, s.name, s.tier),
+            createBoardSkillFromId(Cards, s.cardId, s.tier),
           ),
         );
       }

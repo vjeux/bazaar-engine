@@ -1,5 +1,5 @@
 "use client";
-import { memo, useEffect } from "react";
+import { memo, useEffect, useState } from "react";
 import { genCardsAndEncounters } from "@/lib/Data.ts";
 import { getFlattenedEncounters } from "@/engine/GameState.ts";
 import { TICK_RATE } from "@/engine/Engine.ts";
@@ -9,7 +9,6 @@ import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { HealthBar } from "@/components/HealthBar.tsx";
 import { Slider } from "@/components/ui/slider";
 import { BoardSkills } from "@/components/BoardSkills";
-import { CardDeck } from "@/components/CardDeck";
 import {
   Select,
   SelectContent,
@@ -19,6 +18,8 @@ import {
 } from "@/components/ui/select";
 import { GoldIncomeDisplay } from "@/components/GoldIncomeDisplay";
 import { useSimulatorStore } from "@/lib/simulatorStore";
+import { Button } from "@/components/ui/button";
+import CardDeck from "@/components/CardDeck";
 
 const { Cards: CardsData, Encounters: EncounterData } =
   await genCardsAndEncounters();
@@ -26,6 +27,13 @@ const { Cards: CardsData, Encounters: EncounterData } =
 const encounters = getFlattenedEncounters(EncounterData);
 
 export default function DragNDrop() {
+  // Opt the entire page out of SSR to prevent crypto UUID from creating hydration mismatches and zustand persist causing changing states when the page is reloaded
+  const [isClient, setIsClient] = useState(false);
+
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const steps = useSimulatorStore((state) => state.steps);
   const autoScroll = useSimulatorStore((state) => state.autoScroll);
   const autoReset = useSimulatorStore((state) => state.autoReset);
@@ -60,37 +68,41 @@ export default function DragNDrop() {
     stepCount,
   ]);
 
-  return (
+  return isClient ? (
     <div className="bg-background text-foreground flex h-[calc(100dvh-64px)] max-h-[calc(100dvh-64px)] w-full flex-row gap-4 p-4">
       {/* Main Game Area */}
       <div className="flex grow flex-col gap-2">
-        {/* Enemy Selection */}
-        <EncounterSelector />
-
+        <div className="flex gap-2">
+          {/* Enemy Selection */}
+          <EncounterSelector />
+          {/* Reset button */}
+          <Button
+            variant={"destructive"}
+            className="hover:cursor-pointer"
+            onClick={() => simulatorStoreActions.reset()}
+          >
+            Reset
+          </Button>
+        </div>
         {/* Enemy Skills and Gold/Income */}
         <div className="flex justify-between">
           <BoardSkills gameState={currentGameState} playerId={0} />
           <GoldIncomeDisplay gameState={currentGameState} playerId={0} />
         </div>
-
         {/* Enemy Health Bar*/}
         <HealthBar gameState={currentGameState} playerId={0} />
-
         {/* Cards Area */}
         <div className="bg-card border-border grid grid-rows-[190px_190px] items-center justify-center gap-2 rounded border p-4">
           <CardDeck gameState={currentGameState} playerId={0} />
           <CardDeck gameState={currentGameState} playerId={1} />
         </div>
-
         {/* Player Health Bar*/}
         <HealthBar gameState={currentGameState} playerId={1} />
-
         {/* Player Skills and Gold/Income */}
         <div className="flex justify-between">
           <BoardSkills gameState={currentGameState} playerId={1} />
           <GoldIncomeDisplay gameState={currentGameState} playerId={1} />
         </div>
-
         {/* Time Slider */}
         <div className="mt-2 flex items-center gap-2">
           <BattleSpeedSelector />
@@ -99,7 +111,6 @@ export default function DragNDrop() {
             onClick={() => simulatorStoreActions.setAutoScroll(!autoScroll)}
             id="autoAdvance"
           />
-
           <label htmlFor="autoAdvance" className="text-sm text-nowrap">
             Auto Advance
           </label>
@@ -120,16 +131,16 @@ export default function DragNDrop() {
               simulatorStoreActions.setStepCount(value);
             }}
           />
-
           <span className="w-28 text-sm text-nowrap">
             Time: {stepCountToSeconds(boundedStepCount).toFixed(1)}s
           </span>
         </div>
       </div>
-
       {/* Right Sidebar - Card and skill search */}
       <SearchableCardSkillList Cards={CardsData} />
     </div>
+  ) : (
+    <div>Loading...</div>
   );
 }
 

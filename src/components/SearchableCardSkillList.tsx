@@ -20,7 +20,7 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
 
   const handleCardSelect = (card: Card) => {
     const cardConfig: PlayerCardConfig = {
-      name: card.Localization.Title.Text,
+      cardId: card.Id,
       tier: card.StartingTier,
     };
     addPlayerCard(cardConfig);
@@ -28,7 +28,7 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
 
   const handleSkillSelect = (card: Card) => {
     const skillConfig: PlayerSkillConfig = {
-      name: card.Localization.Title.Text,
+      cardId: card.Id,
       tier: card.StartingTier,
     };
     addPlayerSkill(skillConfig);

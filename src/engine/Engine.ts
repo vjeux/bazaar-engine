@@ -41,6 +41,7 @@ export interface Player {
 
 export interface BoardCard {
   card: Card;
+  uuid: string; // Used to identify similar cards in drag and drop
   tick: number;
   Slow: number;
   Freeze: number;

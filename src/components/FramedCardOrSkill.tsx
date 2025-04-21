@@ -74,12 +74,17 @@ export default function FramedCardOrSkill({
         }}
       >
         <img
+          draggable={false}
           src={imageUrl}
           className={`h-full w-full ${isCardItem ? "rounded-[5px]" : "rounded-full"}`}
         />
       </div>
       {/* Frame image */}
-      <img src={frameUrl} className="absolute h-full w-full" />
+      <img
+        draggable={false}
+        src={frameUrl}
+        className="absolute h-full w-full"
+      />
     </div>
   );
 }
