@@ -159,7 +159,7 @@ function createBoardSkillFromId(
   Cards: Cards,
   cardId: string,
   tier: Tier,
-  modifiers?: any = {},
+  modifiers: any = {},
 ): BoardSkill {
   const card = Cards["0.1.9"].find((card) => card.Id === cardId);
   if (!card) {
