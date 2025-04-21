@@ -42,10 +42,13 @@ export async function genCardsAndEncounters(): Promise<{
 }> {
   const [Cards, Encounters] = await Promise.all([
     // https://cdn.playthebazaar.com/bazaardesigndataprod/cards.json
-    genDataFromLocalStorage("Cards", import("../json/cards.json")),
+    genDataFromLocalStorage(
+      `Cards-${CARDS_VERSION}`,
+      import("../json/cards.json"),
+    ),
     // https://www.howbazaar.gg/api/monsterEncounterDays
     genDataFromLocalStorage(
-      "Encounters",
+      `Encounters-${CARDS_VERSION}`,
       import("../json/monsterEncounterDays.json"),
     ),
   ]);
