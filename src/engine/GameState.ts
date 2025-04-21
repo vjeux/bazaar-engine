@@ -211,7 +211,7 @@ function createBoardSkillFromId(
 function createBoardSkillFromName(
   Cards: Cards,
   name: string,
-  tier: Tier | null = null,
+  tier?: Tier,
   modifiers: any = {},
 ): BoardSkill {
   const CardsValues = Cards["0.1.9"];
@@ -221,7 +221,12 @@ function createBoardSkillFromName(
   if (!card) {
     throw new Error(`Card for Skill ${name} not found`);
   }
-  return createBoardSkillFromId(Cards, card.Id, tier, modifiers);
+  return createBoardSkillFromId(
+    Cards,
+    card.Id,
+    tier ?? card.StartingTier,
+    modifiers,
+  );
 }
 
 function createBoardPlayer(
