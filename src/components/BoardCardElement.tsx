@@ -32,7 +32,7 @@ export function BoardCardElement({
     useSortable({ id: boardCard.uuid, disabled: playerIdx === 0 });
 
   const style = {
-    transform: CSS.Transform.toString(transform),
+    transform: CSS.Translate.toString(transform),
     transition,
   };
 
