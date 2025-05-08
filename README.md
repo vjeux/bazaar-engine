@@ -13,12 +13,12 @@ A simulation engine for [The Bazaar](https://playthebazaar.com/).
 - [x] Add github repo link to navbar
 - [x] Replace old tooltips with new floating UI tooltips
 - [x] Move gold/income to separate UI component
+- [x] Fix bug: having to doubleclick the red X to remove a card
+- [x] Add state saving to URL. Should probably use Zustand.
 - [ ] Add player config for health, level, regen, income, gold, etc.
-- [ ] Add state saving to URL. Should probably use Zustand.
 - [ ] Add card config, to set dmg, shield etc. Which can be boosted outside of combat.
 - [ ] Win percentage for RNG in battles
 - [ ] Show storm damage UI
 - [ ] Damage numbers above health
 - [ ] Implement TActionPlayerBurnRemove
 - [ ] Change the code to support custom monsters/encounters
-- [ ] Fix bug: having to doubleclick the red X to remove a card
