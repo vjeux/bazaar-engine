@@ -120,6 +120,7 @@ function _createBoardCardFromCard(
     Haste: 0,
     CritChance: 0,
     DamageCrit: 0,
+    tags: card.Tags,
     tier: tier,
     Enchantment: enchantment,
     isDisabled: false,
@@ -205,6 +206,7 @@ function createBoardSkillFromId(
     card,
     ...attributes,
     tier: tier ?? card.StartingTier,
+    tags: card.Tags,
   };
   return result;
 }

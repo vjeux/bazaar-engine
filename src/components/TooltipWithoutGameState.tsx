@@ -46,7 +46,9 @@ export default function TooltipWithoutGameState({
           </div>
         ))}
         <div className="text-muted-foreground text-sm">
-          {[...card.Heroes, ...card.Tags, ...card.HiddenTags].join(", ")}
+          <p>{card.Tags.join(", ")}</p>
+          <p className="italic">{card.HiddenTags.join(", ")}</p>
+          <p className="italic">{card.Heroes.join(", ")}</p>
         </div>
       </div>
     </div>

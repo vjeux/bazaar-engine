@@ -2,7 +2,6 @@
 import type { EnchantmentType, HiddenTag, Tag, Tier } from "./shared.ts";
 
 export interface Cards {
-  "0.1.9": Card[];
   "1.0.0": Card[];
 }
 
@@ -500,6 +499,7 @@ export interface Aura {
 interface AuraAction {
   $type: AuraActionType;
   AttributeType: AttributeType;
+  Source: Source;
   Operation: Operation;
   Value: Value;
   Target: Target;
@@ -508,6 +508,7 @@ interface AuraAction {
 enum AuraActionType {
   TAuraActionCardModifyAttribute = "TAuraActionCardModifyAttribute",
   TAuraActionPlayerModifyAttribute = "TAuraActionPlayerModifyAttribute",
+  TAuraActionCardAddTagsBySource = "TAuraActionCardAddTagsBySource",
 }
 
 interface AuraPrerequisite {
