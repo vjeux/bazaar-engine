@@ -1066,8 +1066,13 @@ function runAction(
         triggerPlayerID,
         targetPlayerID,
       ).forEach((playerID) => {
-        const poison = getPlayerAttribute(gameState, playerID, "Regen");
-        updatePlayerAttribute(gameState, playerID, "Regen", poison + amount);
+        const currentRegen = getPlayerAttribute(gameState, playerID, "HealthRegen");
+        updatePlayerAttribute(
+          gameState,
+          playerID,
+          "HealthRegen",
+          currentRegen + amount,
+        );
         triggerActions(
           gameState,
           TriggerType.TTriggerOnCardPerformedPoison,
