@@ -78,18 +78,18 @@ function _createBoardCardFromCard(
         ...enchant.Abilities,
       };
       attributes.AbilityIds = [
-        ...attributes.AbilityIds,
+        ...attributes.AbilityIds ?? [],
         ...Object.keys(enchant.Abilities),
       ];
     }
     if (enchant.HasAuras) {
       attributes.Auras = { ...attributes.Auras, ...enchant.Auras };
       attributes.AuraIds = [
-        ...attributes.AuraIds,
+        ...attributes.AuraIds ?? [],
         ...Object.keys(enchant.Auras),
       ];
     }
-    attributes.Tags = [...(attributes.Tags ?? []), ...enchant.Tags];
+    attributes.tags = [...(attributes.tags ?? []), ...enchant.Tags];
     attributes.HiddenTags = [
       ...(attributes.HiddenTags ?? []),
       ...enchant.HiddenTags,
@@ -194,9 +194,9 @@ function createBoardSkillFromId(
     attributes = {
       ...attributes,
       ...tierValues?.Attributes,
-      AbilityIds: tierValues?.AbilityIds,
-      AuraIds: tierValues?.AuraIds,
-      TooltipIds: tierValues?.TooltipIds,
+      AbilityIds: tierValues?.AbilityIds ?? [],
+      AuraIds: tierValues?.AuraIds ?? [],
+      TooltipIds: tierValues?.TooltipIds ?? [],
     };
     if (tierName === (tier ?? card.StartingTier)) {
       break;

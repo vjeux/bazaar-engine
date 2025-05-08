@@ -9,6 +9,7 @@ import {
   Source,
   Subject,
   Target,
+  Tooltip,
   TriggerType,
   type Value,
 } from "../types/cardTypes.ts";
@@ -38,8 +39,8 @@ export interface Player {
   Poison: number;
   Gold: number;
   Income: number;
+  Hero: string; // hero name
   board: (BoardCard | BoardSkill)[];
-  [key: string]: any;
 }
 
 export interface BoardCard {
@@ -52,6 +53,7 @@ export interface BoardCard {
   CritChance: number;
   DamageCrit: number;
   tags: string[]; // visible tags on the card. Dynamic as certain auras can append tags.
+  HiddenTags: string[];
   tier: Tier;
   Ammo?: number;
   DamageAmount?: number;
@@ -62,7 +64,16 @@ export interface BoardCard {
   Enchantment?: keyof Enchantments | null;
   isDisabled?: boolean;
   Auras?: { [key: string]: Aura };
-  [key: string]: any;
+  AbilityIds: string[];
+  AuraIds: string[];
+  TooltipIds: number[];
+  Abilities: { [key: string]: Ability };
+  Localization: {
+    Title: {
+      Text: string;
+    };
+    Tooltips: Tooltip[];
+  };
 }
 
 export interface BoardSkill {
@@ -70,7 +81,10 @@ export interface BoardSkill {
   tier: Tier;
   Auras?: { [key: string]: Aura };
   tags: string[];
-  [key: string]: any;
+  AbilityIds: string[];
+  AuraIds: string[];
+  TooltipIds: number[];
+  Abilities: { [key: string]: Ability };
 }
 
 export type BoardCardOrSkill = BoardCard | BoardSkill;
@@ -247,12 +261,12 @@ function forEachAura(
   });
 }
 
-export function getCardAttribute<T extends keyof BoardCard>(
+export function getCardAttribute<T extends keyof BoardCardOrSkill>(
   gameState: GameState,
   playerID: number,
   boardCardID: number,
   attribute: T,
-): BoardCard[T] {
+): BoardCardOrSkill[T] {
   if (attribute === undefined) {
     return undefined;
   }
@@ -371,7 +385,7 @@ export function getCardAttribute<T extends keyof BoardCard>(
 export function getPlayerAttribute(
   gameState: GameState,
   playerID: number,
-  attribute: string,
+  attribute: keyof Player,
 ): number {
   let value = gameState.players[playerID][attribute];
 
@@ -456,7 +470,7 @@ function updateCardAttribute(
   gameState: GameState,
   playerID: number,
   boardCardID: number,
-  attribute: string,
+  attribute: keyof BoardCardOrSkill,
   value: number,
 ): void {
   const existingValue =
@@ -1907,7 +1921,8 @@ function getTargetCards(
         }
         default:
           throw new Error(
-            "Not implemented Target.TargetSection: " + targetConfig.TargetSection,
+            "Not implemented Target.TargetSection: " +
+              targetConfig.TargetSection,
           );
       }
 
