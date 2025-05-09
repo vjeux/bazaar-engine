@@ -41,7 +41,7 @@ export interface Player {
   Gold: number;
   Income: number;
   Hero: string; // hero name
-  board: (BoardCard | BoardSkill)[];
+  board: BoardCard[];
 }
 
 export type BoardCard = {
@@ -50,45 +50,16 @@ export type BoardCard = {
   card: Card;
   uuid: string; // Used to identify similar cards in drag and drop
   tick: number;
-  Slow: number;
-  Freeze: number;
-  Haste: number;
-  CritChance: number;
-  DamageCrit: number;
   tags: string[]; // visible tags on the card. Dynamic as certain auras can append tags.
   HiddenTags: string[];
   tier: Tier;
-  Ammo?: number;
-  DamageAmount?: number;
-  HealAmount?: number;
-  BurnApplyAmount?: number;
-  PoisonApplyAmount?: number;
-  ShieldApplyAmount?: number;
   Enchantment?: keyof Enchantments | null;
-  isDisabled?: boolean;
-  Auras?: { [key: string]: Aura };
-  AbilityIds: string[];
-  AuraIds: string[];
-  TooltipIds: number[];
-  Abilities: { [key: string]: Ability };
-  Localization: {
-    Title: {
-      Text: string;
-    };
-    Tooltips: Tooltip[];
-  };
-};
-
-export type BoardSkill = {
-  card: Card;
-  tier: Tier;
-  Auras?: { [key: string]: Aura };
-  tags: string[];
-  AbilityIds: string[];
-  AuraIds: string[];
-  TooltipIds: number[];
-  Abilities: { [key: string]: Ability };
   isDisabled: boolean;
+  Auras: { [key: string]: Aura };
+  AbilityIds: string[];
+  AuraIds: string[];
+  TooltipIds: number[];
+  Abilities: { [key: string]: Ability };
   Localization: {
     Title: {
       Text: string;
@@ -96,8 +67,6 @@ export type BoardSkill = {
     Tooltips: Tooltip[];
   };
 };
-
-export type BoardCardOrSkill = BoardCard | BoardSkill;
 
 /**
  * Iterates over every board card for each player in the game state, calling the provided callback for each non-disabled board card.
@@ -107,7 +76,7 @@ function forEachCard(
   callback: (
     player: Player,
     playerIndex: number,
-    boardCard: BoardCardOrSkill,
+    boardCard: BoardCard,
     boardCardIndex: number,
   ) => void,
 ): void {
@@ -148,7 +117,7 @@ function forEachAbility(
   callback: (
     player: Player,
     playerIndex: number,
-    boardCard: BoardCardOrSkill,
+    boardCard: BoardCard,
     boardCardIndex: number,
     ability: Ability,
     addAction: (
@@ -255,7 +224,7 @@ function forEachAura(
   callback: (
     player: Player,
     playerIndex: number,
-    boardCard: BoardCardOrSkill,
+    boardCard: BoardCard,
     boardCardIndex: number,
     aura: Aura,
   ) => void,
@@ -271,12 +240,12 @@ function forEachAura(
   });
 }
 
-export function getCardAttribute<K extends keyof BoardCardOrSkill>(
+export function getCardAttribute<K extends keyof BoardCard>(
   gameState: GameState,
   playerID: number,
   boardCardID: number,
   attribute: K,
-): BoardCardOrSkill[K] {
+): BoardCard[K] {
   const boardCard = gameState.players[playerID].board[boardCardID];
   const value = boardCard[attribute];
 
@@ -310,7 +279,7 @@ export function getCardAttribute<K extends keyof BoardCardOrSkill>(
           });
         },
       );
-      return Array.from(tags) as BoardCardOrSkill[K];
+      return Array.from(tags) as BoardCard[K];
     }
     default: {
       // For numerical attributes only
@@ -373,7 +342,7 @@ export function getCardAttribute<K extends keyof BoardCardOrSkill>(
           },
         );
 
-        return numericValue as unknown as BoardCardOrSkill[K];
+        return numericValue as unknown as BoardCard[K];
       }
 
       // For non-numeric attributes
@@ -444,7 +413,7 @@ export function getPlayerAttribute<K extends keyof Player>(
   return value;
 }
 
-function hasCooldown(boardCard: BoardCardOrSkill): boolean {
+function hasCooldown(boardCard: BoardCard): boolean {
   return "CooldownMax" in boardCard;
 }
 
@@ -476,7 +445,7 @@ function updateCardAttribute(
   gameState: GameState,
   playerID: number,
   boardCardID: number,
-  attribute: keyof BoardCardOrSkill,
+  attribute: keyof BoardCard,
   value: number,
 ): void {
   const existingValue =
