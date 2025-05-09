@@ -85,6 +85,13 @@ export interface BoardSkill {
   AuraIds: string[];
   TooltipIds: number[];
   Abilities: { [key: string]: Ability };
+  isDisabled: boolean;
+  Localization: {
+    Title: {
+      Text: string;
+    };
+    Tooltips: Tooltip[];
+  };
 }
 
 export type BoardCardOrSkill = BoardCard | BoardSkill;
@@ -1080,7 +1087,11 @@ function runAction(
         triggerPlayerID,
         targetPlayerID,
       ).forEach((playerID) => {
-        const currentRegen = getPlayerAttribute(gameState, playerID, "HealthRegen");
+        const currentRegen = getPlayerAttribute(
+          gameState,
+          playerID,
+          "HealthRegen",
+        );
         updatePlayerAttribute(
           gameState,
           playerID,

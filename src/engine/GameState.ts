@@ -26,9 +26,14 @@ function _createBoardCardFromCard(
   tier: Tier,
   enchantment: keyof Enchantments | null = null,
 ): BoardCard {
-  let attributes: Partial<BoardCard> = {
-    Abilities: card.Abilities,
-    Auras: card.Auras,
+  let attributes: Partial<BoardCard> & {
+    Localization: NonNullable<BoardCard["Localization"]>;
+  } = {
+    Abilities: card.Abilities || {},
+    Auras: card.Auras || {},
+    AbilityIds: [],
+    AuraIds: [],
+    TooltipIds: [],
     Localization: {
       Tooltips: card.Localization.Tooltips,
       Title: {
@@ -78,14 +83,14 @@ function _createBoardCardFromCard(
         ...enchant.Abilities,
       };
       attributes.AbilityIds = [
-        ...attributes.AbilityIds ?? [],
+        ...(attributes.AbilityIds ?? []),
         ...Object.keys(enchant.Abilities),
       ];
     }
     if (enchant.HasAuras) {
       attributes.Auras = { ...attributes.Auras, ...enchant.Auras };
       attributes.AuraIds = [
-        ...attributes.AuraIds ?? [],
+        ...(attributes.AuraIds ?? []),
         ...Object.keys(enchant.Auras),
       ];
     }
@@ -99,7 +104,7 @@ function _createBoardCardFromCard(
       ...enchant.Localization.Tooltips,
     ];
     attributes.TooltipIds = [
-      ...attributes.TooltipIds,
+      ...(attributes.TooltipIds ?? []),
       ...enchant.Localization.Tooltips.map((tooltip) =>
         attributes.Localization.Tooltips.indexOf(tooltip),
       ),
@@ -121,6 +126,12 @@ function _createBoardCardFromCard(
     CritChance: 0,
     DamageCrit: 0,
     tags: card.Tags,
+    HiddenTags: attributes.HiddenTags || [],
+    AbilityIds: attributes.AbilityIds || [],
+    AuraIds: attributes.AuraIds || [],
+    TooltipIds: attributes.TooltipIds || [],
+    Abilities: attributes.Abilities || {},
+    Auras: attributes.Auras || {},
     tier: tier,
     Enchantment: enchantment,
     isDisabled: false,
@@ -147,21 +158,21 @@ function createBoardCardFromName(
 function createBoardCardFromId(
   Cards: Cards,
   cardId: string,
-  tier: Tier,
+  tier: Tier | undefined,
   enchantment: keyof Enchantments | null = null,
 ): BoardCard {
   const card = Cards[CARDS_VERSION].find((card) => card.Id === cardId);
   if (!card) {
     throw new Error(`Card from id ${cardId} not found`);
   }
-  return _createBoardCardFromCard(card, tier, enchantment);
+  return _createBoardCardFromCard(card, tier ?? card.StartingTier, enchantment);
 }
 
 function createBoardSkillFromId(
   Cards: Cards,
   cardId: string,
-  tier: Tier,
-  modifiers: any = {},
+  tier: Tier | undefined,
+  modifiers: Record<string, unknown> = {},
 ): BoardSkill {
   const card = Cards[CARDS_VERSION].find((card) => card.Id === cardId);
   if (!card) {
@@ -169,20 +180,21 @@ function createBoardSkillFromId(
   }
 
   let attributes: Partial<BoardSkill> = {
-    Abilities: card.Abilities,
-    Auras: card.Auras,
-    Localization: {
-      Tooltips: card.Localization.Tooltips,
-      Title: {
-        Text: card.Localization.Title.Text,
-      },
-    },
+    Abilities: card.Abilities || {},
+    Auras: card.Auras || {},
+    AbilityIds: [],
+    AuraIds: [],
+    TooltipIds: [],
   };
-  if (!card.Tiers || !card.Tiers[tier ?? card.StartingTier]) {
+
+  // Use provided tier or fall back to card's starting tier
+  const effectiveTier = tier ?? card.StartingTier;
+
+  if (!card.Tiers || !card.Tiers[effectiveTier]) {
     throw new Error(
       name +
         " doesn't have tier " +
-        tier +
+        effectiveTier +
         ", the first one is " +
         Object.keys(card.Tiers || {})[0],
     );
@@ -194,20 +206,33 @@ function createBoardSkillFromId(
     attributes = {
       ...attributes,
       ...tierValues?.Attributes,
-      AbilityIds: tierValues?.AbilityIds ?? [],
-      AuraIds: tierValues?.AuraIds ?? [],
-      TooltipIds: tierValues?.TooltipIds ?? [],
+      AbilityIds: tierValues?.AbilityIds ?? attributes.AbilityIds,
+      AuraIds: tierValues?.AuraIds ?? attributes.AuraIds,
+      TooltipIds: tierValues?.TooltipIds ?? attributes.TooltipIds,
     };
-    if (tierName === (tier ?? card.StartingTier)) {
+    if (tierName === effectiveTier) {
       break;
     }
   }
-  const result = {
+
+  const result: BoardSkill = {
     card,
-    ...attributes,
-    tier: tier ?? card.StartingTier,
+    tier: effectiveTier,
     tags: card.Tags,
+    Abilities: attributes.Abilities || {},
+    Auras: attributes.Auras || {},
+    AbilityIds: attributes.AbilityIds || [],
+    AuraIds: attributes.AuraIds || [],
+    TooltipIds: attributes.TooltipIds || [],
+    isDisabled: false,
+    Localization: {
+      Tooltips: card.Localization.Tooltips,
+      Title: {
+        Text: card.Localization.Title.Text,
+      },
+    },
   };
+
   return result;
 }
 
@@ -263,7 +288,7 @@ function createBoardPlayerFromMonsterCard(Cards: Cards, monsterCard: Group) {
       ),
     ),
     monsterCard.skills.map((item) =>
-      createBoardCardFromId(Cards, item.card.id, item.tierType, null),
+      createBoardSkillFromId(Cards, item.card.id, item.tierType),
     ),
   );
 }
@@ -294,7 +319,7 @@ function sfc32(a: number, b: number, c: number, d: number) {
     b |= 0;
     c |= 0;
     d |= 0;
-    let t = (((a + b) | 0) + d) | 0;
+    const t = (((a + b) | 0) + d) | 0;
     d = (d + 1) | 0;
     a = b ^ (b >>> 9);
     b = (c + (c << 3)) | 0;
