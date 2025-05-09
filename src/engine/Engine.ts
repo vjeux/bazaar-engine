@@ -2,6 +2,7 @@ import {
   type Ability,
   type AbilityAction,
   type ActionType,
+  AttributeType,
   type Aura,
   type Card,
   type Enchantments,
@@ -43,7 +44,9 @@ export interface Player {
   board: (BoardCard | BoardSkill)[];
 }
 
-export interface BoardCard {
+export type BoardCard = {
+  [key in AttributeType]: number;
+} & {
   card: Card;
   uuid: string; // Used to identify similar cards in drag and drop
   tick: number;
@@ -74,9 +77,9 @@ export interface BoardCard {
     };
     Tooltips: Tooltip[];
   };
-}
+};
 
-export interface BoardSkill {
+export type BoardSkill = {
   card: Card;
   tier: Tier;
   Auras?: { [key: string]: Aura };
@@ -92,7 +95,7 @@ export interface BoardSkill {
     };
     Tooltips: Tooltip[];
   };
-}
+};
 
 export type BoardCardOrSkill = BoardCard | BoardSkill;
 
@@ -268,19 +271,14 @@ function forEachAura(
   });
 }
 
-export function getCardAttribute<T extends keyof BoardCardOrSkill>(
+export function getCardAttribute<K extends keyof BoardCardOrSkill>(
   gameState: GameState,
   playerID: number,
   boardCardID: number,
-  attribute: T,
-): BoardCardOrSkill[T] {
-  if (attribute === undefined) {
-    return undefined;
-  }
-  let value = gameState.players[playerID].board[boardCardID][attribute];
-  if (value === undefined) {
-    return undefined;
-  }
+  attribute: K,
+): BoardCardOrSkill[K] {
+  const boardCard = gameState.players[playerID].board[boardCardID];
+  const value = boardCard[attribute];
 
   switch (attribute) {
     case "tags": {
@@ -293,15 +291,6 @@ export function getCardAttribute<T extends keyof BoardCardOrSkill>(
           if (aura.Action.$type !== "TAuraActionCardAddTagsBySource") {
             return;
           }
-          console.log(
-            "Getting targets for",
-            gameState,
-            aura.Action.Source,
-            playerID,
-            boardCardID,
-            playerIndex,
-            boardCardIndex,
-          );
           const targetCards = getTargetCards(
             gameState,
             aura.Action.Source,
@@ -313,134 +302,144 @@ export function getCardAttribute<T extends keyof BoardCardOrSkill>(
           console.log("Target cards", targetCards);
           targetCards.forEach(([targetPlayerID, targetBoardCardID]) => {
             // Append tags from card to set
-            tags = tags.union(
-              new Set(
-                // getCardAttribute(
-                //   gameState,
-                //   targetPlayerID,
-                //   targetBoardCardID,
-                //   "tags",
-                // ),
-                gameState.players[targetPlayerID].board[targetBoardCardID].tags,
-              ),
-            );
+            tags = new Set([
+              ...tags,
+              ...gameState.players[targetPlayerID].board[targetBoardCardID]
+                .tags,
+            ]);
           });
         },
       );
-      return Array.from(tags);
+      return Array.from(tags) as BoardCardOrSkill[K];
     }
     default: {
-      forEachAura(
-        gameState,
-        (
-          targetPlayer,
-          targetPlayerID,
-          targetBoardCard,
-          targetBoardCardID,
-          aura,
-        ) => {
-          const action = aura.Action;
-          if (
-            action.$type !== "TAuraActionCardModifyAttribute" ||
-            action.AttributeType !== attribute
-          ) {
-            return;
-          }
-          const targetCards = getTargetCards(
-            gameState,
-            action.Target,
-            playerID,
-            boardCardID,
+      // For numerical attributes only
+      if (typeof value === "number") {
+        let numericValue = value as number;
+
+        forEachAura(
+          gameState,
+          (
+            targetPlayer,
             targetPlayerID,
+            targetBoardCard,
             targetBoardCardID,
-          );
+            aura,
+          ) => {
+            const action = aura.Action;
+            if (
+              action.$type !== "TAuraActionCardModifyAttribute" ||
+              action.AttributeType !== (attribute as string)
+            ) {
+              return;
+            }
+            const targetCards = getTargetCards(
+              gameState,
+              action.Target,
+              playerID,
+              boardCardID,
+              targetPlayerID,
+              targetBoardCardID,
+            );
 
-          targetCards.forEach(
-            ([actionTargetPlayerID, actionTargetBoardCardID]) => {
-              if (
-                actionTargetPlayerID !== playerID ||
-                actionTargetBoardCardID !== boardCardID
-              ) {
-                return;
-              }
+            targetCards.forEach(
+              ([actionTargetPlayerID, actionTargetBoardCardID]) => {
+                if (
+                  actionTargetPlayerID !== playerID ||
+                  actionTargetBoardCardID !== boardCardID
+                ) {
+                  return;
+                }
 
-              const actionValue = getActionValue(
-                gameState,
-                action.Value,
-                playerID,
-                boardCardID,
-                targetPlayerID,
-                targetBoardCardID,
-              );
+                const actionValue = getActionValue(
+                  gameState,
+                  action.Value,
+                  playerID,
+                  boardCardID,
+                  targetPlayerID,
+                  targetBoardCardID,
+                );
 
-              value =
-                action.Operation === "Add"
-                  ? value + actionValue
-                  : action.Operation === "Multiply"
-                    ? value * actionValue
-                    : value - actionValue;
-            },
-          );
-        },
-      );
+                if (typeof actionValue === "number") {
+                  numericValue =
+                    action.Operation === "Add"
+                      ? numericValue + actionValue
+                      : action.Operation === "Multiply"
+                        ? numericValue * actionValue
+                        : numericValue - actionValue;
+                }
+              },
+            );
+          },
+        );
 
+        return numericValue as unknown as BoardCardOrSkill[K];
+      }
+
+      // For non-numeric attributes
       return value;
     }
   }
 }
 
-export function getPlayerAttribute(
+export function getPlayerAttribute<K extends keyof Player>(
   gameState: GameState,
   playerID: number,
-  attribute: keyof Player,
-): number {
-  let value = gameState.players[playerID][attribute];
+  attribute: K,
+): Player[K] {
+  const value = gameState.players[playerID][attribute];
 
-  forEachAura(
-    gameState,
-    (
-      targetPlayer,
-      targetPlayerID,
-      targetBoardCard,
-      targetBoardCardID,
-      aura,
-    ) => {
-      const action = aura.Action;
-      if (
-        action.$type !== "TAuraActionPlayerModifyAttribute" ||
-        action.AttributeType !== attribute
-      ) {
-        return;
-      }
+  if (typeof value === "number") {
+    let numericValue = value as number;
 
-      getTargetPlayers(
-        gameState,
-        action.Target,
-        playerID,
+    forEachAura(
+      gameState,
+      (
+        targetPlayer,
         targetPlayerID,
-      ).forEach((actionTargetPlayerID) => {
-        if (actionTargetPlayerID !== playerID) {
+        targetBoardCard,
+        targetBoardCardID,
+        aura,
+      ) => {
+        const action = aura.Action;
+        if (
+          action.$type !== "TAuraActionPlayerModifyAttribute" ||
+          action.AttributeType !== attribute
+        ) {
           return;
         }
 
-        const actionValue = getActionValue(
+        getTargetPlayers(
           gameState,
-          action.Value as Value,
+          action.Target,
           playerID,
-          -1,
           targetPlayerID,
-          targetBoardCardID,
-        );
+        ).forEach((actionTargetPlayerID) => {
+          if (actionTargetPlayerID !== playerID) {
+            return;
+          }
 
-        value =
-          action.Operation === "Add"
-            ? value + actionValue
-            : action.Operation === "Multiply"
-              ? value * actionValue
-              : value - actionValue;
-      });
-    },
-  );
+          const actionValue = getActionValue(
+            gameState,
+            action.Value as Value,
+            playerID,
+            -1,
+            targetPlayerID,
+            targetBoardCardID,
+          );
+
+          numericValue =
+            action.Operation === "Add"
+              ? numericValue + actionValue
+              : action.Operation === "Multiply"
+                ? numericValue * actionValue
+                : numericValue - actionValue;
+        });
+      },
+    );
+
+    return numericValue as unknown as Player[K];
+  }
 
   return value;
 }
@@ -2568,7 +2567,7 @@ export function getTooltips(
               );
 
             default:
-              throw new Error("Action type not implemented: " + action.$type);
+              throw new Error(action.$type + ": Action type not implemented");
           }
 
           const match = action.$type.match(/^TActionPlayer([A-Za-z]+)Apply$/);
