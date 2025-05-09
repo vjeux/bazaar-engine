@@ -13,9 +13,11 @@ import {
   Tooltip,
   TriggerType,
   type Value,
+  type Conditions,
+  AbilityPrerequisite,
 } from "../types/cardTypes.ts";
 
-import type { Tier } from "../types/shared.ts";
+import type { Hero, Tag, Tier } from "../types/shared.ts";
 
 export interface GameState {
   tick: number;
@@ -445,12 +447,14 @@ function updateCardAttribute(
   gameState: GameState,
   playerID: number,
   boardCardID: number,
-  attribute: keyof BoardCard,
+  attribute: AttributeType,
   value: number,
 ): void {
   const existingValue =
     gameState.players[playerID].board[boardCardID][attribute];
-  gameState.players[playerID].board[boardCardID][attribute] = value;
+
+  const bc = gameState.players[playerID].board[boardCardID];
+  bc[attribute] = value;
 
   forEachAbility(
     gameState,
@@ -468,6 +472,11 @@ function updateCardAttribute(
         ((ability.Trigger.ChangeType === "Gain" && value > existingValue) ||
           (ability.Trigger.ChangeType === "Loss" && value < existingValue))
       ) {
+        if (!ability.Trigger.Subject) {
+          throw new Error(
+            "Trigger subject must exist for attribute change trigger",
+          );
+        }
         const subjects = getTargetCards(
           gameState,
           ability.Trigger.Subject,
@@ -493,8 +502,11 @@ function updateCardAttribute(
 function updatePlayerAttribute<K extends keyof Player>(
   gameState: GameState,
   playerID: number,
-  attribute: K,
-  value: Player[K],
+  attribute: K &
+    keyof {
+      [P in keyof Player as Player[P] extends number ? P : never]: Player[P];
+    }, // ensures player attribute being changed is a number
+  value: number,
 ): void {
   const existingValue = gameState.players[playerID][attribute];
   gameState.players[playerID][attribute] = value;
@@ -532,7 +544,7 @@ function updatePlayerAttribute<K extends keyof Player>(
 
 function testPrerequisite(
   gameState: GameState,
-  prerequisite: any,
+  prerequisite: AbilityPrerequisite,
   triggerPlayerID: number,
   triggerBoardCardID: number,
   targetPlayerID: number,
@@ -542,7 +554,7 @@ function testPrerequisite(
     case "TPrerequisiteCardCount": {
       const subjects = getTargetCards(
         gameState,
-        prerequisite.Subject,
+        prerequisite.Subject as Subject,
         triggerPlayerID,
         triggerBoardCardID,
         targetPlayerID,
@@ -550,6 +562,11 @@ function testPrerequisite(
       );
       const value = subjects.length;
       const comparisonValue = prerequisite.Amount;
+      if (comparisonValue === undefined) {
+        throw new Error(
+          "Comparison value must exist for card count prerequisite",
+        );
+      }
       switch (prerequisite.Comparison) {
         case "Equal":
           return value === comparisonValue;
@@ -585,7 +602,7 @@ function testPrerequisite(
 
 function testPlayerConditions(
   gameState: GameState,
-  conditions: any,
+  conditions: Conditions,
   triggerPlayerID: number,
   targetPlayerID: number,
 ) {
@@ -595,7 +612,18 @@ function testPlayerConditions(
 
   switch (conditions.$type) {
     case "TPlayerConditionalAttribute": {
-      const value = gameState.players[targetPlayerID][conditions.Attribute];
+      if (!conditions.Attribute) {
+        throw new Error(
+          "Attribute must exist for player conditional attribute",
+        );
+      }
+      const value =
+        gameState.players[targetPlayerID][conditions.Attribute as keyof Player];
+      if (!conditions.ComparisonValue) {
+        throw new Error(
+          "Comparison value must exist for player conditional attribute",
+        );
+      }
       const comparisonValue = getActionValue(
         gameState,
         conditions.ComparisonValue,
@@ -608,13 +636,25 @@ function testPlayerConditions(
         case "Equal":
           return value === comparisonValue;
         case "GreaterThan":
-          return value > comparisonValue;
+          return typeof value === "number" &&
+            typeof comparisonValue === "number"
+            ? value > comparisonValue
+            : false;
         case "GreaterThanOrEqual":
-          return value >= comparisonValue;
+          return typeof value === "number" &&
+            typeof comparisonValue === "number"
+            ? value >= comparisonValue
+            : false;
         case "LessThan":
-          return value < comparisonValue;
+          return typeof value === "number" &&
+            typeof comparisonValue === "number"
+            ? value < comparisonValue
+            : false;
         case "LessThanOrEqual":
-          return value <= comparisonValue;
+          return typeof value === "number" &&
+            typeof comparisonValue === "number"
+            ? value <= comparisonValue
+            : false;
         default:
           throw new Error(
             "Not implemented ComparisonOperator: " +
@@ -629,7 +669,7 @@ function testPlayerConditions(
 
 function testCardConditions(
   gameState: GameState,
-  conditions: any,
+  conditions: Conditions,
   triggerPlayerID: number,
   triggerBoardCardID: number,
   targetPlayerID: number,
@@ -641,10 +681,18 @@ function testCardConditions(
 
   switch (conditions.$type) {
     case "TCardConditionalAttribute": {
+      if (!conditions.Attribute) {
+        throw new Error("Attribute must exist for card conditional attribute");
+      }
       const value =
         gameState.players[targetPlayerID].board[targetBoardCardID][
-          conditions.Attribute
+          conditions.Attribute as keyof BoardCard
         ];
+      if (!conditions.ComparisonValue) {
+        throw new Error(
+          "Comparison value must exist for card conditional attribute",
+        );
+      }
       const comparisonValue = getActionValue(
         gameState,
         conditions.ComparisonValue,
@@ -657,13 +705,25 @@ function testCardConditions(
         case "Equal":
           return value === comparisonValue;
         case "GreaterThan":
-          return value > comparisonValue;
+          return typeof value === "number" &&
+            typeof comparisonValue === "number"
+            ? value > comparisonValue
+            : false;
         case "GreaterThanOrEqual":
-          return value >= comparisonValue;
+          return typeof value === "number" &&
+            typeof comparisonValue === "number"
+            ? value >= comparisonValue
+            : false;
         case "LessThan":
-          return value < comparisonValue;
+          return typeof value === "number" &&
+            typeof comparisonValue === "number"
+            ? value < comparisonValue
+            : false;
         case "LessThanOrEqual":
-          return value <= comparisonValue;
+          return typeof value === "number" &&
+            typeof comparisonValue === "number"
+            ? value <= comparisonValue
+            : false;
         default:
           throw new Error(
             "ComparisonOperator not implemented: " +
@@ -672,6 +732,9 @@ function testCardConditions(
       }
     }
     case "TCardConditionalSize": {
+      if (!conditions.Sizes) {
+        throw new Error("Sizes must exist for card conditional size");
+      }
       const is = conditions.Sizes.includes(
         gameState.players[targetPlayerID].board[targetBoardCardID].card.Size,
       );
@@ -684,6 +747,9 @@ function testCardConditions(
       return conditions.IsNot ? !is : is;
     }
     case "TCardConditionalTier": {
+      if (!conditions.Tiers) {
+        throw new Error("Tiers must exist for card conditional tier");
+      }
       const is = conditions.Tiers.includes(
         gameState.players[targetPlayerID].board[targetBoardCardID].tier,
       );
@@ -692,7 +758,9 @@ function testCardConditions(
     case "TCardConditionalPlayerHero": {
       const targetHeroes =
         gameState.players[targetPlayerID].board[targetBoardCardID].card.Heroes;
-      const is = targetHeroes.includes(gameState.players[targetPlayerID].Hero);
+      const is = targetHeroes.includes(
+        gameState.players[targetPlayerID].Hero as Hero,
+      );
       return conditions.IsSameAsPlayerHero ? is : !is;
     }
     case "TCardConditionalHasEnchantment": {
@@ -710,18 +778,29 @@ function testCardConditions(
             : "Tags"
         ];
 
+      if (!conditions.Tags) {
+        throw new Error("Tags must exist for card conditional tag");
+      }
+
       switch (conditions.Operator) {
         case "Any":
-          return tags.filter((tag) => conditions.Tags.includes(tag)).length > 0;
+          return (
+            tags.filter((tag) => conditions.Tags?.includes(tag as Tag)).length >
+            0
+          );
         case "None":
           return (
-            tags.filter((tag) => conditions.Tags.includes(tag)).length === 0
+            tags.filter((tag) => conditions.Tags?.includes(tag as Tag))
+              .length === 0
           );
         default:
           throw new Error("Operator not implemented: " + conditions.Operator);
       }
     }
     case "TCardConditionalOr": {
+      if (!conditions.Conditions) {
+        throw new Error("Conditions must exist for card conditional or");
+      }
       for (let i = 0; i < conditions.Conditions.length; ++i) {
         if (
           testCardConditions(
@@ -739,6 +818,9 @@ function testCardConditions(
       return false;
     }
     case "TCardConditionalAnd": {
+      if (!conditions.Conditions) {
+        throw new Error("Conditions must exist for card conditional and");
+      }
       for (let i = 0; i < conditions.Conditions.length; ++i) {
         if (
           !testCardConditions(
@@ -787,6 +869,9 @@ function triggerActions(
       if (ability.Trigger.$type !== triggerType) {
         return;
       }
+      if (!ability.Trigger.Subject) {
+        throw new Error("Subject must exist for trigger");
+      }
       const subjects = getTargetCards(
         gameState,
         ability.Trigger.Subject,
@@ -834,6 +919,9 @@ function triggerCard(
       ) {
         addAction(playerID, boardCardID, targetPlayerID, targetBoardCardID);
       } else if (ability.Trigger.$type === "TTriggerOnItemUsed") {
+        if (!ability.Trigger.Subject) {
+          throw new Error("Subject must exist for trigger");
+        }
         const subjects = getTargetCards(
           gameState,
           ability.Trigger.Subject,
@@ -869,6 +957,9 @@ function runAction(
 
   switch (action.$type) {
     case "TActionCardForceUse": {
+      if (!action.Target) {
+        throw new Error("Target must exist for action card force use");
+      }
       const targetCards = getTargetCards(
         gameState,
         action.Target,
@@ -893,7 +984,7 @@ function runAction(
         gameState,
         targetPlayerID,
         targetBoardCardID,
-        "CritChange",
+        "CritChance",
       );
       if (critChance > 0) {
         if (gameState.getRand() * 100 < critChance) {
@@ -1276,6 +1367,9 @@ function runAction(
       break;
     }
     case "TActionCardDisable": {
+      if (!action.Target) {
+        throw new Error("Target must exist for action card disable");
+      }
       const targetCards = getTargetCards(
         gameState,
         action.Target,
