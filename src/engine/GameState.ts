@@ -19,13 +19,11 @@ function _createBoardCardFromCard(
   enchantment: keyof Enchantments | null = null,
   attributeOverrides: Partial<Record<AttributeType, number>> = {},
 ): BoardCard {
-  // Initialize all AttributeType properties with 0
-  const baseAttributes: Record<AttributeType, number> = {} as Record<
-    AttributeType,
-    number
-  >;
+  // Initialize all AttributeType properties with undefined
+  const baseAttributes: Record<AttributeType, number | undefined> =
+    {} as Record<AttributeType, number | undefined>;
   for (const attribute of Object.keys(AttributeType)) {
-    baseAttributes[attribute as AttributeType] = 0;
+    baseAttributes[attribute as AttributeType] = undefined;
   }
 
   // Combine with other required properties

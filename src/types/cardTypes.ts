@@ -112,57 +112,62 @@ export enum ActionType {
   TAuraActionPlayerModifyAttribute = "TAuraActionPlayerModifyAttribute",
 }
 
-export type AttributeType =
-  | "Ammo"
-  | "AmmoMax"
-  | "Burn"
-  | "BurnApplyAmount"
-  | "BurnRemoveAmount"
-  | "BuyPrice"
-  | "ChargeAmount"
-  | "CooldownMax"
-  | "Counter"
-  | "CritChance"
-  | "Custom_0"
-  | "Custom_1"
-  | "Custom_2"
-  | "Custom_3"
-  | "Custom_4"
-  | "Custom_5"
-  | "DamageAmount"
-  | "DamageCrit"
-  | "DisableTargets"
-  | "Experience"
-  | "Freeze"
-  | "FreezeAmount"
-  | "FreezeTargets"
-  | "Gold"
-  | "Haste"
-  | "HasteAmount"
-  | "HealAmount"
-  | "Health"
-  | "HealthMax"
-  | "HealthRegen"
-  | "Income"
-  | "Joy"
-  | "JoyApplyAmount"
-  | "Level"
-  | "Lifesteal"
-  | "Multicast"
-  | "PercentDamageReduction"
-  | "Poison"
-  | "PoisonApplyAmount"
-  | "PoisonRemoveAmount"
-  | "Prestige"
-  | "ReloadAmount"
-  | "RegenApplyAmount"
-  | "RerollCostModifier"
-  | "SellPrice"
-  | "Shield"
-  | "ShieldApplyAmount"
-  | "ShieldRemoveAmount"
-  | "Slow"
-  | "SlowAmount";
+export enum AttributeType {
+  Ammo = "Ammo",
+  AmmoMax = "AmmoMax",
+  Burn = "Burn",
+  BurnApplyAmount = "BurnApplyAmount",
+  BurnRemoveAmount = "BurnRemoveAmount",
+  BuyPrice = "BuyPrice",
+  ChargeAmount = "ChargeAmount",
+  CooldownMax = "CooldownMax",
+  Counter = "Counter",
+  CritChance = "CritChance",
+  Custom_0 = "Custom_0",
+  Custom_1 = "Custom_1",
+  Custom_2 = "Custom_2",
+  Custom_3 = "Custom_3",
+  Custom_4 = "Custom_4",
+  Custom_5 = "Custom_5",
+  DamageAmount = "DamageAmount",
+  DamageCrit = "DamageCrit",
+  DisableTargets = "DisableTargets",
+  Experience = "Experience",
+  Freeze = "Freeze",
+  FreezeAmount = "FreezeAmount",
+  FreezeTargets = "FreezeTargets",
+  Gold = "Gold",
+  Haste = "Haste",
+  HasteAmount = "HasteAmount",
+  HasteTargets = "HasteTargets",
+  HealAmount = "HealAmount",
+  Health = "Health",
+  HealthMax = "HealthMax",
+  HealthRegen = "HealthRegen",
+  Income = "Income",
+  Joy = "Joy",
+  JoyApplyAmount = "JoyApplyAmount",
+  Level = "Level",
+  Lifesteal = "Lifesteal",
+  Multicast = "Multicast",
+  PercentDamageReduction = "PercentDamageReduction",
+  Poison = "Poison",
+  PoisonApplyAmount = "PoisonApplyAmount",
+  PoisonRemoveAmount = "PoisonRemoveAmount",
+  Prestige = "Prestige",
+  ReloadAmount = "ReloadAmount",
+  RegenApplyAmount = "RegenApplyAmount",
+  RerollCostModifier = "RerollCostModifier",
+  SellPrice = "SellPrice",
+  Shield = "Shield",
+  ShieldApplyAmount = "ShieldApplyAmount",
+  ShieldRemoveAmount = "ShieldRemoveAmount",
+  Slow = "Slow",
+  SlowAmount = "SlowAmount",
+  SlowTargets = "SlowTargets",
+  ReloadTargets = "ReloadTargets",
+  ChargeTargets = "ChargeTargets",
+}
 
 interface Duration {
   $type: DurationType;

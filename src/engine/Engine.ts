@@ -47,7 +47,7 @@ export interface Player {
 }
 
 export type BoardCard = {
-  [key in AttributeType]: number;
+  [key in AttributeType]: number | undefined;
 } & {
   card: Card;
   uuid: string; // Used to identify similar cards in drag and drop
@@ -447,7 +447,7 @@ function updateCardAttribute(
   gameState: GameState,
   playerID: number,
   boardCardID: number,
-  attribute: AttributeType,
+  attribute: AttributeType | "tick",
   value: number,
 ): void {
   const existingValue =
@@ -467,6 +467,7 @@ function updateCardAttribute(
       addAction,
     ) => {
       if (
+        typeof existingValue === "number" &&
         ability.Trigger.$type === "TTriggerOnCardAttributeChanged" &&
         ability.Trigger.AttributeChanged === attribute &&
         ((ability.Trigger.ChangeType === "Gain" && value > existingValue) ||
@@ -978,14 +979,20 @@ function runAction(
         gameState,
         targetPlayerID,
         targetBoardCardID,
-        "DamageAmount",
+        AttributeType.DamageAmount,
       );
       const critChance = getCardAttribute(
         gameState,
         targetPlayerID,
         targetBoardCardID,
-        "CritChance",
+        AttributeType.CritChance,
       );
+      if (!critChance) {
+        throw new Error("Crit chance must exist for action player damage");
+      }
+      if (!amount) {
+        throw new Error("Damage amount must exist for action player damage");
+      }
       if (critChance > 0) {
         if (gameState.getRand() * 100 < critChance) {
           amount *= 2;
@@ -993,7 +1000,7 @@ function runAction(
             gameState,
             targetPlayerID,
             targetBoardCardID,
-            "DamageCrit",
+            AttributeType.DamageCrit,
           );
           if (damageCrit !== undefined) {
             amount *= 1 + damageCrit / 100;
@@ -1006,7 +1013,7 @@ function runAction(
         gameState,
         targetPlayerID,
         targetBoardCardID,
-        "Lifesteal",
+        AttributeType.Lifesteal,
       );
 
       getTargetPlayers(
@@ -1032,7 +1039,7 @@ function runAction(
           );
         }
 
-        if (lifesteal > 0) {
+        if (lifesteal && lifesteal > 0) {
           const otherPlayerID = (playerID + 1) % 2;
           const health = getPlayerAttribute(gameState, otherPlayerID, "Health");
           const healthMax = getPlayerAttribute(
@@ -1058,15 +1065,18 @@ function runAction(
         gameState,
         targetPlayerID,
         targetBoardCardID,
-        "HealAmount",
+        AttributeType.HealAmount,
       );
+      if (!amount) {
+        throw new Error("Heal amount must exist for action player heal");
+      }
       const critChance = getCardAttribute(
         gameState,
         targetPlayerID,
         targetBoardCardID,
-        "CritChance",
+        AttributeType.CritChance,
       );
-      if (critChance > 0) {
+      if (critChance && critChance > 0) {
         if (gameState.getRand() * 100 < critChance) {
           amount *= 2;
           hasCritted = true;
@@ -1125,15 +1135,20 @@ function runAction(
         gameState,
         targetPlayerID,
         targetBoardCardID,
-        "RegenApplyAmount",
+        AttributeType.RegenApplyAmount,
       );
+      if (!amount) {
+        throw new Error(
+          "Regen apply amount must exist for action player regen apply",
+        );
+      }
       const critChance = getCardAttribute(
         gameState,
         targetPlayerID,
         targetBoardCardID,
-        "CritChance",
+        AttributeType.CritChance,
       );
-      if (critChance > 0) {
+      if (critChance && critChance > 0) {
         if (gameState.getRand() * 100 < critChance) {
           amount *= 2;
           hasCritted = true;
@@ -1173,15 +1188,20 @@ function runAction(
         gameState,
         targetPlayerID,
         targetBoardCardID,
-        "PoisonApplyAmount",
+        AttributeType.PoisonApplyAmount,
       );
+      if (!amount) {
+        throw new Error(
+          "Poison apply amount must exist for action player poison apply",
+        );
+      }
       const critChance = getCardAttribute(
         gameState,
         targetPlayerID,
         targetBoardCardID,
-        "CritChance",
+        AttributeType.CritChance,
       );
-      if (critChance > 0) {
+      if (critChance && critChance > 0) {
         if (gameState.getRand() * 100 < critChance) {
           amount *= 2;
           hasCritted = true;
@@ -1212,8 +1232,13 @@ function runAction(
         gameState,
         targetPlayerID,
         targetBoardCardID,
-        "PoisonRemoveAmount",
+        AttributeType.PoisonRemoveAmount,
       );
+      if (!amount) {
+        throw new Error(
+          "Poison remove amount must exist for action player poison remove",
+        );
+      }
       getTargetPlayers(
         gameState,
         action.Target,
@@ -1235,15 +1260,20 @@ function runAction(
         gameState,
         targetPlayerID,
         targetBoardCardID,
-        "BurnApplyAmount",
+        AttributeType.BurnApplyAmount,
       );
+      if (!amount) {
+        throw new Error(
+          "Burn apply amount must exist for action player burn apply",
+        );
+      }
       const critChance = getCardAttribute(
         gameState,
         targetPlayerID,
         targetBoardCardID,
-        "CritChance",
+        AttributeType.CritChance,
       );
-      if (critChance > 0) {
+      if (critChance && critChance > 0) {
         if (gameState.getRand() * 100 < critChance) {
           amount *= 2;
           hasCritted = true;
@@ -1279,9 +1309,13 @@ function runAction(
           gameState,
           targetPlayerID,
           targetBoardCardID,
-          "BurnRemoveAmount",
+          AttributeType.BurnRemoveAmount,
         );
-
+        if (!amount) {
+          throw new Error(
+            "Burn remove amount must exist for action player burn remove",
+          );
+        }
         const burn = getPlayerAttribute(gameState, playerID, "Burn");
         updatePlayerAttribute(
           gameState,
@@ -1297,15 +1331,20 @@ function runAction(
         gameState,
         targetPlayerID,
         targetBoardCardID,
-        "ShieldApplyAmount",
+        AttributeType.ShieldApplyAmount,
       );
+      if (!amount) {
+        throw new Error(
+          "Shield apply amount must exist for action player shield apply",
+        );
+      }
       const critChance = getCardAttribute(
         gameState,
         targetPlayerID,
         targetBoardCardID,
-        "CritChance",
+        AttributeType.CritChance,
       );
-      if (critChance > 0) {
+      if (critChance && critChance > 0) {
         if (gameState.getRand() * 100 < critChance) {
           amount *= 2;
           hasCritted = true;
@@ -1343,8 +1382,13 @@ function runAction(
           gameState,
           targetPlayerID,
           targetBoardCardID,
-          "ShieldRemoveAmount",
+          AttributeType.ShieldRemoveAmount,
         );
+        if (!amount) {
+          throw new Error(
+            "Shield remove amount must exist for action player shield remove",
+          );
+        }
         const shield = getPlayerAttribute(gameState, playerID, "Shield");
         updatePlayerAttribute(
           gameState,
@@ -1382,7 +1426,7 @@ function runAction(
         gameState,
         targetPlayerID,
         targetBoardCardID,
-        "DisableTargets",
+        AttributeType.DisableTargets,
       );
       targetCards
         .slice(0, targetCount)
@@ -1404,6 +1448,9 @@ function runAction(
       break;
     }
     case "TActionCardReload": {
+      if (!action.Target) {
+        throw new Error("Target must exist for action card reload");
+      }
       const targetCards = getTargetCards(
         gameState,
         action.Target,
@@ -1416,14 +1463,14 @@ function runAction(
         gameState,
         targetPlayerID,
         targetBoardCardID,
-        "ReloadAmount",
+        AttributeType.ReloadAmount,
       );
 
       const targetCount = getCardAttribute(
         gameState,
         targetPlayerID,
         targetBoardCardID,
-        "ReloadTargets",
+        AttributeType.ReloadTargets,
       );
 
       targetCards
@@ -1433,21 +1480,31 @@ function runAction(
             gameState,
             actionTargetPlayerID,
             actionTargetBoardCardID,
-            "Ammo",
+            AttributeType.Ammo,
           );
+          if (!value) {
+            throw new Error("Ammo must exist for action card reload");
+          }
           const ammoMax = getCardAttribute(
             gameState,
             actionTargetPlayerID,
             actionTargetBoardCardID,
-            "AmmoMax",
+            AttributeType.AmmoMax,
           );
+          if (!amount) {
+            throw new Error("Reload amount must exist for action card reload");
+          }
+          if (!ammoMax) {
+            throw new Error("Ammo max must exist for action card reload");
+          }
+
           const newValue = Math.min(ammoMax, value + amount);
           if (value !== newValue) {
             updateCardAttribute(
               gameState,
               actionTargetPlayerID,
               actionTargetBoardCardID,
-              "Ammo",
+              AttributeType.Ammo,
               newValue,
             );
           }
@@ -1460,32 +1517,27 @@ function runAction(
       const [amountKey, targetsKey, tickKey, triggerType] =
         action.$type === "TActionCardFreeze"
           ? [
-              "FreezeAmount",
-              "FreezeTargets",
-              "Freeze",
+              AttributeType.FreezeAmount,
+              AttributeType.FreezeTargets,
+              AttributeType.Freeze,
               TriggerType.TTriggerOnCardPerformedFreeze,
             ]
           : action.$type === "TActionCardSlow"
             ? [
-                "SlowAmount",
-                "SlowTargets",
-                "Slow",
+                AttributeType.SlowAmount,
+                AttributeType.SlowTargets,
+                AttributeType.Slow,
                 TriggerType.TTriggerOnCardPerformedSlow,
               ]
             : action.$type === "TActionCardHaste"
               ? [
-                  "HasteAmount",
-                  "HasteTargets",
-                  "Haste",
+                  AttributeType.HasteAmount,
+                  AttributeType.HasteTargets,
+                  AttributeType.Haste,
                   TriggerType.TTriggerOnCardPerformedHaste,
                 ]
               : [];
-      if (
-        amountKey == null ||
-        targetsKey == null ||
-        tickKey == null ||
-        triggerType == null
-      ) {
+      if (!amountKey || !targetsKey || !tickKey || !triggerType) {
         throw new Error(
           "Card:" +
             gameState.players[targetPlayerID].board[targetBoardCardID].card
@@ -1500,12 +1552,19 @@ function runAction(
         targetBoardCardID,
         amountKey,
       );
+      if (!amount) {
+        throw new Error("Amount must exist for action card freeze|slow|haste");
+      }
       const targetCount = getCardAttribute(
         gameState,
         targetPlayerID,
         targetBoardCardID,
         targetsKey,
       );
+
+      if (!action.Target) {
+        throw new Error("Target must exist for action card freeze|slow|haste");
+      }
 
       const targetCards = getTargetCards(
         gameState,
@@ -1543,6 +1602,11 @@ function runAction(
             actionTargetBoardCardID,
             tickKey,
           );
+          if (!existingAmount) {
+            throw new Error(
+              "Existing amount must exist for action card freeze|slow|haste",
+            );
+          }
           updateCardAttribute(
             gameState,
             actionTargetPlayerID,
@@ -1562,7 +1626,10 @@ function runAction(
       break;
     }
     case "TActionCardCharge": {
-      const [amountKey, targetsKey] = ["ChargeAmount", "ChargeTargets"];
+      const [amountKey, targetsKey] = [
+        AttributeType.ChargeAmount,
+        AttributeType.ChargeTargets,
+      ];
       const amount = getCardAttribute(
         gameState,
         targetPlayerID,
@@ -1575,6 +1642,13 @@ function runAction(
         targetBoardCardID,
         targetsKey,
       );
+
+      if (!amount) {
+        throw new Error("Amount must exist for action card charge");
+      }
+      if (!action.Target) {
+        throw new Error("Target must exist for action card charge");
+      }
 
       const targetCards = getTargetCards(
         gameState,
@@ -1602,8 +1676,11 @@ function runAction(
             gameState,
             actionTargetPlayerID,
             actionTargetBoardCardID,
-            "CooldownMax",
+            AttributeType.CooldownMax,
           );
+          if (!cooldownMax) {
+            throw new Error("Cooldown max must exist for action card charge");
+          }
           const newValue = Math.min(cooldownMax, nextBoardCard.tick + amount);
 
           if (nextBoardCard.tick !== newValue) {
@@ -1632,6 +1709,10 @@ function runAction(
         metadata,
       );
 
+      if (!action.Target) {
+        throw new Error("Target must exist for action card modify attribute");
+      }
+
       const targetCards = getTargetCards(
         gameState,
         action.Target,
@@ -1653,13 +1734,19 @@ function runAction(
               targetBoardCardID,
             );
 
+      if (!action.AttributeType) {
+        throw new Error(
+          "Attribute type must exist for action card modify attribute",
+        );
+      }
+
       targetCards
         .slice(0, targetCount)
         .forEach(([actionTargetPlayerID, actionTargetBoardCardID]) => {
           const oldValue =
             gameState.players[actionTargetPlayerID].board[
               actionTargetBoardCardID
-            ][action.AttributeType as string];
+            ][action.AttributeType as AttributeType];
           if (oldValue === undefined) {
             return;
           }
@@ -1675,7 +1762,7 @@ function runAction(
             gameState,
             actionTargetPlayerID,
             actionTargetBoardCardID,
-            action.AttributeType as string,
+            action.AttributeType as AttributeType,
             Math.max(0, Math.floor(newValue)),
           );
         });
@@ -1696,8 +1783,14 @@ function runAction(
         triggerPlayerID,
         targetPlayerID,
       ).forEach((playerID) => {
-        const oldValue =
-          gameState.players[playerID][action.AttributeType as string];
+        const oldValue: number | undefined = gameState.players[playerID][
+          action.AttributeType as keyof Player
+        ] as number | undefined;
+        if (oldValue === undefined) {
+          throw new Error(
+            "Old value must exist for action player modify attribute",
+          );
+        }
         const newValue =
           action.Operation === "Add"
             ? oldValue + actionValue
@@ -1710,7 +1803,11 @@ function runAction(
         updatePlayerAttribute(
           gameState,
           playerID,
-          action.AttributeType as string,
+          action.AttributeType as keyof {
+            [P in keyof Player as Player[P] extends number
+              ? P
+              : never]: Player[P];
+          },
           Math.floor(newValue),
         );
       });
@@ -1739,6 +1836,11 @@ function getActionValue(
       break;
     case "TReferenceValueCardAttribute":
     case "TReferenceValueCardAttributeAggregate": {
+      if (!value.Target) {
+        throw new Error(
+          "Target must exist for action reference value card attribute",
+        );
+      }
       const targetCards = getTargetCards(
         gameState,
         value.Target,
@@ -1755,7 +1857,7 @@ function getActionValue(
             gameState,
             valueTargetPlayerID,
             valueTargetBoardCardID,
-            value.AttributeType as string,
+            value.AttributeType,
           ) ?? 0);
       });
       break;
