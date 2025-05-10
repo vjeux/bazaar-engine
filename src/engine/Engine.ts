@@ -1212,14 +1212,6 @@ function runAction(
           "HealthRegen",
           currentRegen + amount,
         );
-        triggerActions(
-          gameState,
-          TriggerType.TTriggerOnCardPerformedPoison,
-          playerID,
-          -1,
-          targetPlayerID,
-          targetBoardCardID,
-        );
       });
       break;
     }
