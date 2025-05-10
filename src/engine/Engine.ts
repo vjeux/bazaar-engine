@@ -611,7 +611,7 @@ function testPrerequisite(
 
 function testPlayerConditions(
   gameState: GameState,
-  conditions: Conditions,
+  conditions: Conditions | null,
   triggerPlayerID: number,
   targetPlayerID: number,
 ) {
@@ -989,14 +989,14 @@ function runAction(
         targetBoardCardID,
         AttributeType.DamageAmount,
       );
-      const critChance = getCardAttribute(
+      let critChance = getCardAttribute(
         gameState,
         targetPlayerID,
         targetBoardCardID,
         AttributeType.CritChance,
       );
       if (!critChance) {
-        throw new Error("Crit chance must exist for action player damage");
+        critChance = 0;
       }
       if (!amount) {
         throw new Error("Damage amount must exist for action player damage");
@@ -1259,6 +1259,9 @@ function runAction(
           "Poison remove amount must exist for action player poison remove",
         );
       }
+      if (!action.Target) {
+        throw new Error("Target must exist for action player poison remove");
+      }
       getTargetPlayers(
         gameState,
         action.Target,
@@ -1299,6 +1302,9 @@ function runAction(
           hasCritted = true;
         }
       }
+      if (!action.Target) {
+        throw new Error("Target must exist for action player burn apply");
+      }
       getTargetPlayers(
         gameState,
         action.Target,
@@ -1319,6 +1325,9 @@ function runAction(
       break;
     }
     case "TActionPlayerBurnRemove": {
+      if (!action.Target) {
+        throw new Error("Target must exist for action player burn remove");
+      }
       getTargetPlayers(
         gameState,
         action.Target,
@@ -1371,6 +1380,9 @@ function runAction(
         }
       }
 
+      if (!action.Target) {
+        throw new Error("Target must exist for action player shield apply");
+      }
       getTargetPlayers(
         gameState,
         action.Target,
@@ -1392,6 +1404,9 @@ function runAction(
       break;
     }
     case "TActionPlayerShieldRemove": {
+      if (!action.Target) {
+        throw new Error("Target must exist for action player shield remove");
+      }
       getTargetPlayers(
         gameState,
         action.Target,
@@ -1420,6 +1435,9 @@ function runAction(
       break;
     }
     case "TActionPlayerReviveHeal": {
+      if (!action.Target) {
+        throw new Error("Target must exist for action player revive heal");
+      }
       getTargetPlayers(
         gameState,
         action.Target,
@@ -1797,6 +1815,9 @@ function runAction(
         targetPlayerID,
         targetBoardCardID,
       );
+      if (!action.Target) {
+        throw new Error("Target must exist for action player modify attribute");
+      }
       getTargetPlayers(
         gameState,
         action.Target,
@@ -1889,6 +1910,11 @@ function getActionValue(
     }
     case "TReferenceValuePlayerAttribute": {
       amount = value.DefaultValue;
+      if (!value.Target) {
+        throw new Error(
+          "Target must exist for action reference value player attribute",
+        );
+      }
       const targetPlayers = getTargetPlayers(
         gameState,
         value.Target,
@@ -2292,7 +2318,7 @@ function getTargetPlayers(
   }
 
   if (targetConfig.Conditions) {
-    results = results.filter((testPlayerID) => {
+    results = results.filter(() => {
       return testPlayerConditions(
         gameState,
         targetConfig.Conditions,
@@ -2399,45 +2425,84 @@ function runGameTick(initialGameState: GameState): GameState {
     }
 
     let tickRate = TICK_RATE;
-    if (boardCard.Slow > 0) {
+    const slowValue = boardCard[AttributeType.Slow] as number | undefined;
+    if (slowValue && slowValue > 0) {
       tickRate /= 2;
     }
-    if (boardCard.Haste > 0) {
+    const hasteValue = boardCard[AttributeType.Haste] as number | undefined;
+    if (hasteValue && hasteValue > 0) {
       tickRate *= 2;
     }
-    let tick = TICK_RATE;
+    const tick = TICK_RATE;
     const CooldownMax = getCardAttribute(
       gameState,
       playerID,
       boardCardID,
-      "CooldownMax",
+      AttributeType.CooldownMax,
     );
-    const slow = getCardAttribute(gameState, playerID, boardCardID, "Slow");
-    const nextSlow = Math.max(0, slow - tick);
-    if (nextSlow !== slow) {
-      updateCardAttribute(gameState, playerID, boardCardID, "Slow", nextSlow);
+    const slow = getCardAttribute(
+      gameState,
+      playerID,
+      boardCardID,
+      AttributeType.Slow,
+    );
+    if (slow) {
+      const nextSlow = Math.max(0, slow - tick);
+      if (nextSlow !== slow) {
+        updateCardAttribute(
+          gameState,
+          playerID,
+          boardCardID,
+          AttributeType.Slow,
+          nextSlow,
+        );
+      }
     }
 
-    const haste = getCardAttribute(gameState, playerID, boardCardID, "Haste");
-    const nextHaste = Math.max(0, haste - tick);
-    if (nextHaste !== haste) {
-      updateCardAttribute(gameState, playerID, boardCardID, "Haste", nextHaste);
+    const haste = getCardAttribute(
+      gameState,
+      playerID,
+      boardCardID,
+      AttributeType.Haste,
+    );
+    if (haste) {
+      const nextHaste = Math.max(0, haste - tick);
+      if (nextHaste !== haste) {
+        updateCardAttribute(
+          gameState,
+          playerID,
+          boardCardID,
+          AttributeType.Haste,
+          nextHaste,
+        );
+      }
     }
 
-    const freeze = getCardAttribute(gameState, playerID, boardCardID, "Freeze");
-    if (freeze === 0) {
-      boardCard.tick = Math.min(boardCard.tick + tickRate, CooldownMax);
-    }
-
-    const nextFreeze = Math.max(0, freeze - tick);
-    if (nextFreeze !== freeze) {
-      updateCardAttribute(
-        gameState,
-        playerID,
-        boardCardID,
-        "Freeze",
-        nextFreeze,
+    // Check if card is frozen, if not then tick the card
+    const freeze = getCardAttribute(
+      gameState,
+      playerID,
+      boardCardID,
+      AttributeType.Freeze,
+    );
+    if ((freeze && !(freeze > 0)) || !freeze) {
+      boardCard.tick = Math.min(
+        boardCard.tick + tickRate,
+        CooldownMax ?? Infinity,
       );
+    }
+
+    if (freeze) {
+      const nextFreeze = Math.max(0, freeze - tick);
+      if (nextFreeze !== freeze) {
+        updateCardAttribute(
+          gameState,
+          playerID,
+          boardCardID,
+          AttributeType.Freeze,
+          nextFreeze,
+        );
+      }
     }
 
     if (boardCard.tick === CooldownMax) {
@@ -2445,7 +2510,7 @@ function runGameTick(initialGameState: GameState): GameState {
         gameState,
         playerID,
         boardCardID,
-        "AmmoMax",
+        AttributeType.AmmoMax,
       );
       const Ammo = getCardAttribute(gameState, playerID, boardCardID, "Ammo");
       if (!AmmoMax || (AmmoMax && Ammo === undefined) || Ammo > 0) {
@@ -2557,6 +2622,9 @@ function runGameTick(initialGameState: GameState): GameState {
           addAction,
         ) => {
           if (ability.Trigger.$type === "TTriggerOnPlayerDied") {
+            if (!ability.Trigger.Subject) {
+              throw new Error("Subject must exist for player died trigger");
+            }
             getTargetPlayers(
               gameState,
               ability.Trigger.Subject,
