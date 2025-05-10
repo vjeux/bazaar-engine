@@ -2512,12 +2512,17 @@ function runGameTick(initialGameState: GameState): GameState {
         boardCardID,
         AttributeType.AmmoMax,
       );
-      const Ammo = getCardAttribute(gameState, playerID, boardCardID, "Ammo");
-      if (!AmmoMax || (AmmoMax && Ammo === undefined) || Ammo > 0) {
+      const Ammo = getCardAttribute(
+        gameState,
+        playerID,
+        boardCardID,
+        AttributeType.Ammo,
+      );
+      if (!AmmoMax || (AmmoMax && Ammo === undefined) || (Ammo && Ammo > 0)) {
         cardTriggerList.push([playerID, boardCardID, /* isMulticast */ false]);
         if ("Multicast" in boardCard) {
           const MULTICAST_DELAY = 300;
-          for (let i = 0; i < boardCard.Multicast - 1; ++i) {
+          for (let i = 0; i < (boardCard.Multicast ?? 1) - 1; ++i) {
             gameState.multicast.push({
               tick: gameState.tick + (i + 1) * MULTICAST_DELAY,
               playerID,
@@ -2548,15 +2553,20 @@ function runGameTick(initialGameState: GameState): GameState {
       gameState,
       playerID,
       boardCardID,
-      "AmmoMax",
+      AttributeType.AmmoMax,
     );
     if (!isMulticast && AmmoMax) {
-      const Ammo = getCardAttribute(gameState, playerID, boardCardID, "Ammo");
+      const Ammo = getCardAttribute(
+        gameState,
+        playerID,
+        boardCardID,
+        AttributeType.Ammo,
+      );
       updateCardAttribute(
         gameState,
         playerID,
         boardCardID,
-        "Ammo",
+        AttributeType.Ammo,
         Ammo === undefined ? AmmoMax - 1 : Ammo - 1,
       );
     }
@@ -2665,50 +2675,60 @@ export function getTooltips(
   boardCardID: number,
 ): string[] {
   const boardCard = gameState.players[playerID].board[boardCardID];
-  return boardCard.TooltipIds.map((tooltipId: string) => {
+  return boardCard.TooltipIds.map((tooltipId: number) => {
     const tooltipObject = boardCard.Localization.Tooltips[tooltipId];
     if (!tooltipObject) {
       return null;
     }
-    const tooltip: string | number = tooltipObject.Content.Text.replace(
+    const tooltip: string = tooltipObject.Content.Text.replace(
       /\{([a-z]+)\.([a-z0-9]+)\.targets\}/g,
-      (_: any, type: string, id: string | number) => {
+      (_: string, type: string, id: string | number): string => {
         const action =
           boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
         if (action.$type === "TActionCardHaste") {
-          return getCardAttribute(
-            gameState,
-            playerID,
-            boardCardID,
-            "HasteTargets",
+          return String(
+            getCardAttribute(
+              gameState,
+              playerID,
+              boardCardID,
+              AttributeType.HasteTargets,
+            ),
           );
         } else if (action.$type === "TActionCardSlow") {
-          return getCardAttribute(
-            gameState,
-            playerID,
-            boardCardID,
-            "SlowTargets",
+          return String(
+            getCardAttribute(
+              gameState,
+              playerID,
+              boardCardID,
+              AttributeType.SlowTargets,
+            ),
           );
         } else if (action.$type === "TActionCardFreeze") {
-          return getCardAttribute(
-            gameState,
-            playerID,
-            boardCardID,
-            "FreezeTargets",
+          return String(
+            getCardAttribute(
+              gameState,
+              playerID,
+              boardCardID,
+              AttributeType.FreezeTargets,
+            ),
           );
         } else if (action.$type === "TActionCardCharge") {
-          return getCardAttribute(
-            gameState,
-            playerID,
-            boardCardID,
-            "ChargeTargets",
+          return String(
+            getCardAttribute(
+              gameState,
+              playerID,
+              boardCardID,
+              AttributeType.ChargeTargets,
+            ),
           );
         } else if (action.$type === "TActionCardReload") {
-          return getCardAttribute(
-            gameState,
-            playerID,
-            boardCardID,
-            "ReloadTargets",
+          return String(
+            getCardAttribute(
+              gameState,
+              playerID,
+              boardCardID,
+              AttributeType.ReloadTargets,
+            ),
           );
         }
         return `{?${type}.${id}.targets}`;
@@ -2716,22 +2736,27 @@ export function getTooltips(
     )
       .replace(
         /\{([a-z]+)\.([a-z0-9]+)\.mod\}/g,
-        (_: any, type: string, id: string | number) => {
+        (_: string, type: string, id: string | number): string => {
           const action =
             boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
-          return getActionValue(
-            gameState,
-            action.Value.Modifier.Value,
-            playerID,
-            boardCardID,
-            playerID,
-            boardCardID,
+          if (!action.Value || !action.Value.Modifier) {
+            return "";
+          }
+          return String(
+            getActionValue(
+              gameState,
+              action.Value.Modifier.Value,
+              playerID,
+              boardCardID,
+              playerID,
+              boardCardID,
+            ),
           );
         },
       )
       .replace(
         /\{([a-z]+)\.([a-z0-9]+)\}/g,
-        (_: any, type: string, id: string | number, targets: any) => {
+        (_: string, type: string, id: string | number) => {
           const action =
             boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
 
@@ -2759,62 +2784,65 @@ export function getTooltips(
 
           switch (action.$type as ActionType) {
             case "TActionGameSpawnCards":
-              return getActionValue(
-                gameState,
-                action.SpawnContext.Limit,
-                playerID,
-                boardCardID,
-                playerID,
-                boardCardID,
-              );
+              if ("SpawnContext" in action && action.SpawnContext) {
+                return getActionValue(
+                  gameState,
+                  action.SpawnContext.Limit,
+                  playerID,
+                  boardCardID,
+                  playerID,
+                  boardCardID,
+                );
+              }
+              return "";
             case "TActionPlayerDamage":
               return getCardAttribute(
                 gameState,
                 playerID,
                 boardCardID,
-                "DamageAmount",
+                AttributeType.DamageAmount,
               );
             case "TActionCardReload":
               return getCardAttribute(
                 gameState,
                 playerID,
                 boardCardID,
-                "ReloadAmount",
+                AttributeType.ReloadAmount,
               );
             case "TActionPlayerHeal":
               return getCardAttribute(
                 gameState,
                 playerID,
                 boardCardID,
-                "HealAmount",
+                AttributeType.HealAmount,
               );
             case "TActionPlayerShieldApply":
               return getCardAttribute(
                 gameState,
                 playerID,
                 boardCardID,
-                "ShieldApplyAmount",
+                AttributeType.ShieldApplyAmount,
               );
             case "TActionPlayerPoisonApply":
               return getCardAttribute(
                 gameState,
                 playerID,
                 boardCardID,
-                "PoisonApplyAmount",
+                AttributeType.PoisonApplyAmount,
               );
             case "TActionPlayerBurnApply":
               return getCardAttribute(
                 gameState,
                 playerID,
                 boardCardID,
-                "BurnApplyAmount",
+                AttributeType.BurnApplyAmount,
               );
             case "TActionPlayerRegenApply":
               return getCardAttribute(
                 gameState,
                 playerID,
                 boardCardID,
-                "RegenApplyAmount",
+                AttributeType.RegenApplyAmount,
               );
             case "TActionCardFreeze":
               return (
@@ -2822,8 +2850,8 @@ export function getTooltips(
                   gameState,
                   playerID,
                   boardCardID,
-                  "FreezeAmount",
-                ) / 1000
+                  AttributeType.FreezeAmount,
+                ) ?? 0 / 1000
               );
             case "TActionCardHaste":
               return (
@@ -2831,8 +2859,8 @@ export function getTooltips(
                   gameState,
                   playerID,
                   boardCardID,
-                  "HasteAmount",
-                ) / 1000
+                  AttributeType.HasteAmount,
+                ) ?? 0 / 1000
               );
             case "TActionCardSlow":
               return (
@@ -2840,8 +2868,8 @@ export function getTooltips(
                   gameState,
                   playerID,
                   boardCardID,
-                  "SlowAmount",
-                ) / 1000
+                  AttributeType.SlowAmount,
+                ) ?? 0 / 1000
               );
             case "TActionCardCharge":
               return (
@@ -2849,8 +2877,8 @@ export function getTooltips(
                   gameState,
                   playerID,
                   boardCardID,
-                  "ChargeAmount",
-                ) / 1000
+                  AttributeType.ChargeAmount,
+                ) ?? 0 / 1000
               );
 
             default:
