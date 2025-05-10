@@ -678,7 +678,7 @@ function testPlayerConditions(
 
 function testCardConditions(
   gameState: GameState,
-  conditions: Conditions,
+  conditions: Conditions | null,
   triggerPlayerID: number,
   triggerBoardCardID: number,
   targetPlayerID: number,
@@ -2220,11 +2220,6 @@ function getTargetCards(
   }
 
   const filteredResults = results.filter(([testPlayerID, testBoardCardID]) => {
-    if (!targetConfig.Conditions) {
-      throw new Error(
-        "Conditions must exist for action card conditional attribute highest",
-      );
-    }
     return (
       !gameState.players[testPlayerID].board[testBoardCardID].isDisabled &&
       testCardConditions(
