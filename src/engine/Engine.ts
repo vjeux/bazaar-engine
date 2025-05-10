@@ -1714,7 +1714,7 @@ function runAction(
             AttributeType.CooldownMax,
           );
           if (!cooldownMax) {
-            throw new Error("Cooldown max must exist for action card charge");
+            return; // If the target card has no cooldown max, don't do anything as it does not have a cooldown
           }
           const newValue = Math.min(cooldownMax, nextBoardCard.tick + amount);
 
