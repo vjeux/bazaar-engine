@@ -46,7 +46,7 @@ const { Cards, Encounters } = await genCardsAndEncounters();
 
 describe("Encounter snapshots should match", () => {
   getFlattenedEncounters(Encounters).forEach((encounter) => {
-    test(`Runs encounter "Day ${encounter.day} - ${encounter.name}"`, () => {
+    test(`Matches snapshot for "Day ${encounter.day} - ${encounter.name}"`, () => {
       const gameState = getInitialGameState(Cards, Encounters, [
         { type: "monster", name: encounter.name },
         {
