@@ -2875,9 +2875,25 @@ export function getTooltips(
                   AttributeType.ChargeAmount,
                 ) ?? 0 / 1000
               );
+            case "TActionPlayerBurnRemove":
+              return getCardAttribute(
+                gameState,
+                playerID,
+                boardCardID,
+                AttributeType.BurnRemoveAmount,
+              );
+            case "TActionPlayerPoisonRemove":
+              return getCardAttribute(
+                gameState,
+                playerID,
+                boardCardID,
+                AttributeType.PoisonRemoveAmount,
+              );
 
             default:
-              throw new Error(action.$type + ": Action type not implemented");
+              throw new Error(
+                action.$type + ": Action type tooltip not implemented",
+              );
           }
 
           const match = action.$type.match(/^TActionPlayer([A-Za-z]+)Apply$/);
