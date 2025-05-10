@@ -15,7 +15,12 @@ export default function TooltipWithGameState({
   if (!card) return null;
 
   const Title = card.Localization.Title.Text;
-  const visibleTags = getCardAttribute(gameState, playerID, boardCardID, "tags");
+  const visibleTags = getCardAttribute(
+    gameState,
+    playerID,
+    boardCardID,
+    "tags",
+  );
 
   return (
     <div className="bg-card border-border rounded border p-4">
