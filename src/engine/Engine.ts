@@ -1634,16 +1634,14 @@ function runAction(
         })
         .slice(0, targetCount)
         .forEach(([actionTargetPlayerID, actionTargetBoardCardID]) => {
-          const existingAmount = getCardAttribute(
+          let existingAmount = getCardAttribute(
             gameState,
             actionTargetPlayerID,
             actionTargetBoardCardID,
             tickKey,
           );
-          if (!existingAmount) {
-            throw new Error(
-              "Existing amount must exist for action card freeze|slow|haste",
-            );
+          if (existingAmount === undefined) {
+            existingAmount = 0;
           }
           updateCardAttribute(
             gameState,
