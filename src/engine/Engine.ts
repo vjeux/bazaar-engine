@@ -528,6 +528,11 @@ function updatePlayerAttribute<K extends keyof Player>(
         ((ability.Trigger.ChangeType === "Gain" && value > existingValue) ||
           (ability.Trigger.ChangeType === "Loss" && value < existingValue))
       ) {
+        if (!ability.Trigger.Subject) {
+          throw new Error(
+            "Trigger subject must exist for player attribute change trigger",
+          );
+        }
         getTargetPlayers(
           gameState,
           ability.Trigger.Subject,
@@ -586,6 +591,9 @@ function testPrerequisite(
       }
     }
     case "TPrerequisitePlayer": {
+      if (!prerequisite.Subject) {
+        throw new Error("Subject must exist for player prerequisite");
+      }
       const subjects = getTargetPlayers(
         gameState,
         prerequisite.Subject,
@@ -1016,6 +1024,9 @@ function runAction(
         AttributeType.Lifesteal,
       );
 
+      if (!action.Target) {
+        throw new Error("Target must exist for action player damage");
+      }
       getTargetPlayers(
         gameState,
         action.Target,
@@ -1083,6 +1094,9 @@ function runAction(
         }
       }
 
+      if (!action.Target) {
+        throw new Error("Target must exist for action player heal");
+      }
       getTargetPlayers(
         gameState,
         action.Target,
@@ -1155,6 +1169,9 @@ function runAction(
         }
       }
 
+      if (!action.Target) {
+        throw new Error("Target must exist for action player regen apply");
+      }
       getTargetPlayers(
         gameState,
         action.Target,
@@ -1208,6 +1225,9 @@ function runAction(
         }
       }
 
+      if (!action.Target) {
+        throw new Error("Target must exist for action player poison apply");
+      }
       getTargetPlayers(
         gameState,
         action.Target,
@@ -1851,6 +1871,11 @@ function getActionValue(
       );
       amount = value.DefaultValue;
       targetCards.forEach(([valueTargetPlayerID, valueTargetBoardCardID]) => {
+        if (!value.AttributeType) {
+          throw new Error(
+            "Attribute type must exist for action reference value card attribute",
+          );
+        }
         amount =
           (amount ?? 0) +
           (getCardAttribute(
@@ -1871,17 +1896,32 @@ function getActionValue(
         targetPlayerID,
       );
       targetPlayers.forEach((valueTargetPlayerID) => {
+        if (!value.AttributeType) {
+          throw new Error(
+            "Attribute type must exist for action reference value player attribute",
+          );
+        }
+
         amount =
           (amount ?? 0) +
           (getPlayerAttribute(
             gameState,
             valueTargetPlayerID,
-            value.AttributeType as string,
+            value.AttributeType as keyof {
+              [P in keyof Player as Player[P] extends number
+                ? P
+                : never]: Player[P];
+            },
           ) ?? 0);
       });
       break;
     }
     case "TReferenceValueCardCount": {
+      if (!value.Target) {
+        throw new Error(
+          "Target must exist for action reference value card count",
+        );
+      }
       const targetCards = getTargetCards(
         gameState,
         value.Target,
@@ -1900,6 +1940,11 @@ function getActionValue(
     }
     // Count number of visible tags on a card
     case "TReferenceValueCardTagCount": {
+      if (!value.Target) {
+        throw new Error(
+          "Target must exist for action reference value card tag count",
+        );
+      }
       const targetCards = getTargetCards(
         gameState,
         value.Target,
@@ -2145,11 +2190,16 @@ function getTargetCards(
     let highestPlayerID = null;
     let highestBoardCardID = null;
     results.forEach(([testPlayerID, testBoardCardID]) => {
+      if (!targetConfig.Conditions?.AttributeType) {
+        throw new Error(
+          "Attribute type must exist for action card conditional attribute highest",
+        );
+      }
       const value = getCardAttribute(
         gameState,
         testPlayerID,
         testBoardCardID,
-        targetConfig.Conditions?.AttributeType,
+        targetConfig.Conditions.AttributeType,
       );
 
       if (
@@ -2170,6 +2220,11 @@ function getTargetCards(
   }
 
   const filteredResults = results.filter(([testPlayerID, testBoardCardID]) => {
+    if (!targetConfig.Conditions) {
+      throw new Error(
+        "Conditions must exist for action card conditional attribute highest",
+      );
+    }
     return (
       !gameState.players[testPlayerID].board[testBoardCardID].isDisabled &&
       testCardConditions(
@@ -2197,15 +2252,15 @@ function getTargetCards(
 
 function getTargetPlayers(
   gameState: GameState,
-  target: any,
+  targetConfig: Target | Subject,
   triggerPlayerID: number,
   targetPlayerID: number,
 ): number[] {
   let results: number[] = [];
 
-  switch (target.$type) {
+  switch (targetConfig.$type) {
     case "TTargetPlayerRelative":
-      switch (target.TargetMode) {
+      switch (targetConfig.TargetMode) {
         case "Opponent":
           results = [(targetPlayerID + 1) % 2];
           break;
@@ -2213,11 +2268,13 @@ function getTargetPlayers(
           results = [targetPlayerID];
           break;
         default:
-          throw new Error("Not implemented TargetMode: " + target.TargetMode);
+          throw new Error(
+            "Not implemented TargetMode: " + targetConfig.TargetMode,
+          );
       }
       break;
     case "TTargetCardSection":
-      switch (target.TargetSection) {
+      switch (targetConfig.TargetSection) {
         case "SelfBoard":
           results = [targetPlayerID];
           break;
@@ -2227,21 +2284,23 @@ function getTargetPlayers(
       }
       break;
     case "TTargetPlayer":
-      if (target.TargetMode === "Both") {
+      if (targetConfig.TargetMode === "Both") {
         results = [targetPlayerID, (targetPlayerID + 1) % 2];
       } else {
-        throw new Error("Not implemented TargetMode: " + target.TargetMode);
+        throw new Error(
+          "Not implemented TargetMode: " + targetConfig.TargetMode,
+        );
       }
       break;
     default:
-      throw new Error("Unhandled target type: " + target.$type);
+      throw new Error("Unhandled target type: " + targetConfig.$type);
   }
 
-  if (target.Conditions) {
+  if (targetConfig.Conditions) {
     results = results.filter((testPlayerID) => {
       return testPlayerConditions(
         gameState,
-        target.Conditions,
+        targetConfig.Conditions,
         triggerPlayerID,
         targetPlayerID,
       );
