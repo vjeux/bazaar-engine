@@ -2766,7 +2766,8 @@ export function getTooltips(
       )
       .replace(
         /\{([a-z]+)\.([a-z0-9]+)\}/g,
-        (_: string, type: string, id: string | number) => {
+        (_: string, type: string, id: string | number): string => {
+          // Ensure a string is always returned
           const action =
             boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
 
@@ -2786,123 +2787,143 @@ export function getTooltips(
                 action.AttributeType === "HasteAmount" ||
                 action.AttributeType === "ChargeAmount")
             ) {
-              return actionValue / 1000;
+              return String(actionValue / 1000);
             } else {
-              return actionValue;
+              return String(actionValue);
             }
           }
 
           switch (action.$type as ActionType) {
             case "TActionGameSpawnCards":
               if ("SpawnContext" in action && action.SpawnContext) {
-                return getActionValue(
-                  gameState,
-                  action.SpawnContext.Limit,
-                  playerID,
-                  boardCardID,
-                  playerID,
-                  boardCardID,
+                return String(
+                  getActionValue(
+                    gameState,
+                    action.SpawnContext.Limit,
+                    playerID,
+                    boardCardID,
+                    playerID,
+                    boardCardID,
+                  ),
                 );
               }
-              return "";
+              return ""; // Ensure string return
             case "TActionPlayerDamage":
-              return getCardAttribute(
-                gameState,
-                playerID,
-                boardCardID,
-                AttributeType.DamageAmount,
-              );
+              return String(
+                getCardAttribute(
+                  gameState,
+                  playerID,
+                  boardCardID,
+                  AttributeType.DamageAmount,
+                ) ?? "",
+              ); // Coalesce to empty string if undefined
             case "TActionCardReload":
-              return getCardAttribute(
-                gameState,
-                playerID,
-                boardCardID,
-                AttributeType.ReloadAmount,
+              return String(
+                getCardAttribute(
+                  gameState,
+                  playerID,
+                  boardCardID,
+                  AttributeType.ReloadAmount,
+                ) ?? "",
               );
             case "TActionPlayerHeal":
-              return getCardAttribute(
-                gameState,
-                playerID,
-                boardCardID,
-                AttributeType.HealAmount,
+              return String(
+                getCardAttribute(
+                  gameState,
+                  playerID,
+                  boardCardID,
+                  AttributeType.HealAmount,
+                ) ?? "",
               );
             case "TActionPlayerShieldApply":
-              return getCardAttribute(
-                gameState,
-                playerID,
-                boardCardID,
-                AttributeType.ShieldApplyAmount,
+              return String(
+                getCardAttribute(
+                  gameState,
+                  playerID,
+                  boardCardID,
+                  AttributeType.ShieldApplyAmount,
+                ) ?? "",
               );
             case "TActionPlayerPoisonApply":
-              return getCardAttribute(
-                gameState,
-                playerID,
-                boardCardID,
-                AttributeType.PoisonApplyAmount,
+              return String(
+                getCardAttribute(
+                  gameState,
+                  playerID,
+                  boardCardID,
+                  AttributeType.PoisonApplyAmount,
+                ) ?? "",
               );
             case "TActionPlayerBurnApply":
-              return getCardAttribute(
-                gameState,
-                playerID,
-                boardCardID,
-                AttributeType.BurnApplyAmount,
+              return String(
+                getCardAttribute(
+                  gameState,
+                  playerID,
+                  boardCardID,
+                  AttributeType.BurnApplyAmount,
+                ) ?? "",
               );
             case "TActionPlayerRegenApply":
-              return getCardAttribute(
-                gameState,
-                playerID,
-                boardCardID,
-                AttributeType.RegenApplyAmount,
+              return String(
+                getCardAttribute(
+                  gameState,
+                  playerID,
+                  boardCardID,
+                  AttributeType.RegenApplyAmount,
+                ) ?? "",
               );
             case "TActionCardFreeze":
-              return (
-                getCardAttribute(
+              return String(
+                (getCardAttribute(
                   gameState,
                   playerID,
                   boardCardID,
                   AttributeType.FreezeAmount,
-                ) ?? 0 / 1000
+                ) ?? 0) / 1000, // Ensure number before division, then string
               );
             case "TActionCardHaste":
-              return (
-                getCardAttribute(
+              return String(
+                (getCardAttribute(
                   gameState,
                   playerID,
                   boardCardID,
                   AttributeType.HasteAmount,
-                ) ?? 0 / 1000
+                ) ?? 0) / 1000,
               );
             case "TActionCardSlow":
-              return (
-                getCardAttribute(
+              return String(
+                (getCardAttribute(
                   gameState,
                   playerID,
                   boardCardID,
                   AttributeType.SlowAmount,
-                ) ?? 0 / 1000
+                ) ?? 0) / 1000,
               );
             case "TActionCardCharge":
-              return (
-                getCardAttribute(
+              return String(
+                (getCardAttribute(
                   gameState,
                   playerID,
                   boardCardID,
                   AttributeType.ChargeAmount,
-                ) ?? 0 / 1000
+                ) ?? 0) / 1000,
               );
             case "TActionPlayerBurnRemove":
-              return getCardAttribute(
-                gameState,
-                playerID,
-                boardCardID,
-                AttributeType.BurnRemoveAmount,
+              return String(
+                getCardAttribute(
+                  gameState,
+                  playerID,
+                  boardCardID,
+                  AttributeType.BurnRemoveAmount,
+                ) ?? "",
               );
             case "TActionPlayerPoisonRemove":
-              return getCardAttribute(
-                gameState,
-                playerID,
-                boardCardID,
-                AttributeType.PoisonRemoveAmount,
+              return String(
+                getCardAttribute(
+                  gameState,
+                  playerID,
+                  boardCardID,
+                  AttributeType.PoisonRemoveAmount,
+                ) ?? "",
               );
 
             default:
@@ -2910,12 +2931,6 @@ export function getTooltips(
                 action.$type + ": Action type tooltip not implemented",
               );
           }
-
-          const match = action.$type.match(/^TActionPlayer([A-Za-z]+)Apply$/);
-          if (match) {
-            return boardCard[`${match[1]}ApplyAmount`];
-          }
-          return `{?${type}.${id}}`;
         },
       );
     return tooltip;
