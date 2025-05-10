@@ -1514,30 +1514,29 @@ function runAction(
       targetCards
         .slice(0, targetCount)
         .forEach(([actionTargetPlayerID, actionTargetBoardCardID]) => {
-          const value = getCardAttribute(
+          const currentAmmo = getCardAttribute(
             gameState,
             actionTargetPlayerID,
             actionTargetBoardCardID,
             AttributeType.Ammo,
           );
-          if (!value) {
-            throw new Error("Ammo must exist for action card reload");
-          }
+
           const ammoMax = getCardAttribute(
             gameState,
             actionTargetPlayerID,
             actionTargetBoardCardID,
             AttributeType.AmmoMax,
           );
+          // If the card has no ammo or ammo max, don't do anything
+          if (!currentAmmo || !ammoMax) {
+            return;
+          }
           if (!amount) {
             throw new Error("Reload amount must exist for action card reload");
           }
-          if (!ammoMax) {
-            throw new Error("Ammo max must exist for action card reload");
-          }
 
-          const newValue = Math.min(ammoMax, value + amount);
-          if (value !== newValue) {
+          const newValue = Math.min(ammoMax, currentAmmo + amount);
+          if (currentAmmo !== newValue) {
             updateCardAttribute(
               gameState,
               actionTargetPlayerID,
@@ -1822,13 +1821,11 @@ function runAction(
         triggerPlayerID,
         targetPlayerID,
       ).forEach((playerID) => {
-        const oldValue: number | undefined = gameState.players[playerID][
+        let oldValue: number | undefined = gameState.players[playerID][
           action.AttributeType as keyof Player
         ] as number | undefined;
         if (oldValue === undefined) {
-          throw new Error(
-            "Old value must exist for action player modify attribute",
-          );
+          oldValue = 0; // If the attribute doesn't exist, set it to 0
         }
         const newValue =
           action.Operation === "Add"
