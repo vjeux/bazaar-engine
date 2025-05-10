@@ -183,7 +183,7 @@ enum DurationTypeEnum {
   UntilEndOfDay = "UntilEndOfDay",
 }
 
-enum Operation {
+export enum Operation {
   Add = "Add",
   Multiply = "Multiply",
   Subtract = "Subtract",

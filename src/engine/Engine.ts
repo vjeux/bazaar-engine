@@ -15,6 +15,7 @@ import {
   type Value,
   type Conditions,
   AbilityPrerequisite,
+  Operation,
 } from "../types/cardTypes.ts";
 
 import type { Hero, Tag, Tier } from "../types/shared.ts";
@@ -1772,18 +1773,6 @@ function runAction(
         targetBoardCardID,
       );
 
-      const targetCount =
-        action.TargetCount == null
-          ? targetCards.length
-          : getActionValue(
-              gameState,
-              action.TargetCount,
-              triggerPlayerID,
-              triggerBoardCardID,
-              targetPlayerID,
-              targetBoardCardID,
-            );
-
       if (!action.AttributeType) {
         throw new Error(
           "Attribute type must exist for action card modify attribute",
@@ -1791,7 +1780,6 @@ function runAction(
       }
 
       targetCards
-        .slice(0, targetCount)
         .forEach(([actionTargetPlayerID, actionTargetBoardCardID]) => {
           const oldValue =
             gameState.players[actionTargetPlayerID].board[
@@ -1800,13 +1788,20 @@ function runAction(
           if (oldValue === undefined) {
             return;
           }
-
-          const newValue =
-            action.Operation === "Add"
-              ? oldValue + actionValue
-              : action.Operation === "Multiply"
-                ? oldValue * actionValue
-                : oldValue - actionValue;
+          let newValue: number;
+          switch (action.Operation) {
+            case Operation.Add:
+              newValue = oldValue + actionValue;
+              break;
+            case Operation.Multiply:
+              newValue = oldValue * actionValue;
+              break;
+            case Operation.Subtract:
+              newValue = oldValue - actionValue;
+              break;
+            default:
+              throw new Error("Unhandled operation: " + action.Operation);
+          }
 
           updateCardAttribute(
             gameState,
