@@ -262,23 +262,46 @@ export function getCardAttribute<K extends keyof BoardCard>(
           if (aura.Action.$type !== "TAuraActionCardAddTagsBySource") {
             return;
           }
-          const targetCards = getTargetCards(
-            gameState,
-            aura.Action.Source,
-            playerID,
-            boardCardID,
-            playerIndex,
-            boardCardIndex,
-          );
-          console.log("Target cards", targetCards);
-          targetCards.forEach(([targetPlayerID, targetBoardCardID]) => {
-            // Append tags from card to set
-            tags = new Set([
-              ...tags,
-              ...gameState.players[targetPlayerID].board[targetBoardCardID]
-                .tags,
-            ]);
-          });
+          // If target includes the card we are getting attribute for
+          if (
+            getTargetCards(
+              gameState,
+              aura.Action.Target,
+              playerID,
+              boardCardID,
+              playerIndex,
+              boardCardIndex,
+            ).some(
+              ([targetPlayerID, targetBoardCardID]) =>
+                targetPlayerID === playerID &&
+                targetBoardCardID === boardCardID,
+            )
+          ) {
+            // Take tags from source cards
+            const sourceCards = getTargetCards(
+              gameState,
+              aura.Action.Source,
+              playerID,
+              boardCardID,
+              playerIndex,
+              boardCardIndex,
+            );
+            sourceCards.forEach(([targetPlayerID, targetBoardCardID]) => {
+              // Append tags from card to set
+              tags = new Set([
+                ...tags,
+                ...gameState.players[targetPlayerID].board[targetBoardCardID]
+                  .tags,
+                // TODO: works for now, should use getCardAttribute but it results in an infinite loop
+                // ...getCardAttribute(
+                //   gameState,
+                //   targetPlayerID,
+                //   targetBoardCardID,
+                //   "tags",
+                // ),
+              ]);
+            });
+          }
         },
       );
       return Array.from(tags) as BoardCard[K];
