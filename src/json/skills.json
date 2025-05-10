@@ -7,25 +7,25 @@
       "tiers": {
         "Bronze": { "tooltips": [] },
         "Silver": {
-          "tooltips": ["You have 2 Regeneration for each Ammo item you have."]
+          "tooltips": ["You have 2 Regen for each Ammo item you have."]
         },
         "Gold": {
-          "tooltips": ["You have 4 Regeneration for each Ammo item you have."]
+          "tooltips": ["You have 4 Regen for each Ammo item you have."]
         },
         "Diamond": {
-          "tooltips": ["You have 6 Regeneration for each Ammo item you have."]
+          "tooltips": ["You have 6 Regen for each Ammo item you have."]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
       "hiddenTags": ["Regen", "AmmoReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_HulkingExperiment_01",
       "unifiedTooltips": [
-        "You have (2/4/6) Regeneration for each Ammo item you have."
+        "You have (2/4/6) Regen for each Ammo item you have."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -51,13 +51,13 @@
       },
       "tags": [],
       "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley", "Stelle"],
       "artKey": "Icon_Skill_DOO_AdvancedSynthetics.png",
       "unifiedTooltips": [
         "When you Level Up, upgrade a (Bronze-tier/Silver-tier) item."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -90,13 +90,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_PackLoyalty_04.png",
       "unifiedTooltips": [
         "When you use a Weapon, it gains (+2%/+4%/+6%/+8%) crit Chance for the fight."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -126,14 +126,39 @@
       },
       "tags": [],
       "hiddenTags": ["Charge", "CritReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Mak"],
       "artKey": "Icon_Skill_Alacrity.png",
       "unifiedTooltips": [
         "The first (5/10) times you Crit each fight, Charge 1 item(s) 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
+      "combatEncounters": []
+    },
+    {
+      "id": "8509674b-3c4b-4250-9bb4-666ef7402654",
+      "name": "Alchemical Precision",
+      "startingTier": "Diamond",
+      "tiers": {
+        "Bronze": { "tooltips": [] },
+        "Silver": { "tooltips": [] },
+        "Gold": { "tooltips": [] },
+        "Diamond": {
+          "tooltips": ["Your Potions have their cooldowns reduced by 1 second."]
+        },
+        "Legendary": { "tooltips": [] }
+      },
+      "tags": ["Potion"],
+      "hiddenTags": ["Cooldown"],
+      "customTags": [],
+      "size": "Medium",
+      "heroes": ["Mak"],
+      "artKey": "Icon_Skill_MAK_AlchemicalPrecision",
+      "unifiedTooltips": [
+        "Your Potions have their cooldowns reduced by 1 second."
+      ],
+      "packId": "Mak_Core",
       "combatEncounters": []
     },
     {
@@ -157,13 +182,13 @@
       },
       "tags": [],
       "hiddenTags": ["DamageReference", "HealthReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_AllTalk_02.png",
       "unifiedTooltips": [
         "While you have more than half Health, your weapons have (+25/+50) damage."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -193,13 +218,13 @@
       },
       "tags": [],
       "hiddenTags": ["Damage"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_Ambush.png",
       "unifiedTooltips": [
         "At the start of each fight, deal damage equal to (15%/30%) of your enemy's Max Health."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -221,13 +246,13 @@
       },
       "tags": [],
       "hiddenTags": ["Ammo"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_ToxicAlacrity.png",
       "unifiedTooltips": [
         "Your leftmost Ammo item has (+1/+2/+3/+4) Max Ammo."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -254,14 +279,14 @@
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
-      "hiddenTags": ["Poison", "Burn", "NonWeapon"],
+      "hiddenTags": ["Poison", "Burn"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_AnythingToWin_03.png",
       "unifiedTooltips": [
         "When you use a non-weapon item, Burn (1/2/3) and Poison (1/2/3)."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": []
     },
@@ -271,28 +296,28 @@
       "startingTier": "Bronze",
       "tiers": {
         "Bronze": {
-          "tooltips": ["When you win a fight against a player, gain 2 gold."]
+          "tooltips": ["When you win a fight against a Hero, gain 2 gold."]
         },
         "Silver": {
-          "tooltips": ["When you win a fight against a player, gain 3 gold."]
+          "tooltips": ["When you win a fight against a Hero, gain 3 gold."]
         },
         "Gold": {
-          "tooltips": ["When you win a fight against a player, gain 4 gold."]
+          "tooltips": ["When you win a fight against a Hero, gain 4 gold."]
         },
         "Diamond": {
-          "tooltips": ["When you win a fight against a player, gain 5 gold."]
+          "tooltips": ["When you win a fight against a Hero, gain 5 gold."]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
       "hiddenTags": ["Gold"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Pygmalien", "Stelle"],
       "artKey": "Icon_Skill_CaptainsDue.png",
       "unifiedTooltips": [
-        "When you win a fight against a player, gain (2/3/4/5) gold."
+        "When you win a fight against a Hero, gain (2/3/4/5) gold."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -317,13 +342,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["Health"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Pygmalien"],
       "artKey": "Icon_Skill_ArmsDealer.png",
       "unifiedTooltips": [
         "When you buy a Weapon, permanently gain (20/30/40/50) Max Health."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -348,13 +373,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_Lurk_02.png",
       "unifiedTooltips": [
         "Your items have (+2%/+3%) Crit Chance for each weapon you have."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -392,13 +417,13 @@
       },
       "tags": [],
       "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Vanessa", "Dooley", "Jules", "Stelle", "Mak"],
       "artKey": "Icon_Skill_ArtillerySpotter.png",
       "unifiedTooltips": [
         "If you have 5 or fewer items, your items have (+10%/+20%/+30%/+40%) Crit Chance."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -422,14 +447,14 @@
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
-      "hiddenTags": ["Slow", "NonWeapon"],
+      "hiddenTags": ["Slow"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_AssaultFocus.png",
       "unifiedTooltips": [
         "When any non-weapon item is used, slow it for (2/4) second(s)."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -459,13 +484,13 @@
       },
       "tags": [],
       "hiddenTags": ["ShieldReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_SKILL_MON_AugmentedDefenses.png",
       "unifiedTooltips": [
         "Your Shield items have +1 Shield. When you sell a small item, increase this bonus by (+1/+2) Shield."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -495,13 +520,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_SKILL_MON_AugmentedWeaponry.png",
       "unifiedTooltips": [
         "Your weapons have +1 Damage. When you sell a small item, increase this bonus by (+1/+2) Damage."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -535,13 +560,13 @@
       },
       "tags": [],
       "hiddenTags": ["Health"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Mak"],
       "artKey": "Icon_Skill_Backroom.png",
       "unifiedTooltips": [
         "When you visit a Merchant, permanently gain (25/50/75) Max Health."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -566,13 +591,13 @@
       },
       "tags": [],
       "hiddenTags": ["Shield", "HealthReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Dooley", "Stelle"],
       "artKey": "Icon_Skill_BackupDefenses.png",
       "unifiedTooltips": [
         "The first time you fall below half health each fight, Shield equal to (20%/30%) of your Max Health."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -601,13 +626,13 @@
       },
       "tags": ["Friend"],
       "hiddenTags": ["ShieldReference", "DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley"],
       "artKey": "Icon_Skill_BalancedFriendship.png",
       "unifiedTooltips": [
         "Your Weapons have (+2/+4/+6) damage and Shield items have (+2/+4/+6) shield for each friend you have."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -628,13 +653,13 @@
       },
       "tags": ["Aquatic"],
       "hiddenTags": ["Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa"],
       "artKey": "Icon_Skill_VAN_BarnacleCrusted",
       "unifiedTooltips": [
         "Reduce the cooldown of your aquatic items by (10%/20%)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -659,13 +684,13 @@
       },
       "tags": ["Friend", "Weapon"],
       "hiddenTags": ["DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley"],
       "artKey": "Icon_Skill_DOO_BeautifulFriendship.png",
       "unifiedTooltips": [
         "When you use a Friend, your weapons gain (3/6) damage for the fight."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": [
         {
@@ -699,13 +724,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa"],
       "artKey": "Icon_Skill_Berserker.png",
       "unifiedTooltips": [
         "While your enemy has more health than you, your Weapons have their cooldowns reduced by (5%/10%/20%)."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -721,12 +746,12 @@
         "Legendary": { "tooltips": [] }
       },
       "tags": ["Weapon"],
-      "hiddenTags": ["Lifesteal"],
+      "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_ThickSkin_03.png",
       "unifiedTooltips": ["Your Weapons have Lifesteal."],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -748,11 +773,11 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Pygmalien", "Stelle"],
       "artKey": "Icon_Skill_BigGuns.png",
       "unifiedTooltips": ["Double the damage of your Large weapons."],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -769,11 +794,11 @@
       },
       "tags": [],
       "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Vanessa", "Dooley", "Jules", "Stelle", "Mak"],
       "artKey": "Icon_Skill_BigNumbers.png",
       "unifiedTooltips": ["Your large items have (+25%/+50%) crit chance"],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": [
         {
@@ -799,13 +824,13 @@
       },
       "tags": [],
       "hiddenTags": ["Poison"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Mak"],
       "artKey": "Icon_Skill_Mak_Biohazard.png",
       "unifiedTooltips": [
         "The first time you fall below half health each fight, double your enemy's Poison."
       ],
-      "remarks": [],
       "packId": "Mak_Core",
       "combatEncounters": []
     },
@@ -818,25 +843,25 @@
         "Silver": { "tooltips": [] },
         "Gold": {
           "tooltips": [
-            "At the start of each fight, Freeze all non-weapon items for 2 second(s)."
+            "The first time you use an item each fight, Freeze all non-weapon items for 2 second(s)."
           ]
         },
         "Diamond": {
           "tooltips": [
-            "At the start of each fight, Freeze all non-weapon items for 3 second(s)."
+            "The first time you use an item each fight, Freeze all non-weapon items for 3 second(s)."
           ]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
-      "hiddenTags": ["Freeze", "NonWeapon"],
+      "hiddenTags": ["Freeze"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_IcicleAmmo_03.png",
       "unifiedTooltips": [
-        "At the start of each fight, Freeze all non-weapon items for (2/3) second(s)."
+        "The first time you use an item each fight, Freeze all non-weapon items for (2/3) second(s)."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -870,13 +895,13 @@
       },
       "tags": [],
       "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Jules"],
       "artKey": "Icon_Skill_Bloodhound.png",
       "unifiedTooltips": [
         "The first time your enemy falls below half health each fight, Charge your items (2/3/4) second(s)."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -901,13 +926,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference", "EconomyReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_PYG_BoarMarket.png",
       "unifiedTooltips": [
         "Your leftmost and rightmost Weapons have + Damage equal to (1x/2x) their value."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -936,13 +961,13 @@
       },
       "tags": [],
       "hiddenTags": ["Haste"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Pygmalien", "Jules", "Mak"],
       "artKey": "Icon_Skill_BoldUnderPressure.png",
       "unifiedTooltips": [
         "The first time you fall below half health each fight, Haste (2/4/6) items 2 second(s)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -961,11 +986,11 @@
       },
       "tags": [],
       "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_TurnOutYourPockets_03.png",
       "unifiedTooltips": ["Enemy cooldowns are increased by 1 second(s)."],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         { "cardId": "2b0437f4-6977-4f84-aeb6-6545cbf5632d", "cardName": "Thug" }
@@ -990,13 +1015,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["Health"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_Brawler.png",
       "unifiedTooltips": [
         "You have (+100/+200/+300) Max Health for each Weapon you have."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -1017,13 +1042,13 @@
       },
       "tags": ["Potion"],
       "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Mak"],
       "artKey": "Icon_Skill_Mak_Brewmaster.png",
       "unifiedTooltips": [
         "At the start of each fight, a random Potion gains +1 Multicast for the fight."
       ],
-      "remarks": [],
       "packId": "Mak_Core",
       "combatEncounters": []
     },
@@ -1052,13 +1077,13 @@
       },
       "tags": ["Core", "Tech", "Friend"],
       "hiddenTags": ["Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley"],
       "artKey": "Icon_Skill_BuddySystem.png",
       "unifiedTooltips": [
         "If you have exactly one friend, reduce its and the Core's cooldown by (5%/10%/15%)."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -1085,6 +1110,7 @@
       },
       "tags": [],
       "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Vanessa", "Dooley", "Jules", "Stelle", "Mak"],
       "artKey": "Icon_Skill_BuildingCrescendo.png",
@@ -1092,7 +1118,6 @@
         "When you use an item, your items gain (3%/6%) crit chance for the fight.",
         "Your items have 100% less crit chance."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -1117,13 +1142,13 @@
       },
       "tags": [],
       "hiddenTags": ["Slow", "AmmoReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa"],
       "artKey": "Icon_Skill_SlowMotion.png",
       "unifiedTooltips": [
         "The first (4/8) times you use an Ammo item each fight, Slow 1 item(s) for 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -1148,13 +1173,13 @@
       },
       "tags": [],
       "hiddenTags": ["Charge", "BurnReference", "ShieldReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley"],
       "artKey": "Icon_Skill_Incinerate.png",
       "unifiedTooltips": [
         "The first (5/10) times you Burn each fight, Charge 1 Shield item 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -1187,13 +1212,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["BurnReference", "DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_DisdainForLife_01",
       "unifiedTooltips": [
         "When you Burn, your Weapons gain (+2/+4/+6/+8) damage for the fight."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -1227,13 +1252,13 @@
       },
       "tags": [],
       "hiddenTags": ["BurnReference", "Shield"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley"],
       "artKey": "Icon_Skill_BurningShield.png",
       "unifiedTooltips": [
         "The first time you fall below half health each fight, Shield equal to (2/3/4) times the Burn on your opponent."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -1266,13 +1291,13 @@
       },
       "tags": [],
       "hiddenTags": ["Burn"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_LivingFlame_01",
       "unifiedTooltips": [
         "The first time your enemy falls below half health each fight, Burn (10/15/20/25)."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -1306,13 +1331,13 @@
       },
       "tags": [],
       "hiddenTags": ["Charge", "HealReference", "SlowReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Mak"],
       "artKey": "Icon_Skill_TraumaKit.png",
       "unifiedTooltips": [
         "The first (5/10) times you Slow each fight, Charge 1 Heal item 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -1341,13 +1366,13 @@
       },
       "tags": [],
       "hiddenTags": ["Haste"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Jules", "Stelle"],
       "artKey": "Icon_Skill_CaptainsCharge.png",
       "unifiedTooltips": [
         "The first time you use a Large item each fight, Haste (2/3/4) items for 3 second(s)."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -1366,11 +1391,11 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference", "Gold"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_CashDeposits.png",
       "unifiedTooltips": ["Your weapons have + damage equal to your gold."],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -1402,6 +1427,7 @@
       },
       "tags": [],
       "hiddenTags": ["PoisonReference", "BurnReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Mak"],
       "artKey": "Icon_Skill_ChemicalFire.png",
@@ -1409,7 +1435,6 @@
         "Your Burn items have (+2/+4/+6) Burn.",
         "Your Poison items have (+2/+4/+6) Poison."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -1438,13 +1463,13 @@
       },
       "tags": [],
       "hiddenTags": ["FreezeReference", "Slow"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_ChillingTouch.png",
       "unifiedTooltips": [
         "The first time you Freeze each fight, Slow all enemy items for (3/5/7) second(s)."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         { "cardId": "69af3106-78fd-4a74-b150-ec41442cdbba", "cardName": "Lich" }
@@ -1459,25 +1484,25 @@
         "Silver": { "tooltips": [] },
         "Gold": {
           "tooltips": [
-            "When you sell a medium or large item, get a Chocolate Bar."
+            "When you sell a medium or large item, get 1 Chocolate Bar."
           ]
         },
         "Diamond": {
           "tooltips": [
-            "When you sell a medium or large item, get 2 Chocolate Bars."
+            "When you sell a medium or large item, get 2 Chocolate Bar."
           ]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
       "hiddenTags": ["Health"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_PYG_Chocoholic.png",
       "unifiedTooltips": [
-        "When you sell a medium or large item, get (1/2) Chocolate Bar(s)."
+        "When you sell a medium or large item, get (1/2) Chocolate Bar."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -1493,12 +1518,12 @@
         "Legendary": { "tooltips": [] }
       },
       "tags": ["Weapon"],
-      "hiddenTags": ["Lifesteal"],
+      "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Mak"],
       "artKey": "Icon_Skill_CircleOfLife.png",
       "unifiedTooltips": ["Your leftmost Weapon has lifesteal."],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -1521,13 +1546,13 @@
       },
       "tags": [],
       "hiddenTags": ["Value"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_SKILL_MON_CleanStorefront.png",
       "unifiedTooltips": [
         "Your leftmost item has (+15/+30/+50) value during combat."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -1544,30 +1569,30 @@
         "Bronze": { "tooltips": [] },
         "Silver": {
           "tooltips": [
-            "When you Heal or gain Regeneration, an item gains 3% Crit Chance for the fight."
+            "When you Heal or gain Regen, an item gains 3% Crit Chance for the fight."
           ]
         },
         "Gold": {
           "tooltips": [
-            "When you Heal or gain Regeneration, an item gains 6% Crit Chance for the fight."
+            "When you Heal or gain Regen, an item gains 6% Crit Chance for the fight."
           ]
         },
         "Diamond": {
           "tooltips": [
-            "When you Heal or gain Regeneration, an item gains 9% Crit Chance for the fight."
+            "When you Heal or gain Regen, an item gains 9% Crit Chance for the fight."
           ]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
       "hiddenTags": ["HealReference", "RegenReference", "Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Mak"],
       "artKey": "Icon_Skill_MedicalTraining.png",
       "unifiedTooltips": [
-        "When you Heal or gain Regeneration, an item gains (3%/6%/9%) Crit Chance for the fight."
+        "When you Heal or gain Regen, an item gains (3%/6%/9%) Crit Chance for the fight."
       ],
-      "remarks": [],
       "packId": "Stelle_Core",
       "combatEncounters": []
     },
@@ -1596,13 +1621,13 @@
       },
       "tags": ["Vehicle"],
       "hiddenTags": ["Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Stelle"],
       "artKey": "Icon_Skill_CommandShip.png",
       "unifiedTooltips": [
         "If you have a vehicle, reduce your non-vehicle items' cooldowns by (10%/15%/20%)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": [
         {
@@ -1632,13 +1657,13 @@
       },
       "tags": ["Property"],
       "hiddenTags": ["Damage", "EconomyReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_CommercialZoning.png",
       "unifiedTooltips": [
         "When you use a Property, deal damage equal to (1x/2x) your gold."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -1667,13 +1692,13 @@
       },
       "tags": [],
       "hiddenTags": ["BurnReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Mak", "Jules", "Stelle"],
       "artKey": "Icon_Skill_Conflagration.png",
       "unifiedTooltips": [
         "When you use an item with Burn, that item gains (1/2/3) Burn for the fight."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -1702,13 +1727,13 @@
       },
       "tags": [],
       "hiddenTags": ["FreezeReference", "Charge"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Dooley", "Jules", "Mak", "Stelle"],
       "artKey": "Icon_Skill_CoolantLeak.png",
       "unifiedTooltips": [
         "The first (3/6/9) times you use your rightmost item each fight, Charge 1 Freeze item 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -1731,13 +1756,13 @@
       },
       "tags": [],
       "hiddenTags": ["CritReference", "Haste"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_Skyfall_01.png",
       "unifiedTooltips": [
         "When you Crit, Haste 1 item(s) for (1/2/3) second(s)."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -1775,13 +1800,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["Charge"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_Counterattack.png",
       "unifiedTooltips": [
         "The first 5 times your enemy uses a weapon, Charge (1/2/3) item(s) 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -1811,13 +1836,13 @@
       },
       "tags": ["Core"],
       "hiddenTags": ["Slow"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley"],
       "artKey": "Icon_Skill_CPUThrotteling.png",
       "unifiedTooltips": [
         "The first (5/10) times you use The Core each fight, Slow 1 item(s) for 2 second(s)."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -1842,13 +1867,13 @@
       },
       "tags": ["Weapon", "Aquatic"],
       "hiddenTags": ["Haste"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa"],
       "artKey": "Icon_Skill_VAN_CrashingWaves",
       "unifiedTooltips": [
         "The first (5/10) times you use an Aquatic item each fight, Haste 1 weapon for 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": [
         {
@@ -1882,13 +1907,13 @@
       },
       "tags": [],
       "hiddenTags": ["SlowReference", "Freeze"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley", "Vanessa", "Mak", "Stelle"],
       "artKey": "Icon_Skill_CreepingChill.png",
       "unifiedTooltips": [
         "The first time you Slow each fight, Freeze 1 item(s) for (2/3/4) second(s)."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -1913,13 +1938,13 @@
       },
       "tags": [],
       "hiddenTags": ["Charge", "PoisonReference", "SlowReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Mak"],
       "artKey": "Icon_Skill_CreepingToxines.png",
       "unifiedTooltips": [
         "The first (5/10) times you Slow each fight, Charge 1 Poison item 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -1940,13 +1965,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Mak"],
       "artKey": "Icon_Skill_Mak_CrimsonDash.png",
       "unifiedTooltips": [
         "Your Lifesteal weapons have their cooldowns reduced by 1 second."
       ],
-      "remarks": [],
       "packId": "Mak_Core",
       "combatEncounters": []
     },
@@ -1963,13 +1988,13 @@
       },
       "tags": [],
       "hiddenTags": ["HealthReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_CriticalAid.png",
       "unifiedTooltips": [
         "Your Heal items have (+5%/+10%/+15%/+20%) Crit chance."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": [
         {
@@ -1981,45 +2006,6 @@
           "cardName": "Joyful Jack"
         }
       ]
-    },
-    {
-      "id": "f2782115-1920-4bf2-9306-32697bcfee15",
-      "name": "Critical Captain",
-      "startingTier": "Bronze",
-      "tiers": {
-        "Bronze": {
-          "tooltips": [
-            "The first time you use a Large item each fight, your items gain +4% Crit Chance for the fight."
-          ]
-        },
-        "Silver": {
-          "tooltips": [
-            "The first time you use a Large item each fight, your items gain +8% Crit Chance for the fight."
-          ]
-        },
-        "Gold": {
-          "tooltips": [
-            "The first time you use a Large item each fight, your items gain +12% Crit Chance for the fight."
-          ]
-        },
-        "Diamond": {
-          "tooltips": [
-            "The first time you use a Large item each fight, your items gain +16% Crit Chance for the fight."
-          ]
-        },
-        "Legendary": { "tooltips": [] }
-      },
-      "tags": [],
-      "hiddenTags": ["Crit"],
-      "size": "Medium",
-      "heroes": ["Vanessa", "Dooley", "Stelle"],
-      "artKey": "Icon_Skill_CriticalCaptain.png",
-      "unifiedTooltips": [
-        "The first time you use a Large item each fight, your items gain (+4%/+8%/+12%/+16%) Crit Chance for the fight."
-      ],
-      "remarks": [],
-      "packId": "Pygmalien_Core",
-      "combatEncounters": []
     },
     {
       "id": "ae41f574-fc9f-492a-8ae0-45853ab607a6",
@@ -2034,11 +2020,11 @@
       },
       "tags": ["Property"],
       "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_CriticalInvestments.png",
       "unifiedTooltips": ["Your Properties have (+10%/+15%/+20%) Crit chance."],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -2055,13 +2041,13 @@
       },
       "tags": [],
       "hiddenTags": ["ShieldReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Dooley"],
       "artKey": "Icon_Skill_CritialProtector.png",
       "unifiedTooltips": [
         "Your Shield items have (+5%/+10%/+15%/+20%) Crit chance."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -2086,13 +2072,13 @@
       },
       "tags": [],
       "hiddenTags": ["Freeze", "ShieldReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_VolkasEnforcer_03.png",
       "unifiedTooltips": [
         "The first (3/6) times you Shield each fight, Freeze 1 item(s) for 2 second(s)."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -2114,13 +2100,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Vanessa", "Dooley", "Jules", "Stelle", "Mak"],
       "artKey": "Icon_Skill_DeadlyEye.png",
       "unifiedTooltips": [
         "Your Weapons have (+5%/+10%/+15%/+20%) Crit chance."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": [
         {
@@ -2162,13 +2148,13 @@
       },
       "tags": [],
       "hiddenTags": ["HealthReference", "Shield"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Dooley", "Stelle"],
       "artKey": "Icon_Skill_DefenseGrid.png",
       "unifiedTooltips": [
         "The first time you use an item each fight, shield equal to (10%/20%/35%/50%) of your max health."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -2197,13 +2183,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["ShieldReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Dooley", "Stelle"],
       "artKey": "Icon_Skill_DefensiveWeapons.png",
       "unifiedTooltips": [
         "When you use a weapon, your Shield items gain (3/6/9) Shield for the fight."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -2230,6 +2216,7 @@
       },
       "tags": ["Weapon", "Aquatic"],
       "hiddenTags": ["Ammo", "DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa"],
       "artKey": "Icon_Skill_VAN_DepthCharge.png",
@@ -2237,7 +2224,6 @@
         "If you have exactly one weapon, it has (+5/+10) Max Ammo.",
         "...if it is also Aquatic, it has (+25/+50) Damage."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -2258,13 +2244,13 @@
       },
       "tags": [],
       "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Dooley"],
       "artKey": "Icon_Skill_DesperateFreeze.png",
       "unifiedTooltips": [
         "The first time you fall below half health each fight, remove Freeze and Slow from your items and Cleanse half your Burn and Poison."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": [
         {
@@ -2298,13 +2284,13 @@
       },
       "tags": [],
       "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Jules", "Stelle"],
       "artKey": "Icon_Skill_DesperateStrike.png",
       "unifiedTooltips": [
         "While you have less health than your opponent, your items gain (10%/15%/20%) Crit Chance."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -2337,13 +2323,13 @@
       },
       "tags": [],
       "hiddenTags": ["Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_DiamondFangs.png",
       "unifiedTooltips": [
         "Your Small Diamond-tier items have their cooldowns reduced by (30%/40%/50%/60%)."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -2373,13 +2359,13 @@
       },
       "tags": [],
       "hiddenTags": ["Health"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Stelle"],
       "artKey": "Icon_Skill_PlatinumHeart.png",
       "unifiedTooltips": [
         "You have (+300/+500) Max Health for each Diamond-tier item you have."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -2404,13 +2390,13 @@
       },
       "tags": [],
       "hiddenTags": ["Haste"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_DistributedSystems.png",
       "unifiedTooltips": [
         "When you use a large item, haste (2/3) small items for (2/3) second(s)."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -2436,13 +2422,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Pygmalien"],
       "artKey": "Icon_Skill_DoubleDown.png",
       "unifiedTooltips": [
         "The first time you fall below half health each fight, double the damage of your leftmost Weapon for the fight."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -2463,13 +2449,13 @@
       },
       "tags": [],
       "hiddenTags": ["Burn"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_DraconicRage.png",
       "unifiedTooltips": [
         "When you use a Medium item, one of your Burn items gains +10 burn for the fight."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -2495,13 +2481,13 @@
       },
       "tags": [],
       "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_BarrelOfThieves_01.png",
       "unifiedTooltips": [
         "If you have exactly 2 Weapons, your items have +50% Crit Chance."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -2531,11 +2517,11 @@
       },
       "tags": ["Potion"],
       "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Mak"],
       "artKey": "Icon_Skill_Mak_DumpsterDiving.png",
       "unifiedTooltips": ["At the start of each day, get a random Potion."],
-      "remarks": [],
       "packId": "Mak_Core",
       "combatEncounters": []
     },
@@ -2560,13 +2546,13 @@
       },
       "tags": [],
       "hiddenTags": ["ShieldReference", "Charge"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Dooley"],
       "artKey": "Icon_Skill_DOO_NumberOneStunner.png",
       "unifiedTooltips": [
         "The first (4/8) times you Shield each fight, Charge 1 item(s) 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -2595,13 +2581,13 @@
       },
       "tags": [],
       "hiddenTags": ["Burn"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley", "Jules", "Stelle"],
       "artKey": "Icon_Skill_EmergencyBurn.png",
       "unifiedTooltips": [
         "The first time you fall below half health each fight, Burn (20/30/40)."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -2614,25 +2600,25 @@
         "Silver": { "tooltips": [] },
         "Gold": {
           "tooltips": [
-            "The first time you fall below half health each fight, gain 1 times your Regeneration for the fight."
+            "The first time you fall below half health each fight, gain 1 times your Regen for the fight."
           ]
         },
         "Diamond": {
           "tooltips": [
-            "The first time you fall below half health each fight, gain 2 times your Regeneration for the fight."
+            "The first time you fall below half health each fight, gain 2 times your Regen for the fight."
           ]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
       "hiddenTags": ["Regen"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Mak"],
       "artKey": "Icon_Skill_EmergencyDraught.png",
       "unifiedTooltips": [
-        "The first time you fall below half health each fight, gain (1/2) times your Regeneration for the fight."
+        "The first time you fall below half health each fight, gain (1/2) times your Regen for the fight."
       ],
-      "remarks": [],
       "packId": "Mak_Core",
       "combatEncounters": []
     },
@@ -2653,13 +2639,13 @@
       },
       "tags": [],
       "hiddenTags": ["Shield"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Dooley", "Stelle"],
       "artKey": "Icon_Skill_ThickShield.png",
       "unifiedTooltips": [
         "The first time you fall below half health each fight, use your highest Shield item."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -2688,13 +2674,13 @@
       },
       "tags": [],
       "hiddenTags": ["HealReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_Endurance.png",
       "unifiedTooltips": [
         "When you use a weapon, your Heal items gain (+10/+20/+30) Heal for the fight."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -2713,11 +2699,11 @@
       },
       "tags": [],
       "hiddenTags": ["Poison", "HealReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_SpreadingInfection_02.png",
       "unifiedTooltips": ["When you Heal, charge 1 Poison item 1 second(s)."],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -2739,19 +2725,17 @@
         "Silver": { "tooltips": [] },
         "Gold": { "tooltips": [] },
         "Diamond": {
-          "tooltips": ["Your weapons have + damage equal to your Regeneration."]
+          "tooltips": ["Your weapons have + damage equal to your Regen."]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference", "RegenReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Mak"],
       "artKey": "Icon_Skill_Mak_Essenceoverflow.png",
-      "unifiedTooltips": [
-        "Your weapons have + damage equal to your Regeneration."
-      ],
-      "remarks": [],
+      "unifiedTooltips": ["Your weapons have + damage equal to your Regen."],
       "packId": "Mak_Core",
       "combatEncounters": []
     },
@@ -2778,6 +2762,7 @@
       },
       "tags": ["Vehicle"],
       "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Stelle"],
       "artKey": "Icon_Skill_Flagship.png",
@@ -2785,7 +2770,6 @@
         "Your Shield Vehicles gain (30%/60%) Shield.",
         "Your Weapon Vehicles gain (30%/60%) Damage."
       ],
-      "remarks": [],
       "packId": "Stelle_Core",
       "combatEncounters": [
         {
@@ -2815,13 +2799,13 @@
       },
       "tags": ["Weapon", "Potion"],
       "hiddenTags": ["Charge", "BurnReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Mak"],
       "artKey": "Icon_Skill_Mak_ExplosivePotions.png",
       "unifiedTooltips": [
         "The first (4/8) times you use a potion each fight, charge 1 Weapon or Burn item 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Mak_Core",
       "combatEncounters": []
     },
@@ -2850,13 +2834,13 @@
       },
       "tags": [],
       "hiddenTags": ["Poison", "Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Mak"],
       "artKey": "Icon_Skill_ExposingToxins.png",
       "unifiedTooltips": [
         "When you Poison, your items gain (+1%/+2%/+3%) Crit Chance for the fight."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": [
         {
@@ -2898,13 +2882,13 @@
       },
       "tags": [],
       "hiddenTags": ["HealReference", "ShieldReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_SKILL_MON_ExtremeComfort.png",
       "unifiedTooltips": [
         "When you heal, your Shield items gain (1/2/3/4) shield for the fight."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -2926,11 +2910,11 @@
       },
       "tags": [],
       "hiddenTags": ["BurnReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Jules", "Mak", "Stelle"],
       "artKey": "Icon_Skill_Fiery.png",
       "unifiedTooltips": ["Your Burn items have (+1/+2/+3/+4) Burn."],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": [
         {
@@ -2959,13 +2943,13 @@
       },
       "tags": [],
       "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_FieryRebirth_01.png",
       "unifiedTooltips": [
         "The first time you would die each fight, Heal to full."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -2989,13 +2973,13 @@
       },
       "tags": [],
       "hiddenTags": ["PoisonReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Mak"],
       "artKey": "Icon_Skill_FinalDose.png",
       "unifiedTooltips": [
         "Your rightmost Poison item has (+2/+4/+6/+8) Poison."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -3012,13 +2996,18 @@
       },
       "tags": [],
       "hiddenTags": ["BurnReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Jules", "Stelle", "Mak", "Pygmalien"],
       "artKey": "Icon_Skill_FinalFlame.png",
       "unifiedTooltips": ["Your rightmost Burn item has (+2/+4/+6/+8) Burn."],
-      "remarks": [],
       "packId": "Vanessa_Core",
-      "combatEncounters": []
+      "combatEncounters": [
+        {
+          "cardId": "608eb88e-c6d8-41c3-ac88-c20aeb185664",
+          "cardName": "Radiant Corsair"
+        }
+      ]
     },
     {
       "id": "8c16e6c8-2f44-4335-b31e-5b2268bf790e",
@@ -3045,13 +3034,13 @@
       },
       "tags": [],
       "hiddenTags": ["ShieldReference", "Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Dooley", "Stelle"],
       "artKey": "Icon_Skill_FinesseShield.png",
       "unifiedTooltips": [
         "While your enemy has more health than you, your Shield items have their cooldowns reduced by (5%/10%/20%)."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -3080,13 +3069,13 @@
       },
       "tags": ["Core"],
       "hiddenTags": ["DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley"],
       "artKey": "Icon_Skill_DOO_Firepower.png",
       "unifiedTooltips": [
         "When you use the Core, adjacent weapons gain (10/20/30) damage for the fight."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -3103,11 +3092,11 @@
       },
       "tags": [],
       "hiddenTags": ["Burn"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_Pyromania_01.png",
       "unifiedTooltips": ["At the start of each fight, burn (17/25/35)."],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -3141,13 +3130,13 @@
       },
       "tags": [],
       "hiddenTags": ["Burn"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Jules", "Stelle", "Mak"],
       "artKey": "Icon_Skill_FirstFlames.png",
       "unifiedTooltips": [
         "The first time you use a Large item each fight, Burn (10/15/20)."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -3164,13 +3153,13 @@
       },
       "tags": [],
       "hiddenTags": ["HealReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_FirstResponder.png",
       "unifiedTooltips": [
         "Your leftmost Heal item has (+20/+35/+50/+65) Heal."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": [
         {
@@ -3202,6 +3191,7 @@
       },
       "tags": [],
       "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Vanessa", "Dooley", "Jules", "Stelle", "Mak"],
       "artKey": "Icon_Skill_FirstStrike.png",
@@ -3209,7 +3199,6 @@
         "Your items have (+50%/+75%) Crit Chance.",
         "When you use an item, all your items lose 10% crit chance for the fight."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -3226,13 +3215,13 @@
       },
       "tags": [],
       "hiddenTags": ["BurnReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_FlameWall_01",
       "unifiedTooltips": [
         "Your Burn items have (+5%/+10%/+15%/+20%) Crit Chance."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -3244,41 +3233,6 @@
           "cardName": "Radiant Corsair"
         }
       ]
-    },
-    {
-      "id": "35cd34d4-80f5-48bd-95ed-5bb7fde3d21c",
-      "name": "Flanking Aid",
-      "startingTier": "Silver",
-      "tiers": {
-        "Bronze": { "tooltips": [] },
-        "Silver": {
-          "tooltips": [
-            "The first time you use a Large item each fight, Adjacent items gain +15 Heal for the fight."
-          ]
-        },
-        "Gold": {
-          "tooltips": [
-            "The first time you use a Large item each fight, Adjacent items gain +20 Heal for the fight."
-          ]
-        },
-        "Diamond": {
-          "tooltips": [
-            "The first time you use a Large item each fight, Adjacent items gain +25 Heal for the fight."
-          ]
-        },
-        "Legendary": { "tooltips": [] }
-      },
-      "tags": [],
-      "hiddenTags": ["HealReference"],
-      "size": "Medium",
-      "heroes": ["Pygmalien", "Mak"],
-      "artKey": "Icon_Skill_FlankingAid.png",
-      "unifiedTooltips": [
-        "The first time you use a Large item each fight, Adjacent items gain (+15/+20/+25) Heal for the fight."
-      ],
-      "remarks": [],
-      "packId": "Pygmalien_Core",
-      "combatEncounters": []
     },
     {
       "id": "7a301c09-3e32-473a-ba6c-89097657a400",
@@ -3305,118 +3259,13 @@
       },
       "tags": [],
       "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Vanessa", "Dooley", "Jules", "Stelle", "Mak"],
       "artKey": "Icon_Skill_FlankingCriticals.png",
       "unifiedTooltips": [
         "The first time you use a Large item each fight, Adjacent items gain (15%/20%/25%) Crit Chance for the fight."
       ],
-      "remarks": [],
-      "packId": "Pygmalien_Core",
-      "combatEncounters": []
-    },
-    {
-      "id": "7518cb66-252b-4b9c-9d4d-269aaad8daf3",
-      "name": "Flanking Fire",
-      "startingTier": "Silver",
-      "tiers": {
-        "Bronze": { "tooltips": [] },
-        "Silver": {
-          "tooltips": [
-            "The first time you use a Large item each fight, Adjacent items gain 7 Burn for the fight."
-          ]
-        },
-        "Gold": {
-          "tooltips": [
-            "The first time you use a Large item each fight, Adjacent items gain 10 Burn for the fight."
-          ]
-        },
-        "Diamond": {
-          "tooltips": [
-            "The first time you use a Large item each fight, Adjacent items gain 13 Burn for the fight."
-          ]
-        },
-        "Legendary": { "tooltips": [] }
-      },
-      "tags": [],
-      "hiddenTags": ["BurnReference"],
-      "size": "Medium",
-      "heroes": ["Vanessa", "Jules", "Stelle"],
-      "artKey": "Icon_Skill_FlankingFire.png",
-      "unifiedTooltips": [
-        "The first time you use a Large item each fight, Adjacent items gain (7/10/13) Burn for the fight."
-      ],
-      "remarks": [],
-      "packId": "Pygmalien_Core",
-      "combatEncounters": []
-    },
-    {
-      "id": "5e193004-5e5f-4166-96a0-9a51a3ef8443",
-      "name": "Flanking Shield",
-      "startingTier": "Silver",
-      "tiers": {
-        "Bronze": { "tooltips": [] },
-        "Silver": {
-          "tooltips": [
-            "The first time you use a Large item each fight, adjacent Shield items gain 15 Shield for the fight."
-          ]
-        },
-        "Gold": {
-          "tooltips": [
-            "The first time you use a Large item each fight, adjacent Shield items gain 30 Shield for the fight."
-          ]
-        },
-        "Diamond": {
-          "tooltips": [
-            "The first time you use a Large item each fight, adjacent Shield items gain 50 Shield for the fight."
-          ]
-        },
-        "Legendary": { "tooltips": [] }
-      },
-      "tags": [],
-      "hiddenTags": ["ShieldReference"],
-      "size": "Medium",
-      "heroes": ["Pygmalien", "Dooley", "Stelle"],
-      "artKey": "Icon_Skill_FlankingShield.png",
-      "unifiedTooltips": [
-        "The first time you use a Large item each fight, adjacent Shield items gain (15/30/50) Shield for the fight."
-      ],
-      "remarks": [],
-      "packId": "Pygmalien_Core",
-      "combatEncounters": []
-    },
-    {
-      "id": "94b80fbf-4d21-4439-beb2-e1bdf56cea03",
-      "name": "Flanking Shots",
-      "startingTier": "Silver",
-      "tiers": {
-        "Bronze": { "tooltips": [] },
-        "Silver": {
-          "tooltips": [
-            "The first time you use a Large item each fight, adjacent weapons gain 15 Damage for the fight."
-          ]
-        },
-        "Gold": {
-          "tooltips": [
-            "The first time you use a Large item each fight, adjacent weapons gain 30 Damage for the fight."
-          ]
-        },
-        "Diamond": {
-          "tooltips": [
-            "The first time you use a Large item each fight, adjacent weapons gain 50 Damage for the fight."
-          ]
-        },
-        "Legendary": { "tooltips": [] }
-      },
-      "tags": ["Weapon"],
-      "hiddenTags": ["DamageReference"],
-      "size": "Medium",
-      "heroes": ["Pygmalien", "Vanessa", "Dooley", "Jules", "Stelle", "Mak"],
-      "artKey": "Icon_Skill_FlankingShots.png",
-      "unifiedTooltips": [
-        "The first time you use a Large item each fight, adjacent weapons gain (15/30/50) Damage for the fight."
-      ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -3445,13 +3294,13 @@
       },
       "tags": ["Tool"],
       "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Jules", "Stelle"],
       "artKey": "Icon_Skill_FlashyMechanic.png",
       "unifiedTooltips": [
         "When you use a Tool, items adjacent to it gain (3%/6%/9%) Crit chance."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": [
         {
@@ -3489,13 +3338,13 @@
       },
       "tags": ["Vehicle"],
       "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Stelle"],
       "artKey": "Icon_Skill_FlashyPilot.png",
       "unifiedTooltips": [
         "When you use a Vehicle, your items gain (10%/20%/30%) Crit chance."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -3516,13 +3365,13 @@
       },
       "tags": [],
       "hiddenTags": ["Ammo", "CritReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa"],
       "artKey": "Icon_Skill_FlashyReload.png",
       "unifiedTooltips": [
         "When you Crit with an item, Reload another item 1 ammo."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": [
         {
@@ -3540,27 +3389,32 @@
         "Silver": { "tooltips": [] },
         "Gold": {
           "tooltips": [
-            "The first 4 times you use a Weapon each fight, charge another item 1 second(s)."
+            "The first 4 times you use a Weapon each fight, charge 1 item(s) 1 second(s)."
           ]
         },
         "Diamond": {
           "tooltips": [
-            "The first 8 times you use a Weapon each fight, charge another item 1 second(s)."
+            "The first 8 times you use a Weapon each fight, charge 1 item(s) 1 second(s)."
           ]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": ["Weapon"],
       "hiddenTags": ["Charge"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa"],
       "artKey": "Icon_Skill_ExtraArms.png",
       "unifiedTooltips": [
-        "The first (4/8) times you use a Weapon each fight, charge another item 1 second(s)."
+        "The first (4/8) times you use a Weapon each fight, charge 1 item(s) 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
-      "combatEncounters": []
+      "combatEncounters": [
+        {
+          "cardId": "8f73d2d6-6071-4464-bb19-8e0783de4df0",
+          "cardName": "Lord Arken"
+        }
+      ]
     },
     {
       "id": "8d41a164-2667-4df4-91ed-3da224b8c63a",
@@ -3579,13 +3433,13 @@
       },
       "tags": [],
       "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Dooley"],
       "artKey": "Icon_Skill_FocusedRage.png",
       "unifiedTooltips": [
         "The first time you fall below half health each fight, double all your items' Crit Chance for the fight."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -3602,13 +3456,13 @@
       },
       "tags": [],
       "hiddenTags": ["HealReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_FollowUpCare.png",
       "unifiedTooltips": [
         "Your rightmost Heal item has (+20/+35/+50/+65) Heal."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": [
         {
@@ -3638,13 +3492,13 @@
       },
       "tags": [],
       "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_LordOfWastes_01.png",
       "unifiedTooltips": [
         "When any player uses an item, all items gain (2%/4%) Crit Chance for the fight."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -3668,13 +3522,13 @@
       },
       "tags": [],
       "hiddenTags": ["ShieldReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Vanessa", "Dooley", "Jules", "Stelle"],
       "artKey": "Icon_Skill_FrontalShielding.png",
       "unifiedTooltips": [
         "Your leftmost Shield item has (+20/+30/+40/+50) Shield."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": [
         {
@@ -3708,13 +3562,13 @@
       },
       "tags": [],
       "hiddenTags": ["BurnReference", "Freeze"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley", "Vanessa", "Mak", "Jules", "Stelle", "Pygmalien"],
       "artKey": "Icon_Skill_Frostfire.png",
       "unifiedTooltips": [
         "The first time you Burn each fight, Freeze 1 item(s) for (2/3/4) second(s)."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -3731,11 +3585,11 @@
       },
       "tags": [],
       "hiddenTags": ["FreezeReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Jules", "Stelle", "Mak", "Pygmalien"],
       "artKey": "Icon_Skill_FireAccelerant.png",
       "unifiedTooltips": ["When your items gain Freeze, Burn (8/12/16)."],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -3764,13 +3618,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["FreezeReference", "Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Dooley", "Jules", "Mak"],
       "artKey": "Icon_Skill_FrozenShot.png",
       "unifiedTooltips": [
         "Your Weapons' cooldowns are reduced by (5%/10%/15%) while your enemy has a Frozen item."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -3795,13 +3649,13 @@
       },
       "tags": ["Core"],
       "hiddenTags": ["Haste", "FreezeReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley"],
       "artKey": "Icon_Skill_DOO_FrozenSynapse.png",
       "unifiedTooltips": [
         "The first (5/10) times you Freeze each fight, Haste the Core for 2 second(s)."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -3826,13 +3680,13 @@
       },
       "tags": ["Vehicle", "Weapon", "Tool"],
       "hiddenTags": ["Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_HighImpact.png",
       "unifiedTooltips": [
         "Your item's cooldowns are reduced by (5%/10%) if you have a Vehicle, reduced by (5%/10%) if you have a Weapon, and reduced by (5%/10%) if you have a Tool."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -3856,11 +3710,11 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Mak", "Stelle"],
       "artKey": "Icon_Skill_GlassCannon.png",
       "unifiedTooltips": ["Both players' weapons have double damage."],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -3877,11 +3731,11 @@
       },
       "tags": ["Tool"],
       "hiddenTags": ["Burn"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley", "Jules", "Stelle"],
       "artKey": "Icon_Skill_GreaseFire.png",
       "unifiedTooltips": ["When you use a tool, Burn (3/5)."],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -3898,11 +3752,11 @@
       },
       "tags": [],
       "hiddenTags": ["Ammo"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Mak"],
       "artKey": "Icon_Skill_Gunner.png",
       "unifiedTooltips": ["Your items have (+1/+2/+3) Max Ammo."],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": [
         {
@@ -3940,13 +3794,13 @@
       },
       "tags": [],
       "hiddenTags": ["Shield", "HealthReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_Withdraw_01",
       "unifiedTooltips": [
         "The first time you fall below half health each fight, Shield equal to (20%/30%/40%/50%) of your Max Health."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -3976,13 +3830,13 @@
       },
       "tags": [],
       "hiddenTags": ["ShieldReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Dooley", "Stelle"],
       "artKey": "Icon_Skill_HardenedShield.png",
       "unifiedTooltips": [
         "When your enemy uses a Weapon, your Shield items gain (5/10) Shield for the fight."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -3994,30 +3848,30 @@
         "Bronze": { "tooltips": [] },
         "Silver": {
           "tooltips": [
-            "The first 5 times times you slow each fight, Charge 1 Regeneration item 1 second(s)."
+            "The first 5 times times you slow each fight, Charge 1 Regen item 1 second(s)."
           ]
         },
         "Gold": {
           "tooltips": [
-            "The first 10 times times you slow each fight, Charge 1 Regeneration item 1 second(s)."
+            "The first 10 times times you slow each fight, Charge 1 Regen item 1 second(s)."
           ]
         },
         "Diamond": {
           "tooltips": [
-            "The first 15 times times you slow each fight, Charge 1 Regeneration item 1 second(s)."
+            "The first 15 times times you slow each fight, Charge 1 Regen item 1 second(s)."
           ]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
       "hiddenTags": ["SlowReference", "RegenReference", "Charge"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Mak"],
       "artKey": "Icon_Skill_HardlyWorkin.png",
       "unifiedTooltips": [
-        "The first (5/10/15) times times you slow each fight, Charge 1 Regeneration item 1 second(s)."
+        "The first (5/10/15) times times you slow each fight, Charge 1 Regen item 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -4034,11 +3888,11 @@
       },
       "tags": [],
       "hiddenTags": ["HealReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_HealingPower.png",
       "unifiedTooltips": ["Your Heal items have (+10/+20/+30/+40) Heal."],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -4059,13 +3913,13 @@
       },
       "tags": [],
       "hiddenTags": ["Health"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Vanessa", "Dooley", "Jules", "Stelle", "Mak"],
       "artKey": "Icon_Skill_Hearty.png",
       "unifiedTooltips": [
         "The first time you fall below half health each fight, Heal for 30% of your Max Health and Cleanse half your Burn and Poison."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -4097,14 +3951,14 @@
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
-      "hiddenTags": ["NonWeapon"],
+      "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_HealthyCollector.png",
       "unifiedTooltips": [
         "You have (+35/+100/+200/+300) Max Health for each Non-Weapon item you have."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -4115,31 +3969,25 @@
       "tiers": {
         "Bronze": { "tooltips": [] },
         "Silver": {
-          "tooltips": [
-            "You have 2 Regeneration for each non-weapon item you have."
-          ]
+          "tooltips": ["You have 2 Regen for each non-weapon item you have."]
         },
         "Gold": {
-          "tooltips": [
-            "You have 4 Regeneration for each non-weapon item you have."
-          ]
+          "tooltips": ["You have 4 Regen for each non-weapon item you have."]
         },
         "Diamond": {
-          "tooltips": [
-            "You have 6 Regeneration for each non-weapon item you have."
-          ]
+          "tooltips": ["You have 6 Regen for each non-weapon item you have."]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
       "hiddenTags": ["Regen"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Mak"],
       "artKey": "Icon_Skill_HealthyLifestyle.png",
       "unifiedTooltips": [
-        "You have (2/4/6) Regeneration for each non-weapon item you have."
+        "You have (2/4/6) Regen for each non-weapon item you have."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -4164,13 +4012,13 @@
       },
       "tags": [],
       "hiddenTags": ["Health", "EconomyReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_PYG_GenerousTip.png",
       "unifiedTooltips": [
         "When you gain gold, permanently gain Max Health equal to (1x/2x) the amount of gold gained."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -4180,28 +4028,24 @@
       "startingTier": "Bronze",
       "tiers": {
         "Bronze": {
-          "tooltips": ["When you Burn, gain 2 Regeneration for the fight."]
+          "tooltips": ["When you Burn, gain 2 Regen for the fight."]
         },
         "Silver": {
-          "tooltips": ["When you Burn, gain 4 Regeneration for the fight."]
+          "tooltips": ["When you Burn, gain 4 Regen for the fight."]
         },
-        "Gold": {
-          "tooltips": ["When you Burn, gain 6 Regeneration for the fight."]
-        },
+        "Gold": { "tooltips": ["When you Burn, gain 6 Regen for the fight."] },
         "Diamond": {
-          "tooltips": ["When you Burn, gain 8 Regeneration for the fight."]
+          "tooltips": ["When you Burn, gain 8 Regen for the fight."]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
       "hiddenTags": ["BurnReference", "Regen"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_HeatLover.png",
-      "unifiedTooltips": [
-        "When you Burn, gain (2/4/6/8) Regeneration for the fight."
-      ],
-      "remarks": [],
+      "unifiedTooltips": ["When you Burn, gain (2/4/6/8) Regen for the fight."],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -4231,13 +4075,13 @@
       },
       "tags": [],
       "hiddenTags": ["BurnReference", "Shield"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley", "Stelle"],
       "artKey": "Icon_Skill_HeatShield.png",
       "unifiedTooltips": [
         "When you Burn with an item, gain Shield equal to (1x/2x) that item's Burn."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -4254,11 +4098,11 @@
       },
       "tags": [],
       "hiddenTags": ["Burn", "Ammo"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Mak"],
       "artKey": "Icon_Skill_HeatedShells.png",
       "unifiedTooltips": ["When you use an Ammo item, Burn (2/3/4)."],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -4287,13 +4131,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley", "Vanessa", "Mak", "Pygmalien", "Stelle", "Jules"],
       "artKey": "Icon_Skill_HeavyFirepower.png",
       "unifiedTooltips": [
         "If you have 5 or fewer items in play, your Weapons have (+25/+50/+75) damage."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": [
         {
@@ -4323,13 +4167,13 @@
       },
       "tags": ["Core"],
       "hiddenTags": ["Haste"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley"],
       "artKey": "Icon_Skill_DOO_HeavyMachinery.png",
       "unifiedTooltips": [
         "The first (5/10) times you use The Core each fight, Haste 1 item(s) for 2 second(s)."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -4358,39 +4202,14 @@
       },
       "tags": [],
       "hiddenTags": ["ShieldReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Dooley", "Stelle"],
       "artKey": "Icon_Skill_HeavyMettle.png",
       "unifiedTooltips": [
         "Your Shield items have + Shield equal to (2/3/4) times your level."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
-      "combatEncounters": []
-    },
-    {
-      "id": "b7c2ce67-0da5-4360-9eda-b328817affe6",
-      "name": "Heavy Shielding",
-      "startingTier": "Bronze",
-      "tiers": {
-        "Bronze": { "tooltips": ["Your Large Shield items have +12 shield."] },
-        "Silver": { "tooltips": ["Your Large Shield items have +36 shield."] },
-        "Gold": { "tooltips": ["Your Large Shield items have +72 shield."] },
-        "Diamond": {
-          "tooltips": ["Your Large Shield items have +120 shield."]
-        },
-        "Legendary": { "tooltips": [] }
-      },
-      "tags": [],
-      "hiddenTags": ["ShieldReference"],
-      "size": "Medium",
-      "heroes": ["Stelle", "Dooley", "Pygmalien"],
-      "artKey": "Icon_Skill_HeavyShielding.png",
-      "unifiedTooltips": [
-        "Your Large Shield items have (+12/+36/+72/+120) shield."
-      ],
-      "remarks": [],
-      "packId": "Jules_Core",
       "combatEncounters": []
     },
     {
@@ -4412,13 +4231,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Vanessa", "Dooley", "Jules", "Stelle", "Mak"],
       "artKey": "Icon_Skill_HonedArcenal.png",
       "unifiedTooltips": [
         "Your items have (+2%/+4%/+6%) Crit Chance per Weapon you have."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -4443,13 +4262,13 @@
       },
       "tags": [],
       "hiddenTags": ["CritReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Mak"],
       "artKey": "Icon_Skill_HonedStrike.png",
       "unifiedTooltips": [
         "When you Crit with an item, it gains (+5%/+10%) Crit Chance for the fight."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -4466,11 +4285,11 @@
       },
       "tags": [],
       "hiddenTags": ["Burn"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Jules", "Stelle", "Pygmalien"],
       "artKey": "Icon_Skill_HotSpot.png",
       "unifiedTooltips": ["When you use your leftmost item, Burn (2/3/4)."],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -4483,25 +4302,25 @@
         "Silver": { "tooltips": [] },
         "Gold": {
           "tooltips": [
-            "When you buy a property, gain 1 Chocolate Bar and 1 Spare Change."
+            "When you buy a property, get 1 Chocolate Bar and 1 Spare Change."
           ]
         },
         "Diamond": {
           "tooltips": [
-            "When you buy a property, gain 2 Chocolate Bars and 2 Spare Change."
+            "When you buy a property, get 2 Chocolate Bar and 2 Spare Change."
           ]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": ["Property"],
       "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_Reclaimer.png",
       "unifiedTooltips": [
-        "When you buy a property, gain (1/2) Chocolate Bar(s) and (1/2) Spare Change."
+        "When you buy a property, get (1/2) Chocolate Bar and (1/2) Spare Change."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -4530,13 +4349,13 @@
       },
       "tags": [],
       "hiddenTags": ["Shield", "HealthReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_GlidedShell_03.png",
       "unifiedTooltips": [
         "The first time you fall below half health each fight, Shield equal to (30%/50%/80%) of your Max Health."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -4562,13 +4381,13 @@
       },
       "tags": [],
       "hiddenTags": ["Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_Lurk_01.png",
       "unifiedTooltips": [
         "If you have only one medium item, its cooldown is reduced by 30%."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -4594,13 +4413,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["Freeze"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_FinesseWeapon.png",
       "unifiedTooltips": [
         "When you use a weapon with Lifesteal, Freeze a smaller item for 2 second(s)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": [
         {
@@ -4622,33 +4441,12 @@
       },
       "tags": [],
       "hiddenTags": ["FreezeReference", "Ammo"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa"],
       "artKey": "Icon_Skill_BulletTime.png",
       "unifiedTooltips": ["When you Freeze, Reload a Weapon 1 ammo."],
-      "remarks": [],
       "packId": "Vanessa_Core",
-      "combatEncounters": []
-    },
-    {
-      "id": "7f097b31-c29e-4082-a835-6d6457c2d536",
-      "name": "Ignition",
-      "startingTier": "Diamond",
-      "tiers": {
-        "Bronze": { "tooltips": [] },
-        "Silver": { "tooltips": [] },
-        "Gold": { "tooltips": [] },
-        "Diamond": { "tooltips": [] },
-        "Legendary": { "tooltips": [] }
-      },
-      "tags": [],
-      "hiddenTags": [],
-      "size": "Medium",
-      "heroes": ["Stelle"],
-      "artKey": "Icon_Skill_Ignition.png",
-      "unifiedTooltips": [],
-      "remarks": [],
-      "packId": "Stelle_Core",
       "combatEncounters": []
     },
     {
@@ -4664,11 +4462,11 @@
       },
       "tags": [],
       "hiddenTags": ["BurnReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Jules", "Stelle", "Mak", "Pygmalien"],
       "artKey": "Icon_Skill_FireStarter.png",
       "unifiedTooltips": ["Your leftmost Burn item has (+2/+4/+6/+8) Burn."],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -4685,11 +4483,11 @@
       },
       "tags": [],
       "hiddenTags": ["PoisonReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Mak"],
       "artKey": "Icon_Skill_ImprovedToxins.png",
       "unifiedTooltips": ["Your Poison items have (+1/+2/+3/+4) Poison."],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": [
         {
@@ -4719,13 +4517,13 @@
       },
       "tags": [],
       "hiddenTags": ["BurnReference", "CritReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Mak"],
       "artKey": "Icon_Skill_ImprovisedBurn.png",
       "unifiedTooltips": [
         "When you Crit, your Burn items gain (1/2) Burn for the fight."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -4754,13 +4552,13 @@
       },
       "tags": [],
       "hiddenTags": ["HealReference", "CritReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Vanessa"],
       "artKey": "Icon_Skill_ImprovisedHealing.png",
       "unifiedTooltips": [
         "When you Crit, your Heal items gain (+10/+20/+30) Heal for the fight."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -4785,13 +4583,13 @@
       },
       "tags": [],
       "hiddenTags": ["PoisonReference", "CritReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Mak"],
       "artKey": "Icon_Skill_ImprovisedPoison.png",
       "unifiedTooltips": [
         "When you Crit, your Poison items gain (1/2) Poison for the fight."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -4820,13 +4618,13 @@
       },
       "tags": [],
       "hiddenTags": ["ShieldReference", "CritReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Vanessa", "Dooley", "Jules", "Stelle"],
       "artKey": "Icon_Skill_ImprovisedProtection.png",
       "unifiedTooltips": [
         "When you Crit, your Shield items gain (5/10/15) Shield for the fight."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -4855,13 +4653,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference", "CritReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Mak"],
       "artKey": "Icon_Skill_ImprovisedWeaponry.png",
       "unifiedTooltips": [
         "When you Crit, your weapons gain (5/10/15) Damage for the fight."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -4882,13 +4680,13 @@
       },
       "tags": ["Property"],
       "hiddenTags": ["Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_PYG_Industrialist.png",
       "unifiedTooltips": [
         "Reduce the cooldown of your Properties by (10%/15%)."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -4917,13 +4715,13 @@
       },
       "tags": [],
       "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa"],
       "artKey": "Icon_Skill_Tinkerer.png",
       "unifiedTooltips": [
         "Your items have +2% crit chance. When you start a fight, increase this bonus by (+2%/+4%/+6%)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -4952,13 +4750,13 @@
       },
       "tags": [],
       "hiddenTags": ["Freeze"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Dooley", "Jules", "Mak"],
       "artKey": "Icon_Skill_InitialChill.png",
       "unifiedTooltips": [
         "The first time you use a Large item each fight, Freeze 1 item(s) for (3/4/5) second(s)."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -4975,13 +4773,13 @@
       },
       "tags": [],
       "hiddenTags": ["PoisonReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Mak"],
       "artKey": "Icon_Skill_InitialDose.png",
       "unifiedTooltips": [
         "Your leftmost Poison item has (+2/+4/+6/+8) Poison."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": [
         {
@@ -4989,6 +4787,29 @@
           "cardName": "Gorgon Noble"
         }
       ]
+    },
+    {
+      "id": "dfeaa982-9ed6-4aee-840e-628fa8b508bd",
+      "name": "Insect Bite",
+      "startingTier": "Diamond",
+      "tiers": {
+        "Bronze": { "tooltips": [] },
+        "Silver": { "tooltips": [] },
+        "Gold": { "tooltips": [] },
+        "Diamond": {
+          "tooltips": ["At the start of each fight, Poison yourself 2."]
+        },
+        "Legendary": { "tooltips": [] }
+      },
+      "tags": [],
+      "hiddenTags": ["Poison"],
+      "customTags": [],
+      "size": "Medium",
+      "heroes": ["Common"],
+      "artKey": "Icon_Skill_QuickExposure.png",
+      "unifiedTooltips": ["At the start of each fight, Poison yourself 2."],
+      "packId": "Core",
+      "combatEncounters": []
     },
     {
       "id": "a2351de3-f077-4631-81fa-5b0f8c2cbb23",
@@ -5007,13 +4828,13 @@
       },
       "tags": [],
       "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_IntotheVoid.png",
       "unifiedTooltips": [
         "At the start of each fight, destroy an item on each player's board for the fight."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -5039,13 +4860,13 @@
       },
       "tags": ["Friend"],
       "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley"],
       "artKey": "Icon_Skill_DOO_IntrusionCountermeasures.png",
       "unifiedTooltips": [
         "The first time you fall below half health in a fight, use your Friends."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -5070,13 +4891,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["Charge", "HealReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_HealingWeapon.png",
       "unifiedTooltips": [
         "The first (5/10) times you use a Weapon each fight, Charge 1 Heal item 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -5105,13 +4926,13 @@
       },
       "tags": [],
       "hiddenTags": ["Haste", "FreezeReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley", "Jules", "Stelle", "Pygmalien", "Vanessa", "Mak"],
       "artKey": "Icon_Skill_InvigoratingCold.png",
       "unifiedTooltips": [
         "The first time you Freeze each fight, Haste (1/2/3) item(s) for 2 second(s)."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": [
         {
@@ -5145,13 +4966,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Jules", "Mak"],
       "artKey": "Icon_Skill_IronSharpensIron.png",
       "unifiedTooltips": [
         "Your leftmost Weapon has +2 damage. When you buy a weapon, increase this bonus by (2/3/4)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -5172,13 +4993,13 @@
       },
       "tags": [],
       "hiddenTags": ["Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_TrashTitan_02.png",
       "unifiedTooltips": [
         "When you use a small item, Charge a large item for 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -5212,13 +5033,13 @@
       },
       "tags": [],
       "hiddenTags": ["Ammo"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_ALittleOfEverything_01.png",
       "unifiedTooltips": [
         "When you use an Ammo item, Reload the item to the left of it (1/2/3) Ammo."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -5240,11 +5061,11 @@
       },
       "tags": [],
       "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Vanessa", "Dooley", "Jules", "Stelle", "Mak"],
       "artKey": "Icon_Skill_KeenEye.png",
       "unifiedTooltips": ["Your items have (+4%/+8%/+12%/+16%) Crit chance."],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": [
         {
@@ -5298,13 +5119,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Pygmalien", "Dooley", "Jules", "Stelle", "Mak"],
       "artKey": "Icon_Skill_KnifeTricks.png",
       "unifiedTooltips": [
         "When you use a weapon, reduce its cooldown by 5% for the fight."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -5333,37 +5154,14 @@
       },
       "tags": [],
       "hiddenTags": ["Health"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Vanessa", "Dooley", "Jules", "Stelle", "Mak"],
       "artKey": "Icon_Skill_LargeAppetites.png",
       "unifiedTooltips": [
         "If you have 5 or fewer items, you have (+500/+1000/+2000) Max Health."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
-      "combatEncounters": []
-    },
-    {
-      "id": "aa59ff52-e4de-4728-bf9c-3ac8411ecbd8",
-      "name": "Large Poisons",
-      "startingTier": "Bronze",
-      "tiers": {
-        "Bronze": { "tooltips": ["Your Large Poison items have +4 Poison."] },
-        "Silver": { "tooltips": ["Your Large Poison items have +8 Poison."] },
-        "Gold": { "tooltips": ["Your Large Poison items have +12 Poison."] },
-        "Diamond": { "tooltips": ["Your Large Poison items have +16 Poison."] },
-        "Legendary": { "tooltips": [] }
-      },
-      "tags": [],
-      "hiddenTags": ["PoisonReference"],
-      "size": "Medium",
-      "heroes": ["Mak"],
-      "artKey": "Icon_Skill_LargePoison.png",
-      "unifiedTooltips": [
-        "Your Large Poison items have (+4/+8/+12/+16) Poison."
-      ],
-      "remarks": [],
-      "packId": "Mak_Core",
       "combatEncounters": []
     },
     {
@@ -5379,11 +5177,11 @@
       },
       "tags": [],
       "hiddenTags": ["Poison"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_LashOut_01",
       "unifiedTooltips": ["At the start of each fight, Poison (3/6/9/12)."],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -5405,13 +5203,13 @@
       },
       "tags": [],
       "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Vanessa", "Dooley", "Jules", "Stelle", "Mak"],
       "artKey": "Icon_Skill_LeftEyeDominant.png",
       "unifiedTooltips": [
         "Your leftmost item has (+8%/+16%/+24%/+32%) Crit chance."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -5428,13 +5226,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Jules", "Stelle", "Mak", "Dooley", "Vanessa", "Pygmalien"],
       "artKey": "Icon_Skill_LeftHanded.png",
       "unifiedTooltips": [
         "Your leftmost Weapon deals (+20/+30/+40/+50) Damage."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -5468,13 +5266,13 @@
       },
       "tags": [],
       "hiddenTags": ["Haste"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley", "Jules", "Vanessa"],
       "artKey": "Icon_Skill_STE_LeftyLoosey.png",
       "unifiedTooltips": [
         "The first (5/10) times you use your leftmost item each fight, Haste 1 item(s) for 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -5497,13 +5295,13 @@
       },
       "tags": [],
       "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Stelle", "Mak"],
       "artKey": "Icon_Skill_Lethargy.png",
       "unifiedTooltips": [
         "All item cooldowns are increased by (1/2/3) second(s)."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -5528,13 +5326,13 @@
       },
       "tags": ["Core"],
       "hiddenTags": ["Haste", "BurnReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley"],
       "artKey": "Icon_Skill_DOO_LettingOffSteam.png",
       "unifiedTooltips": [
         "The first (5/10) times you Burn each fight, Haste the Core for 2 second(s)."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -5563,13 +5361,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Vanessa", "Jules"],
       "artKey": "Icon_Skill_Lifting.png",
       "unifiedTooltips": [
         "Your weapons have +1 Damage. When you buy a Weapon, increase this bonus by (+1/+2/+3) Damage."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -5602,13 +5400,13 @@
       },
       "tags": ["Core"],
       "hiddenTags": ["DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley"],
       "artKey": "Icon_Skill_DOO_LikeClockwork.png",
       "unifiedTooltips": [
         "When you level up, Your Weapons gain (+5/+10/+15/+20) damage. If you have a Weapon Core, double this."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -5633,13 +5431,13 @@
       },
       "tags": ["Core"],
       "hiddenTags": ["Freeze"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley"],
       "artKey": "Icon_Skill_DOO_LiquidCooled.png",
       "unifiedTooltips": [
         "The first (5/10) times use the Core each fight, Freeze 1 item(s) of equal or smaller size for 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -5660,13 +5458,13 @@
       },
       "tags": [],
       "hiddenTags": ["Burn", "Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Mak", "Jules", "Stelle"],
       "artKey": "Icon_Skill_LivingFlame.png",
       "unifiedTooltips": [
         "The first time you fall below half health each fight, your Burn items have their cooldowns reduced by 50% for the fight."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -5695,13 +5493,13 @@
       },
       "tags": [],
       "hiddenTags": ["Ammo", "DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa"],
       "artKey": "Icon_Skill_ScopedShot.png",
       "unifiedTooltips": [
         "Your Weapons have (+1/+2/+3) damage for each ammo you have on your items in play."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -5730,13 +5528,13 @@
       },
       "tags": [],
       "hiddenTags": ["Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_LongStride.png",
       "unifiedTooltips": [
         "If you have 5 or fewer items, your items have their cooldowns reduced by (4%/8%/12%)."
       ],
-      "remarks": [],
       "packId": "Jules_Core",
       "combatEncounters": []
     },
@@ -5759,11 +5557,11 @@
       },
       "tags": ["Core"],
       "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley"],
       "artKey": "Icon_Skill_DOO_MachineLearning.png",
       "unifiedTooltips": ["When you buy or upgrade this, upgrade the core."],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -5792,13 +5590,13 @@
       },
       "tags": [],
       "hiddenTags": ["Shield", "EconomyReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_MakeshiftPlate.png",
       "unifiedTooltips": [
         "Your Shield items have +1 Shield for every (4/3/2) gold you have."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -5817,11 +5615,11 @@
       },
       "tags": [],
       "hiddenTags": ["Value"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MasterSalesman.png",
       "unifiedTooltips": ["Your items have double value during combat."],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -5829,29 +5627,6 @@
           "cardName": "Property Baron"
         }
       ]
-    },
-    {
-      "id": "65a77e2d-6c13-46c2-ae28-c521502a8be3",
-      "name": "Medical Ward",
-      "startingTier": "Bronze",
-      "tiers": {
-        "Bronze": { "tooltips": ["Your Large Heal items have +12 Heal."] },
-        "Silver": { "tooltips": ["Your Large Heal items have +36 Heal."] },
-        "Gold": { "tooltips": ["Your Large Heal items have +72 Heal."] },
-        "Diamond": { "tooltips": ["Your Large Heal items have +120 Heal."] },
-        "Legendary": { "tooltips": [] }
-      },
-      "tags": [],
-      "hiddenTags": ["HealReference"],
-      "size": "Medium",
-      "heroes": ["Pygmalien", "Mak"],
-      "artKey": "Icon_Skill_MedicalWard.png",
-      "unifiedTooltips": [
-        "Your Large Heal items have (+12/+36/+72/+120) Heal."
-      ],
-      "remarks": [],
-      "packId": "Pygmalien_Core",
-      "combatEncounters": []
     },
     {
       "id": "d4471fb1-a60b-4f64-9c60-ae0e8c930306",
@@ -5874,13 +5649,13 @@
       },
       "tags": [],
       "hiddenTags": ["Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_Minimalist.png",
       "unifiedTooltips": [
         "If you have no weapons, your items' cooldowns are reduced by (10%/20%)."
       ],
-      "remarks": [],
       "packId": "Jules_Core",
       "combatEncounters": []
     },
@@ -5905,13 +5680,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["Charge"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Jules", "Stelle", "Mak", "Pygmalien"],
       "artKey": "Icon_Skill_MixedMessage.png",
       "unifiedTooltips": [
         "The first (3/6) times you use a non-Weapon item each fight, Charge 1 Weapon 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -5924,21 +5699,19 @@
         "Silver": { "tooltips": [] },
         "Gold": { "tooltips": [] },
         "Diamond": {
-          "tooltips": [
-            "You have Regeneration equal to half the Burn on your enemy."
-          ]
+          "tooltips": ["You have Regen equal to half the Burn on your enemy."]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
       "hiddenTags": ["Regen", "BurnReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Jules", "Mak"],
       "artKey": "Icon_Skill_MothtoaFlame.png",
       "unifiedTooltips": [
-        "You have Regeneration equal to half the Burn on your enemy."
+        "You have Regen equal to half the Burn on your enemy."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -5970,13 +5743,13 @@
         "HasteReference",
         "Cooldown"
       ],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_Neophiliac.png",
       "unifiedTooltips": [
         "The first time you freeze, burn, slow, poison, and haste each fight, charge 1 item(s) (2/3) second(s)."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -6010,13 +5783,13 @@
       },
       "tags": [],
       "hiddenTags": ["Slow"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Stelle", "Mak"],
       "artKey": "Icon_Skill_NetLauncher.png",
       "unifiedTooltips": [
         "The first time you use a Large item each fight, Slow (2/3/4) item(s) for 3 second(s)."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -6045,13 +5818,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley", "Vanessa", "Mak", "Pygmalien", "Stelle", "Jules"],
       "artKey": "Icon_Skill_NoisyCricket.png",
       "unifiedTooltips": [
         "If you have at least 7 items in play, your Weapons deal (+20/+25/+30) damage."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -6080,13 +5853,13 @@
       },
       "tags": ["Aquatic"],
       "hiddenTags": ["Haste"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa"],
       "artKey": "Icon_Skill_ChillZone.png",
       "unifiedTooltips": [
         "The first time you use an item each fight, Haste (1/2/3) Aquatic item(s) for 2 second(s)."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -6107,13 +5880,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_RedundantSystems.png",
       "unifiedTooltips": [
         "If you only have one weapon, it deals triple damage and has its cooldown increased by 50%."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -6147,13 +5920,13 @@
       },
       "tags": ["Property"],
       "hiddenTags": ["Income"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_PYG_GrandOpening.png",
       "unifiedTooltips": [
         "You have (+1/+2/+3) income for each Property you have (including Stash)."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -6178,13 +5951,13 @@
       },
       "tags": ["Vehicle"],
       "hiddenTags": ["Haste", "SlowReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Stelle"],
       "artKey": "Icon_Skill_Outmaneuver.png",
       "unifiedTooltips": [
         "The first (5/10) times you Slow each fight, Haste 1 vehicle for 2 second(s)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -6211,6 +5984,7 @@
       },
       "tags": ["Core"],
       "hiddenTags": ["BurnReference", "Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley"],
       "artKey": "Icon_Skill_DOO_Overclocked.png",
@@ -6218,7 +5992,6 @@
         "The Core has its cooldown reduced by (10%/15%).",
         "While you have Burn, double this effect."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -6243,13 +6016,13 @@
       },
       "tags": [],
       "hiddenTags": ["HealReference", "Haste"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Vanessa"],
       "artKey": "Icon_Skill_QuickHeal.png",
       "unifiedTooltips": [
         "The first time you Over-heal each fight, Haste your items for (2/4) second(s)."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": [
         {
@@ -6265,29 +6038,25 @@
       "tiers": {
         "Bronze": { "tooltips": [] },
         "Silver": {
-          "tooltips": ["When you Over-heal, gain 5 Regeneration for the fight."]
+          "tooltips": ["When you Over-heal, gain 5 Regen for the fight."]
         },
         "Gold": {
-          "tooltips": [
-            "When you Over-heal, gain 10 Regeneration for the fight."
-          ]
+          "tooltips": ["When you Over-heal, gain 10 Regen for the fight."]
         },
         "Diamond": {
-          "tooltips": [
-            "When you Over-heal, gain 15 Regeneration for the fight."
-          ]
+          "tooltips": ["When you Over-heal, gain 15 Regen for the fight."]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
       "hiddenTags": ["HealReference", "Regen"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_ConcentratedHealing.png",
       "unifiedTooltips": [
-        "When you Over-heal, gain (5/10/15) Regeneration for the fight."
+        "When you Over-heal, gain (5/10/15) Regen for the fight."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -6320,13 +6089,13 @@
       },
       "tags": [],
       "hiddenTags": ["Ammo"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_DabblingApprentice_01.png",
       "unifiedTooltips": [
         "The first time you fall below 50% health each fight, Reload (2/4/6/8) items."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -6360,13 +6129,13 @@
       },
       "tags": [],
       "hiddenTags": ["PoisonReference", "Freeze"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley", "Vanessa", "Mak"],
       "artKey": "Icon_Skill_ParalyticPoison.png",
       "unifiedTooltips": [
         "The first time you Poison each fight, Freeze 1 item(s) for (2/3/4) second(s)."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": [
         {
@@ -6390,11 +6159,11 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["SlowReference", "Haste"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_Drain_01",
       "unifiedTooltips": ["When you Slow, Haste a Weapon (1/2) second(s)."],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -6424,13 +6193,13 @@
       },
       "tags": [],
       "hiddenTags": ["Crit", "AmmoReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa"],
       "artKey": "Icon_Skill_VAN_PartingShot.png",
       "unifiedTooltips": [
         "When you use an item with Ammo, it gains (+5%/+10%) Crit Chance for the fight."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": [
         {
@@ -6464,13 +6233,13 @@
       },
       "tags": ["Core", "Tech", "Friend"],
       "hiddenTags": ["DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley"],
       "artKey": "Icon_Skill_DOO_PartyLikeIts11111001111.png",
       "unifiedTooltips": [
         "When you upgrade a Friend, your other items gain (3/6/9) bonus Damage, (3/6/9) bonus Shield and (1/2/3) bonus Burn."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -6494,14 +6263,14 @@
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
-      "hiddenTags": ["Crit", "NonWeapon"],
+      "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Vanessa", "Dooley", "Jules", "Stelle", "Mak"],
       "artKey": "Icon_Skill_PeacefulEye.png",
       "unifiedTooltips": [
         "Your Non-Weapon items have (+5%/+10%/+15%/+20%) Crit chance."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -6530,13 +6299,13 @@
       },
       "tags": [],
       "hiddenTags": ["Freeze", "HealthReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_PetrifyingGaze_01.png",
       "unifiedTooltips": [
         "The first time you fall below half health each fight, Freeze all enemy items for (1/2/3) second(s)."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -6559,11 +6328,11 @@
       },
       "tags": [],
       "hiddenTags": ["Gold"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_Greed_02.png",
       "unifiedTooltips": ["At the start of each fight, gain (1/2/3/4) gold."],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -6578,28 +6347,28 @@
       "startingTier": "Bronze",
       "tiers": {
         "Bronze": {
-          "tooltips": ["When you Poison, gain 2 Regeneration for the fight."]
+          "tooltips": ["When you Poison, gain 2 Regen for the fight."]
         },
         "Silver": {
-          "tooltips": ["When you Poison, gain 4 Regeneration for the fight."]
+          "tooltips": ["When you Poison, gain 4 Regen for the fight."]
         },
         "Gold": {
-          "tooltips": ["When you Poison, gain 6 Regeneration for the fight."]
+          "tooltips": ["When you Poison, gain 6 Regen for the fight."]
         },
         "Diamond": {
-          "tooltips": ["When you Poison, gain 8 Regeneration for the fight."]
+          "tooltips": ["When you Poison, gain 8 Regen for the fight."]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
       "hiddenTags": ["Regen", "PoisonReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_RevitalizingToxins.png",
       "unifiedTooltips": [
-        "When you Poison, gain (2/4/6/8) Regeneration for the fight."
+        "When you Poison, gain (2/4/6/8) Regen for the fight."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -6633,13 +6402,44 @@
       },
       "tags": [],
       "hiddenTags": ["Poison"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Mak"],
       "artKey": "Icon_Skill_PoisonousOpener.png",
       "unifiedTooltips": [
         "The first time you use a Large item each fight, Poison (10/15/20)."
       ],
-      "remarks": [],
+      "packId": "Pygmalien_Core",
+      "combatEncounters": []
+    },
+    {
+      "id": "4d8b7111-c324-4558-af3c-d7c8df61618d",
+      "name": "Pop-Up Shop",
+      "startingTier": "Gold",
+      "tiers": {
+        "Bronze": { "tooltips": [] },
+        "Silver": { "tooltips": [] },
+        "Gold": {
+          "tooltips": [
+            "Your Toys and Apparel have their cooldowns reduced by 5%."
+          ]
+        },
+        "Diamond": {
+          "tooltips": [
+            "Your Toys and Apparel have their cooldowns reduced by 10%."
+          ]
+        },
+        "Legendary": { "tooltips": [] }
+      },
+      "tags": ["Toy", "Apparel"],
+      "hiddenTags": ["Cooldown"],
+      "customTags": [],
+      "size": "Medium",
+      "heroes": ["Pygmalien"],
+      "artKey": "Icon_Skill_PYG_PopUpShop",
+      "unifiedTooltips": [
+        "Your Toys and Apparel have their cooldowns reduced by (5%/10%)."
+      ],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -6671,6 +6471,7 @@
       },
       "tags": ["Potion"],
       "hiddenTags": ["PoisonReference", "BurnReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Mak"],
       "artKey": "Icon_Skill_Mak_PotentPotables.png",
@@ -6678,7 +6479,6 @@
         "Your Poison items have (+1/+2/+3) Poison for each potion you have.",
         "Your Burn items have (+1/+2/+3) Burn for each potion you have."
       ],
-      "remarks": [],
       "packId": "Mak_Core",
       "combatEncounters": []
     },
@@ -6701,13 +6501,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference", "EconomyReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_MoneyIsPower_02.png",
       "unifiedTooltips": [
         "Your weapons have + damage equal to (1x/2x) your income."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -6731,13 +6531,13 @@
       },
       "tags": ["Aquatic"],
       "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa"],
       "artKey": "Icon_Skill_PrecisionDiver.png",
       "unifiedTooltips": [
         "Your Aquatic items have (+8%/+10%/+12%) Crit chance."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -6766,13 +6566,13 @@
       },
       "tags": ["Property"],
       "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_PrimeRealEstate.png",
       "unifiedTooltips": [
         "When you use a Property, adjacent items gain (5%/10%/15%) Crit chance for the fight."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -6801,13 +6601,13 @@
       },
       "tags": ["Property"],
       "hiddenTags": ["Health"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_PropertyMogul.png",
       "unifiedTooltips": [
         "When you buy a Property, permanently gain (50/100/150) Max Health."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -6828,13 +6628,13 @@
       },
       "tags": [],
       "hiddenTags": ["Shield", "EconomyReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_BananaBreak_02.png",
       "unifiedTooltips": [
         "Your Shield items have + Shield equal to the value of your Items."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -6852,25 +6652,25 @@
         "Silver": { "tooltips": [] },
         "Gold": {
           "tooltips": [
-            "When you gain Regeneration, a Burn item gains 1 Burn for the fight."
+            "When you gain Regen, a Burn item gains 1 Burn for the fight."
           ]
         },
         "Diamond": {
           "tooltips": [
-            "When you gain Regeneration, a Burn item gains 2 Burn for the fight."
+            "When you gain Regen, a Burn item gains 2 Burn for the fight."
           ]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
       "hiddenTags": ["BurnReference", "RegenReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_SKILL_MON_PurifyingFlame.png",
       "unifiedTooltips": [
-        "When you gain Regeneration, a Burn item gains (1/2) Burn for the fight."
+        "When you gain Regen, a Burn item gains (1/2) Burn for the fight."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -6892,11 +6692,11 @@
       },
       "tags": [],
       "hiddenTags": ["Burn"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_Pyromania_03.png",
       "unifiedTooltips": ["When you use a large item, Burn (10/15)."],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": []
     },
@@ -6920,14 +6720,14 @@
         "Legendary": { "tooltips": [] }
       },
       "tags": ["Weapon"],
-      "hiddenTags": ["Lifesteal", "Crit"],
+      "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Pygmalien", "Mak"],
       "artKey": "Icon_Skill_QualityOverQuantity.png",
       "unifiedTooltips": [
         "If you have exactly one weapon, it has Lifesteal and (5%/10%) Crit Chance."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -6956,13 +6756,13 @@
       },
       "tags": [],
       "hiddenTags": ["HasteReference", "Freeze"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley", "Vanessa", "Stelle", "Jules"],
       "artKey": "Icon_Skill_QuickFreeze.png",
       "unifiedTooltips": [
         "The first time you Haste each fight, Freeze 1 item(s) for (3/4/5) second(s)."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -6991,13 +6791,13 @@
       },
       "tags": [],
       "hiddenTags": ["BurnReference", "Haste"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Jules", "Stelle", "Mak"],
       "artKey": "Icon_Skill_QuickIgnition.png",
       "unifiedTooltips": [
         "The first time you use an item each fight, Haste (1/2/3) Burn item(s) for 2 second(s)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -7009,30 +6809,30 @@
         "Bronze": { "tooltips": [] },
         "Silver": {
           "tooltips": [
-            "While your enemy has more health than you, your Heal and Regeneration items have their cooldowns reduced by 5%."
+            "While your enemy has more health than you, your Heal and Regen items have their cooldowns reduced by 5%."
           ]
         },
         "Gold": {
           "tooltips": [
-            "While your enemy has more health than you, your Heal and Regeneration items have their cooldowns reduced by 10%."
+            "While your enemy has more health than you, your Heal and Regen items have their cooldowns reduced by 10%."
           ]
         },
         "Diamond": {
           "tooltips": [
-            "While your enemy has more health than you, your Heal and Regeneration items have their cooldowns reduced by 15%."
+            "While your enemy has more health than you, your Heal and Regen items have their cooldowns reduced by 15%."
           ]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
       "hiddenTags": ["HealReference", "Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Mak"],
       "artKey": "Icon_Skill_RapidRelief.png",
       "unifiedTooltips": [
-        "While your enemy has more health than you, your Heal and Regeneration items have their cooldowns reduced by (5%/10%/15%)."
+        "While your enemy has more health than you, your Heal and Regen items have their cooldowns reduced by (5%/10%/15%)."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -7053,13 +6853,13 @@
       },
       "tags": [],
       "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_Ravenous.png",
       "unifiedTooltips": [
         "The first time you fall below half health each fight, destroy an item for the fight."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -7081,11 +6881,11 @@
       },
       "tags": ["Tool"],
       "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Jules", "Mak", "Vanessa", "Dooley", "Stelle"],
       "artKey": "Icon_Skill_Re-Tooled.png",
       "unifiedTooltips": ["Your leftmost Tool has +1 Multicast."],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -7110,13 +6910,13 @@
       },
       "tags": [],
       "hiddenTags": ["FreezeReference", "Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Jules", "Stelle", "Mak", "Pygmalien"],
       "artKey": "Icon_Skill_ReachingTheSummit.png",
       "unifiedTooltips": [
         "When you Freeze, your items gain (+3%/+6%) Crit Chance for the fight."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": [
         {
@@ -7148,13 +6948,13 @@
       },
       "tags": [],
       "hiddenTags": ["ShieldReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Vanessa", "Dooley", "Jules", "Stelle"],
       "artKey": "Icon_Skill_RearShielding.png",
       "unifiedTooltips": [
         "Your rightmost Shield item has (+20/+30/+40/+50) Shield."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -7171,11 +6971,11 @@
       },
       "tags": [],
       "hiddenTags": ["Gold"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Pygmalien", "Dooley", "Jules", "Stelle", "Mak"],
       "artKey": "Icon_Skill_RedEnvelope.png",
       "unifiedTooltips": ["When you buy this, gain 10 gold."],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -7196,13 +6996,13 @@
       },
       "tags": [],
       "hiddenTags": ["Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Stelle"],
       "artKey": "Icon_Skill_ReelEmIn.png",
       "unifiedTooltips": [
         "The first time your enemy falls below half health each fight, your items have their cooldowns reduced by 50% for the fight."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -7212,18 +7012,18 @@
       "startingTier": "Silver",
       "tiers": {
         "Bronze": { "tooltips": [] },
-        "Silver": { "tooltips": ["You have 10 Regeneration."] },
-        "Gold": { "tooltips": ["You have 20 Regeneration."] },
-        "Diamond": { "tooltips": ["You have 30 Regeneration."] },
+        "Silver": { "tooltips": ["You have 10 Regen."] },
+        "Gold": { "tooltips": ["You have 20 Regen."] },
+        "Diamond": { "tooltips": ["You have 30 Regen."] },
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
       "hiddenTags": ["Regen"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Stelle", "Mak"],
       "artKey": "Icon_Skill_Regenerative.png",
-      "unifiedTooltips": ["You have (10/20/30) Regeneration."],
-      "remarks": [],
+      "unifiedTooltips": ["You have (10/20/30) Regen."],
       "packId": "Stelle_Core",
       "combatEncounters": [
         {
@@ -7257,13 +7057,13 @@
       },
       "tags": ["Property"],
       "hiddenTags": ["DamageReference", "ShieldReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_PYG_ReinforcedSteel.png",
       "unifiedTooltips": [
         "When you use a Property, your Weapons gain (+5/+10/+15) damage and your Shield items gain (+5/+10/+15) shield for the fight."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -7274,23 +7074,19 @@
       "tiers": {
         "Bronze": { "tooltips": [] },
         "Silver": { "tooltips": [] },
-        "Gold": {
-          "tooltips": ["When you Slow, gain 2 Regeneration for the fight."]
-        },
+        "Gold": { "tooltips": ["When you Slow, gain 2 Regen for the fight."] },
         "Diamond": {
-          "tooltips": ["When you Slow, gain 4 Regeneration for the fight."]
+          "tooltips": ["When you Slow, gain 4 Regen for the fight."]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": ["Weapon"],
       "hiddenTags": ["SlowReference", "Regen"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_RelaxBro.png",
-      "unifiedTooltips": [
-        "When you Slow, gain (2/4) Regeneration for the fight."
-      ],
-      "remarks": [],
+      "unifiedTooltips": ["When you Slow, gain (2/4) Regen for the fight."],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -7312,11 +7108,11 @@
       },
       "tags": ["Property"],
       "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_PYG_Renovation.png",
       "unifiedTooltips": ["When you level up, upgrade a Property."],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -7345,13 +7141,13 @@
       },
       "tags": [],
       "hiddenTags": ["Shield", "HealthReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Dooley", "Stelle"],
       "artKey": "Icon_Skill_ReserveShield.png",
       "unifiedTooltips": [
         "The first time you use a Large item each fight, Shield equal to (10%/20%/30%) of your max health."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -7368,11 +7164,11 @@
       },
       "tags": [],
       "hiddenTags": ["Poison"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Mak"],
       "artKey": "Icon_Skill_RetalitoryToxins.png",
       "unifiedTooltips": ["When your enemy uses an item, Poison (1/2)."],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -7391,11 +7187,11 @@
       },
       "tags": ["Tool"],
       "hiddenTags": ["AmmoReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_EmergencyReload.png",
       "unifiedTooltips": ["When you use a Tool, Reload an adjacent item."],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -7407,39 +7203,35 @@
     {
       "id": "51cec489-1988-48ff-95af-0235b374803e",
       "name": "Rigged",
-      "startingTier": "Bronze",
+      "startingTier": "Silver",
       "tiers": {
-        "Bronze": {
-          "tooltips": [
-            "At the start of each fight, Haste 2 items for 3 second(s)."
-          ]
-        },
+        "Bronze": { "tooltips": [] },
         "Silver": {
           "tooltips": [
-            "At the start of each fight, Haste 3 items for 3 second(s)."
+            "The first time you use an item each fight, Haste your items for 1 second(s)."
           ]
         },
         "Gold": {
           "tooltips": [
-            "At the start of each fight, Haste 4 items for 3 second(s)."
+            "The first time you use an item each fight, Haste your items for 2 second(s)."
           ]
         },
         "Diamond": {
           "tooltips": [
-            "At the start of each fight, Haste 5 items for 3 second(s)."
+            "The first time you use an item each fight, Haste your items for 3 second(s)."
           ]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
       "hiddenTags": ["Haste"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_Rigged.png",
       "unifiedTooltips": [
-        "At the start of each fight, Haste (2/3/4/5) items for 3 second(s)."
+        "The first time you use an item each fight, Haste your items for (1/2/3) second(s)."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -7463,13 +7255,13 @@
       },
       "tags": [],
       "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Vanessa", "Dooley", "Jules", "Stelle", "Mak"],
       "artKey": "Icon_Skill_RightEyeDominant.png",
       "unifiedTooltips": [
         "Your rightmost item has (+8%/+16%/+24%/+32%) Crit chance."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -7486,18 +7278,22 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Jules", "Stelle", "Mak", "Dooley", "Vanessa", "Pygmalien"],
       "artKey": "Icon_Skill_RightHanded.png",
       "unifiedTooltips": [
         "Your rightmost Weapon has (+20/+30/+40/+50) Damage."
       ],
-      "remarks": [],
       "packId": "Jules_Core",
       "combatEncounters": [
         {
           "cardId": "21a485af-8811-4d38-bccb-be03a2dcca7f",
           "cardName": "Ferros Khan"
+        },
+        {
+          "cardId": "608eb88e-c6d8-41c3-ac88-c20aeb185664",
+          "cardName": "Radiant Corsair"
         }
       ]
     },
@@ -7526,13 +7322,13 @@
       },
       "tags": [],
       "hiddenTags": ["Slow"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley", "Mak", "Vanessa"],
       "artKey": "Icon_Skill_RightyTighty.png",
       "unifiedTooltips": [
         "The first (3/6/9) times you use your rightmost item each fight, Charge 1 Slow item 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -7543,35 +7339,35 @@
       "tiers": {
         "Bronze": {
           "tooltips": [
-            "At the start of each fight, Haste a weapon 3 second(s)."
+            "The first time you use an item, Haste 1 Weapon 3 seconds."
           ]
         },
         "Silver": {
           "tooltips": [
-            "At the start of each fight, Haste a weapon 5 second(s)."
+            "The first time you use an item, Haste 1 Weapon 4 seconds."
           ]
         },
         "Gold": {
           "tooltips": [
-            "At the start of each fight, Haste a weapon 7 second(s)."
+            "The first time you use an item, Haste 1 Weapon 5 seconds."
           ]
         },
         "Diamond": {
           "tooltips": [
-            "At the start of each fight, Haste a weapon 9 second(s)."
+            "The first time you use an item, Haste 1 Weapon 6 seconds."
           ]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": ["Weapon"],
       "hiddenTags": ["Haste"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_MegaDrain_01.png",
       "unifiedTooltips": [
-        "At the start of each fight, Haste a weapon (3/5/7/9) second(s)."
+        "The first time you use an item, Haste 1 Weapon (3/4/5/6) seconds."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -7587,35 +7383,35 @@
       "tiers": {
         "Bronze": {
           "tooltips": [
-            "At the start of each fight, slow 1 item(s) for 3 second(s)."
+            "The first time you use an item each fight, slow 1 item(s) for 3 second(s)."
           ]
         },
         "Silver": {
           "tooltips": [
-            "At the start of each fight, slow 1 item(s) for 5 second(s)."
+            "The first time you use an item each fight, slow 1 item(s) for 4 second(s)."
           ]
         },
         "Gold": {
           "tooltips": [
-            "At the start of each fight, slow 1 item(s) for 7 second(s)."
+            "The first time you use an item each fight, slow 1 item(s) for 5 second(s)."
           ]
         },
         "Diamond": {
           "tooltips": [
-            "At the start of each fight, slow 1 item(s) for 9 second(s)."
+            "The first time you use an item each fight, slow 1 item(s) for 6 second(s)."
           ]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
       "hiddenTags": ["Slow"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_RogueScrapper_01.png",
       "unifiedTooltips": [
-        "At the start of each fight, slow 1 item(s) for (3/5/7/9) second(s)."
+        "The first time you use an item each fight, slow 1 item(s) for (3/4/5/6) second(s)."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -7649,13 +7445,13 @@
       },
       "tags": ["Tool"],
       "hiddenTags": ["Slow"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Stelle"],
       "artKey": "Icon_Skill_Sabotage.png",
       "unifiedTooltips": [
         "The first (5/10) times you use a Tool each fight, Slow 1 item(s) for 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -7684,34 +7480,13 @@
       },
       "tags": [],
       "hiddenTags": ["BurnReference", "HasteReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley"],
       "artKey": "Icon_Skill_SearingBlade.png",
       "unifiedTooltips": [
         "When one of your Burn items gains Haste, if it already has Haste, it gains (1/2/3) Burn for the fight."
       ],
-      "remarks": [],
-      "packId": "Vanessa_Core",
-      "combatEncounters": []
-    },
-    {
-      "id": "11a262fe-e1e7-4656-a07c-f6a3a1249352",
-      "name": "Second Degree Burns",
-      "startingTier": "Bronze",
-      "tiers": {
-        "Bronze": { "tooltips": ["Your Medium Burn items have +2 Burn."] },
-        "Silver": { "tooltips": ["Your Medium Burn items have +4 Burn."] },
-        "Gold": { "tooltips": ["Your Medium Burn items have +6 Burn."] },
-        "Diamond": { "tooltips": ["Your Medium Burn items have +8 Burn."] },
-        "Legendary": { "tooltips": [] }
-      },
-      "tags": [],
-      "hiddenTags": ["BurnReference"],
-      "size": "Medium",
-      "heroes": ["Vanessa", "Dooley", "Jules", "Stelle", "Mak"],
-      "artKey": "Icon_Skill_SecondDegreeBurns.png",
-      "unifiedTooltips": ["Your Medium Burn items have (+2/+4/+6/+8) Burn."],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -7740,13 +7515,13 @@
       },
       "tags": [],
       "hiddenTags": ["Heal", "HealthReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Dooley", "Mak"],
       "artKey": "Icon_Skill_SecondWind.png",
       "unifiedTooltips": [
         "The first time you use a Large item each fight, heal (20%/40%/60%) of your max health."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -7775,13 +7550,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["ShieldReference", "DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Dooley", "Stelle"],
       "artKey": "Icon_Skill_SharpCorners.png",
       "unifiedTooltips": [
         "When you Shield, your weapons gain (3/6/9) damage for the fight."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -7810,13 +7585,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_SharpenedSteel.png",
       "unifiedTooltips": [
         "When you use a Weapon, Adjacent items gain (4%/8%/12%) Crit Chance for the fight."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -7838,13 +7613,13 @@
       },
       "tags": [],
       "hiddenTags": ["AmmoReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Mak"],
       "artKey": "Icon_Skill_Sharpshooter.png",
       "unifiedTooltips": [
         "Your Ammo items have (+3%/+6%/+9%/+12%) Crit chance."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -7873,13 +7648,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["FreezeReference", "DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Pygmalien", "Dooley", "Jules", "Stelle", "Mak"],
       "artKey": "Icon_Skill_Shatter.png",
       "unifiedTooltips": [
         "When you freeze, your Weapons gain (+10/+15/+20) damage for the fight."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -7904,13 +7679,13 @@
       },
       "tags": [],
       "hiddenTags": ["Charge"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Vanessa", "Dooley", "Stelle"],
       "artKey": "Icon_Skill_Conditioning.png",
       "unifiedTooltips": [
         "The first (4/8) times your enemy uses a non-weapon item each fight, Charge 1 Weapon 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -7929,11 +7704,11 @@
       },
       "tags": [],
       "hiddenTags": ["HealReference", "ShieldReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_RoamingIsle_01",
       "unifiedTooltips": ["When you Heal, charge a Shield item 1 second(s)."],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -7963,13 +7738,13 @@
       },
       "tags": [],
       "hiddenTags": ["Charge", "PoisonReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Mak"],
       "artKey": "Icon_Skill_SickBurn.png",
       "unifiedTooltips": [
         "The first (5/10) times you Poison each fight, charge 1 Burn item 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -7998,13 +7773,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference", "SlowReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Stelle", "Mak"],
       "artKey": "Icon_Skill_SlowandSteady.png",
       "unifiedTooltips": [
         "When you Slow, your weapons gain (2/4/6) damage for the fight."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": [
         {
@@ -8034,13 +7809,13 @@
       },
       "tags": [],
       "hiddenTags": ["Charge", "BurnReference", "SlowReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Mak"],
       "artKey": "Icon_Skill_SlowBurn.png",
       "unifiedTooltips": [
         "The first (5/10) times you Slow each fight, Charge 1 Burn item 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": [
         {
@@ -8074,13 +7849,13 @@
       },
       "tags": [],
       "hiddenTags": ["SlowReference", "Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Stelle", "Mak"],
       "artKey": "Icon_Skill_SlowedTargets.png",
       "unifiedTooltips": [
         "When you Slow, your items gain (+1%/+2%/+3%) Crit Chance for the fight."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": [
         {
@@ -8102,11 +7877,11 @@
       },
       "tags": [],
       "hiddenTags": ["Heal"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_SmallRefresh.png",
       "unifiedTooltips": ["When you use a small item, heal (5/10/15/20)."],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -8144,13 +7919,13 @@
       },
       "tags": [],
       "hiddenTags": ["FreezeReference", "DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_TheColdShoulder_01.png",
       "unifiedTooltips": [
         "When you freeze, your weapons gain (2/4/6/8) damage for the fight."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -8184,83 +7959,14 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["ShieldReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Dooley", "Stelle"],
       "artKey": "Icon_Skill_Specialist.png",
       "unifiedTooltips": [
         "If you have exactly 1 weapon, your Shield items have (+10/+20/+30) shield."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
-      "combatEncounters": []
-    },
-    {
-      "id": "b6936741-8ec9-42f1-a6ec-d76061141f7d",
-      "name": "Standardized Care",
-      "startingTier": "Bronze",
-      "tiers": {
-        "Bronze": { "tooltips": ["Your Medium Heal items have +6 Heal."] },
-        "Silver": { "tooltips": ["Your Medium Heal items have +18 Heal."] },
-        "Gold": { "tooltips": ["Your Medium Heal items have +36 Heal."] },
-        "Diamond": { "tooltips": ["Your Medium Heal items have +60 Heal."] },
-        "Legendary": { "tooltips": [] }
-      },
-      "tags": [],
-      "hiddenTags": ["HealReference"],
-      "size": "Medium",
-      "heroes": ["Pygmalien", "Mak"],
-      "artKey": "Icon_Skill_StandardizedCare.png",
-      "unifiedTooltips": ["Your Medium Heal items have (+6/+18/+36/+60) Heal."],
-      "remarks": [],
-      "packId": "Pygmalien_Core",
-      "combatEncounters": []
-    },
-    {
-      "id": "254017cc-e3b9-486e-9276-850867ceba6b",
-      "name": "Standardized Defenses",
-      "startingTier": "Bronze",
-      "tiers": {
-        "Bronze": { "tooltips": ["Your Medium Shield items have +6 shield."] },
-        "Silver": { "tooltips": ["Your Medium Shield items have +18 shield."] },
-        "Gold": { "tooltips": ["Your Medium Shield items have +36 shield."] },
-        "Diamond": {
-          "tooltips": ["Your Medium Shield items have +60 shield."]
-        },
-        "Legendary": { "tooltips": [] }
-      },
-      "tags": [],
-      "hiddenTags": ["ShieldReference"],
-      "size": "Medium",
-      "heroes": ["Stelle", "Dooley", "Pygmalien"],
-      "artKey": "Icon_Skill_StandardizedDefences.png",
-      "unifiedTooltips": [
-        "Your Medium Shield items have (+6/+18/+36/+60) shield."
-      ],
-      "remarks": [],
-      "packId": "Jules_Core",
-      "combatEncounters": []
-    },
-    {
-      "id": "07fbd5ab-c52a-42d8-801d-8992c44714de",
-      "name": "Standardized Toxins",
-      "startingTier": "Bronze",
-      "tiers": {
-        "Bronze": { "tooltips": ["Your Medium Poison items have +2 Poison."] },
-        "Silver": { "tooltips": ["Your Medium Poison items have +4 Poison."] },
-        "Gold": { "tooltips": ["Your Medium Poison items have +6 Poison."] },
-        "Diamond": { "tooltips": ["Your Medium Poison items have +8 Poison."] },
-        "Legendary": { "tooltips": [] }
-      },
-      "tags": [],
-      "hiddenTags": ["PoisonReference"],
-      "size": "Medium",
-      "heroes": ["Vanessa", "Dooley", "Mak"],
-      "artKey": "Icon_Skill_StandadizedPoison.png",
-      "unifiedTooltips": [
-        "Your Medium Poison items have (+2/+4/+6/+8) Poison."
-      ],
-      "remarks": [],
-      "packId": "Vanessa_Core",
       "combatEncounters": []
     },
     {
@@ -8288,13 +7994,13 @@
       },
       "tags": [],
       "hiddenTags": ["HasteReference", "Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley", "Stelle", "Mak", "Vanessa"],
       "artKey": "Icon_Skill_StaticAcceleration.png",
       "unifiedTooltips": [
         "When you Haste, your items gain (+1%/+2%/+3%) crit chance for the fight."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -8311,11 +8017,11 @@
       },
       "tags": ["Tool"],
       "hiddenTags": ["Heal"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_StayingPower.png",
       "unifiedTooltips": ["When you use a Tool, Heal (5/10/15/20)."],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -8338,13 +8044,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa"],
       "artKey": "Icon_Skill_StandardOrdinance.png",
       "unifiedTooltips": [
         "Your Weapons have (+4/+8/+12) Damage for each Weapon you have."
       ],
-      "remarks": [],
       "packId": "Jules_Core",
       "combatEncounters": []
     },
@@ -8361,11 +8067,11 @@
       },
       "tags": ["Potion"],
       "hiddenTags": ["Ammo"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Mak"],
       "artKey": "Icon_Skill_Mak_Stocked.png",
       "unifiedTooltips": ["Your Potions have (+1/+2/+3) Ammo."],
-      "remarks": [],
       "packId": "Mak_Core",
       "combatEncounters": []
     },
@@ -8394,13 +8100,13 @@
       },
       "tags": [],
       "hiddenTags": ["Slow"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Mak"],
       "artKey": "Icon_Skill_StopThat.png",
       "unifiedTooltips": [
         "The first time you fall below half health each fight, slow (2/4/6) items for 2 second(s)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -8429,13 +8135,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference", "HasteReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa"],
       "artKey": "Icon_Skill_FinesseWeapon.png",
       "unifiedTooltips": [
         "When one of your Weapons gains Haste, if it already has Haste, it gains (+5/+10/+15) damage."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -8452,11 +8158,11 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Jules", "Stelle", "Mak", "Dooley", "Vanessa", "Pygmalien"],
       "artKey": "Icon_Skill_Strenght.png",
       "unifiedTooltips": ["Your Weapons deal (+10/+15/+20/+25) Damage."],
-      "remarks": [],
       "packId": "Jules_Core",
       "combatEncounters": [
         {
@@ -8478,6 +8184,14 @@
         {
           "cardId": "85420ae1-363b-4e84-8405-cc1a306b00fb",
           "cardName": "Mimic"
+        },
+        {
+          "cardId": "96349563-bfb5-46ef-8dff-dbf1ff0d4196",
+          "cardName": "Veteran Octopus"
+        },
+        {
+          "cardId": "8f73d2d6-6071-4464-bb19-8e0783de4df0",
+          "cardName": "Lord Arken"
         }
       ]
     },
@@ -8504,13 +8218,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["Damage", "EconomyReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_StrongArm.png",
       "unifiedTooltips": [
         "Your Weapons have + Damage equal to (1x/2x/3x) your income."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -8539,13 +8253,13 @@
       },
       "tags": [],
       "hiddenTags": ["CritReference", "Freeze"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa"],
       "artKey": "Icon_Skill_StunningHit.png",
       "unifiedTooltips": [
         "The first time you Crit each fight, Freeze 1 item(s) for (3/4/5) second(s)."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -8577,6 +8291,7 @@
       },
       "tags": ["Weapon", "Aquatic"],
       "hiddenTags": ["DamageReference", "ShieldReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa"],
       "artKey": "Icon_Skill_VAN_Submerged",
@@ -8584,7 +8299,6 @@
         "Your Weapons have (+3/+6/+9) Damage for each Aquatic item you have.",
         "Your Shield items have (+3/+6/+9) Shield for each Aquatic item you have."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -8609,13 +8323,13 @@
       },
       "tags": ["Property"],
       "hiddenTags": ["Haste"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_PYG_TallBuildings.png",
       "unifiedTooltips": [
         "When you use a Property, haste items adjacent to it (1/2) second(s)."
       ],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": []
     },
@@ -8644,13 +8358,13 @@
       },
       "tags": [],
       "hiddenTags": ["Damage"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Jules"],
       "artKey": "Icon_Skill_Tempering.png",
       "unifiedTooltips": [
         "When you use a weapon, it gains (+3/+6/+9) damage for the fight."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -8679,13 +8393,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["SlowReference", "Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Mak"],
       "artKey": "Icon_Skill_TemporalStrike.png",
       "unifiedTooltips": [
         "If you have exactly one weapon, its cooldown is reduced by (5%/10%/15%) while your enemy has a Slowed item."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -8714,13 +8428,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa"],
       "artKey": "Icon_Skill_TheBestDefence.png",
       "unifiedTooltips": [
         "When you use a weapon, Weapons adjacent to it gain (+3/+6/+9) damage for the fight."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -8749,13 +8463,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_TheRightTool.png",
       "unifiedTooltips": [
         "Your non-tool items have (+5%/+10%/+15%) Crit Chance for each tool you have."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": []
     },
@@ -8774,11 +8488,11 @@
       },
       "tags": [],
       "hiddenTags": ["SlowReference", "Charge"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_Smack_01.png",
       "unifiedTooltips": ["When you slow, charge 1 item(s) 1 second(s)."],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -8786,27 +8500,6 @@
           "cardName": "Wandering Shoal"
         }
       ]
-    },
-    {
-      "id": "b1b9ff21-32ac-436a-bd3c-120563b26bea",
-      "name": "Third Degree Burns",
-      "startingTier": "Bronze",
-      "tiers": {
-        "Bronze": { "tooltips": ["Your Large Burn items have +4 Burn."] },
-        "Silver": { "tooltips": ["Your Large Burn items have +8 Burn."] },
-        "Gold": { "tooltips": ["Your Large Burn items have +12 Burn."] },
-        "Diamond": { "tooltips": ["Your Large Burn items have +16 Burn."] },
-        "Legendary": { "tooltips": [] }
-      },
-      "tags": [],
-      "hiddenTags": ["BurnReference"],
-      "size": "Medium",
-      "heroes": ["Vanessa", "Dooley", "Jules", "Stelle", "Mak"],
-      "artKey": "Icon_Skill_ThirdDegreeBurns.png",
-      "unifiedTooltips": ["Your Large Burn items have (+4/+8/+12/+16) Burn."],
-      "remarks": [],
-      "packId": "Vanessa_Core",
-      "combatEncounters": []
     },
     {
       "id": "878440a6-99e8-4178-8d3f-38c94fb8c334",
@@ -8817,25 +8510,25 @@
         "Silver": { "tooltips": [] },
         "Gold": {
           "tooltips": [
-            "The first 4 times you use a potion each fight, gain 20 Regeneration for the fight."
+            "The first 4 times you use a potion each fight, gain 20 Regen for the fight."
           ]
         },
         "Diamond": {
           "tooltips": [
-            "The first 8 times you use a potion each fight, gain 20 Regeneration for the fight."
+            "The first 8 times you use a potion each fight, gain 20 Regen for the fight."
           ]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": ["Potion"],
       "hiddenTags": ["Regen"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Mak"],
       "artKey": "Icon_Skill_Mak_Thirsty.png",
       "unifiedTooltips": [
-        "The first (4/8) times you use a potion each fight, gain 20 Regeneration for the fight."
+        "The first (4/8) times you use a potion each fight, gain 20 Regen for the fight."
       ],
-      "remarks": [],
       "packId": "Mak_Core",
       "combatEncounters": []
     },
@@ -8852,11 +8545,11 @@
       },
       "tags": [],
       "hiddenTags": ["Shield", "HasteReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_TimetoTinker01.png",
       "unifiedTooltips": ["When you Haste, Shield (10/20/30/40)."],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -8890,13 +8583,13 @@
       },
       "tags": [],
       "hiddenTags": ["Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley", "Vanessa"],
       "artKey": "Icon_Skill_TinyDancer.png",
       "unifiedTooltips": [
         "If you have at least 7 items, your items have their cooldowns reduced by (5%/10%/15%)."
       ],
-      "remarks": [],
       "packId": "Jules_Core",
       "combatEncounters": []
     },
@@ -8921,13 +8614,13 @@
       },
       "tags": ["Core"],
       "hiddenTags": ["ShieldReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley"],
       "artKey": "Icon_Skill_DOO_TitaniumCasing.png",
       "unifiedTooltips": [
         "When you use The Core, your Shield items gain (15/30) Shield for the fight."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -8952,13 +8645,13 @@
       },
       "tags": ["Tool"],
       "hiddenTags": ["Haste"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley", "Jules", "Stelle"],
       "artKey": "Icon_Skill_ToolsOFTheTrade.png",
       "unifiedTooltips": [
         "The first (5/10) times you use a Tool each fight, Haste 1 Tool for 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": [
         {
@@ -8980,11 +8673,11 @@
       },
       "tags": [],
       "hiddenTags": ["ShieldReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien", "Dooley", "Stelle"],
       "artKey": "Icon_Skill_Toughness.png",
       "unifiedTooltips": ["Your Shield items have (+10/+15/+20/+25) Shield."],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": [
         {
@@ -9022,13 +8715,13 @@
       },
       "tags": [],
       "hiddenTags": ["DamageReference", "PoisonReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Mak"],
       "artKey": "Icon_Skill_Toxic.png",
       "unifiedTooltips": [
         "When you poison, your weapons gain (5/10/15) damage for the fight."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -9055,6 +8748,7 @@
       },
       "tags": [],
       "hiddenTags": ["Poison", "Burn"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Mak"],
       "artKey": "Icon_Skill_ToxicFlame.png",
@@ -9062,7 +8756,6 @@
         "When you Burn with an item, Poison (1/2).",
         "When you Poison with an item, Burn (2/4)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -9079,11 +8772,11 @@
       },
       "tags": ["Friend"],
       "hiddenTags": ["Poison"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_SKILL_MON_ToxicFriendship.png",
       "unifiedTooltips": ["When you use a Friend, Poison (1/2)."],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -9117,13 +8810,13 @@
       },
       "tags": [],
       "hiddenTags": ["PoisonReference", "Shield"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Mak", "Dooley"],
       "artKey": "Icon_Skill_ToxicShield.png",
       "unifiedTooltips": [
         "The first time you fall below half health each fight, Shield equal to (2/3/4) times the Poison on your opponent."
       ],
-      "remarks": [],
       "packId": "Mak_Core",
       "combatEncounters": []
     },
@@ -9152,13 +8845,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["PoisonReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Mak"],
       "artKey": "Icon_Skill_ExoticHerbs.png",
       "unifiedTooltips": [
         "Your Poison items have (+2/+4/+6) Poison for each Weapon you have."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -9187,13 +8880,13 @@
       },
       "tags": [],
       "hiddenTags": ["PoisonReference", "Haste"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Mak"],
       "artKey": "Icon_Skill_ToxicInjector.png",
       "unifiedTooltips": [
         "The first time you use an item each fight, Haste (1/2/3) Poison item(s) for 2 second(s)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -9222,13 +8915,13 @@
       },
       "tags": [],
       "hiddenTags": ["BurnReference", "Crit"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Dooley", "Jules", "Stelle", "Mak"],
       "artKey": "Icon_Skill_TracerFire.png",
       "unifiedTooltips": [
         "When you burn, your items gain (+1%/+2%/+3%) Crit Chance for the fight."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": [
         {
@@ -9254,11 +8947,11 @@
       },
       "tags": [],
       "hiddenTags": ["Value"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Pygmalien"],
       "artKey": "Icon_Skill_Trader.png",
       "unifiedTooltips": ["Your items have (+1/+2) value."],
-      "remarks": [],
       "packId": "Pygmalien_Core",
       "combatEncounters": [
         {
@@ -9294,13 +8987,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["DamageReference", "SlowReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": [],
       "artKey": "Icon_Skill_MON_Trained.png",
       "unifiedTooltips": [
         "When you slow, a weapon gains (+5/+10/+15/+20) damage for the fight."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -9330,13 +9023,13 @@
       },
       "tags": [],
       "hiddenTags": ["Haste"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_BananaBreak_01.png",
       "unifiedTooltips": [
         "When you use a large item, haste another item for (3/4) second(s)."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -9358,11 +9051,11 @@
       },
       "tags": [],
       "hiddenTags": ["Shield"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_Unrelenting.png",
       "unifiedTooltips": ["When you use an item, Shield (20/40)."],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -9370,6 +9063,29 @@
           "cardName": "Lord Arken"
         }
       ]
+    },
+    {
+      "id": "83cf85fa-f486-4486-ba76-c28f4db60677",
+      "name": "Valley Fever",
+      "startingTier": "Diamond",
+      "tiers": {
+        "Bronze": { "tooltips": [] },
+        "Silver": { "tooltips": [] },
+        "Gold": { "tooltips": [] },
+        "Diamond": {
+          "tooltips": ["At the start of each fight, Burn yourself 2."]
+        },
+        "Legendary": { "tooltips": [] }
+      },
+      "tags": [],
+      "hiddenTags": ["Burn"],
+      "customTags": [],
+      "size": "Medium",
+      "heroes": ["Common"],
+      "artKey": "Icon_Skill_ConcentratedFlame.png",
+      "unifiedTooltips": ["At the start of each fight, Burn yourself 2."],
+      "packId": "Core",
+      "combatEncounters": []
     },
     {
       "id": "9dacb0ad-a016-40ff-a54a-24d807c0988f",
@@ -9396,13 +9112,13 @@
       },
       "tags": [],
       "hiddenTags": ["Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_DeathWish_02.png",
       "unifiedTooltips": [
         "Your leftmost and rightmost items have their cooldowns reduced by (5%/10%/15%)."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -9432,13 +9148,13 @@
       },
       "tags": ["Weapon"],
       "hiddenTags": ["Charge", "PoisonReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Mak"],
       "artKey": "Icon_Skill_VenomousBlade.png",
       "unifiedTooltips": [
         "The first (4/8) times you use a Weapon each fight, Charge 1 Poison item 1 second(s)."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -9451,21 +9167,19 @@
         "Silver": { "tooltips": [] },
         "Gold": { "tooltips": [] },
         "Diamond": {
-          "tooltips": [
-            "You have Regeneration equal to half the Poison on your enemy."
-          ]
+          "tooltips": ["You have Regen equal to half the Poison on your enemy."]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
       "hiddenTags": ["Regen", "PoisonReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Vanessa", "Mak"],
       "artKey": "Icon_Skill_NaturalRemedy.png",
       "unifiedTooltips": [
-        "You have Regeneration equal to half the Poison on your enemy."
+        "You have Regen equal to half the Poison on your enemy."
       ],
-      "remarks": [],
       "packId": "Vanessa_Core",
       "combatEncounters": []
     },
@@ -9477,30 +9191,30 @@
         "Bronze": { "tooltips": [] },
         "Silver": {
           "tooltips": [
-            "When you Slow, Freeze, Poison or Burn with an item, a Regeneration item gains 1 Regeneration for the fight."
+            "When you Slow, Freeze, Poison or Burn with an item, a Regen item gains 1 Regen for the fight."
           ]
         },
         "Gold": {
           "tooltips": [
-            "When you Slow, Freeze, Poison or Burn with an item, a Regeneration item gains 2 Regeneration for the fight."
+            "When you Slow, Freeze, Poison or Burn with an item, a Regen item gains 2 Regen for the fight."
           ]
         },
         "Diamond": {
           "tooltips": [
-            "When you Slow, Freeze, Poison or Burn with an item, a Regeneration item gains 3 Regeneration for the fight."
+            "When you Slow, Freeze, Poison or Burn with an item, a Regen item gains 3 Regen for the fight."
           ]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
       "hiddenTags": ["Cooldown"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Mak"],
       "artKey": "Icon_Skill_Mak_VitalRenewal.png",
       "unifiedTooltips": [
-        "When you Slow, Freeze, Poison or Burn with an item, a Regeneration item gains (1/2/3) Regeneration for the fight."
+        "When you Slow, Freeze, Poison or Burn with an item, a Regen item gains (1/2/3) Regen for the fight."
       ],
-      "remarks": [],
       "packId": "Mak_Core",
       "combatEncounters": []
     },
@@ -9519,11 +9233,11 @@
       },
       "tags": [],
       "hiddenTags": ["BurnReference", "ShieldReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_VoidEnergy01.png",
       "unifiedTooltips": ["When you Burn, charge a Shield item 1 second(s)."],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -9549,11 +9263,11 @@
       },
       "tags": [],
       "hiddenTags": ["Haste", "BurnReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_VoidRake.png",
       "unifiedTooltips": ["When you burn, Haste an item for (1/2) second(s)."],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -9583,13 +9297,13 @@
       },
       "tags": [],
       "hiddenTags": [],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_VoidRender.png",
       "unifiedTooltips": [
         "When you destroy an item during combat, your Weapons gain (100/200) damage and your burn items gain (10/20) Burn for the fight."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -9611,11 +9325,11 @@
       },
       "tags": [],
       "hiddenTags": ["Burn"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley", "Vanessa"],
       "artKey": "Icon_Skill_DOO_WarmHugs.png",
       "unifiedTooltips": ["When you use a Friend, Burn (2/3)."],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -9626,31 +9340,25 @@
       "tiers": {
         "Bronze": { "tooltips": [] },
         "Silver": {
-          "tooltips": [
-            "You have +10 Regeneration for each non-weapon item you have."
-          ]
+          "tooltips": ["You have +10 Regen for each non-weapon item you have."]
         },
         "Gold": {
-          "tooltips": [
-            "You have +15 Regeneration for each non-weapon item you have."
-          ]
+          "tooltips": ["You have +15 Regen for each non-weapon item you have."]
         },
         "Diamond": {
-          "tooltips": [
-            "You have +20 Regeneration for each non-weapon item you have."
-          ]
+          "tooltips": ["You have +20 Regen for each non-weapon item you have."]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": [],
       "hiddenTags": ["Regen"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Common"],
       "artKey": "Icon_Skill_MON_WatersofInfinity.png",
       "unifiedTooltips": [
-        "You have (+10/+15/+20) Regeneration for each non-weapon item you have."
+        "You have (+10/+15/+20) Regen for each non-weapon item you have."
       ],
-      "remarks": [],
       "packId": "Core",
       "combatEncounters": [
         {
@@ -9680,13 +9388,13 @@
       },
       "tags": ["Core"],
       "hiddenTags": ["DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley"],
       "artKey": "Icon_Skill_DOO_WellOiledMachine.png",
       "unifiedTooltips": [
         "When you use The Core, reduce an item's cooldown by 5% for the fight."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     },
@@ -9701,22 +9409,22 @@
           "tooltips": ["Your weapons have +7 Damage for each Tool you have."]
         },
         "Diamond": {
-          "tooltips": ["Your weapons have +7 Damage for each Tool you have."]
+          "tooltips": ["Your weapons have +14 Damage for each Tool you have."]
         },
         "Legendary": { "tooltips": [] }
       },
       "tags": ["Weapon", "Tool"],
       "hiddenTags": ["DamageReference"],
+      "customTags": [],
       "size": "Medium",
       "heroes": ["Dooley", "Jules", "Stelle"],
       "artKey": "Icon_Skill_STE_WorkinHard.png",
       "unifiedTooltips": [
-        "Your weapons have +7 Damage for each Tool you have."
+        "Your weapons have (+7/+14) Damage for each Tool you have."
       ],
-      "remarks": [],
       "packId": "Dooley_Core",
       "combatEncounters": []
     }
   ],
-  "version": "b437bc96"
+  "version": "7da37832"
 }

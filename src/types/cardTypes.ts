@@ -2,7 +2,7 @@
 import type { EnchantmentType, HiddenTag, Tag, Tier } from "./shared.ts";
 
 export interface Cards {
-  "1.0.0": Card[];
+  [version: string]: Card[];
 }
 
 export interface Card {
