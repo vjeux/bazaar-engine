@@ -410,12 +410,12 @@ enum PrerequisiteType {
 }
 
 export enum Priority {
-  High = "High",
-  Highest = "Highest",
   Immediate = "Immediate",
+  Highest = "Highest",
+  High = "High",
+  Medium = "Medium",
   Low = "Low",
   Lowest = "Lowest",
-  Medium = "Medium",
 }
 
 export interface Trigger {

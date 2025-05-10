@@ -95,11 +95,11 @@ function forEachCard(
 
 const priorityOrder = {
   [Priority.Immediate]: 0,
-  [Priority.High]: 1,
-  [Priority.Medium]: 2,
-  [Priority.Low]: 3,
-  [Priority.Lowest]: 4,
-  [Priority.Highest]: 5,
+  [Priority.Highest]: 1,
+  [Priority.High]: 2,
+  [Priority.Medium]: 3,
+  [Priority.Low]: 4,
+  [Priority.Lowest]: 5,
 };
 
 type ActionMetadata = { changeValue?: number } | undefined;
@@ -195,8 +195,8 @@ function forEachAbility(
       },
     )
     .sort((a, b) => {
-      const priorityA = priorityOrder[a[0].Priority || "Low"];
-      const priorityB = priorityOrder[b[0].Priority || "Low"];
+      const priorityA = priorityOrder[a[0].Priority || "Lowest"];
+      const priorityB = priorityOrder[b[0].Priority || "Lowest"];
       return priorityA - priorityB;
     })
     .forEach(
@@ -300,7 +300,7 @@ export function getCardAttribute<K extends keyof BoardCard>(
             const action = aura.Action;
             if (
               action.$type !== "TAuraActionCardModifyAttribute" ||
-              action.AttributeType !== (attribute as string)
+              action.AttributeType !== attribute
             ) {
               return;
             }
