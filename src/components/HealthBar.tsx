@@ -85,7 +85,7 @@ export function HealthBar({ gameState, playerId }: HealthBarProps) {
 
           {Shield > 0 && <span className="text-yellow-300">{Shield}</span>}
 
-          {Poison > 0 && <span className="text-emerald-400">{Poison}</span>}
+          {Poison > 0 && <span className="text-purple-500">{Poison}</span>}
 
           {Burn > 0 && <span className="text-amber-400">{Burn}</span>}
         </div>
