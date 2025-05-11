@@ -38,18 +38,20 @@ export function BoardSkillElement({
             tier={boardSkill.tier}
           />
           {/* Remove button */}
-          <button
-            type="button"
-            className="tooltip absolute top-0.5 left-0.5 z-50 hover:cursor-pointer"
-            onClick={() => {
-              const skillIndex = gameState.players[playerID].board.findIndex(
-                (x) => x.card.Id === boardSkill.card.Id,
-              );
-              simulatorStoreActions.removePlayerSkill(skillIndex);
-            }}
-          >
-            ❌
-          </button>
+          {playerID == 1 && (
+            <button
+              type="button"
+              className="tooltip absolute top-0.5 left-0.5 z-50 hover:cursor-pointer"
+              onClick={() => {
+                const skillIndex = gameState.players[playerID].board.findIndex(
+                  (x) => x.card.Id === boardSkill.card.Id,
+                );
+                simulatorStoreActions.removePlayerSkill(skillIndex);
+              }}
+            >
+              ❌
+            </button>
+          )}
         </div>
       </TooltipTrigger>
       <TooltipContent>
