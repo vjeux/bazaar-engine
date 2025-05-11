@@ -116,6 +116,7 @@ export const useSimulatorStore = create<State & Actions>()(
           set((state) => {
             state.monsterConfig = monsterConfig;
             state.steps = runWrapper(monsterConfig, state.playerConfig);
+            state.stepCount = 0;
           }),
         addPlayerCard: (card: PlayerCardConfig) =>
           set((state) => {
