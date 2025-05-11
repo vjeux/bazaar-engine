@@ -1,4 +1,3 @@
-import pako from "pako";
 import type { Cards } from "../types/cardTypes.ts";
 import type {
   EncounterDays,
@@ -11,10 +10,13 @@ import { useQuery } from "@tanstack/react-query";
 import ValidSkillNames from "../../public/json/ValidSkillNames.json";
 import ValidItemNames from "../../public/json/ValidItemNames.json";
 
-// Storage keys
-const VERSION_KEY = "storedVersion";
-const CARDS_KEY = "Cards";
-const ENCOUNTERS_KEY = "Encounters";
+// Database configuration
+const DB_NAME = "bazaar-engine";
+const DB_VERSION = 1;
+const CARDS_STORE = "cards";
+const ENCOUNTERS_STORE = "encounters";
+const VERSION_STORE = "version";
+const VERSION_KEY = "currentVersion";
 
 // Filter cards for valid names
 function filterValidCards(cards: Cards): Cards {
@@ -38,48 +40,123 @@ async function fetchJSON<T>(url: string): Promise<T> {
   return response.json() as Promise<T>;
 }
 
-function getFromLocalStorage<T>(key: string): T | null {
-  if (typeof localStorage === "undefined") return null;
+// Initialize the database
+function initDB(): Promise<IDBDatabase> {
+  return new Promise((resolve, reject) => {
+    if (!window.indexedDB) {
+      reject(new Error("Your browser doesn't support IndexedDB"));
+      return;
+    }
 
-  const storage = localStorage.getItem(key);
-  if (!storage) return null;
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
 
+    request.onerror = () => {
+      reject(new Error("Failed to open database"));
+    };
+
+    request.onsuccess = () => {
+      resolve(request.result);
+    };
+
+    request.onupgradeneeded = () => {
+      const db = request.result;
+
+      // Create object stores if they don't exist
+      if (!db.objectStoreNames.contains(CARDS_STORE)) {
+        db.createObjectStore(CARDS_STORE);
+      }
+
+      if (!db.objectStoreNames.contains(ENCOUNTERS_STORE)) {
+        db.createObjectStore(ENCOUNTERS_STORE);
+      }
+
+      if (!db.objectStoreNames.contains(VERSION_STORE)) {
+        db.createObjectStore(VERSION_STORE);
+      }
+    };
+  });
+}
+
+// Get data from IndexedDB
+async function getFromIndexedDB<T>(
+  storeName: string,
+  key: string,
+): Promise<T | null> {
   try {
-    const compressed = new Uint8Array(JSON.parse(storage));
-    return JSON.parse(pako.inflate(compressed, { to: "string" })) as T;
+    const db = await initDB();
+    return new Promise((resolve) => {
+      const transaction = db.transaction(storeName, "readonly");
+      const store = transaction.objectStore(storeName);
+      const request = store.get(key);
+
+      request.onsuccess = () => {
+        resolve(request.result || null);
+      };
+
+      request.onerror = () => {
+        console.error(`Error reading from IndexedDB store ${storeName}`);
+        resolve(null);
+      };
+
+      transaction.oncomplete = () => {
+        db.close();
+      };
+    });
   } catch (e) {
-    console.error(`Error parsing data from localStorage for key ${key}:`, e);
+    console.error(`Error accessing IndexedDB for store ${storeName}:`, e);
     return null;
   }
 }
 
-function saveToLocalStorage<T>(key: string, data: T): void {
-  if (typeof localStorage === "undefined") return;
-
+// Save data to IndexedDB
+async function saveToIndexedDB<T>(
+  storeName: string,
+  key: string,
+  data: T,
+): Promise<void> {
   try {
-    const compressed = JSON.stringify([...pako.deflate(JSON.stringify(data))]);
-    localStorage.setItem(key, compressed);
+    const db = await initDB();
+    return new Promise((resolve, reject) => {
+      const transaction = db.transaction(storeName, "readwrite");
+      const store = transaction.objectStore(storeName);
+      const request = store.put(data, key);
+
+      request.onsuccess = () => {
+        resolve();
+      };
+
+      request.onerror = () => {
+        console.warn(
+          `Failed to save to IndexedDB store ${storeName}:`,
+          request.error,
+        );
+        reject(request.error);
+      };
+
+      transaction.oncomplete = () => {
+        db.close();
+      };
+    });
   } catch (e) {
-    // Ignore quota errors
-    console.warn("Failed to save to localStorage:", e);
+    console.warn("Failed to save to IndexedDB:", e);
   }
 }
 
-function getStoredVersion(): string | null {
-  if (typeof localStorage === "undefined") return null;
-  return localStorage.getItem(VERSION_KEY);
+// Get stored version from IndexedDB
+async function getStoredVersion(): Promise<string | null> {
+  return getFromIndexedDB<string>(VERSION_STORE, VERSION_KEY);
 }
 
-function saveVersion(version: string): void {
-  if (typeof localStorage === "undefined") return;
-  localStorage.setItem(VERSION_KEY, version);
+// Save version to IndexedDB
+async function saveVersion(version: string): Promise<void> {
+  return saveToIndexedDB(VERSION_STORE, VERSION_KEY, version);
 }
 
 export async function genCardsAndEncounters(): Promise<{
   Cards: Cards;
   Encounters: EncounterDays;
 }> {
-  const storedVersion = getStoredVersion();
+  const storedVersion = await getStoredVersion();
   const isVersionMatch = storedVersion === CARDS_VERSION;
 
   let cards: Cards | null = null;
@@ -87,29 +164,32 @@ export async function genCardsAndEncounters(): Promise<{
 
   // Only use cached data if the version matches
   if (isVersionMatch) {
-    cards = getFromLocalStorage<Cards>(CARDS_KEY);
-    encounters = getFromLocalStorage<EncounterDays>(ENCOUNTERS_KEY);
+    cards = await getFromIndexedDB<Cards>(CARDS_STORE, CARDS_VERSION);
+    encounters = await getFromIndexedDB<EncounterDays>(
+      ENCOUNTERS_STORE,
+      CARDS_VERSION,
+    );
   }
 
   if (!cards) {
     cards = await fetchJSON<Cards>(
       process.env.NEXT_PUBLIC_HOST_URL + "/json/cards.json",
     );
-    // Filter cards before storing in localStorage
+    // Filter cards before storing in IndexedDB
     cards = filterValidCards(cards);
-    saveToLocalStorage(CARDS_KEY, cards);
+    await saveToIndexedDB(CARDS_STORE, CARDS_VERSION, cards);
   }
 
   if (!encounters) {
     encounters = await fetchJSON<EncounterDays>(
       process.env.NEXT_PUBLIC_HOST_URL + "/json/monsterEncounterDays.json",
     );
-    saveToLocalStorage(ENCOUNTERS_KEY, encounters);
+    await saveToIndexedDB(ENCOUNTERS_STORE, CARDS_VERSION, encounters);
   }
 
   // Update the version if we fetched new data or the version was different
   if (!isVersionMatch) {
-    saveVersion(CARDS_VERSION);
+    await saveVersion(CARDS_VERSION);
   }
 
   return { Cards: cards, Encounters: encounters };
