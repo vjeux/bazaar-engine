@@ -11,7 +11,11 @@ import {
   useSensor,
   useSensors,
 } from "@dnd-kit/core";
-import { rectSortingStrategy, SortableContext } from "@dnd-kit/sortable";
+import {
+  horizontalListSortingStrategy,
+  rectSortingStrategy,
+  SortableContext,
+} from "@dnd-kit/sortable";
 import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 
 interface CardDeckProps {
@@ -39,7 +43,7 @@ export default function CardDeck({ gameState, playerId }: CardDeckProps) {
       <div className="flex w-full items-center justify-center gap-2">
         <SortableContext
           items={playerBoardCards.map((x) => x.uuid)}
-          strategy={rectSortingStrategy}
+          strategy={horizontalListSortingStrategy}
         >
           {playerBoardCards.map((card, index) => (
             <BoardCardElement
