@@ -1,4 +1,4 @@
-import { memo, useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { Card, Cards, CardType } from "../types/cardTypes.ts";
 import Fuse from "fuse.js";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip.tsx";
@@ -7,6 +7,7 @@ import FramedCardOrSkill from "./FramedCardOrSkill.tsx";
 import { useSimulatorStore } from "@/lib/simulatorStore.ts";
 import { PlayerCardConfig, PlayerSkillConfig } from "@/engine/GameState.ts";
 import { CARDS_VERSION } from "@/lib/constants.ts";
+import { GroupedVirtuoso } from "react-virtuoso";
 
 const CARD_HEIGHT = 70;
 const SKILL_SIZE = 70;
@@ -17,21 +18,27 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
   const addPlayerCard = simulatorStoreActions.addPlayerCard;
   const addPlayerSkill = simulatorStoreActions.addPlayerSkill;
 
-  const handleCardSelect = (card: Card) => {
-    const cardConfig: PlayerCardConfig = {
-      cardId: card.Id,
-      tier: card.StartingTier,
-    };
-    addPlayerCard(cardConfig);
-  };
+  const handleCardSelect = useCallback(
+    (card: Card) => {
+      const cardConfig: PlayerCardConfig = {
+        cardId: card.Id,
+        tier: card.StartingTier,
+      };
+      addPlayerCard(cardConfig);
+    },
+    [addPlayerCard],
+  );
 
-  const handleSkillSelect = (card: Card) => {
-    const skillConfig: PlayerSkillConfig = {
-      cardId: card.Id,
-      tier: card.StartingTier,
-    };
-    addPlayerSkill(skillConfig);
-  };
+  const handleSkillSelect = useCallback(
+    (card: Card) => {
+      const skillConfig: PlayerSkillConfig = {
+        cardId: card.Id,
+        tier: card.StartingTier,
+      };
+      addPlayerSkill(skillConfig);
+    },
+    [addPlayerSkill],
+  );
 
   const [search, setSearch] = useState("");
 
@@ -52,15 +59,80 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
   }, [search, Cards, fuse]);
 
   // Filter results by type
-  const filteredCards = searchResults.filter(
-    (item: Card) => item.$type === CardType.TCardItem,
+  const filteredCards = useMemo(
+    () =>
+      searchResults.filter((item: Card) => item.$type === CardType.TCardItem),
+    [searchResults],
   );
-  const filteredSkills = searchResults.filter(
-    (item) => item.$type === CardType.TCardSkill,
+
+  const filteredSkills = useMemo(
+    () => searchResults.filter((item) => item.$type === CardType.TCardSkill),
+    [searchResults],
+  );
+
+  // Create group counts for GroupedVirtuoso
+  const groupCounts = useMemo(() => {
+    const counts = [];
+
+    // Add cards count if we have cards
+    if (filteredCards.length > 0) {
+      counts.push(filteredCards.length);
+    }
+
+    // Add skills count if we have skills
+    if (filteredSkills.length > 0) {
+      counts.push(filteredSkills.length);
+    }
+
+    return counts;
+  }, [filteredCards.length, filteredSkills.length]);
+
+  // Group content renderer (headers)
+  const groupContent = useCallback(
+    (groupIndex: number) => {
+      // First group is cards (if any), second group is skills
+      const isCardGroup = groupIndex === 0 && filteredCards.length > 0;
+      const title = isCardGroup ? "Cards" : "Skills";
+
+      return (
+        <div className="bg-background flex flex-col items-center">
+          <h4 className="text-xs font-medium text-gray-500 uppercase">
+            {title}
+          </h4>
+          <hr className="w-full" />
+        </div>
+      );
+    },
+    [filteredCards.length],
+  );
+
+  // Item content renderer
+  const itemContent = useCallback(
+    (absoluteIndex: number, groupIndex: number) => {
+      // First group is cards (if we have cards), second group is skills
+      const isCardGroup = groupIndex === 0 && filteredCards.length > 0;
+
+      // Get the item from the correct array based on group
+      const item = isCardGroup
+        ? filteredCards[absoluteIndex]
+        : filteredSkills[
+            absoluteIndex -
+              (filteredCards.length > 0 ? filteredCards.length : 0)
+          ];
+
+      return (
+        <SearchResultItem
+          item={item}
+          onSelectSkill={handleSkillSelect}
+          onSelectCard={handleCardSelect}
+        />
+      );
+    },
+    [filteredCards, filteredSkills, handleCardSelect, handleSkillSelect],
   );
 
   return (
-    <div className="bg-background border-border min-w-96 overflow-x-visible overflow-y-scroll rounded border p-3">
+    <div className="bg-background border-border flex min-w-96 flex-col overflow-x-visible rounded border p-3">
       <h2 className="text-card-foreground mb-2 text-lg font-semibold">
         Cards & Skills
       </h2>
@@ -71,41 +143,17 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-
-      <div className="flex flex-col gap-1 pr-1">
-        {filteredCards.length > 0 ? (
-          <>
-            <h4>Cards</h4>
-            <hr />
-            {filteredCards.map((item) => {
-              return (
-                <SearchResultItem
-                  key={item.Id}
-                  item={item}
-                  onSelectSkill={handleSkillSelect}
-                  onSelectCard={handleCardSelect}
-                />
-              );
-            })}
-          </>
-        ) : null}
-        {filteredSkills.length > 0 ? (
-          <>
-            <h4>Skills</h4>
-            <hr />
-            {filteredSkills.map((item) => {
-              return (
-                <SearchResultItem
-                  key={item.Id}
-                  item={item}
-                  onSelectSkill={handleSkillSelect}
-                  onSelectCard={handleCardSelect}
-                />
-              );
-            })}
-          </>
-        ) : null}
-      </div>
+      {groupCounts.length > 0 ? (
+        <GroupedVirtuoso
+          groupCounts={groupCounts}
+          groupContent={groupContent}
+          itemContent={itemContent}
+        />
+      ) : (
+        <div className="text-center text-sm text-gray-500">
+          No results found
+        </div>
+      )}
     </div>
   );
 }
@@ -123,8 +171,9 @@ function SearchResultItem_({
   return (
     <Tooltip placement="left">
       <TooltipTrigger>
-        <div
-          className="hover:bg-accent text-secondary-foreground relative flex cursor-pointer items-center gap-2 rounded p-1 text-sm"
+        <TriggerContent
+          item={item}
+          key={item.Id}
           onClick={() => {
             if (item.$type == CardType.TCardSkill) {
               onSelectSkill(item);
@@ -132,9 +181,7 @@ function SearchResultItem_({
               onSelectCard(item);
             }
           }}
-        >
-          <TriggerContent item={item} key={item.Id} />
-        </div>
+        />
       </TooltipTrigger>
       <TooltipContent>
         <TooltipWithoutGameState card={item} />
@@ -144,11 +191,15 @@ function SearchResultItem_({
 }
 
 const TriggerContent = memo(TriggerContent_);
-function TriggerContent_({ item }: { item: Card }) {
+function TriggerContent_({
+  item,
+  ...props
+}: { item: Card } & React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       key={item.Id}
-      className="hover:bg-accent text-secondary-foreground flex grow items-center justify-between gap-2 rounded p-1 text-sm"
+      className="hover:bg-accent text-secondary-foreground flex grow items-center justify-between gap-2 rounded p-1 pr-4 text-sm hover:cursor-pointer"
+      {...props}
     >
       <span>{item.Localization.Title.Text}</span>
 

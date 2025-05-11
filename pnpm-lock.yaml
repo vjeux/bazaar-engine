@@ -128,6 +128,9 @@ importers:
       react-tooltip:
         specifier: ^5.28.1
         version: 5.28.1(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      react-virtuoso:
+        specifier: ^4.12.7
+        version: 4.12.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       tailwind-merge:
         specifier: ^3.2.0
         version: 3.2.0
@@ -3084,6 +3087,12 @@ packages:
     peerDependencies:
       react: '>=16.14.0'
       react-dom: '>=16.14.0'
+
+  react-virtuoso@4.12.7:
+    resolution: {integrity: sha512-njJp764he6Fi1p89PUW0k2kbyWu9w/y+MwdxmwK2kvdwwzVDbz2c2wMj5xdSruBFVgFTsI7Z85hxZR7aSHBrbQ==}
+    peerDependencies:
+      react: '>=16 || >=17 || >= 18 || >= 19'
+      react-dom: '>=16 || >=17 || >= 18 || >=19'
 
   react@19.1.0:
     resolution: {integrity: sha512-FS+XFBNvn3GTAWq26joslQgWNoFu08F4kl0J4CgdNKADkdSGXQyTCnKteIAJy96Br6YbpEU1LSzV5dYtjMkMDg==}
@@ -6373,6 +6382,11 @@ snapshots:
     dependencies:
       '@floating-ui/dom': 1.6.13
       classnames: 2.5.1
+      react: 19.1.0
+      react-dom: 19.1.0(react@19.1.0)
+
+  react-virtuoso@4.12.7(react-dom@19.1.0(react@19.1.0))(react@19.1.0):
+    dependencies:
       react: 19.1.0
       react-dom: 19.1.0(react@19.1.0)
 
