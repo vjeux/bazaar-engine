@@ -151,10 +151,10 @@ const BattleSpeedSelector = memo(function BattleSpeedSelector() {
   return (
     <Select onValueChange={(val) => handleBattleSpeedChange(parseInt(val))}>
       <SelectTrigger>
-        <SelectValue placeholder="Battle Speed" />
+        <SelectValue placeholder="1x" />
       </SelectTrigger>
       <SelectContent>
-        <SelectItem value="1">1×</SelectItem>
+        <SelectItem value="1">1x</SelectItem>
         <SelectItem value="2">2×</SelectItem>
         <SelectItem value="3">3×</SelectItem>
         <SelectItem value="5">5×</SelectItem>
@@ -166,6 +166,7 @@ const BattleSpeedSelector = memo(function BattleSpeedSelector() {
 
 const EncounterSelector = memo(function EncounterSelector() {
   const simulatorStoreActions = useSimulatorStore((state) => state.actions);
+  const selectedEncounter = useSimulatorStore((state) => state.monsterConfig);
   return (
     <ComboBox
       items={encounters.map((encounter) => ({
@@ -176,7 +177,11 @@ const EncounterSelector = memo(function EncounterSelector() {
             : `Event ${encounter.name}`,
       }))}
       searchPlaceholder="Search encounters..."
-      selectPlaceholder="Select encounter..."
+      selectPlaceholder={
+        selectedEncounter?.name
+          ? `Day ${encounters.find((e) => e.name === selectedEncounter.name && e.day === selectedEncounter.day)?.day ?? ""} - ${selectedEncounter.name}`
+          : "Select encounter..."
+      }
       onChange={(value) => {
         const encounter = encounters.find(
           (encounter) => encounter.card.cardId === value.split(":")[1],
@@ -185,6 +190,7 @@ const EncounterSelector = memo(function EncounterSelector() {
           simulatorStoreActions.setMonsterConfig({
             type: "monster",
             name: encounter.name,
+            day: Number(encounter.day),
           });
         }
       }}

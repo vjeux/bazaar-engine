@@ -54,6 +54,7 @@ describe("Single card battle simulations (Items and Skills)", () => {
         const monsterEntityConfig: MonsterConfig = {
           type: "monster" as const,
           name: firstEncounter.name,
+          day: Number(firstEncounter.day),
         };
 
         const gameState = getInitialGameState(Cards, Encounters, [
@@ -81,6 +82,7 @@ describe("Single card battle simulations (Items and Skills)", () => {
         const monsterEntityConfig: MonsterConfig = {
           type: "monster" as const,
           name: firstEncounter.name,
+          day: Number(firstEncounter.day),
         };
 
         const gameState = getInitialGameState(Cards, Encounters, [

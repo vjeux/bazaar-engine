@@ -52,6 +52,7 @@ const initialPlayer: PlayerConfig = {
 const initialMonster: MonsterConfig = {
   type: "monster",
   name: "Pyro",
+  day: 1,
 };
 
 const runWrapper = (monsterConfig: MonsterConfig, playerConfig: PlayerConfig) =>

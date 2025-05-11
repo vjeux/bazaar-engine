@@ -259,6 +259,7 @@ function sfc32(a: number, b: number, c: number, d: number) {
 export const MonsterConfigSchema = z.object({
   type: z.literal("monster"),
   name: z.string(),
+  day: z.number(),
 });
 
 // Infer the TypeScript type from the Zod schema
