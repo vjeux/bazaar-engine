@@ -55,15 +55,22 @@ const initialMonster: MonsterConfig = {
   day: 1,
 };
 
-const runWrapper = (monsterConfig: MonsterConfig, playerConfig: PlayerConfig) =>
-  run(
+const runWrapper = (
+  monsterConfig: MonsterConfig,
+  playerConfig: PlayerConfig,
+) => {
+  const t0 = performance.now();
+  const steps = run(
     getInitialGameState(CardsData, EncounterData, [
       monsterConfig,
       playerConfig,
     ]),
     100000,
   );
-
+  const t1 = performance.now();
+  console.log(`Running simulation took ${t1 - t0} milliseconds`);
+  return steps;
+};
 const initialSteps = runWrapper(initialMonster, initialPlayer);
 
 const initialState: State = {
