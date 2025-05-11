@@ -336,6 +336,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 1 - Banann
     "players.0.Health": -9,
     "players.1.Health": 1921,
     "step": 319,
+    "winner": "Player",
   },
 ]
 `;
@@ -481,6 +482,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 1 - Fanged
     "players.0.Health": -8,
     "players.1.Health": 1872,
     "step": 316,
+    "winner": "Player",
   },
 ]
 `;
@@ -629,6 +631,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 1 - Haunte
     "players.0.Health": -10,
     "players.1.Health": 1940,
     "step": 318,
+    "winner": "Player",
   },
 ]
 `;
@@ -890,6 +893,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 1 - Kyver 
     "players.0.Health": -10,
     "players.1.Health": 1760,
     "step": 318,
+    "winner": "Player",
   },
 ]
 `;
@@ -1174,6 +1178,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 1 - Pyro" 
     "players.0.Health": -8,
     "players.1.Health": 1935.5,
     "step": 316,
+    "winner": "Player",
   },
 ]
 `;
@@ -1435,6 +1440,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 1 - Viper"
     "players.0.Health": 0,
     "players.1.Health": 1731.5,
     "step": 313,
+    "winner": "Player",
   },
 ]
 `;
@@ -1803,6 +1809,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Boarri
     "players.0.Health": 0,
     "players.1.Health": 265,
     "step": 333,
+    "winner": "Player",
   },
 ]
 `;
@@ -2015,6 +2022,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Coconu
     "players.0.board.3.Custom_0": 9,
     "players.1.Health": 1568,
     "step": 328,
+    "winner": "Player",
   },
 ]
 `;
@@ -2369,6 +2377,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Coveto
     "players.0.Health": -20,
     "players.1.Health": 1442,
     "step": 328,
+    "winner": "Player",
   },
 ]
 `;
@@ -3052,6 +3061,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Giant 
     "players.1.Health": 1766,
     "players.1.board.1.Slow": 600,
     "step": 324,
+    "winner": "Player",
   },
 ]
 `;
@@ -3427,6 +3437,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Rogue 
     "players.0.board.6.Custom_0": 15,
     "players.1.Health": 1295,
     "step": 330,
+    "winner": "Player",
   },
 ]
 `;
@@ -3728,6 +3739,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 3 - Dabbli
     "players.0.board.5.Custom_0": 14,
     "players.1.Health": 1526,
     "step": 325,
+    "winner": "Player",
   },
 ]
 `;
@@ -4092,6 +4104,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 3 - Eccent
     "players.0.Health": -14,
     "players.1.Health": 101,
     "step": 339,
+    "winner": "Player",
   },
 ]
 `;
@@ -4739,6 +4752,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 3 - Frost 
     "players.0.Health": -40,
     "players.1.Health": 1036,
     "step": 330,
+    "winner": "Player",
   },
 ]
 `;
@@ -5664,6 +5678,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 3 - Hoover
     "players.0.Health": -24,
     "players.1.Health": 336,
     "step": 334,
+    "winner": "Player",
   },
 ]
 `;
@@ -6039,6 +6054,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 3 - Rogue 
     "players.0.board.6.Custom_0": 15,
     "players.1.Health": 1295,
     "step": 330,
+    "winner": "Player",
   },
 ]
 `;
@@ -6310,6 +6326,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 3 - Street
     "players.0.Health": -23,
     "players.1.Health": 1019,
     "step": 331,
+    "winner": "Player",
   },
 ]
 `;
@@ -6694,6 +6711,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 3 - Tempes
     "players.0.Health": -15,
     "players.1.Health": 1536,
     "step": 325,
+    "winner": "Player",
   },
 ]
 `;
@@ -6984,6 +7002,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 4 - Bloodr
     "players.0.board.5.Custom_0": 19,
     "players.1.Health": 1166,
     "step": 334,
+    "winner": "Player",
   },
 ]
 `;
@@ -7936,6 +7955,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 4 - Boiler
     "players.1.Health": 1302,
     "players.1.board.1.Slow": 1000,
     "step": 336,
+    "winner": "Player",
   },
 ]
 `;
@@ -8259,6 +8279,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 4 - Flame 
     "players.1.Burn": 37,
     "players.1.Health": -36,
     "step": 261,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -8595,6 +8616,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 4 - Hellbi
     "players.0.Health": -19,
     "players.1.Health": 316,
     "step": 339,
+    "winner": "Player",
   },
 ]
 `;
@@ -8811,6 +8833,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 4 - Outlan
     "players.0.Health": -9,
     "players.1.Health": 711,
     "step": 329,
+    "winner": "Player",
   },
 ]
 `;
@@ -9731,6 +9754,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 4 - Prince
     "players.0.Health": -49,
     "players.1.Health": 89,
     "step": 339,
+    "winner": "Player",
   },
 ]
 `;
@@ -10051,6 +10075,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 4 - Retire
     "players.0.Health": -42,
     "players.1.Health": 287,
     "step": 337,
+    "winner": "Player",
   },
 ]
 `;
@@ -10374,6 +10399,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 5 - Flame 
     "players.1.Burn": 37,
     "players.1.Health": -36,
     "step": 261,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -10775,6 +10801,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 5 - Gorgon
     "players.0.Health": 1117,
     "players.1.Health": -9,
     "step": 322,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -11830,6 +11857,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 5 - Harkuv
     "players.0.Health": -20,
     "players.1.Health": 554,
     "step": 343,
+    "winner": "Player",
   },
 ]
 `;
@@ -12376,6 +12404,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 5 - Infern
     "players.1.Burn": 33,
     "players.1.Health": -54,
     "step": 341,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -12680,6 +12709,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 5 - Kyver 
     "players.0.Health": -5,
     "players.1.Health": 610,
     "step": 338,
+    "winner": "Player",
   },
 ]
 `;
@@ -13615,6 +13645,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 5 - Mod Sq
     "players.1.Burn": 75,
     "players.1.Health": -47,
     "step": 216,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -13873,6 +13904,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 5 - Preeni
     "players.0.Health": 102,
     "players.1.Health": -25,
     "step": 331,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -14154,6 +14186,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 5 - Sabret
     "players.0.Health": -39,
     "players.1.Health": 806,
     "step": 334,
+    "winner": "Player",
   },
 ]
 `;
@@ -14443,6 +14476,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 5 - Scovyl
     "players.1.Burn": 151,
     "players.1.Health": -17,
     "step": 236,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -14792,6 +14826,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 5 - Trasht
     "players.1.board.0.Slow": 2100,
     "players.1.board.1.Slow": 2100,
     "step": 347,
+    "winner": "Player",
   },
 ]
 `;
@@ -15071,6 +15106,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 6 - Dire I
     "players.0.Health": 480,
     "players.1.Health": -10,
     "step": 328,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -16462,6 +16498,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 6 - Dire M
     "players.1.board.0.Slow": 100,
     "players.1.board.1.Slow": 1100,
     "step": 339,
+    "winner": "Player",
   },
 ]
 `;
@@ -16763,6 +16800,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 6 - Enclav
     "players.1.Health": -72,
     "players.1.Shield": 3.5,
     "step": 301,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -17221,6 +17259,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 6 - Forema
     "players.0.board.3.DamageAmount": 219,
     "players.1.Health": -109,
     "step": 172,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -17441,6 +17480,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 6 - Infern
     "players.1.Health": -96.5,
     "players.1.Shield": 0,
     "step": 161,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -17964,6 +18004,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 6 - Lich" 
     "players.1.Health": -63,
     "players.1.Shield": 12.5,
     "step": 191,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -18615,6 +18656,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 6 - Trash 
     "players.0.Health": 645,
     "players.1.Health": -25.5,
     "step": 330,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -19075,6 +19117,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 6 - Zookee
     "players.0.Health": -34,
     "players.1.Health": -1,
     "step": 341,
+    "winner": "Draw",
   },
 ]
 `;
@@ -20443,6 +20486,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 7 - Chilly
     "players.1.board.0.Freeze": 600,
     "players.1.board.2.Freeze": 600,
     "step": 354,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -20760,6 +20804,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 7 - Cosmic
     "players.0.Health": 801,
     "players.1.Health": -14,
     "step": 344,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -21384,6 +21429,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 7 - Ghost 
     "players.1.Burn": 166,
     "players.1.Health": -38,
     "step": 166,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -21832,6 +21878,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 7 - Joyful
     "players.0.Health": 513,
     "players.1.Health": -18.099999999999852,
     "step": 346,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -22464,6 +22511,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 7 - Radian
     "players.1.board.0.Slow": 3400,
     "players.1.board.1.Slow": 400,
     "step": 146,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -23641,6 +23689,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 7 - Sergea
     "players.0.board.4.Haste": 2300,
     "players.1.Health": -8,
     "step": 337,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -24000,6 +24049,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 7 - Shock 
     "players.1.Health": -1204,
     "players.1.Shield": 10,
     "step": 170,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -24566,6 +24616,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 7 - Thug" 
     "players.1.Health": -63.49999999999969,
     "players.1.Shield": 10,
     "step": 220,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -25668,6 +25719,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 7 - Treasu
     "players.0.board.5.ShieldApplyAmount": 120,
     "players.1.Health": -69,
     "step": 351,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -26106,6 +26158,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 7 - Viper 
     "players.0.Health": 520,
     "players.1.Health": -3,
     "step": 339,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -27001,6 +27054,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 8 - Burnin
     "players.1.Health": -69,
     "players.1.board.1.Slow": 400,
     "step": 196,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -28676,6 +28730,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 8 - Car Co
     "players.1.Health": -80.5,
     "players.1.board.1.Slow": 0,
     "step": 282,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -28993,6 +29048,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 8 - Cosmic
     "players.0.Health": 801,
     "players.1.Health": -14,
     "step": 344,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -30271,6 +30327,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 8 - Dr. Vo
     "players.1.board.0.Freeze": 700,
     "players.1.board.0.Slow": 1700,
     "step": 300,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -30435,6 +30492,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 8 - Dragon
     "players.1.Health": -105,
     "players.1.Shield": 0,
     "step": 161,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -30751,6 +30809,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 8 - Infern
     "players.1.Burn": 75,
     "players.1.Health": -32,
     "step": 196,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -31199,6 +31258,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 8 - Joyful
     "players.0.Health": 513,
     "players.1.Health": -18.099999999999852,
     "step": 346,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -31731,6 +31791,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 8 - Oasis 
     "players.1.Health": -720,
     "players.1.Shield": 0,
     "step": 291,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -32835,6 +32896,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 8 - Wander
     "players.1.Health": -141,
     "players.1.board.0.Slow": 900,
     "step": 231,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -34474,6 +34536,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 9 - Bloodr
     "players.1.Burn": 31,
     "players.1.Health": -38,
     "step": 321,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -35047,6 +35110,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 9 - Death 
     "players.1.board.1.Freeze": 3000,
     "players.1.board.2.Freeze": 1000,
     "step": 270,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -35357,6 +35421,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 9 - Elite 
     "players.0.board.2.Ammo": 5,
     "players.1.Health": -86,
     "step": 270,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -36133,6 +36198,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 9 - Enclav
     "players.1.Burn": 13,
     "players.1.Health": -343,
     "step": 201,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -36364,6 +36430,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 9 - Ferros
     "players.1.Health": -1635,
     "players.1.Shield": 0,
     "step": 208,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -36896,6 +36963,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 9 - Oasis 
     "players.1.Health": -720,
     "players.1.Shield": 0,
     "step": 291,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -38495,6 +38563,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 9 - Roamin
     "players.0.board.4.Haste": 1800,
     "players.1.Health": -31,
     "step": 332,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -38796,6 +38865,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 10 - Awake
     "players.1.Health": -4538,
     "players.1.Shield": 0,
     "step": 114,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -39403,6 +39473,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 10 - Boss 
     "players.1.board.0.Slow": 1000,
     "players.1.board.1.Slow": 2000,
     "step": 180,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -40236,6 +40307,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 10 - Frost
     "players.1.Health": -1074,
     "players.1.board.1.Freeze": 2000,
     "step": 211,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -40732,6 +40804,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 10 - Hulki
     "players.1.Burn": 91,
     "players.1.Health": -7,
     "step": 141,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -40794,6 +40867,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 10 - Lord 
     "players.0.board.8.Custom_0": 9,
     "players.1.Health": -615,
     "step": 123,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -40997,6 +41071,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 10 - Lord 
     "players.0.board.0.CritChance": 112,
     "players.1.Health": -10,
     "step": 310,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -41519,6 +41594,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 10 - Maste
     "players.1.Health": 0,
     "players.1.Shield": 7.5,
     "step": 241,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -41648,6 +41724,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 10 - Trash
     "isPlaying": false,
     "players.1.Health": -41,
     "step": 201,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -41928,6 +42005,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 10 - Veter
     "multicast.2": undefined,
     "players.1.Health": -20,
     "step": 141,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -42548,6 +42626,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 10 - Void 
     "players.1.Burn": 140,
     "players.1.Health": -13,
     "step": 196,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -43005,6 +43084,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 10 - Void 
     "players.0.Health": 4610,
     "players.1.Health": -15,
     "step": 318,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -44068,6 +44148,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 10 - Volka
     "players.1.board.1.Freeze": 1000,
     "players.1.board.2.Freeze": 0,
     "step": 243,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -44968,6 +45049,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day event - Bo
     "players.0.Health": 967,
     "players.1.Health": -8,
     "step": 332,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -45559,6 +45641,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day event - Mi
     "players.1.board.1.Slow": 1000,
     "players.1.board.2.Freeze": 1000,
     "step": 180,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -45866,6 +45949,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day event - Mr
     "players.1.Burn": 51,
     "players.1.Health": -14,
     "step": 251,
+    "winner": "Enemy",
   },
 ]
 `;
