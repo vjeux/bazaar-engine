@@ -1,4 +1,8 @@
 import {
+  defaultSandstormInitialTick,
+  sandstormTickRate,
+} from "@/lib/constants.ts";
+import {
   type Ability,
   type AbilityAction,
   type ActionType,
@@ -27,6 +31,7 @@ export interface GameState {
   multicast: Multicast[];
   getRand: () => number;
   winner?: "Player" | "Enemy" | "Draw";
+  sandstormStartTick: number;
 }
 
 export interface Multicast {
@@ -452,12 +457,9 @@ function hasCooldown(boardCard: BoardCard): boolean {
  * Increase by 2 every tick after the first 10 ticks
  * End Game at around 100 seconds (this is hard to get exact from a video)
  */
-const sandstormInitialTick = 30000;
-const sandstormTickRate = 100;
-
 const sandstormDamagePerTick: Record<number, number> = {};
 let sandstormDamage = 1;
-let sandstormTick = sandstormInitialTick;
+let sandstormTick = defaultSandstormInitialTick;
 let damageTicks = 0;
 while (damageTicks < 1000) {
   sandstormDamagePerTick[sandstormTick] = sandstormDamage;
@@ -1859,6 +1861,10 @@ function runAction(
       });
       break;
     }
+    case "TActionCardBeginSandstorm": {
+      gameState.sandstormStartTick = gameState.tick;
+      break;
+    }
     default:
       throw new Error("Unhandled action type: " + action.$type);
   }
@@ -2603,7 +2609,12 @@ function runGameTick(initialGameState: GameState): GameState {
   });
 
   // Sandstorm
-  const sandstormDamage = sandstormDamagePerTick[gameState.tick];
+  const sandstormDamage =
+    sandstormDamagePerTick[
+      defaultSandstormInitialTick -
+        gameState.sandstormStartTick +
+        gameState.tick
+    ];
   if (sandstormDamage > 0) {
     gameState.players.forEach((player, playerID) => {
       const shield = player.Shield;

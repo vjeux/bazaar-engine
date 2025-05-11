@@ -15,7 +15,7 @@ import type {
 } from "../types/encounterTypes.ts";
 import { z } from "zod";
 import { v7 as uuidv7 } from "uuid";
-import { CARDS_VERSION } from "@/lib/constants.ts";
+import { CARDS_VERSION, defaultSandstormInitialTick } from "@/lib/constants.ts";
 
 function _createBoardCardFromCard(
   card: Card,
@@ -296,6 +296,7 @@ export function getInitialGameState(
   return {
     tick: 0,
     isPlaying: true,
+    sandstormStartTick: defaultSandstormInitialTick,
     players: config.map((player) => {
       if (player.type === "monster") {
         if (!player.name) throw new Error("Monster name is required");
