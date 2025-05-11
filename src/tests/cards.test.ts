@@ -5,8 +5,8 @@ import {
 import { run } from "../engine/Engine";
 import { genCardsAndEncounters } from "../lib/Data";
 import { CARDS_VERSION } from "../lib/constants";
-import validItemNames from "../../public/json/ValidItemNames.json";
-import validSkillNames from "../../public/json/ValidSkillNames.json"; // Re-added for skill tests
+import validItemIds from "../../public/json/ValidItemIds.json";
+import validSkillIds from "../../public/json/ValidSkillIds.json"; // Re-added for skill tests
 import { describe, expect, it } from "vitest";
 import type { PlayerConfig, MonsterConfig } from "../engine/GameState"; // Assuming these types are available or adjust
 import { Card } from "@/types/cardTypes"; // CardType is no longer needed for the primary filter
@@ -35,9 +35,10 @@ describe("Single card battle simulations (Items and Skills)", () => {
 
   cardsForCurrentVersion.forEach((card) => {
     const currentCard = card as Card;
+    const cardId = currentCard.Id;
     const cardTitle = currentCard.Localization.Title.Text;
 
-    if (validItemNames.some((name) => name === cardTitle)) {
+    if (validItemIds.some((id) => id === cardId)) {
       it(`Battle with item "${cardTitle}" (Tier: ${currentCard.StartingTier}) should not throw`, () => {
         if (!currentCard.Id) {
           throw new Error(`Card "${cardTitle}" (Item) is missing an Id.`);
@@ -66,7 +67,7 @@ describe("Single card battle simulations (Items and Skills)", () => {
           run(gameState);
         }).not.toThrow();
       });
-    } else if (validSkillNames.some((name) => name === cardTitle)) {
+    } else if (validSkillIds.some((id) => id === cardId)) {
       it(`Battle with skill "${cardTitle}" (Tier: ${currentCard.StartingTier}) should not throw`, () => {
         if (!currentCard.Id) {
           throw new Error(`Card "${cardTitle}" (Skill) is missing an Id.`);

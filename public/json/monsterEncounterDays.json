@@ -6726,7 +6726,7 @@
                   "packId": "Core",
                   "combatEncounters": []
                 },
-                "tierType": "Silver"
+                "tierType": "Gold"
               },
               {
                 "card": {
@@ -6902,7 +6902,7 @@
                   "packId": "Core",
                   "combatEncounters": []
                 },
-                "tierType": "Silver"
+                "tierType": "Gold"
               },
               {
                 "card": {
@@ -7024,7 +7024,7 @@
                   "packId": "Pygmalien_Core",
                   "combatEncounters": []
                 },
-                "tierType": "Gold"
+                "tierType": "Silver"
               },
               {
                 "card": {
@@ -7105,7 +7105,7 @@
                   "packId": "Core",
                   "combatEncounters": []
                 },
-                "tierType": "Silver"
+                "tierType": "Gold"
               }
             ],
             "skills": [
@@ -54482,5 +54482,5 @@
       ]
     }
   ],
-  "version": "d18e6fca"
+  "version": "9c759494"
 }

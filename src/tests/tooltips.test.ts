@@ -1,6 +1,6 @@
 import { getInitialGameState } from "../engine/GameState";
-import validItemNames from "../../public/json/ValidItemNames.json";
-import validSkillNames from "../../public/json/ValidSkillNames.json";
+import validItemIds from "../../public/json/ValidItemIds.json";
+import validSkillIds from "../../public/json/ValidSkillIds.json";
 import { getTooltips } from "../engine/Engine";
 import { describe, expect, it } from "vitest";
 import { genCardsAndEncounters } from "../lib/Data";
@@ -28,17 +28,16 @@ function getTiers(startingTier: Tier): Tier[] {
 }
 
 describe("Tooltips should not throw", () => {
-  [...validItemNames, ...validSkillNames].forEach((cardName: string) => {
+  [...validItemIds, ...validSkillIds].forEach((cardId: string) => {
+    const card = Cards[CARDS_VERSION].find((c) => c.Id === cardId);
+    if (!card) {
+      throw new Error(`Card "${cardId}" not found or it's Id is missing`);
+    }
+    const cardName = card.Localization.Title.Text;
+
     it(`Tooltip for "${cardName}" should not throw`, () => {
-      const card = Cards[CARDS_VERSION].find(
-        (card) => card.Localization.Title.Text === cardName,
-      );
-      const cardId = card?.Id;
-      if (!card || !cardId) {
-        throw new Error(`Card "${cardName}" not found or it's Id is missing`);
-      }
       getTiers(card.StartingTier).forEach((tier) => {
-        const extension = validItemNames.includes(cardName)
+        const extension = validItemIds.includes(cardId)
           ? { cards: [{ cardId, tier }] }
           : { skills: [{ cardId, tier }] };
         const gameState = getInitialGameState(Cards, Encounters, [
@@ -56,18 +55,16 @@ describe("Tooltips should not throw", () => {
 });
 
 describe("Tooltip snapshots", () => {
-  [...validItemNames, ...validSkillNames].forEach((cardName: string) => {
+  [...validItemIds, ...validSkillIds].forEach((cardId: string) => {
+    const card = Cards[CARDS_VERSION].find((c) => c.Id === cardId);
+    const cardName = card?.Localization.Title.Text;
+    if (!card || !cardName) {
+      throw new Error(`Card "${cardId}" not found or it's Id is missing`);
+    }
     it(`Snapshot equality for tooltips for "${cardName}"`, () => {
-      const card = Cards[CARDS_VERSION].find(
-        (card) => card.Localization.Title.Text === cardName,
-      );
-      const cardId = card?.Id;
-      if (!card || !cardId) {
-        throw new Error(`Card "${cardName}" not found or it's Id is missing`);
-      }
       getTiers(card.StartingTier).forEach((tier) => {
         try {
-          const extension = validItemNames.includes(cardName)
+          const extension = validItemIds.includes(cardId)
             ? { cards: [{ cardId: cardId, tier }] }
             : { skills: [{ cardId: cardId, tier }] };
           const gameState = getInitialGameState(Cards, Encounters, [

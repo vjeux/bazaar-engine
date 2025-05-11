@@ -4213,6 +4213,27 @@
       "combatEncounters": []
     },
     {
+      "id": "cac848c8-dc77-4277-ba9f-df282b9f36ef",
+      "name": "Herbal Supplements",
+      "startingTier": "Bronze",
+      "tiers": {
+        "Bronze": { "tooltips": ["Your Regen items have +1 Regen."] },
+        "Silver": { "tooltips": ["Your Regen items have +2 Regen."] },
+        "Gold": { "tooltips": ["Your Regen items have +3 Regen."] },
+        "Diamond": { "tooltips": ["Your Regen items have +4 Regen."] },
+        "Legendary": { "tooltips": [] }
+      },
+      "tags": [],
+      "hiddenTags": ["RegenReference"],
+      "customTags": [],
+      "size": "Medium",
+      "heroes": ["Pygmalien", "Mak"],
+      "artKey": "Icon_Skill_NaniteHealing.png",
+      "unifiedTooltips": ["Your Regen items have (+1/+2/+3/+4) Regen."],
+      "packId": "Pygmalien_Core",
+      "combatEncounters": []
+    },
+    {
       "id": "a2200487-1d56-4383-8671-781049f8f7de",
       "name": "Honed Arsenal",
       "startingTier": "Silver",
@@ -9219,6 +9240,27 @@
       "combatEncounters": []
     },
     {
+      "id": "b6936741-8ec9-42f1-a6ec-d76061141f7d",
+      "name": "Vital Reserve",
+      "startingTier": "Bronze",
+      "tiers": {
+        "Bronze": { "tooltips": ["Your rightmost Regen item has +2 Regen."] },
+        "Silver": { "tooltips": ["Your rightmost Regen item has +4 Regen."] },
+        "Gold": { "tooltips": ["Your rightmost Regen item has +6 Regen."] },
+        "Diamond": { "tooltips": ["Your rightmost Regen item has +8 Regen."] },
+        "Legendary": { "tooltips": [] }
+      },
+      "tags": [],
+      "hiddenTags": ["RegenReference"],
+      "customTags": [],
+      "size": "Medium",
+      "heroes": ["Pygmalien", "Mak"],
+      "artKey": "Icon_Skill_StandardizedCare.png",
+      "unifiedTooltips": ["Your rightmost Regen item has (+2/+4/+6/+8) Regen."],
+      "packId": "Pygmalien_Core",
+      "combatEncounters": []
+    },
+    {
       "id": "f74f460e-6b49-43a9-9b9f-9b6fe36d28e9",
       "name": "Void Energy",
       "startingTier": "Diamond",
@@ -9311,6 +9353,27 @@
           "cardName": "Void Golem"
         }
       ]
+    },
+    {
+      "id": "65a77e2d-6c13-46c2-ae28-c521502a8be3",
+      "name": "Walk-in Clinic",
+      "startingTier": "Bronze",
+      "tiers": {
+        "Bronze": { "tooltips": ["Your leftmost Regen item has +2 Regen."] },
+        "Silver": { "tooltips": ["Your leftmost Regen item has +4 Regen."] },
+        "Gold": { "tooltips": ["Your leftmost Regen item has +6 Regen."] },
+        "Diamond": { "tooltips": ["Your leftmost Regen item has +8 Regen."] },
+        "Legendary": { "tooltips": [] }
+      },
+      "tags": [],
+      "hiddenTags": ["HealReference"],
+      "customTags": [],
+      "size": "Medium",
+      "heroes": ["Pygmalien", "Mak"],
+      "artKey": "Icon_Skill_MedicalWard.png",
+      "unifiedTooltips": ["Your leftmost Regen item has (+2/+4/+6/+8) Regen."],
+      "packId": "Pygmalien_Core",
+      "combatEncounters": []
     },
     {
       "id": "1d9eb8d1-ef94-4847-b472-28290159e894",
@@ -9426,5 +9489,5 @@
       "combatEncounters": []
     }
   ],
-  "version": "7da37832"
+  "version": "acb2d55b"
 }

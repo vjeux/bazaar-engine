@@ -7,8 +7,8 @@ import { CARDS_VERSION } from "./constants.ts";
 import { useEffect, useState } from "react";
 import { getFlattenedEncounters } from "../engine/GameState.ts";
 import { useQuery } from "@tanstack/react-query";
-import ValidSkillNames from "../../public/json/ValidSkillNames.json";
-import ValidItemNames from "../../public/json/ValidItemNames.json";
+import ValidSkillIds from "../../public/json/ValidSkillIds.json";
+import ValidItemIds from "../../public/json/ValidItemIds.json";
 
 // Database configuration
 const DB_NAME = "bazaar-engine";
@@ -23,10 +23,8 @@ function filterValidCards(cards: Cards): Cards {
   const filteredCards = {
     ...cards,
     [CARDS_VERSION]: cards[CARDS_VERSION].filter((card) => {
-      const cardName = card.Localization.Title.Text;
-      return (
-        ValidSkillNames.includes(cardName) || ValidItemNames.includes(cardName)
-      );
+      const cardId = card.Id;
+      return ValidSkillIds.includes(cardId) || ValidItemIds.includes(cardId);
     }),
   };
   return filteredCards;

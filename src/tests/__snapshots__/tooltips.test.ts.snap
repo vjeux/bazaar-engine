@@ -539,32 +539,20 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Ambergris" 4`] 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Ambush" 1`] = `
 {
   "cardName": "Ambush",
-  "tier": "Bronze",
-  "tooltips": [],
+  "tier": "Gold",
+  "tooltips": [
+    "At the start of each fight, deal damage equal to 15% of your enemy's Max Health.",
+  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Ambush" 2`] = `
 {
   "cardName": "Ambush",
-  "tier": "Silver",
-  "tooltips": [],
-}
-`;
-
-exports[`Tooltip snapshots > Snapshot equality for tooltips for "Ambush" 3`] = `
-{
-  "cardName": "Ambush",
-  "tier": "Gold",
-  "tooltips": [],
-}
-`;
-
-exports[`Tooltip snapshots > Snapshot equality for tooltips for "Ambush" 4`] = `
-{
-  "cardName": "Ambush",
   "tier": "Diamond",
-  "tooltips": [],
+  "tooltips": [
+    "At the start of each fight, deal damage equal to 30% of your enemy's Max Health.",
+  ],
 }
 `;
 
@@ -8528,7 +8516,9 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Extract" 1`] = 
 {
   "cardName": "Extract",
   "tier": "Bronze",
-  "tooltips": [],
+  "tooltips": [
+    "When you sell this, your leftmost Poison item gains +1 Poison.",
+  ],
 }
 `;
 
@@ -8536,7 +8526,9 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Extract" 2`] = 
 {
   "cardName": "Extract",
   "tier": "Silver",
-  "tooltips": [],
+  "tooltips": [
+    "When you sell this, your leftmost Poison item gains +2 Poison.",
+  ],
 }
 `;
 
@@ -8544,7 +8536,9 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Extract" 3`] = 
 {
   "cardName": "Extract",
   "tier": "Gold",
-  "tooltips": [],
+  "tooltips": [
+    "When you sell this, your leftmost Poison item gains +3 Poison.",
+  ],
 }
 `;
 
@@ -8552,7 +8546,9 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Extract" 4`] = 
 {
   "cardName": "Extract",
   "tier": "Diamond",
-  "tooltips": [],
+  "tooltips": [
+    "When you sell this, your leftmost Poison item gains +4 Poison.",
+  ],
 }
 `;
 
@@ -8651,7 +8647,9 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Feather" 1`] = 
 {
   "cardName": "Feather",
   "tier": "Bronze",
-  "tooltips": [],
+  "tooltips": [
+    "When you sell this, reduce your items' cooldowns by 2%.",
+  ],
 }
 `;
 
@@ -8659,7 +8657,9 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Feather" 2`] = 
 {
   "cardName": "Feather",
   "tier": "Silver",
-  "tooltips": [],
+  "tooltips": [
+    "When you sell this, reduce your items' cooldowns by 4%.",
+  ],
 }
 `;
 
@@ -8667,7 +8667,9 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Feather" 3`] = 
 {
   "cardName": "Feather",
   "tier": "Gold",
-  "tooltips": [],
+  "tooltips": [
+    "When you sell this, reduce your items' cooldowns by 6%.",
+  ],
 }
 `;
 
@@ -8675,7 +8677,9 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Feather" 4`] = 
 {
   "cardName": "Feather",
   "tier": "Diamond",
-  "tooltips": [],
+  "tooltips": [
+    "When you sell this, reduce your items' cooldowns by 8%.",
+  ],
 }
 `;
 
@@ -10852,7 +10856,10 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Gumball Machine
 {
   "cardName": "Gumball Machine",
   "tier": "Silver",
-  "tooltips": [],
+  "tooltips": [
+    "Shield 10.",
+    "At the start of each hour, spend 2 gold to get a Gumball.",
+  ],
 }
 `;
 
@@ -10860,7 +10867,10 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Gumball Machine
 {
   "cardName": "Gumball Machine",
   "tier": "Gold",
-  "tooltips": [],
+  "tooltips": [
+    "Shield 20.",
+    "At the start of each hour, spend 2 gold to get a Gumball.",
+  ],
 }
 `;
 
@@ -10868,7 +10878,10 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Gumball Machine
 {
   "cardName": "Gumball Machine",
   "tier": "Diamond",
-  "tooltips": [],
+  "tooltips": [
+    "Shield 30.",
+    "At the start of each hour, spend 2 gold to get a Gumball.",
+  ],
 }
 `;
 
@@ -11749,6 +11762,46 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Hemlock" 4`] = 
   "tooltips": [
     "Poison 5.",
     "When this is transformed, enchant it with Toxic if able.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Herbal Supplements" 1`] = `
+{
+  "cardName": "Herbal Supplements",
+  "tier": "Bronze",
+  "tooltips": [
+    "Your Regen items have +1 Regen.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Herbal Supplements" 2`] = `
+{
+  "cardName": "Herbal Supplements",
+  "tier": "Silver",
+  "tooltips": [
+    "Your Regen items have +2 Regen.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Herbal Supplements" 3`] = `
+{
+  "cardName": "Herbal Supplements",
+  "tier": "Gold",
+  "tooltips": [
+    "Your Regen items have +3 Regen.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Herbal Supplements" 4`] = `
+{
+  "cardName": "Herbal Supplements",
+  "tier": "Diamond",
+  "tooltips": [
+    "Your Regen items have +4 Regen.",
   ],
 }
 `;
@@ -13874,7 +13927,7 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Katana" 1`] = `
   "cardName": "Katana",
   "tier": "Bronze",
   "tooltips": [
-    "Deal 1 damage.",
+    "Deal 5 damage.",
   ],
 }
 `;
@@ -13884,7 +13937,7 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Katana" 2`] = `
   "cardName": "Katana",
   "tier": "Silver",
   "tooltips": [
-    "Deal 2 damage.",
+    "Deal 10 damage.",
   ],
 }
 `;
@@ -13894,7 +13947,7 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Katana" 3`] = `
   "cardName": "Katana",
   "tier": "Gold",
   "tooltips": [
-    "Deal 3 damage.",
+    "Deal 15 damage.",
   ],
 }
 `;
@@ -13904,7 +13957,7 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Katana" 4`] = `
   "cardName": "Katana",
   "tier": "Diamond",
   "tooltips": [
-    "Deal 4 damage.",
+    "Deal 20 damage.",
   ],
 }
 `;
@@ -15830,7 +15883,9 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Med Kit" 1`] = 
 {
   "cardName": "Med Kit",
   "tier": "Bronze",
-  "tooltips": [],
+  "tooltips": [
+    "When you sell this, your leftmost Heal item gains 5 Heal.",
+  ],
 }
 `;
 
@@ -15838,7 +15893,9 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Med Kit" 2`] = 
 {
   "cardName": "Med Kit",
   "tier": "Silver",
-  "tooltips": [],
+  "tooltips": [
+    "When you sell this, your leftmost Heal item gains 10 Heal.",
+  ],
 }
 `;
 
@@ -15846,7 +15903,9 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Med Kit" 3`] = 
 {
   "cardName": "Med Kit",
   "tier": "Gold",
-  "tooltips": [],
+  "tooltips": [
+    "When you sell this, your leftmost Heal item gains 20 Heal.",
+  ],
 }
 `;
 
@@ -15854,7 +15913,9 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Med Kit" 4`] = 
 {
   "cardName": "Med Kit",
   "tier": "Diamond",
-  "tooltips": [],
+  "tooltips": [
+    "When you sell this, your leftmost Heal item gains 40 Heal.",
+  ],
 }
 `;
 
@@ -21964,7 +22025,9 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Scrap" 1`] = `
 {
   "cardName": "Scrap",
   "tier": "Bronze",
-  "tooltips": [],
+  "tooltips": [
+    "When you sell this, your leftmost Shield item gains +3 Shield.",
+  ],
 }
 `;
 
@@ -21972,7 +22035,9 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Scrap" 2`] = `
 {
   "cardName": "Scrap",
   "tier": "Silver",
-  "tooltips": [],
+  "tooltips": [
+    "When you sell this, your leftmost Shield item gains +6 Shield.",
+  ],
 }
 `;
 
@@ -21980,7 +22045,9 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Scrap" 3`] = `
 {
   "cardName": "Scrap",
   "tier": "Gold",
-  "tooltips": [],
+  "tooltips": [
+    "When you sell this, your leftmost Shield item gains +12 Shield.",
+  ],
 }
 `;
 
@@ -21988,7 +22055,9 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Scrap" 4`] = `
 {
   "cardName": "Scrap",
   "tier": "Diamond",
-  "tooltips": [],
+  "tooltips": [
+    "When you sell this, your leftmost Shield item gains +24 Shield.",
+  ],
 }
 `;
 
@@ -27248,6 +27317,46 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vital Renewal" 
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vital Reserve" 1`] = `
+{
+  "cardName": "Vital Reserve",
+  "tier": "Bronze",
+  "tooltips": [
+    "Your rightmost Regen item has +2 Regen.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vital Reserve" 2`] = `
+{
+  "cardName": "Vital Reserve",
+  "tier": "Silver",
+  "tooltips": [
+    "Your rightmost Regen item has +4 Regen.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vital Reserve" 3`] = `
+{
+  "cardName": "Vital Reserve",
+  "tier": "Gold",
+  "tooltips": [
+    "Your rightmost Regen item has +6 Regen.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vital Reserve" 4`] = `
+{
+  "cardName": "Vital Reserve",
+  "tier": "Diamond",
+  "tooltips": [
+    "Your rightmost Regen item has +8 Regen.",
+  ],
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vitality Potion" 1`] = `
 {
   "cardName": "Vitality Potion",
@@ -27387,6 +27496,46 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Volcanic Vents"
   "tier": "Diamond",
   "tooltips": [
     "Burn 12.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Walk-in Clinic" 1`] = `
+{
+  "cardName": "Walk-in Clinic",
+  "tier": "Bronze",
+  "tooltips": [
+    "Your leftmost Regen item has +2 Regen.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Walk-in Clinic" 2`] = `
+{
+  "cardName": "Walk-in Clinic",
+  "tier": "Silver",
+  "tooltips": [
+    "Your leftmost Regen item has +4 Regen.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Walk-in Clinic" 3`] = `
+{
+  "cardName": "Walk-in Clinic",
+  "tier": "Gold",
+  "tooltips": [
+    "Your leftmost Regen item has +6 Regen.",
+  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Walk-in Clinic" 4`] = `
+{
+  "cardName": "Walk-in Clinic",
+  "tier": "Diamond",
+  "tooltips": [
+    "Your leftmost Regen item has +8 Regen.",
   ],
 }
 `;
