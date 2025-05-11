@@ -55,7 +55,9 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
     if (search.length > 0) {
       return fuse.search(search).map((result) => result.item);
     }
-    return Cards[CARDS_VERSION];
+    return Cards[CARDS_VERSION].slice().sort((a, b) =>
+      a.Localization.Title.Text.localeCompare(b.Localization.Title.Text),
+    );
   }, [search, Cards, fuse]);
 
   // Filter results by type
