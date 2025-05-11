@@ -156,6 +156,24 @@ export async function genCardsAndEncounters(): Promise<{
   Cards: Cards;
   Encounters: EncounterDays;
 }> {
+  // Check if we're running in a browser environment
+  if (typeof window === "undefined") {
+    // Server-side or testing environment - directly import JSON files
+    const cards: Cards = (await import("../../public/json/cards.json"))
+      .default as Cards;
+    const encounters = await import(
+      "../../public/json/monsterEncounterDays.json"
+    );
+
+    // Filter cards before returning
+    const filteredCards = filterValidCards(cards);
+
+    return {
+      Cards: filteredCards,
+      Encounters: encounters.default as EncounterDays,
+    };
+  }
+
   const storedVersion = await getStoredVersion();
   const isVersionMatch = storedVersion === CARDS_VERSION;
 

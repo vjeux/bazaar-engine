@@ -37,7 +37,6 @@ export interface Card {
   heroes: Hero[];
   enchantments?: Enchantment[];
   unifiedTooltips: string[];
-  remarks: any[];
   combatEncounters: any[];
   artKey?: string;
 }
