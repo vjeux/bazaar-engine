@@ -1,11 +1,10 @@
 "use client";
 import { memo, useEffect, useState } from "react";
-import { genCardsAndEncounters } from "@/lib/Data.ts";
-import { getFlattenedEncounters } from "@/engine/GameState.ts";
+import { useGameData } from "@/lib/Data.ts";
+import type { FlattenedEncounter } from "@/types/encounterTypes.ts";
 import { TICK_RATE } from "@/engine/Engine.ts";
 import { SearchableCardSkillList } from "@/components/SearchableCardSkillList";
 import { ComboBox } from "@/components/ui/combobox.tsx";
-import { Checkbox } from "@/components/ui/checkbox.tsx";
 import { HealthBar } from "@/components/HealthBar.tsx";
 import { Slider } from "@/components/ui/slider";
 import { BoardSkills } from "@/components/BoardSkills";
@@ -20,19 +19,20 @@ import { GoldIncomeDisplay } from "@/components/GoldIncomeDisplay";
 import { useSimulatorStore } from "@/lib/simulatorStore";
 import { Button } from "@/components/ui/button";
 import CardDeck from "@/components/CardDeck";
+import { Pause, Play, RotateCcw } from "lucide-react";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
-const { Cards: CardsData, Encounters: EncounterData } =
-  await genCardsAndEncounters();
-
-const encounters = getFlattenedEncounters(EncounterData);
-
-export default function DragNDrop() {
-  // Opt the entire page out of SSR to prevent crypto UUID from creating hydration mismatches and zustand persist causing changing states when the page is reloaded
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
+export default function SimulatorPage() {
+  const {
+    cardsData,
+    flattenedEncounters,
+    isLoading: isGameDataLoading,
+    error: gameDataError,
+  } = useGameData();
 
   const steps = useSimulatorStore((state) => state.steps);
   const autoScroll = useSimulatorStore((state) => state.autoScroll);
@@ -68,13 +68,25 @@ export default function DragNDrop() {
     stepCount,
   ]);
 
-  return isClient ? (
+  if (isGameDataLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (gameDataError) {
+    return <div>Error loading game data: {gameDataError.message}</div>;
+  }
+
+  if (!cardsData || !flattenedEncounters) {
+    return <div>Loading game assets...</div>;
+  }
+
+  return (
     <div className="bg-background text-foreground flex h-[calc(100dvh-64px)] max-h-[calc(100dvh-64px)] w-full flex-row gap-4 p-4">
       {/* Main Game Area */}
       <div className="flex grow flex-col gap-2">
         <div className="flex gap-2">
           {/* Enemy Selection */}
-          <EncounterSelector />
+          <EncounterSelector encounters={flattenedEncounters} />
           {/* Reset button */}
           <Button
             variant={"destructive"}
@@ -84,6 +96,58 @@ export default function DragNDrop() {
             Reset
           </Button>
         </div>
+
+        {/* Time Slider */}
+        <div className="mt-2 flex items-center gap-2">
+          <BattleSpeedSelector />
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant={autoScroll ? "default" : "outline"}
+                size="icon"
+                onClick={() => simulatorStoreActions.setAutoScroll(!autoScroll)}
+                className="h-8 w-8 hover:cursor-pointer"
+              >
+                {autoScroll ? (
+                  <Pause className="h-4 w-4" />
+                ) : (
+                  <Play className="h-4 w-4" />
+                )}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{autoScroll ? "Pause" : "Play"}</p>
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant={autoReset ? "default" : "outline"}
+                size="icon"
+                onClick={() => simulatorStoreActions.setAutoReset(!autoReset)}
+                className="h-8 w-8 hover:cursor-pointer"
+              >
+                <RotateCcw className="h-4 w-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Loop</p>
+            </TooltipContent>
+          </Tooltip>
+          <Slider
+            defaultValue={[0]}
+            min={0}
+            max={steps.length - 1}
+            value={[boundedStepCount]}
+            onValueChange={([value]) => {
+              simulatorStoreActions.setStepCount(value);
+            }}
+          />
+          <span className="w-28 text-sm text-nowrap">
+            Time: {stepCountToSeconds(boundedStepCount).toFixed(1)}s
+          </span>
+        </div>
+
         {/* Enemy Skills and Gold/Income */}
         <div className="flex justify-between">
           <BoardSkills gameState={currentGameState} playerId={0} />
@@ -103,44 +167,10 @@ export default function DragNDrop() {
           <BoardSkills gameState={currentGameState} playerId={1} />
           <GoldIncomeDisplay gameState={currentGameState} playerId={1} />
         </div>
-        {/* Time Slider */}
-        <div className="mt-2 flex items-center gap-2">
-          <BattleSpeedSelector />
-          <Checkbox
-            checked={autoScroll}
-            onClick={() => simulatorStoreActions.setAutoScroll(!autoScroll)}
-            id="autoAdvance"
-          />
-          <label htmlFor="autoAdvance" className="text-sm text-nowrap">
-            Auto Advance
-          </label>
-          <Checkbox
-            checked={autoReset}
-            onClick={() => simulatorStoreActions.setAutoReset(!autoReset)}
-            id="autoRestart"
-          />
-          <label htmlFor="autoRestart" className="text-sm text-nowrap">
-            Auto Restart
-          </label>
-          <Slider
-            defaultValue={[0]}
-            min={0}
-            max={steps.length - 1}
-            value={[boundedStepCount]}
-            onValueChange={([value]) => {
-              simulatorStoreActions.setStepCount(value);
-            }}
-          />
-          <span className="w-28 text-sm text-nowrap">
-            Time: {stepCountToSeconds(boundedStepCount).toFixed(1)}s
-          </span>
-        </div>
       </div>
       {/* Right Sidebar - Card and skill search */}
-      <SearchableCardSkillList Cards={CardsData} />
+      <SearchableCardSkillList Cards={cardsData} />
     </div>
-  ) : (
-    <div>Loading...</div>
   );
 }
 
@@ -150,7 +180,7 @@ const BattleSpeedSelector = memo(function BattleSpeedSelector() {
   );
   return (
     <Select onValueChange={(val) => handleBattleSpeedChange(parseInt(val))}>
-      <SelectTrigger>
+      <SelectTrigger className="hover:cursor-pointer">
         <SelectValue placeholder="1x" />
       </SelectTrigger>
       <SelectContent>
@@ -164,7 +194,11 @@ const BattleSpeedSelector = memo(function BattleSpeedSelector() {
   );
 });
 
-const EncounterSelector = memo(function EncounterSelector() {
+const EncounterSelector = memo(function EncounterSelector({
+  encounters,
+}: {
+  encounters: FlattenedEncounter[];
+}) {
   const simulatorStoreActions = useSimulatorStore((state) => state.actions);
   const selectedEncounter = useSimulatorStore((state) => state.monsterConfig);
   return (
@@ -178,11 +212,12 @@ const EncounterSelector = memo(function EncounterSelector() {
       }))}
       searchPlaceholder="Search encounters..."
       selectPlaceholder={
-        selectedEncounter?.name
+        selectedEncounter?.name && encounters.length > 0
           ? `Day ${encounters.find((e) => e.name === selectedEncounter.name && e.day === selectedEncounter.day)?.day ?? ""} - ${selectedEncounter.name}`
           : "Select encounter..."
       }
       onChange={(value) => {
+        if (encounters.length === 0) return;
         const encounter = encounters.find(
           (encounter) => encounter.card.cardId === value.split(":")[1],
         );

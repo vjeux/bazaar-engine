@@ -1,5 +1,5 @@
 "use client";
-import type { BoardSkill, GameState } from "@/engine/Engine";
+import type { BoardCard, GameState } from "@/engine/Engine";
 import React from "react";
 import FramedCardOrSkill from "./FramedCardOrSkill";
 import TooltipWithGameState from "./TooltipWithGameState";
@@ -11,7 +11,7 @@ export function BoardSkillElement({
   playerID,
   boardCardID,
 }: {
-  boardSkill: BoardSkill;
+  boardSkill: BoardCard;
   gameState: GameState;
   playerID: number;
   boardCardID: number;

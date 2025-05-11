@@ -12,8 +12,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
 import { useSimulatorStore } from "@/lib/simulatorStore";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-
-export const CARD_HEIGHT = 180;
+import { CARD_HEIGHT } from "@/lib/constants";
+import { AttributeType } from "@/types/cardTypes";
 
 export function BoardCardElement({
   boardCard,
@@ -59,71 +59,91 @@ export function BoardCardElement({
     gameState,
     playerIdx,
     boardCardIdx,
-    "DamageAmount",
+    AttributeType.DamageAmount,
   );
   const HealAmount = getCardAttribute(
     gameState,
     playerIdx,
     boardCardIdx,
-    "HealAmount",
+    AttributeType.HealAmount,
   );
   const BurnApplyAmount = getCardAttribute(
     gameState,
     playerIdx,
     boardCardIdx,
-    "BurnApplyAmount",
+    AttributeType.BurnApplyAmount,
   );
   const PoisonApplyAmount = getCardAttribute(
     gameState,
     playerIdx,
     boardCardIdx,
-    "PoisonApplyAmount",
+    AttributeType.PoisonApplyAmount,
   );
   const ShieldApplyAmount = getCardAttribute(
     gameState,
     playerIdx,
     boardCardIdx,
-    "ShieldApplyAmount",
+    AttributeType.ShieldApplyAmount,
   );
-  const Freeze = getCardAttribute(gameState, playerIdx, boardCardIdx, "Freeze");
-  const Slow = getCardAttribute(gameState, playerIdx, boardCardIdx, "Slow");
-  const Haste = getCardAttribute(gameState, playerIdx, boardCardIdx, "Haste");
+  const Freeze = getCardAttribute(
+    gameState,
+    playerIdx,
+    boardCardIdx,
+    AttributeType.Freeze,
+  );
+  const Slow = getCardAttribute(
+    gameState,
+    playerIdx,
+    boardCardIdx,
+    AttributeType.Slow,
+  );
+  const Haste = getCardAttribute(
+    gameState,
+    playerIdx,
+    boardCardIdx,
+    AttributeType.Haste,
+  );
   const CritChance = getCardAttribute(
     gameState,
     playerIdx,
     boardCardIdx,
-    "CritChance",
+    AttributeType.CritChance,
   );
   const SellPrice = getCardAttribute(
     gameState,
     playerIdx,
     boardCardIdx,
-    "SellPrice",
+    AttributeType.SellPrice,
   );
   const Multicast = getCardAttribute(
     gameState,
     playerIdx,
     boardCardIdx,
-    "Multicast",
+    AttributeType.Multicast,
   );
   const AmmoMax = getCardAttribute(
     gameState,
     playerIdx,
     boardCardIdx,
-    "AmmoMax",
+    AttributeType.AmmoMax,
   );
-  const Ammo = getCardAttribute(gameState, playerIdx, boardCardIdx, "Ammo");
+  const Ammo = getCardAttribute(
+    gameState,
+    playerIdx,
+    boardCardIdx,
+    AttributeType.Ammo,
+  );
   const CooldownMax = getCardAttribute(
     gameState,
     playerIdx,
     boardCardIdx,
-    "CooldownMax",
+    AttributeType.CooldownMax,
   );
   const Lifesteal = getCardAttribute(
     gameState,
     playerIdx,
     boardCardIdx,
-    "Lifesteal",
+    AttributeType.Lifesteal,
   );
 
   return (
@@ -174,7 +194,7 @@ export function BoardCardElement({
                   tier={boardCard.tier}
                 />
                 {/* Cooldown Indicator */}
-                {CooldownMax > 0 ? (
+                {CooldownMax && CooldownMax > 0 ? (
                   <div
                     className="absolute box-border h-0.5 border-t-2 border-white text-right text-[8pt] text-white"
                     style={{
@@ -191,7 +211,7 @@ export function BoardCardElement({
                     <span
                       className={cn(
                         "absolute right-0.5 inline-block",
-                        boardCard.tick / boardCard.CooldownMax > 0.5
+                        boardCard.tick / CooldownMax > 0.5
                           ? "top-0.5"
                           : "bottom-[3px]",
                       )}
@@ -203,17 +223,17 @@ export function BoardCardElement({
                 ) : null}
                 {/* Status effects container */}
                 <div className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col whitespace-pre-wrap text-white">
-                  {Freeze > 0 ? (
+                  {Freeze && Freeze > 0 ? (
                     <div className="bg-opacity-50 m-0.5 rounded-[5px] bg-gray-800 p-[2px_5px]">
                       ❄️ {(Freeze / 1000).toFixed(1)}
                     </div>
                   ) : null}
-                  {Slow > 0 ? (
+                  {Slow && Slow > 0 ? (
                     <div className="bg-opacity-50 m-0.5 rounded-[5px] bg-gray-800 p-[2px_5px]">
                       🐌 {(Slow / 1000).toFixed(1)}
                     </div>
                   ) : null}
-                  {Haste > 0 ? (
+                  {Haste && Haste > 0 ? (
                     <div className="bg-opacity-50 m-0.5 rounded-[5px] bg-gray-800 p-[2px_5px]">
                       ⏱️ {(Haste / 1000).toFixed(1)}
                     </div>
@@ -230,7 +250,7 @@ export function BoardCardElement({
                     <div
                       className={cn(
                         "m-[0_2px] rounded-[5px] p-[2px_5px] text-white",
-                        Lifesteal > 0
+                        Lifesteal && Lifesteal > 0
                           ? "bg-gradient-to-br from-purple-700 to-red-600"
                           : "bg-red-600",
                       )}
@@ -259,7 +279,7 @@ export function BoardCardElement({
                     </div>
                   )}
                 </div>
-                {CritChance > 0 && (
+                {CritChance && CritChance > 0 && (
                   <div className="absolute top-6 left-0 rounded-[5px] bg-red-600 p-[1px_3px] text-[9pt] text-white">
                     🎯 {CritChance + "%"}
                   </div>

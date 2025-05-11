@@ -1,5 +1,5 @@
 "use client";
-import type { BoardSkill, GameState } from "@/engine/Engine";
+import type { BoardCard, GameState } from "@/engine/Engine";
 import { BoardSkillElement } from "@/components/BoardSkillElement";
 
 export function BoardSkills({
@@ -12,8 +12,8 @@ export function BoardSkills({
   return (
     <div className="my-2 flex min-h-12 flex-wrap items-center gap-1">
       {gameState.players[playerId].board
-        .filter((x): x is BoardSkill => x.card.$type === "TCardSkill")
-        .map((boardSkill: BoardSkill, i: React.Key | null | undefined) => (
+        .filter((x): x is BoardCard => x.card.$type === "TCardSkill")
+        .map((boardSkill: BoardCard, i: React.Key | null | undefined) => (
           <BoardSkillElement
             boardSkill={boardSkill}
             gameState={gameState}

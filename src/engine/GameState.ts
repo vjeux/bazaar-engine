@@ -8,7 +8,11 @@ import {
   type Enchantments,
 } from "../types/cardTypes.ts";
 import type { Tier } from "../types/shared.ts";
-import type { EncounterDays, Group } from "../types/encounterTypes.ts";
+import type {
+  EncounterDays,
+  FlattenedEncounter,
+  Group,
+} from "../types/encounterTypes.ts";
 import { z } from "zod";
 import { v7 as uuidv7 } from "uuid";
 import { CARDS_VERSION } from "@/lib/constants.ts";
@@ -319,11 +323,9 @@ export function getInitialGameState(
   };
 }
 
-export function getFlattenedEncounters(Encounters: EncounterDays): Array<{
-  name: string;
-  card: { cardName: string; cardId: string };
-  day: number | string;
-}> {
+export function getFlattenedEncounters(
+  Encounters: EncounterDays,
+): Array<FlattenedEncounter> {
   return Encounters.data
     .map((data) => {
       return data.groups

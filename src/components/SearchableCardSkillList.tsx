@@ -1,8 +1,6 @@
 import { memo, useMemo, useState } from "react";
 import { Card, Cards, CardType } from "../types/cardTypes.ts";
 import Fuse from "fuse.js";
-import ValidSkillNames from "../json/ValidSkillNames.json";
-import ValidItemNames from "../json/ValidItemNames.json";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip.tsx";
 import TooltipWithoutGameState from "./TooltipWithoutGameState.tsx";
 import FramedCardOrSkill from "./FramedCardOrSkill.tsx";
@@ -37,31 +35,21 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
 
   const [search, setSearch] = useState("");
 
-  // Filter for valid card and skill names
-  const filteredItems = useMemo(() => {
-    return Cards[CARDS_VERSION].filter((card) => {
-      const cardName = card.Localization.Title.Text;
-      return (
-        ValidSkillNames.includes(cardName) || ValidItemNames.includes(cardName)
-      );
-    });
-  }, [Cards]);
-
   const fuse = useMemo(
     () =>
-      new Fuse(filteredItems, {
+      new Fuse(Cards[CARDS_VERSION], {
         keys: ["Localization.Title.Text"],
         threshold: 0.3,
       }),
-    [filteredItems],
+    [Cards],
   );
 
   const searchResults = useMemo(() => {
     if (search.length > 0) {
       return fuse.search(search).map((result) => result.item);
     }
-    return filteredItems;
-  }, [search, filteredItems, fuse]);
+    return Cards[CARDS_VERSION];
+  }, [search, Cards, fuse]);
 
   // Filter results by type
   const filteredCards = searchResults.filter(

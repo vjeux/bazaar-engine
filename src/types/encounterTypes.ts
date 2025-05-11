@@ -79,3 +79,9 @@ export interface Skill {
   card: Card;
   tierType: Tier;
 }
+
+export interface FlattenedEncounter {
+  name: string;
+  card: { cardName: string; cardId: string };
+  day: number | string;
+}
