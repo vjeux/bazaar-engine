@@ -5,8 +5,8 @@ import {
 import { run } from "../engine/Engine";
 import { genCardsAndEncounters } from "../lib/Data";
 import { CARDS_VERSION } from "../lib/constants";
-import validItemNames from "../json/ValidItemNames.json";
-import validSkillNames from "../json/ValidSkillNames.json"; // Re-added for skill tests
+import validItemNames from "../../public/json/ValidItemNames.json";
+import validSkillNames from "../../public/json/ValidSkillNames.json"; // Re-added for skill tests
 import { describe, expect, it } from "vitest";
 import type { PlayerConfig, MonsterConfig } from "../engine/GameState"; // Assuming these types are available or adjust
 import { Card } from "@/types/cardTypes"; // CardType is no longer needed for the primary filter
