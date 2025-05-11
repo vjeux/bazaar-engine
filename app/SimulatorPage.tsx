@@ -27,6 +27,10 @@ import {
 } from "@/components/ui/tooltip";
 import { MoonLoader } from "react-spinners";
 import { cn } from "@/lib/utils";
+import SandstormParticles from "../src/components/SandStormParticles";
+
+// Memoized version of SandstormParticles to prevent re-renders
+const MemoizedSandstormParticles = memo(SandstormParticles);
 
 export default function SimulatorPage() {
   const {
@@ -172,10 +176,14 @@ export default function SimulatorPage() {
         </div>
         {/* Enemy Health Bar*/}
         <HealthBar gameState={currentGameState} playerId={0} />
+
         {/* Cards Area */}
-        <div className="bg-card border-border grid grid-rows-[190px_190px] items-center justify-center gap-2 rounded border p-4">
+        <div className="bg-card border-border relative grid grid-rows-[190px_190px] items-center justify-center gap-2 rounded border p-2">
           <CardDeck gameState={currentGameState} playerId={0} />
           <CardDeck gameState={currentGameState} playerId={1} />
+
+          {currentGameState.tick > currentGameState.sandstormStartTick &&
+            currentGameState.isPlaying && <MemoizedSandstormParticles />}
         </div>
         {/* Player Health Bar*/}
         <HealthBar gameState={currentGameState} playerId={1} />
