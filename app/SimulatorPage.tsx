@@ -26,6 +26,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { MoonLoader } from "react-spinners";
+import { cn } from "@/lib/utils";
 
 export default function SimulatorPage() {
   const {
@@ -89,7 +90,7 @@ export default function SimulatorPage() {
   return (
     <div className="bg-background text-foreground flex h-[calc(100dvh-64px)] max-h-[calc(100dvh-64px)] w-full flex-row gap-4 p-4">
       {/* Main Game Area */}
-      <div className="flex grow flex-col gap-2">
+      <div className="flex grow flex-col justify-center gap-2">
         <div className="flex gap-2">
           {/* Enemy Selection */}
           <EncounterSelector encounters={flattenedEncounters} />
@@ -101,6 +102,16 @@ export default function SimulatorPage() {
           >
             Reset
           </Button>
+          <div
+            className={cn(
+              "ml-auto flex items-center",
+              steps.at(-1)?.winner == "Player" && "text-green",
+              steps.at(-1)?.winner == "Enemy" && "text-red-500",
+              steps.at(-1)?.winner == "Draw" && "text-yellow-500",
+            )}
+          >
+            Winner: {steps.at(-1)?.winner}
+          </div>
         </div>
 
         {/* Time Slider */}

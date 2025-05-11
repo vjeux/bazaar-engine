@@ -26,6 +26,7 @@ export interface GameState {
   players: Player[];
   multicast: Multicast[];
   getRand: () => number;
+  winner?: "Player" | "Enemy" | "Draw";
 }
 
 export interface Multicast {
@@ -1779,38 +1780,37 @@ function runAction(
         );
       }
 
-      targetCards
-        .forEach(([actionTargetPlayerID, actionTargetBoardCardID]) => {
-          const oldValue =
-            gameState.players[actionTargetPlayerID].board[
-              actionTargetBoardCardID
-            ][action.AttributeType as AttributeType];
-          if (oldValue === undefined) {
-            return;
-          }
-          let newValue: number;
-          switch (action.Operation) {
-            case Operation.Add:
-              newValue = oldValue + actionValue;
-              break;
-            case Operation.Multiply:
-              newValue = oldValue * actionValue;
-              break;
-            case Operation.Subtract:
-              newValue = oldValue - actionValue;
-              break;
-            default:
-              throw new Error("Unhandled operation: " + action.Operation);
-          }
+      targetCards.forEach(([actionTargetPlayerID, actionTargetBoardCardID]) => {
+        const oldValue =
+          gameState.players[actionTargetPlayerID].board[
+            actionTargetBoardCardID
+          ][action.AttributeType as AttributeType];
+        if (oldValue === undefined) {
+          return;
+        }
+        let newValue: number;
+        switch (action.Operation) {
+          case Operation.Add:
+            newValue = oldValue + actionValue;
+            break;
+          case Operation.Multiply:
+            newValue = oldValue * actionValue;
+            break;
+          case Operation.Subtract:
+            newValue = oldValue - actionValue;
+            break;
+          default:
+            throw new Error("Unhandled operation: " + action.Operation);
+        }
 
-          updateCardAttribute(
-            gameState,
-            actionTargetPlayerID,
-            actionTargetBoardCardID,
-            action.AttributeType as AttributeType,
-            Math.max(0, Math.floor(newValue)),
-          );
-        });
+        updateCardAttribute(
+          gameState,
+          actionTargetPlayerID,
+          actionTargetBoardCardID,
+          action.AttributeType as AttributeType,
+          Math.max(0, Math.floor(newValue)),
+        );
+      });
       break;
     }
     case "TActionPlayerModifyAttribute": {
@@ -2668,6 +2668,15 @@ function runGameTick(initialGameState: GameState): GameState {
     }
   });
   gameState.isPlaying = isPlaying;
+  // Check who won
+  // Draw if both health <= 0
+  if (gameState.players[0].Health <= 0 && gameState.players[1].Health <= 0) {
+    gameState.winner = "Draw";
+  } else if (gameState.players[0].Health <= 0) {
+    gameState.winner = "Player";
+  } else if (gameState.players[1].Health <= 0) {
+    gameState.winner = "Enemy";
+  }
 
   gameState.tick += TICK_RATE;
 
