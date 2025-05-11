@@ -1025,7 +1025,7 @@ function runAction(
       if (!critChance) {
         critChance = 0;
       }
-      if (!amount) {
+      if (amount === undefined) {
         throw new Error("Damage amount must exist for action player damage");
       }
       if (critChance > 0) {
@@ -1105,7 +1105,7 @@ function runAction(
         targetBoardCardID,
         AttributeType.HealAmount,
       );
-      if (!amount) {
+      if (amount === undefined) {
         throw new Error("Heal amount must exist for action player heal");
       }
       const critChance = getCardAttribute(
@@ -1178,7 +1178,7 @@ function runAction(
         targetBoardCardID,
         AttributeType.RegenApplyAmount,
       );
-      if (!amount) {
+      if (amount === undefined) {
         throw new Error(
           "Regen apply amount must exist for action player regen apply",
         );
@@ -1226,7 +1226,7 @@ function runAction(
         targetBoardCardID,
         AttributeType.PoisonApplyAmount,
       );
-      if (!amount) {
+      if (amount === undefined) {
         throw new Error(
           "Poison apply amount must exist for action player poison apply",
         );
@@ -1273,7 +1273,7 @@ function runAction(
         targetBoardCardID,
         AttributeType.PoisonRemoveAmount,
       );
-      if (!amount) {
+      if (amount === undefined) {
         throw new Error(
           "Poison remove amount must exist for action player poison remove",
         );
@@ -1304,7 +1304,7 @@ function runAction(
         targetBoardCardID,
         AttributeType.BurnApplyAmount,
       );
-      if (!amount) {
+      if (amount === undefined) {
         throw new Error(
           "Burn apply amount must exist for action player burn apply",
         );
@@ -1359,7 +1359,7 @@ function runAction(
           targetBoardCardID,
           AttributeType.BurnRemoveAmount,
         );
-        if (!amount) {
+        if (amount === undefined) {
           throw new Error(
             "Burn remove amount must exist for action player burn remove",
           );
@@ -1381,7 +1381,7 @@ function runAction(
         targetBoardCardID,
         AttributeType.ShieldApplyAmount,
       );
-      if (!amount) {
+      if (amount === undefined) {
         throw new Error(
           "Shield apply amount must exist for action player shield apply",
         );
@@ -1438,7 +1438,7 @@ function runAction(
           targetBoardCardID,
           AttributeType.ShieldRemoveAmount,
         );
-        if (!amount) {
+        if (amount === undefined) {
           throw new Error(
             "Shield remove amount must exist for action player shield remove",
           );
@@ -1550,7 +1550,7 @@ function runAction(
           if (!currentAmmo || !ammoMax) {
             return;
           }
-          if (!amount) {
+          if (amount === undefined) {
             throw new Error("Reload amount must exist for action card reload");
           }
 
@@ -1608,7 +1608,7 @@ function runAction(
         targetBoardCardID,
         amountKey,
       );
-      if (!amount) {
+      if (amount === undefined) {
         throw new Error("Amount must exist for action card freeze|slow|haste");
       }
       const targetCount = getCardAttribute(
@@ -1697,7 +1697,7 @@ function runAction(
         targetsKey,
       );
 
-      if (!amount) {
+      if (amount === undefined) {
         throw new Error("Amount must exist for action card charge");
       }
       if (!action.Target) {
