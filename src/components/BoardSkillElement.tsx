@@ -42,13 +42,9 @@ export function BoardSkillElement({
             type="button"
             className="tooltip absolute top-0.5 left-0.5 z-50 hover:cursor-pointer"
             onClick={() => {
-              const actualIndex = gameState.players[playerID].board.findIndex(
-                (x) => x.uuid === boardSkill.uuid,
+              const skillIndex = gameState.players[playerID].board.findIndex(
+                (x) => x.card.Id === boardSkill.card.Id,
               );
-              const lastCardIndex = gameState.players[
-                playerID
-              ].board.findLastIndex((x) => x.card.$type === CardType.TCardItem);
-              const skillIndex = actualIndex - lastCardIndex - 1;
               simulatorStoreActions.removePlayerSkill(skillIndex);
             }}
           >
