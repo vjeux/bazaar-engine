@@ -1,4 +1,5 @@
-import type { GameState } from "../engine/Engine.ts";
+import { AttributeType } from "@/types/cardTypes.ts";
+import { getPlayerAttribute, type GameState } from "../engine/Engine.ts";
 
 interface HealthBarProps {
   gameState: GameState;
@@ -17,12 +18,20 @@ export function HealthBar({ gameState, playerId }: HealthBarProps) {
   }
 
   // Extract player attributes
-  const Poison = player.Poison || 0;
-  const Burn = player.Burn || 0;
-  const HealthRegen = player.HealthRegen || 0;
-  const Health = player.Health;
-  const HealthMax = player.HealthMax;
-  const Shield = player.Shield || 0;
+  const Poison = getPlayerAttribute(gameState, playerId, AttributeType.Poison);
+  const Burn = getPlayerAttribute(gameState, playerId, AttributeType.Burn);
+  const HealthRegen = getPlayerAttribute(
+    gameState,
+    playerId,
+    AttributeType.HealthRegen,
+  );
+  const Health = getPlayerAttribute(gameState, playerId, AttributeType.Health);
+  const HealthMax = getPlayerAttribute(
+    gameState,
+    playerId,
+    AttributeType.HealthMax,
+  );
+  const Shield = getPlayerAttribute(gameState, playerId, AttributeType.Shield);
 
   const healthPercentage =
     HealthMax > 0 ? Math.max(0, (Health / HealthMax) * 100) : 0;
@@ -70,15 +79,15 @@ export function HealthBar({ gameState, playerId }: HealthBarProps) {
         <div className="flex items-center space-x-1 text-sm font-medium text-shadow-lg/100">
           <span className="text-white">{Math.round(Health)}</span>
 
+          {HealthRegen > 0 && (
+            <span className="text-lime-300">{HealthRegen}</span>
+          )}
+
           {Shield > 0 && <span className="text-yellow-300">{Shield}</span>}
 
           {Poison > 0 && <span className="text-emerald-400">{Poison}</span>}
 
           {Burn > 0 && <span className="text-amber-400">{Burn}</span>}
-
-          {HealthRegen > 0 && (
-            <span className="text-lime-300">{HealthRegen}</span>
-          )}
         </div>
       </div>
     </div>
