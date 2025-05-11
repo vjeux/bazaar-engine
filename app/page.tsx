@@ -25,6 +25,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { MoonLoader } from "react-spinners";
 
 export default function SimulatorPage() {
   const {
@@ -69,7 +70,12 @@ export default function SimulatorPage() {
   ]);
 
   if (isGameDataLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex h-[calc(100dvh-64px)] max-h-[calc(100dvh-64px)] w-full grow flex-col items-center justify-center gap-2">
+        <div>Loading...</div>
+        <MoonLoader />
+      </div>
+    );
   }
 
   if (gameDataError) {
