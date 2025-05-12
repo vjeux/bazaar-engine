@@ -1,9 +1,9 @@
 import { StrictMode } from "react";
-import { ThemeProvider } from "@/components/theme-provider.tsx";
 import "./globals.css";
 import Navbar from "./navbar";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { ReactScan } from "@/components/ReactScan";
+import Providers from "@/components/Providers";
 
 export default function RootLayout({
   children,
@@ -19,17 +19,12 @@ export default function RootLayout({
         </head>
 
         <body className="min-h-screen">
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
+          <Providers>
             <NuqsAdapter>
               <Navbar />
               <main>{children}</main>
             </NuqsAdapter>
-          </ThemeProvider>
+          </Providers>
         </body>
       </html>
     </StrictMode>

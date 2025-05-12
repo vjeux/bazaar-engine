@@ -1,4 +1,4 @@
-import { GameState, getTooltips } from "@/engine/Engine";
+import { GameState, getCardAttribute, getTooltips } from "@/engine/Engine";
 import { Card } from "@/types/cardTypes";
 
 export default function TooltipWithGameState({
@@ -15,6 +15,12 @@ export default function TooltipWithGameState({
   if (!card) return null;
 
   const Title = card.Localization.Title.Text;
+  const visibleTags = getCardAttribute(
+    gameState,
+    playerID,
+    boardCardID,
+    "tags",
+  );
 
   return (
     <div className="bg-card border-border rounded border p-4">
@@ -26,7 +32,9 @@ export default function TooltipWithGameState({
           </div>
         ))}
         <div className="text-muted-foreground text-sm">
-          {[...card.Heroes, ...card.Tags, ...card.HiddenTags].join(", ")}
+          <p>{visibleTags.join(", ")}</p>
+          <p className="italic">{card.HiddenTags.join(", ")}</p>
+          <p className="italic">{card.Heroes.join(", ")}</p>
         </div>
       </div>
     </div>

@@ -37,7 +37,6 @@ export interface Card {
   heroes: Hero[];
   enchantments?: Enchantment[];
   unifiedTooltips: string[];
-  remarks: any[];
   combatEncounters: any[];
   artKey?: string;
 }
@@ -78,4 +77,10 @@ export interface Bronze {
 export interface Skill {
   card: Card;
   tierType: Tier;
+}
+
+export interface FlattenedEncounter {
+  name: string;
+  card: { cardName: string; cardId: string };
+  day: number | string;
 }

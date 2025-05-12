@@ -6,12 +6,15 @@ import {
 } from "../engine/GameState.ts";
 import { describe, expect, it, test } from "vitest";
 
+type DiffObject = Record<string, unknown>;
+type DiffWithStep = DiffObject & { step: number };
+
 function getOptimizedDiff(
-  prev: any,
-  curr: any,
+  prev: unknown,
+  curr: unknown,
   ignoreKeys = new Set(["card", "tick"]),
   path: string[] = [],
-): Record<string, any> {
+): Record<string, unknown> {
   // If both values are strictly equal, no diff
   if (prev === curr) return {};
 
@@ -25,14 +28,18 @@ function getOptimizedDiff(
     return { [path.join(".")]: curr };
   }
 
-  const differences: Record<string, any> = {};
+  // At this point, prev and curr are known to be non-null objects
+  const prevObj = prev as Record<string, unknown>;
+  const currObj = curr as Record<string, unknown>;
+
+  const differences: Record<string, unknown> = {};
   // Get the union of keys from both objects
-  const keys = new Set([...Object.keys(prev), ...Object.keys(curr)]);
+  const keys = new Set([...Object.keys(prevObj), ...Object.keys(currObj)]);
   for (const key of keys) {
     if (ignoreKeys.has(key)) continue; // Skip ignored keys
 
     // Recurse for the current key; build a new path
-    const subDiff = getOptimizedDiff(prev[key], curr[key], ignoreKeys, [
+    const subDiff = getOptimizedDiff(prevObj[key], currObj[key], ignoreKeys, [
       ...path,
       key,
     ]);
@@ -46,9 +53,9 @@ const { Cards, Encounters } = await genCardsAndEncounters();
 
 describe("Encounter snapshots should match", () => {
   getFlattenedEncounters(Encounters).forEach((encounter) => {
-    test(`Runs encounter "Day ${encounter.day} - ${encounter.name}"`, () => {
+    test(`Matches snapshot for "Day ${encounter.day} - ${encounter.name}"`, () => {
       const gameState = getInitialGameState(Cards, Encounters, [
-        { type: "monster", name: encounter.name },
+        { type: "monster", name: encounter.name, day: Number(encounter.day) },
         {
           type: "player",
           health: 2000,
@@ -67,12 +74,13 @@ describe("Encounter snapshots should match", () => {
         steps = [{ error: "null" }, { error: (e as Error).message }];
       }
 
-      const diffs: any[] = [];
+      const diffs: DiffWithStep[] = [];
       for (let i = 1; i < steps.length; i++) {
-        const diff = getOptimizedDiff(steps[i - 1], steps[i]);
+        const diff: DiffObject = getOptimizedDiff(steps[i - 1], steps[i]);
         if (Object.keys(diff).length > 0) {
-          diff.step = i;
-          diffs.push(diff);
+          const diffWithStep = diff as DiffWithStep;
+          diffWithStep.step = i;
+          diffs.push(diffWithStep);
         }
       }
 
@@ -85,7 +93,7 @@ describe("Encounters should not throw", () => {
   getFlattenedEncounters(Encounters).forEach((encounter) => {
     it(`Encounter "Day ${encounter.day} - ${encounter.name}" should not throw`, () => {
       const gameState = getInitialGameState(Cards, Encounters, [
-        { type: "monster", name: encounter.name },
+        { type: "monster", name: encounter.name, day: Number(encounter.day) },
         {
           type: "player",
           health: 2000,

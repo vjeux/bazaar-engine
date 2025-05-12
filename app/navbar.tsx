@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { ModeToggle } from "@/components/DarkModeToggle";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -22,6 +23,7 @@ export default function Navbar() {
         >
           Home
         </Link>
+        <ModeToggle />
         <Link href="https://github.com/vjeux/bazaar-engine" target="_blank">
           <svg
             role="img"

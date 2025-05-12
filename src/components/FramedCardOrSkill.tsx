@@ -18,7 +18,7 @@ export default function FramedCardOrSkill({
   const displayTier = tier ?? card.StartingTier;
 
   const imageUrl = `https://www.howbazaar.gg/images/${isCardItem ? "items" : "skills"}/${
-    card.Localization.Title.Text?.replace(/[ '\-&]/g, "") ?? ""
+    card.Id ?? ""
   }.avif`;
 
   const frameUrl = isCardItem

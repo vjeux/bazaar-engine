@@ -2,8 +2,7 @@
 import type { EnchantmentType, HiddenTag, Tag, Tier } from "./shared.ts";
 
 export interface Cards {
-  "0.1.9": Card[];
-  "1.0.0": Card[];
+  [version: string]: Card[];
 }
 
 export interface Card {
@@ -124,14 +123,15 @@ export enum AttributeType {
   CooldownMax = "CooldownMax",
   Counter = "Counter",
   CritChance = "CritChance",
-  Custom0 = "Custom_0",
-  Custom1 = "Custom_1",
-  Custom2 = "Custom_2",
-  Custom3 = "Custom_3",
-  Custom4 = "Custom_4",
-  Custom5 = "Custom_5",
+  Custom_0 = "Custom_0",
+  Custom_1 = "Custom_1",
+  Custom_2 = "Custom_2",
+  Custom_3 = "Custom_3",
+  Custom_4 = "Custom_4",
+  Custom_5 = "Custom_5",
   DamageAmount = "DamageAmount",
   DamageCrit = "DamageCrit",
+  DisableTargets = "DisableTargets",
   Experience = "Experience",
   Freeze = "Freeze",
   FreezeAmount = "FreezeAmount",
@@ -139,6 +139,7 @@ export enum AttributeType {
   Gold = "Gold",
   Haste = "Haste",
   HasteAmount = "HasteAmount",
+  HasteTargets = "HasteTargets",
   HealAmount = "HealAmount",
   Health = "Health",
   HealthMax = "HealthMax",
@@ -155,6 +156,7 @@ export enum AttributeType {
   PoisonRemoveAmount = "PoisonRemoveAmount",
   Prestige = "Prestige",
   ReloadAmount = "ReloadAmount",
+  RegenApplyAmount = "RegenApplyAmount",
   RerollCostModifier = "RerollCostModifier",
   SellPrice = "SellPrice",
   Shield = "Shield",
@@ -162,6 +164,9 @@ export enum AttributeType {
   ShieldRemoveAmount = "ShieldRemoveAmount",
   Slow = "Slow",
   SlowAmount = "SlowAmount",
+  SlowTargets = "SlowTargets",
+  ReloadTargets = "ReloadTargets",
+  ChargeTargets = "ChargeTargets",
 }
 
 interface Duration {
@@ -178,7 +183,7 @@ enum DurationTypeEnum {
   UntilEndOfDay = "UntilEndOfDay",
 }
 
-enum Operation {
+export enum Operation {
   Add = "Add",
   Multiply = "Multiply",
   Subtract = "Subtract",
@@ -322,7 +327,7 @@ interface Limit {
   Modifier?: Modifier | null;
 }
 
-interface Conditions {
+export interface Conditions {
   $type: ConditionType;
   Attribute?: AttributeType;
   AttributeType?: AttributeType;
@@ -390,7 +395,7 @@ export enum ActiveIn {
   HandOnly = "HandOnly",
 }
 
-interface AbilityPrerequisite {
+export interface AbilityPrerequisite {
   $type: PrerequisiteType;
   Subject?: Subject;
   Comparison?: Comparison;
@@ -405,17 +410,18 @@ enum PrerequisiteType {
 }
 
 export enum Priority {
-  High = "High",
-  Highest = "Highest",
   Immediate = "Immediate",
+  Highest = "Highest",
+  High = "High",
+  Medium = "Medium",
   Low = "Low",
   Lowest = "Lowest",
-  Medium = "Medium",
 }
 
 export interface Trigger {
   $type: TriggerType;
   Subject?: Subject;
+  Target?: Target;
   CombatType?: null | string;
   AttributeType?: AttributeType;
   ChangeType?: ChangeType;
@@ -500,6 +506,7 @@ export interface Aura {
 interface AuraAction {
   $type: AuraActionType;
   AttributeType: AttributeType;
+  Source: Source;
   Operation: Operation;
   Value: Value;
   Target: Target;
@@ -508,6 +515,7 @@ interface AuraAction {
 enum AuraActionType {
   TAuraActionCardModifyAttribute = "TAuraActionCardModifyAttribute",
   TAuraActionPlayerModifyAttribute = "TAuraActionPlayerModifyAttribute",
+  TAuraActionCardAddTagsBySource = "TAuraActionCardAddTagsBySource",
 }
 
 interface AuraPrerequisite {

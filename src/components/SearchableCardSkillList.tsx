@@ -1,14 +1,13 @@
-import { memo, useMemo, useState } from "react";
+import { memo, useCallback, useMemo, useState } from "react";
 import { Card, Cards, CardType } from "../types/cardTypes.ts";
 import Fuse from "fuse.js";
-import ValidSkillNames from "../json/ValidSkillNames.json";
-import ValidItemNames from "../json/ValidItemNames.json";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip.tsx";
 import TooltipWithoutGameState from "./TooltipWithoutGameState.tsx";
 import FramedCardOrSkill from "./FramedCardOrSkill.tsx";
 import { useSimulatorStore } from "@/lib/simulatorStore.ts";
 import { PlayerCardConfig, PlayerSkillConfig } from "@/engine/GameState.ts";
 import { CARDS_VERSION } from "@/lib/constants.ts";
+import { Virtuoso } from "react-virtuoso";
 
 const CARD_HEIGHT = 70;
 const SKILL_SIZE = 70;
@@ -19,60 +18,71 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
   const addPlayerCard = simulatorStoreActions.addPlayerCard;
   const addPlayerSkill = simulatorStoreActions.addPlayerSkill;
 
-  const handleCardSelect = (card: Card) => {
-    const cardConfig: PlayerCardConfig = {
-      cardId: card.Id,
-      tier: card.StartingTier,
-    };
-    addPlayerCard(cardConfig);
-  };
+  const handleCardSelect = useCallback(
+    (card: Card) => {
+      const cardConfig: PlayerCardConfig = {
+        cardId: card.Id,
+        tier: card.StartingTier,
+      };
+      addPlayerCard(cardConfig);
+    },
+    [addPlayerCard],
+  );
 
-  const handleSkillSelect = (card: Card) => {
-    const skillConfig: PlayerSkillConfig = {
-      cardId: card.Id,
-      tier: card.StartingTier,
-    };
-    addPlayerSkill(skillConfig);
-  };
+  const handleSkillSelect = useCallback(
+    (card: Card) => {
+      const skillConfig: PlayerSkillConfig = {
+        cardId: card.Id,
+        tier: card.StartingTier,
+      };
+      addPlayerSkill(skillConfig);
+    },
+    [addPlayerSkill],
+  );
 
   const [search, setSearch] = useState("");
 
-  // Filter for valid card and skill names
-  const filteredItems = useMemo(() => {
-    return Cards[CARDS_VERSION].filter((card) => {
-      const cardName = card.Localization.Title.Text;
-      return (
-        ValidSkillNames.includes(cardName) || ValidItemNames.includes(cardName)
-      );
-    });
-  }, [Cards]);
-
   const fuse = useMemo(
     () =>
-      new Fuse(filteredItems, {
-        keys: ["Localization.Title.Text"],
+      new Fuse(Cards[CARDS_VERSION], {
+        keys: [
+          {
+            name: "Localization.Title.Text",
+            weight: 3,
+          },
+          "Localization.Tooltips.Content.Text",
+        ],
         threshold: 0.3,
+        fieldNormWeight: 2,
       }),
-    [filteredItems],
+    [Cards],
   );
 
   const searchResults = useMemo(() => {
     if (search.length > 0) {
       return fuse.search(search).map((result) => result.item);
     }
-    return filteredItems;
-  }, [search, filteredItems, fuse]);
+    return Cards[CARDS_VERSION].slice().sort((a, b) =>
+      a.Localization.Title.Text.localeCompare(b.Localization.Title.Text),
+    );
+  }, [search, Cards, fuse]);
 
-  // Filter results by type
-  const filteredCards = searchResults.filter(
-    (item: Card) => item.$type === CardType.TCardItem,
-  );
-  const filteredSkills = searchResults.filter(
-    (item) => item.$type === CardType.TCardSkill,
+  const itemContent = useCallback(
+    (index: number) => {
+      const item = searchResults[index];
+      return (
+        <SearchResultItem
+          item={item}
+          onSelectSkill={handleSkillSelect}
+          onSelectCard={handleCardSelect}
+        />
+      );
+    },
+    [searchResults, handleCardSelect, handleSkillSelect],
   );
 
   return (
-    <div className="bg-background border-border min-w-96 overflow-x-visible overflow-y-scroll rounded border p-3">
+    <div className="bg-background border-border flex min-w-96 flex-col overflow-x-visible rounded border p-3">
       <h2 className="text-card-foreground mb-2 text-lg font-semibold">
         Cards & Skills
       </h2>
@@ -83,41 +93,13 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-
-      <div className="flex flex-col gap-1 pr-1">
-        {filteredCards.length > 0 ? (
-          <>
-            <h4>Cards</h4>
-            <hr />
-            {filteredCards.map((item) => {
-              return (
-                <SearchResultItem
-                  key={item.Id}
-                  item={item}
-                  onSelectSkill={handleSkillSelect}
-                  onSelectCard={handleCardSelect}
-                />
-              );
-            })}
-          </>
-        ) : null}
-        {filteredSkills.length > 0 ? (
-          <>
-            <h4>Skills</h4>
-            <hr />
-            {filteredSkills.map((item) => {
-              return (
-                <SearchResultItem
-                  key={item.Id}
-                  item={item}
-                  onSelectSkill={handleSkillSelect}
-                  onSelectCard={handleCardSelect}
-                />
-              );
-            })}
-          </>
-        ) : null}
-      </div>
+      {searchResults.length > 0 ? (
+        <Virtuoso totalCount={searchResults.length} itemContent={itemContent} />
+      ) : (
+        <div className="text-center text-sm text-gray-500">
+          No results found
+        </div>
+      )}
     </div>
   );
 }
@@ -135,8 +117,9 @@ function SearchResultItem_({
   return (
     <Tooltip placement="left">
       <TooltipTrigger>
-        <div
-          className="hover:bg-accent text-secondary-foreground relative flex cursor-pointer items-center gap-2 rounded p-1 text-sm"
+        <TriggerContent
+          item={item}
+          key={item.Id}
           onClick={() => {
             if (item.$type == CardType.TCardSkill) {
               onSelectSkill(item);
@@ -144,9 +127,7 @@ function SearchResultItem_({
               onSelectCard(item);
             }
           }}
-        >
-          <TriggerContent item={item} key={item.Id} />
-        </div>
+        />
       </TooltipTrigger>
       <TooltipContent>
         <TooltipWithoutGameState card={item} />
@@ -156,11 +137,15 @@ function SearchResultItem_({
 }
 
 const TriggerContent = memo(TriggerContent_);
-function TriggerContent_({ item }: { item: Card }) {
+function TriggerContent_({
+  item,
+  ...props
+}: { item: Card } & React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
       key={item.Id}
-      className="hover:bg-accent text-secondary-foreground flex grow items-center justify-between gap-2 rounded p-1 text-sm"
+      className="hover:bg-accent text-secondary-foreground flex grow items-center justify-between gap-2 rounded p-1 pr-4 text-sm hover:cursor-pointer"
+      {...props}
     >
       <span>{item.Localization.Title.Text}</span>
 
