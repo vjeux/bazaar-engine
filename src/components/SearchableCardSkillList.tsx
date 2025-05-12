@@ -45,7 +45,13 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
   const fuse = useMemo(
     () =>
       new Fuse(Cards[CARDS_VERSION], {
-        keys: ["Localization.Title.Text"],
+        keys: [
+          {
+            name: "Localization.Title.Text",
+            weight: 3,
+          },
+          "Localization.Tooltips.Content.Text",
+        ],
         threshold: 0.3,
       }),
     [Cards],
