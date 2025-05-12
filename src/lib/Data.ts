@@ -188,17 +188,23 @@ export async function genCardsAndEncounters(): Promise<{
   }
 
   if (!cards) {
-    cards = await fetchJSON<Cards>(
-      process.env.NEXT_PUBLIC_HOST_URL + "/json/cards.json",
-    );
+    const baseUrl =
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000"
+        : "https://" + process.env.VERCEL_URL;
+    cards = await fetchJSON<Cards>(`${baseUrl}/json/cards.json`);
     // Filter cards before storing in IndexedDB
     cards = filterValidCards(cards);
     await saveToIndexedDB(CARDS_STORE, CARDS_VERSION, cards);
   }
 
   if (!encounters) {
+    const baseUrl =
+      process.env.NODE_ENV === "development"
+        ? "http://localhost:3000"
+        : "https://" + process.env.VERCEL_URL;
     encounters = await fetchJSON<EncounterDays>(
-      process.env.NEXT_PUBLIC_HOST_URL + "/json/monsterEncounterDays.json",
+      `${baseUrl}/json/monsterEncounterDays.json`,
     );
     await saveToIndexedDB(ENCOUNTERS_STORE, CARDS_VERSION, encounters);
   }
