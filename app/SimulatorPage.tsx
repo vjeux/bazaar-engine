@@ -95,7 +95,7 @@ export default function SimulatorPage() {
   return (
     <div className="bg-background text-foreground flex h-[calc(100dvh-64px)] max-h-[calc(100dvh-64px)] w-full flex-row gap-4 p-4">
       {/* Main Game Area */}
-      <div className="flex grow flex-col justify-center gap-2">
+      <div className="flex grow flex-col gap-2">
         <div className="flex gap-2">
           {/* Enemy Selection */}
           <EncounterSelector encounters={flattenedEncounters} />
