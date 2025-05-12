@@ -5,7 +5,7 @@ import FramedCardOrSkill from "./FramedCardOrSkill";
 import TooltipWithGameState from "./TooltipWithGameState";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
 import { useSimulatorStore } from "@/lib/simulatorStore";
-import { CardType } from "@/types/cardTypes";
+import { PLAYER_PLAYER_IDX } from "@/lib/constants";
 
 export function BoardSkillElement({
   boardSkill,
@@ -38,7 +38,7 @@ export function BoardSkillElement({
             tier={boardSkill.tier}
           />
           {/* Remove button */}
-          {playerID == 1 && (
+          {playerID == PLAYER_PLAYER_IDX && (
             <button
               type="button"
               className="tooltip absolute top-0.5 left-0.5 z-50 hover:cursor-pointer"

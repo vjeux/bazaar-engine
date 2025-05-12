@@ -7,7 +7,7 @@ import FramedCardOrSkill from "./FramedCardOrSkill.tsx";
 import { useSimulatorStore } from "@/lib/simulatorStore.ts";
 import { PlayerCardConfig, PlayerSkillConfig } from "@/engine/GameState.ts";
 import { CARDS_VERSION } from "@/lib/constants.ts";
-import { GroupedVirtuoso } from "react-virtuoso";
+import { Virtuoso } from "react-virtuoso";
 
 const CARD_HEIGHT = 70;
 const SKILL_SIZE = 70;
@@ -53,6 +53,7 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
           "Localization.Tooltips.Content.Text",
         ],
         threshold: 0.3,
+        fieldNormWeight: 2,
       }),
     [Cards],
   );
@@ -66,68 +67,9 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
     );
   }, [search, Cards, fuse]);
 
-  // Filter results by type
-  const filteredCards = useMemo(
-    () =>
-      searchResults.filter((item: Card) => item.$type === CardType.TCardItem),
-    [searchResults],
-  );
-
-  const filteredSkills = useMemo(
-    () => searchResults.filter((item) => item.$type === CardType.TCardSkill),
-    [searchResults],
-  );
-
-  // Create group counts for GroupedVirtuoso
-  const groupCounts = useMemo(() => {
-    const counts = [];
-
-    // Add cards count if we have cards
-    if (filteredCards.length > 0) {
-      counts.push(filteredCards.length);
-    }
-
-    // Add skills count if we have skills
-    if (filteredSkills.length > 0) {
-      counts.push(filteredSkills.length);
-    }
-
-    return counts;
-  }, [filteredCards.length, filteredSkills.length]);
-
-  // Group content renderer (headers)
-  const groupContent = useCallback(
-    (groupIndex: number) => {
-      // First group is cards (if any), second group is skills
-      const isCardGroup = groupIndex === 0 && filteredCards.length > 0;
-      const title = isCardGroup ? "Cards" : "Skills";
-
-      return (
-        <div className="bg-background flex flex-col items-center">
-          <h4 className="text-xs font-medium text-gray-500 uppercase">
-            {title}
-          </h4>
-          <hr className="w-full" />
-        </div>
-      );
-    },
-    [filteredCards.length],
-  );
-
-  // Item content renderer
   const itemContent = useCallback(
-    (absoluteIndex: number, groupIndex: number) => {
-      // First group is cards (if we have cards), second group is skills
-      const isCardGroup = groupIndex === 0 && filteredCards.length > 0;
-
-      // Get the item from the correct array based on group
-      const item = isCardGroup
-        ? filteredCards[absoluteIndex]
-        : filteredSkills[
-            absoluteIndex -
-              (filteredCards.length > 0 ? filteredCards.length : 0)
-          ];
-
+    (index: number) => {
+      const item = searchResults[index];
       return (
         <SearchResultItem
           item={item}
@@ -136,7 +78,7 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
         />
       );
     },
-    [filteredCards, filteredSkills, handleCardSelect, handleSkillSelect],
+    [searchResults, handleCardSelect, handleSkillSelect],
   );
 
   return (
@@ -151,12 +93,8 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-      {groupCounts.length > 0 ? (
-        <GroupedVirtuoso
-          groupCounts={groupCounts}
-          groupContent={groupContent}
-          itemContent={itemContent}
-        />
+      {searchResults.length > 0 ? (
+        <Virtuoso totalCount={searchResults.length} itemContent={itemContent} />
       ) : (
         <div className="text-center text-sm text-gray-500">
           No results found

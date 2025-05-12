@@ -421,6 +421,7 @@ export enum Priority {
 export interface Trigger {
   $type: TriggerType;
   Subject?: Subject;
+  Target?: Target;
   CombatType?: null | string;
   AttributeType?: AttributeType;
   ChangeType?: ChangeType;

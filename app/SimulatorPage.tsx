@@ -28,6 +28,7 @@ import {
 import { MoonLoader } from "react-spinners";
 import { cn } from "@/lib/utils";
 import SandstormParticles from "../src/components/SandStormParticles";
+import { ENEMY_PLAYER_IDX, PLAYER_PLAYER_IDX } from "@/lib/constants";
 
 // Memoized version of SandstormParticles to prevent re-renders
 const MemoizedSandstormParticles = memo(SandstormParticles);
@@ -171,26 +172,49 @@ export default function SimulatorPage() {
 
         {/* Enemy Skills and Gold/Income */}
         <div className="flex justify-between">
-          <BoardSkills gameState={currentGameState} playerId={0} />
-          <GoldIncomeDisplay gameState={currentGameState} playerId={0} />
+          <BoardSkills
+            gameState={currentGameState}
+            playerId={ENEMY_PLAYER_IDX}
+          />
+          <GoldIncomeDisplay
+            gameState={currentGameState}
+            playerId={ENEMY_PLAYER_IDX}
+          />
         </div>
         {/* Enemy Health Bar*/}
-        <HealthBar gameState={currentGameState} playerId={0} />
+        <HealthBar gameState={currentGameState} playerId={ENEMY_PLAYER_IDX} />
 
         {/* Cards Area */}
         <div className="bg-card border-border relative grid grid-rows-[190px_190px] items-center justify-center gap-2 rounded border p-2">
-          <CardDeck gameState={currentGameState} playerId={0} />
-          <CardDeck gameState={currentGameState} playerId={1} />
+          <CardDeck gameState={currentGameState} playerId={ENEMY_PLAYER_IDX} />
+          <CardDeck gameState={currentGameState} playerId={PLAYER_PLAYER_IDX} />
 
           {currentGameState.tick > currentGameState.sandstormStartTick &&
             currentGameState.isPlaying && <MemoizedSandstormParticles />}
+
+          {process.env.NODE_ENV === "development" && (
+            <div className="absolute top-0 right-0 z-50">
+              <button
+                className="hover:cursor-pointer"
+                onClick={() => console.log(currentGameState)}
+              >
+                🐛
+              </button>
+            </div>
+          )}
         </div>
         {/* Player Health Bar*/}
-        <HealthBar gameState={currentGameState} playerId={1} />
+        <HealthBar gameState={currentGameState} playerId={PLAYER_PLAYER_IDX} />
         {/* Player Skills and Gold/Income */}
         <div className="flex justify-between">
-          <BoardSkills gameState={currentGameState} playerId={1} />
-          <GoldIncomeDisplay gameState={currentGameState} playerId={1} />
+          <BoardSkills
+            gameState={currentGameState}
+            playerId={PLAYER_PLAYER_IDX}
+          />
+          <GoldIncomeDisplay
+            gameState={currentGameState}
+            playerId={PLAYER_PLAYER_IDX}
+          />
         </div>
       </div>
       {/* Right Sidebar - Card and skill search */}

@@ -12,7 +12,11 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
 import { useSimulatorStore } from "@/lib/simulatorStore";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { CARD_HEIGHT } from "@/lib/constants";
+import {
+  CARD_HEIGHT,
+  ENEMY_PLAYER_IDX,
+  PLAYER_PLAYER_IDX,
+} from "@/lib/constants";
 import { AttributeType } from "@/types/cardTypes";
 
 export function BoardCardElement({
@@ -35,7 +39,10 @@ export function BoardCardElement({
     transform,
     transition,
     isSorting,
-  } = useSortable({ id: boardCard.uuid, disabled: playerIdx === 0 });
+  } = useSortable({
+    id: boardCard.uuid,
+    disabled: playerIdx === ENEMY_PLAYER_IDX,
+  });
 
   const style = {
     transform: CSS.Translate.toString(transform),
@@ -153,17 +160,17 @@ export function BoardCardElement({
           <div
             className={cn(
               "tooltipContainer relative",
-              playerIdx === 1 && "hover:cursor-grab",
+              playerIdx === PLAYER_PLAYER_IDX && "hover:cursor-grab",
             )}
           >
             {/* Settings button */}
-            {playerIdx == 1 && !isSorting && (
+            {playerIdx == PLAYER_PLAYER_IDX && !isSorting && (
               <div className="tooltip absolute top-0.5 right-0.5 z-10">
                 <button type="button">⚙️</button>
               </div>
             )}
             {/* Remove button */}
-            {playerIdx == 1 && !isSorting && (
+            {playerIdx == PLAYER_PLAYER_IDX && !isSorting && (
               <div className="tooltip absolute top-0.5 left-0.5 z-50">
                 <button
                   type="button"
@@ -176,6 +183,32 @@ export function BoardCardElement({
                 </button>
               </div>
             )}
+            {/* Debug button */}
+            {playerIdx == PLAYER_PLAYER_IDX &&
+              !isSorting &&
+              process.env.NODE_ENV === "development" && (
+                <div className="tooltip absolute right-0.5 bottom-0.5 z-50">
+                  <button
+                    type="button"
+                    className="hover:cursor-pointer"
+                    onClick={() => {
+                      console.log("boardCard", boardCard);
+                      const attrObject = {} as Record<AttributeType, unknown>;
+                      for (const attr of Object.values(AttributeType)) {
+                        attrObject[attr] = getCardAttribute(
+                          gameState,
+                          playerIdx,
+                          boardCardIdx,
+                          attr,
+                        );
+                      }
+                      console.log("getAttributes", attrObject);
+                    }}
+                  >
+                    🐛
+                  </button>
+                </div>
+              )}
             {/* Card container */}
             <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
               <div

@@ -20,5 +20,11 @@ A simulation engine for [The Bazaar](https://playthebazaar.com/).
 - [ ] Win percentage for RNG in battles
 - [ ] Show storm damage UI
 - [ ] Damage numbers above health
-- [ ] Implement TActionPlayerBurnRemove
 - [ ] Change the code to support custom monsters/encounters
+
+
+
+
+## Bugged Items
+- [ ] Z-Shield, no multicast
+- [ ] Adrenal converter gives double Regen
