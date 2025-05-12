@@ -191,7 +191,7 @@ export async function genCardsAndEncounters(): Promise<{
     const baseUrl =
       process.env.NODE_ENV === "development"
         ? "http://localhost:3000"
-        : "https://" + process.env.VERCEL_URL;
+        : "https://" + process.env.NEXT_PUBLIC_VERCEL_URL;
     cards = await fetchJSON<Cards>(`${baseUrl}/json/cards.json`);
     // Filter cards before storing in IndexedDB
     cards = filterValidCards(cards);
@@ -202,7 +202,7 @@ export async function genCardsAndEncounters(): Promise<{
     const baseUrl =
       process.env.NODE_ENV === "development"
         ? "http://localhost:3000"
-        : "https://" + process.env.VERCEL_URL;
+        : "https://" + process.env.NEXT_PUBLIC_VERCEL_URL;
     encounters = await fetchJSON<EncounterDays>(
       `${baseUrl}/json/monsterEncounterDays.json`,
     );
