@@ -60,6 +60,8 @@ const initialPlayer: PlayerConfig = {
   type: "player",
   health: 2000,
   healthRegen: 0,
+  income: 0,
+  gold: 0,
   cards: [],
   skills: [],
 };
