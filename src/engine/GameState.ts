@@ -272,7 +272,8 @@ export type MonsterConfig = z.infer<typeof MonsterConfigSchema>;
 export interface PlayerCardConfig {
   cardId: string;
   tier?: Tier;
-  enchantment?: keyof Enchantments | null;
+  enchantment?: keyof Enchantments;
+  attributeOverrides?: Partial<Record<AttributeType, number>>;
 }
 
 export interface PlayerSkillConfig {
@@ -309,7 +310,13 @@ export function getInitialGameState(
           },
           (player.cards ?? [])
             .map((c) =>
-              createBoardCardFromId(Cards, c.cardId, c.tier, c.enchantment),
+              createBoardCardFromId(
+                Cards,
+                c.cardId,
+                c.tier,
+                c.enchantment,
+                c.attributeOverrides,
+              ),
             )
             .concat(
               (player.skills ?? []).map((s) =>

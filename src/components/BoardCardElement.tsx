@@ -4,12 +4,12 @@ import {
   type GameState,
   getCardAttribute,
 } from "@/engine/Engine";
-import React from "react";
+import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import FramedCardOrSkill from "./FramedCardOrSkill";
 import TooltipWithGameState from "./TooltipWithGameState";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
-import { useSimulatorStore } from "@/lib/simulatorStore";
+import { useSimulatorStore, useEditingCardIndex } from "@/lib/simulatorStore";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import {
@@ -18,6 +18,19 @@ import {
   PLAYER_PLAYER_IDX,
 } from "@/lib/constants";
 import { AttributeType } from "@/types/cardTypes";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "./ui/dialog";
+import { Input } from "./ui/input";
+import { Label } from "./ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger } from "./ui/select";
+import { SelectValue } from "@radix-ui/react-select";
+import { EnchantmentType, Tier } from "@/types/shared";
 
 export function BoardCardElement({
   boardCard,
@@ -31,6 +44,37 @@ export function BoardCardElement({
   boardCardIdx: number;
 }) {
   const simulatorStoreActions = useSimulatorStore((state) => state.actions);
+  const editingCardIndex = useEditingCardIndex();
+
+  const [cardConfig, setCardConfig] = useState<
+    Partial<{
+      attributeOverrides: Partial<Record<AttributeType, number>>;
+      enchantment: EnchantmentType;
+      tier: Tier;
+    }>
+  >({});
+
+  // Initialize card config with all attributes defined in the card
+  React.useEffect(() => {
+    Object.values(AttributeType)
+      .filter((attr) => {
+        return boardCard[attr] != undefined;
+      })
+      .forEach((attr) => {
+        setCardConfig((prev) => ({
+          ...prev,
+          attributeOverrides: {
+            ...prev.attributeOverrides,
+            [attr]: boardCard[attr],
+          },
+        }));
+      });
+    setCardConfig((prev) => ({
+      ...prev,
+      enchantment: boardCard.Enchantment ?? undefined,
+      tier: boardCard.tier ?? undefined,
+    }));
+  }, [boardCard]);
 
   const {
     attributes,
@@ -165,9 +209,179 @@ export function BoardCardElement({
           >
             {/* Settings button */}
             {playerIdx == PLAYER_PLAYER_IDX && !isSorting && (
-              <div className="tooltip absolute top-0.5 right-0.5 z-10">
-                <button type="button">⚙️</button>
-              </div>
+              <Dialog
+                open={editingCardIndex === boardCardIdx}
+                onOpenChange={(value) => {
+                  if (!value) {
+                    // Save changes when closing the dialog
+                    const overrides = {} as Record<AttributeType, number>;
+                    for (const attr of Object.keys(
+                      cardConfig.attributeOverrides ?? {},
+                    )) {
+                      if (
+                        typeof cardConfig.attributeOverrides?.[
+                          attr as keyof typeof cardConfig.attributeOverrides
+                        ] === "number"
+                      ) {
+                        overrides[attr as AttributeType] = cardConfig
+                          .attributeOverrides?.[
+                          attr as keyof typeof cardConfig.attributeOverrides
+                        ] as number;
+                      }
+                    }
+                    simulatorStoreActions.setCardAttributeOverrides(
+                      boardCardIdx,
+                      overrides,
+                    );
+                  }
+                  simulatorStoreActions.setEditingCardIndex(
+                    value ? boardCardIdx : null,
+                  );
+                }}
+                defaultOpen={editingCardIndex === boardCardIdx}
+              >
+                <DialogTrigger asChild>
+                  <div className="tooltip absolute top-0.5 right-0.5 z-10">
+                    <button
+                      type="button"
+                      className="hover:cursor-pointer"
+                      onClick={() => {
+                        simulatorStoreActions.setAutoScroll(false);
+                      }}
+                    >
+                      ⚙️
+                    </button>
+                  </div>
+                </DialogTrigger>
+                <DialogContent className="max-h-[90vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>Edit Card</DialogTitle>
+                  </DialogHeader>
+                  <DialogDescription>
+                    NOTE: <br />
+                    These are the BASE attributes, i.e. not taking into account
+                    the buffs from other cards.
+                  </DialogDescription>
+                  <div className="flex flex-col gap-2">
+                    {/* Enchantment */}
+                    <div className="flex flex-col gap-2">
+                      <Label htmlFor="enchantment">Enchantment</Label>
+                      <div className="flex gap-2">
+                        <Select
+                          onValueChange={(value: EnchantmentType) => {
+                            simulatorStoreActions.setCardEnchantment(
+                              boardCardIdx,
+                              value,
+                            );
+                            simulatorStoreActions.setEditingCardIndex(
+                              boardCardIdx,
+                            );
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue
+                              placeholder={
+                                boardCard.Enchantment ?? "Select Enchantment"
+                              }
+                            />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Object.keys(card.Enchantments ?? [])
+                              .toSorted()
+                              .map((enchantment) => (
+                                <SelectItem
+                                  key={enchantment}
+                                  value={enchantment}
+                                >
+                                  {enchantment}
+                                </SelectItem>
+                              ))}
+                          </SelectContent>
+                        </Select>
+                        <p className="flex items-center text-xs text-gray-500">
+                          The attributes will get reset when changing
+                          enchantment.
+                        </p>
+                      </div>
+                      {/* Tier Select */}
+                      <Label htmlFor="tier">Tier</Label>
+                      <div className="flex gap-2">
+                        <Select
+                          onValueChange={(value: Tier) => {
+                            simulatorStoreActions.setCardTier(
+                              boardCardIdx,
+                              value,
+                            );
+                            simulatorStoreActions.setEditingCardIndex(
+                              boardCardIdx,
+                            );
+                          }}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder={boardCard.tier} />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Object.keys(card.Tiers ?? {}).map((tier) => (
+                              <SelectItem key={tier} value={tier}>
+                                {tier}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                        <p className="flex items-center text-xs text-gray-500">
+                          The attributes will get reset when changing tier.
+                        </p>
+                      </div>
+                    </div>
+                    {Object.keys(cardConfig.attributeOverrides ?? [])
+                      .filter((attr) => attr != "Enchantment")
+                      .map((attr) => {
+                        return (
+                          <div key={attr} className="flex flex-col gap-2">
+                            <Label htmlFor={attr}>{attr}</Label>
+                            <Input
+                              key={attr}
+                              type={
+                                typeof cardConfig.attributeOverrides?.[
+                                  attr as keyof typeof cardConfig.attributeOverrides
+                                ] === "number"
+                                  ? "number"
+                                  : typeof cardConfig.attributeOverrides?.[
+                                        attr as keyof typeof cardConfig.attributeOverrides
+                                      ] === "boolean"
+                                    ? "checkbox"
+                                    : "text"
+                              }
+                              value={
+                                cardConfig.attributeOverrides?.[
+                                  attr as keyof typeof cardConfig.attributeOverrides
+                                ]
+                              }
+                              onChange={(e) => {
+                                setCardConfig((prev) => ({
+                                  ...prev,
+                                  attributeOverrides: {
+                                    ...prev.attributeOverrides,
+                                    [attr]:
+                                      typeof prev.attributeOverrides?.[
+                                        attr as keyof typeof prev.attributeOverrides
+                                      ] === "number"
+                                        ? Number(e.target.value)
+                                        : typeof prev.attributeOverrides?.[
+                                              attr as keyof typeof prev.attributeOverrides
+                                            ] === "boolean"
+                                          ? e.target.checked
+                                          : e.target.value,
+                                  },
+                                }));
+                              }}
+                            />
+                          </div>
+                        );
+                      })}
+                  </div>
+                </DialogContent>
+              </Dialog>
             )}
             {/* Remove button */}
             {playerIdx == PLAYER_PLAYER_IDX && !isSorting && (
