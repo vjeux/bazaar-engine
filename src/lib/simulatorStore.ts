@@ -202,7 +202,9 @@ export const useSimulatorStore = create<State & Actions>()(
         setCardEnchantment: (cardIndex: number, enchantment: EnchantmentType) =>
           set((state) => {
             if (state.playerConfig.cards?.[cardIndex]) {
-              state.playerConfig.cards[cardIndex].enchantment = enchantment;
+              const card = state.playerConfig.cards[cardIndex];
+              card.enchantment = enchantment;
+              card.attributeOverrides = {};
             }
             state.steps = runWrapper(state.monsterConfig, state.playerConfig);
           }),
