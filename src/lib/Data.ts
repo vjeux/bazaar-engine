@@ -31,7 +31,7 @@ function filterValidCards(cards: Cards): Cards {
 }
 
 async function fetchJSON<T>(url: string): Promise<T> {
-  const response = await fetch(url);
+  const response = await fetch(url, { mode: "no-cors" });
   if (!response.ok) {
     throw new Error(`Failed to fetch from ${url}: ${response.statusText}`);
   }
