@@ -32,6 +32,25 @@ import { SelectValue } from "@radix-ui/react-select";
 import { EnchantmentType, Tier } from "@/types/shared";
 import CardTooltip from "./CardTooltip";
 
+// Enchantment color mappings
+const ENCHANTMENT_COLORS: Record<EnchantmentType, string> = {
+  [EnchantmentType.Obsidian]: "bg-purple-900 text-purple-100",
+  [EnchantmentType.Shielded]: "bg-yellow-500 text-yellow-100",
+  [EnchantmentType.Fiery]:
+    "bg-gradient-to-r from-red-600 to-orange-500 text-orange-100",
+  [EnchantmentType.Deadly]: "bg-red-700 text-red-100",
+  [EnchantmentType.Heavy]: "bg-amber-700 text-amber-100",
+  [EnchantmentType.Icy]: "bg-blue-300 text-blue-900",
+  [EnchantmentType.Radiant]: "bg-yellow-300 text-yellow-900",
+  [EnchantmentType.Restorative]: "bg-emerald-400 text-emerald-900",
+  [EnchantmentType.Toxic]: "bg-green-600 text-green-100",
+  [EnchantmentType.Turbo]:
+    "bg-gradient-to-r from-blue-500 to-cyan-400 text-cyan-100",
+  [EnchantmentType.Golden]: "bg-amber-400 text-amber-900",
+  [EnchantmentType.Shiny]:
+    "bg-gradient-to-r from-pink-400 to-indigo-400 text-white",
+};
+
 export function BoardCardElement({
   boardCard,
   gameState,
@@ -494,7 +513,14 @@ export function BoardCardElement({
                   }}
                 >
                   {boardCard.Enchantment && (
-                    <div className="m-[0_2px] rounded-[5px] bg-gray-500 p-[2px_5px] text-white">
+                    <div
+                      className={cn(
+                        "m-[0_2px] rounded-[5px] p-[2px_5px]",
+                        boardCard.Enchantment in ENCHANTMENT_COLORS
+                          ? ENCHANTMENT_COLORS[boardCard.Enchantment]
+                          : "bg-gray-500 text-white",
+                      )}
+                    >
                       {boardCard.Enchantment}
                     </div>
                   )}
