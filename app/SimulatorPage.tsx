@@ -29,6 +29,7 @@ import { MoonLoader } from "react-spinners";
 import { cn } from "@/lib/utils";
 import SandstormParticles from "../src/components/SandStormParticles";
 import { ENEMY_PLAYER_IDX, PLAYER_PLAYER_IDX } from "@/lib/constants";
+import { PlayerStatsDialog } from "../src/components/PlayerStatsDialog";
 
 // Memoized version of SandstormParticles to prevent re-renders
 const MemoizedSandstormParticles = memo(SandstormParticles);
@@ -211,10 +212,13 @@ export default function SimulatorPage() {
             gameState={currentGameState}
             playerId={PLAYER_PLAYER_IDX}
           />
-          <GoldIncomeDisplay
-            gameState={currentGameState}
-            playerId={PLAYER_PLAYER_IDX}
-          />
+          <div className="flex items-center gap-2">
+            <GoldIncomeDisplay
+              gameState={currentGameState}
+              playerId={PLAYER_PLAYER_IDX}
+            />
+            <PlayerStatsDialog />
+          </div>
         </div>
       </div>
       {/* Right Sidebar - Card and skill search */}

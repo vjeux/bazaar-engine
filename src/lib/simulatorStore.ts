@@ -11,6 +11,9 @@ import { immer } from "zustand/middleware/immer";
 import { genCardsAndEncounters } from "./Data";
 import { persist, StateStorage, createJSONStorage } from "zustand/middleware";
 import { arrayMove } from "@dnd-kit/sortable";
+import { AttributeType } from "@/types/cardTypes";
+import { Tier } from "@/types/shared";
+import { EnchantmentType } from "@/types/shared";
 const { Cards: CardsData, Encounters: EncounterData } =
   await genCardsAndEncounters();
 
@@ -22,6 +25,7 @@ type State = {
   autoReset: boolean;
   battleSpeed: number;
   stepCount: number;
+  editingCardIndex: number | null;
 };
 
 type Actions = {
@@ -39,6 +43,16 @@ type Actions = {
     removePlayerSkill: (skillIndex: number) => void;
     reset: () => void;
     movePlayerCard: (oldIndex: number, newIndex: number) => void;
+    setCardAttributeOverrides: (
+      cardIndex: number,
+      attributeOverrides: Partial<Record<AttributeType, number>>,
+    ) => void;
+    setCardEnchantment: (
+      cardIndex: number,
+      enchantment: EnchantmentType,
+    ) => void;
+    setCardTier: (cardIndex: number, tier: Tier) => void;
+    setEditingCardIndex: (index: number | null) => void;
   };
 };
 
@@ -46,6 +60,8 @@ const initialPlayer: PlayerConfig = {
   type: "player",
   health: 2000,
   healthRegen: 0,
+  income: 0,
+  gold: 0,
   cards: [],
   skills: [],
 };
@@ -81,6 +97,7 @@ const initialState: State = {
   autoReset: false,
   battleSpeed: 1,
   stepCount: 0,
+  editingCardIndex: null,
 };
 
 // URL Persistance
@@ -171,6 +188,38 @@ export const useSimulatorStore = create<State & Actions>()(
             state.playerConfig.cards = newCards;
             state.steps = runWrapper(state.monsterConfig, state.playerConfig);
           }),
+        setCardAttributeOverrides: (
+          cardIndex: number,
+          attributeOverrides: Partial<Record<AttributeType, number>>,
+        ) =>
+          set((state) => {
+            if (state.playerConfig.cards?.[cardIndex]) {
+              state.playerConfig.cards[cardIndex].attributeOverrides =
+                attributeOverrides;
+            }
+            state.steps = runWrapper(state.monsterConfig, state.playerConfig);
+          }),
+        setCardEnchantment: (cardIndex: number, enchantment: EnchantmentType) =>
+          set((state) => {
+            if (state.playerConfig.cards?.[cardIndex]) {
+              const card = state.playerConfig.cards[cardIndex];
+              card.enchantment = enchantment;
+              card.attributeOverrides = {};
+            }
+            state.steps = runWrapper(state.monsterConfig, state.playerConfig);
+          }),
+        setCardTier: (cardIndex: number, tier: Tier) =>
+          set((state) => {
+            if (state.playerConfig.cards?.[cardIndex]) {
+              state.playerConfig.cards[cardIndex].tier = tier;
+              state.playerConfig.cards[cardIndex].attributeOverrides = {};
+            }
+            state.steps = runWrapper(state.monsterConfig, state.playerConfig);
+          }),
+        setEditingCardIndex: (index: number | null) =>
+          set((state) => {
+            state.editingCardIndex = index;
+          }),
       },
     })),
     {
@@ -204,3 +253,5 @@ export const useAutoReset = () => useSimulatorStore((state) => state.autoReset);
 export const useBattleSpeed = () =>
   useSimulatorStore((state) => state.battleSpeed);
 export const useStepCount = () => useSimulatorStore((state) => state.stepCount);
+export const useEditingCardIndex = () =>
+  useSimulatorStore((state) => state.editingCardIndex);

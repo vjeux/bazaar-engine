@@ -196,8 +196,8 @@ function createBoardPlayer(
     Shield: 0,
     Burn: 0,
     Poison: 0,
-    Gold: 0,
-    Income: 0,
+    Gold: stats.Gold ?? 0,
+    Income: stats.Income ?? 0,
     Hero: "<Hero Name>",
     board: boardCards,
   };
@@ -272,7 +272,8 @@ export type MonsterConfig = z.infer<typeof MonsterConfigSchema>;
 export interface PlayerCardConfig {
   cardId: string;
   tier?: Tier;
-  enchantment?: keyof Enchantments | null;
+  enchantment?: keyof Enchantments;
+  attributeOverrides?: Partial<Record<AttributeType, number>>;
 }
 
 export interface PlayerSkillConfig {
@@ -284,6 +285,8 @@ export interface PlayerConfig {
   type: "player";
   health?: number;
   healthRegen?: number;
+  income?: number;
+  gold?: number;
   cards?: PlayerCardConfig[];
   skills?: PlayerSkillConfig[];
 }
@@ -306,10 +309,18 @@ export function getInitialGameState(
           {
             HealthMax: player.health ?? 3500,
             HealthRegen: player.healthRegen ?? 0,
+            Income: player.income ?? 0,
+            Gold: player.gold ?? 0,
           },
           (player.cards ?? [])
             .map((c) =>
-              createBoardCardFromId(Cards, c.cardId, c.tier, c.enchantment),
+              createBoardCardFromId(
+                Cards,
+                c.cardId,
+                c.tier,
+                c.enchantment,
+                c.attributeOverrides,
+              ),
             )
             .concat(
               (player.skills ?? []).map((s) =>

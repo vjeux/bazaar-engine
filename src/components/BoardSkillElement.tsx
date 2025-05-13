@@ -2,7 +2,7 @@
 import type { BoardCard, GameState } from "@/engine/Engine";
 import React from "react";
 import FramedCardOrSkill from "./FramedCardOrSkill";
-import TooltipWithGameState from "./TooltipWithGameState";
+import CardTooltip from "./CardTooltip";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
 import { useSimulatorStore } from "@/lib/simulatorStore";
 import { PLAYER_PLAYER_IDX } from "@/lib/constants";
@@ -55,7 +55,7 @@ export function BoardSkillElement({
         </div>
       </TooltipTrigger>
       <TooltipContent>
-        <TooltipWithGameState
+        <CardTooltip
           card={boardSkill.card}
           gameState={gameState}
           playerID={playerID}
