@@ -31,6 +31,9 @@ function _createBoardCardFromCard(
     baseAttributes[attribute as AttributeType] = undefined;
   }
 
+  // All cards have a CritChance base of 0
+  baseAttributes.CritChance = 0;
+
   // Combine with other required properties
   let attributes = {
     ...baseAttributes,
