@@ -101,13 +101,20 @@ export default function SimulatorPage() {
           {/* Enemy Selection */}
           <EncounterSelector encounters={flattenedEncounters} />
           {/* Reset button */}
-          <Button
-            variant={"destructive"}
-            className="hover:cursor-pointer"
-            onClick={() => simulatorStoreActions.reset()}
-          >
-            Reset
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant={"destructive"}
+                className="hover:cursor-pointer"
+                onClick={() => simulatorStoreActions.reset()}
+              >
+                Reset
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>WARNING: Resets everything</p>
+            </TooltipContent>
+          </Tooltip>
           <div
             className={cn(
               "ml-auto flex items-center",
