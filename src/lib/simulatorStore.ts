@@ -122,21 +122,42 @@ const generateCalculationId = () => uuidv4();
 // URL Persistance
 const persistentStorage: StateStorage = {
   getItem: (key): string => {
-    const searchParams = new URLSearchParams(location.hash.slice(1));
+    const searchParams = new URLSearchParams(window.location.hash.slice(1));
     const storedValue = searchParams.get(key) ?? "";
     return JSON.parse(storedValue);
   },
   setItem: (key, newValue): void => {
-    const searchParams = new URLSearchParams(location.hash.slice(1));
+    const searchParams = new URLSearchParams(window.location.hash.slice(1));
     searchParams.set(key, JSON.stringify(newValue));
-    location.hash = searchParams.toString();
+    // Save the current state in history
+    window.history.pushState(
+      { [key]: JSON.stringify(newValue) },
+      "",
+      `#${searchParams.toString()}`,
+    );
   },
   removeItem: (key): void => {
-    const searchParams = new URLSearchParams(location.hash.slice(1));
+    const searchParams = new URLSearchParams(window.location.hash.slice(1));
     searchParams.delete(key);
-    location.hash = searchParams.toString();
+    window.history.pushState({}, "", `#${searchParams.toString()}`);
   },
 };
+
+// Handle browser back/forward navigation
+if (typeof window !== "undefined") {
+  window.addEventListener("popstate", (event) => {
+    // When the browser's back/forward buttons are used,
+    // reload the page with the new state from the URL
+    if (event.state) {
+      // Optional: you can access state from event.state
+      // and apply it directly if needed
+
+      // Force reinitialization with the new URL params
+      // This will trigger a re-read from the URL
+      window.location.reload();
+    }
+  });
+}
 
 // Run simulation and recalculate winrate if enabled
 const runSimulationAndUpdateWinrate = (
