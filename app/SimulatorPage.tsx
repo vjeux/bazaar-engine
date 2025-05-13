@@ -26,10 +26,10 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { MoonLoader } from "react-spinners";
-import { cn } from "@/lib/utils";
 import SandstormParticles from "../src/components/SandStormParticles";
 import { ENEMY_PLAYER_IDX, PLAYER_PLAYER_IDX } from "@/lib/constants";
 import { PlayerStatsDialog } from "../src/components/PlayerStatsDialog";
+import WinrateCalculator from "@/components/WinrateCalculator";
 
 // Memoized version of SandstormParticles to prevent re-renders
 const MemoizedSandstormParticles = memo(SandstormParticles);
@@ -115,15 +115,8 @@ export default function SimulatorPage() {
               <p>WARNING: Resets everything</p>
             </TooltipContent>
           </Tooltip>
-          <div
-            className={cn(
-              "ml-auto flex items-center",
-              steps.at(-1)?.winner == "Player" && "text-green",
-              steps.at(-1)?.winner == "Enemy" && "text-red-500",
-              steps.at(-1)?.winner == "Draw" && "text-yellow-500",
-            )}
-          >
-            Winner: {steps.at(-1)?.winner}
+          <div className="ml-auto">
+            <WinrateCalculator />
           </div>
         </div>
 

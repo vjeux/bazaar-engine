@@ -295,6 +295,7 @@ export function getInitialGameState(
   Cards: Cards,
   Encounters: EncounterDays,
   config: (MonsterConfig | PlayerConfig)[],
+  randomSeed: number = 1,
 ): GameState {
   return {
     tick: 0,
@@ -331,7 +332,12 @@ export function getInitialGameState(
       }
     }),
     multicast: [],
-    getRand: sfc32(0, 10000, 10000000, 100000000000),
+    getRand: sfc32(
+      randomSeed,
+      randomSeed + 10000,
+      randomSeed * 10000000,
+      randomSeed * 100000000000,
+    ),
   };
 }
 
