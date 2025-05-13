@@ -16,7 +16,7 @@ export default function WinrateCalculator() {
   );
   const steps = useSimulatorStore((state) => state.steps);
   const [simCount, setSimCount] = useState(
-    targetSimulations > 0 ? targetSimulations.toString() : "100",
+    targetSimulations > 0 ? targetSimulations : 100,
   );
   const isEnabled = isCalculating || winrate !== null;
 
@@ -24,22 +24,21 @@ export default function WinrateCalculator() {
     if (isEnabled) {
       simulatorStoreActions.resetWinrateCalculation();
     } else {
-      const numSimulations = parseInt(simCount) || 100;
-      simulatorStoreActions.calculateWinrate(numSimulations);
+      simulatorStoreActions.calculateWinrate(simCount);
     }
   };
 
   // Only update the input value, but don't trigger recalculation
   const handleSimCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSimCount(e.target.value);
+    const value = parseInt(e.target.value) || 100;
+    setSimCount(value);
   };
 
   // Handle input blur or Enter key - trigger recalculation
   const handleSimCountUpdate = () => {
     // Only recalculate if winrate tracking is already enabled
     if (isEnabled) {
-      const numSimulations = parseInt(simCount) || 100;
-      simulatorStoreActions.calculateWinrate(numSimulations);
+      simulatorStoreActions.calculateWinrate(simCount);
     }
   };
 
