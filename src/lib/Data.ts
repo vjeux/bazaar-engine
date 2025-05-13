@@ -31,7 +31,7 @@ function filterValidCards(cards: Cards): Cards {
 }
 
 async function fetchJSON<T>(url: string): Promise<T> {
-  const response = await fetch(url, { mode: "no-cors" });
+  const response = await fetch(url);
   if (!response.ok) {
     throw new Error(`Failed to fetch from ${url}: ${response.statusText}`);
   }
@@ -188,23 +188,15 @@ export async function genCardsAndEncounters(): Promise<{
   }
 
   if (!cards) {
-    const baseUrl =
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:3000"
-        : "https://" + process.env.NEXT_PUBLIC_VERCEL_URL;
-    cards = await fetchJSON<Cards>(`${baseUrl}/json/cards.json`);
+    cards = await fetchJSON<Cards>(`/json/cards.json`);
     // Filter cards before storing in IndexedDB
     cards = filterValidCards(cards);
     await saveToIndexedDB(CARDS_STORE, CARDS_VERSION, cards);
   }
 
   if (!encounters) {
-    const baseUrl =
-      process.env.NODE_ENV === "development"
-        ? "http://localhost:3000"
-        : "https://" + process.env.NEXT_PUBLIC_VERCEL_URL;
     encounters = await fetchJSON<EncounterDays>(
-      `${baseUrl}/json/monsterEncounterDays.json`,
+      `/json/monsterEncounterDays.json`,
     );
     await saveToIndexedDB(ENCOUNTERS_STORE, CARDS_VERSION, encounters);
   }
