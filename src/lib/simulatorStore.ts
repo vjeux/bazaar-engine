@@ -84,7 +84,6 @@ const runWrapper = (
   playerConfig: PlayerConfig,
   randomSeed: number = 1,
 ) => {
-  const t0 = performance.now();
   const steps = run(
     getInitialGameState(
       CardsData,
@@ -94,8 +93,6 @@ const runWrapper = (
     ),
     100000,
   );
-  const t1 = performance.now();
-  console.log(`Running simulation took ${t1 - t0} milliseconds`);
   return steps;
 };
 const initialSteps = runWrapper(initialMonster, initialPlayer);
@@ -129,29 +126,14 @@ const persistentStorage: StateStorage = {
   setItem: (key, newValue): void => {
     const searchParams = new URLSearchParams(window.location.hash.slice(1));
     searchParams.set(key, JSON.stringify(newValue));
-    // Save the current state in history
-    window.history.pushState(
-      { [key]: JSON.stringify(newValue) },
-      "",
-      `#${searchParams.toString()}`,
-    );
+    window.location.hash = searchParams.toString();
   },
   removeItem: (key): void => {
     const searchParams = new URLSearchParams(window.location.hash.slice(1));
     searchParams.delete(key);
-    window.history.pushState({}, "", `#${searchParams.toString()}`);
+    window.location.hash = searchParams.toString();
   },
 };
-
-// Handle browser back/forward navigation
-if (typeof window !== "undefined") {
-  window.addEventListener("popstate", (event) => {
-    if (event.state) {
-      // Force reinitialization with the new URL params
-      window.location.reload();
-    }
-  });
-}
 
 // Run simulation and recalculate winrate if enabled
 const runSimulationAndUpdateWinrate = (
