@@ -16,6 +16,7 @@ import type {
 import { z } from "zod";
 import { v7 as uuidv7 } from "uuid";
 import { CARDS_VERSION, defaultSandstormInitialTick } from "@/lib/constants.ts";
+import prand from "pure-rand";
 
 function _createBoardCardFromCard(
   card: Card,
@@ -243,22 +244,6 @@ function createBoardPlayerFromMonsterName(
   throw new Error(`Can't find a monster with name ${name}`);
 }
 
-function sfc32(a: number, b: number, c: number, d: number) {
-  return function () {
-    a |= 0;
-    b |= 0;
-    c |= 0;
-    d |= 0;
-    const t = (((a + b) | 0) + d) | 0;
-    d = (d + 1) | 0;
-    a = b ^ (b >>> 9);
-    b = (c + (c << 3)) | 0;
-    c = (c << 21) | (c >>> 11);
-    c = (c + t) | 0;
-    return (t >>> 0) / 4294967296;
-  };
-}
-
 // Define Zod schema for MonsterConfig
 export const MonsterConfigSchema = z.object({
   type: z.literal("monster"),
@@ -295,6 +280,7 @@ export function getInitialGameState(
   Cards: Cards,
   Encounters: EncounterDays,
   config: (MonsterConfig | PlayerConfig)[],
+  randomSeed: number = 1,
 ): GameState {
   return {
     tick: 0,
@@ -331,7 +317,7 @@ export function getInitialGameState(
       }
     }),
     multicast: [],
-    getRand: sfc32(0, 10000, 10000000, 100000000000),
+    randomGen: prand.xoroshiro128plus(randomSeed),
   };
 }
 

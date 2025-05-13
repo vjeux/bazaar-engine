@@ -14,6 +14,7 @@ import { arrayMove } from "@dnd-kit/sortable";
 import { AttributeType } from "@/types/cardTypes";
 import { Tier } from "@/types/shared";
 import { EnchantmentType } from "@/types/shared";
+import { v4 as uuidv4 } from "uuid";
 const { Cards: CardsData, Encounters: EncounterData } =
   await genCardsAndEncounters();
 
@@ -26,6 +27,11 @@ type State = {
   battleSpeed: number;
   stepCount: number;
   editingCardIndex: number | null;
+  isCalculatingWinrate: boolean;
+  winrate: number | null;
+  completedSimulations: number;
+  targetSimulations: number;
+  calculationId: string;
 };
 
 type Actions = {
@@ -53,6 +59,8 @@ type Actions = {
     ) => void;
     setCardTier: (cardIndex: number, tier: Tier) => void;
     setEditingCardIndex: (index: number | null) => void;
+    calculateWinrate: (numSimulations?: number) => void;
+    resetWinrateCalculation: () => void;
   };
 };
 
@@ -74,13 +82,16 @@ const initialMonster: MonsterConfig = {
 const runWrapper = (
   monsterConfig: MonsterConfig,
   playerConfig: PlayerConfig,
+  randomSeed: number = 1,
 ) => {
   const t0 = performance.now();
   const steps = run(
-    getInitialGameState(CardsData, EncounterData, [
-      monsterConfig,
-      playerConfig,
-    ]),
+    getInitialGameState(
+      CardsData,
+      EncounterData,
+      [monsterConfig, playerConfig],
+      randomSeed,
+    ),
     100000,
   );
   const t1 = performance.now();
@@ -98,52 +109,94 @@ const initialState: State = {
   battleSpeed: 1,
   stepCount: 0,
   editingCardIndex: null,
+  isCalculatingWinrate: false,
+  winrate: null,
+  completedSimulations: 0,
+  targetSimulations: 100,
+  calculationId: "",
 };
+
+// Helper to generate random ID
+const generateCalculationId = () => uuidv4();
 
 // URL Persistance
 const persistentStorage: StateStorage = {
   getItem: (key): string => {
-    const searchParams = new URLSearchParams(location.hash.slice(1));
+    const searchParams = new URLSearchParams(window.location.hash.slice(1));
     const storedValue = searchParams.get(key) ?? "";
     return JSON.parse(storedValue);
   },
   setItem: (key, newValue): void => {
-    const searchParams = new URLSearchParams(location.hash.slice(1));
+    const searchParams = new URLSearchParams(window.location.hash.slice(1));
     searchParams.set(key, JSON.stringify(newValue));
-    location.hash = searchParams.toString();
+    // Save the current state in history
+    window.history.pushState(
+      { [key]: JSON.stringify(newValue) },
+      "",
+      `#${searchParams.toString()}`,
+    );
   },
   removeItem: (key): void => {
-    const searchParams = new URLSearchParams(location.hash.slice(1));
+    const searchParams = new URLSearchParams(window.location.hash.slice(1));
     searchParams.delete(key);
-    location.hash = searchParams.toString();
+    window.history.pushState({}, "", `#${searchParams.toString()}`);
   },
+};
+
+// Handle browser back/forward navigation
+if (typeof window !== "undefined") {
+  window.addEventListener("popstate", (event) => {
+    if (event.state) {
+      // Force reinitialization with the new URL params
+      window.location.reload();
+    }
+  });
+}
+
+// Run simulation and recalculate winrate if enabled
+const runSimulationAndUpdateWinrate = (
+  state: State,
+  actions: Actions["actions"],
+) => {
+  // Run the simulation and update steps
+  state.steps = runWrapper(state.monsterConfig, state.playerConfig);
+
+  // If winrate calculation is enabled, schedule recalculation after current update completes
+  if (
+    state.isCalculatingWinrate ||
+    (state.winrate !== null && state.targetSimulations > 0)
+  ) {
+    // Need setTimeout to ensure UI updates properly between state changes
+    const simCount = state.targetSimulations;
+    setTimeout(() => actions.calculateWinrate(simCount), 0);
+  }
 };
 
 export const useSimulatorStore = create<State & Actions>()(
   persist(
-    immer((set) => ({
+    immer((set, get) => ({
       ...initialState,
       actions: {
         setPlayerConfig: (playerConfig: PlayerConfig) =>
           set((state) => {
             state.playerConfig = playerConfig;
-            state.steps = runWrapper(state.monsterConfig, playerConfig);
+            runSimulationAndUpdateWinrate(state, get().actions);
           }),
         setMonsterConfig: (monsterConfig: MonsterConfig) =>
           set((state) => {
             state.monsterConfig = monsterConfig;
-            state.steps = runWrapper(monsterConfig, state.playerConfig);
             state.stepCount = 0;
+            runSimulationAndUpdateWinrate(state, get().actions);
           }),
         addPlayerCard: (card: PlayerCardConfig) =>
           set((state) => {
             (state.playerConfig.cards ??= []).push(card);
-            state.steps = runWrapper(state.monsterConfig, state.playerConfig);
+            runSimulationAndUpdateWinrate(state, get().actions);
           }),
         addPlayerSkill: (skill: PlayerSkillConfig) =>
           set((state) => {
             (state.playerConfig.skills ??= []).push(skill);
-            state.steps = runWrapper(state.monsterConfig, state.playerConfig);
+            runSimulationAndUpdateWinrate(state, get().actions);
           }),
         setAutoScroll: (autoScroll: boolean) =>
           set((state) => {
@@ -163,17 +216,17 @@ export const useSimulatorStore = create<State & Actions>()(
           }),
         recalculateSteps: () =>
           set((state) => {
-            state.steps = runWrapper(state.monsterConfig, state.playerConfig);
+            runSimulationAndUpdateWinrate(state, get().actions);
           }),
         removePlayerCard: (cardIndex: number) =>
           set((state) => {
             state.playerConfig.cards?.splice(cardIndex, 1);
-            state.steps = runWrapper(state.monsterConfig, state.playerConfig);
+            runSimulationAndUpdateWinrate(state, get().actions);
           }),
         removePlayerSkill: (skillIndex: number) =>
           set((state) => {
             state.playerConfig.skills?.splice(skillIndex, 1);
-            state.steps = runWrapper(state.monsterConfig, state.playerConfig);
+            runSimulationAndUpdateWinrate(state, get().actions);
           }),
         reset: () => {
           set(initialState);
@@ -186,7 +239,7 @@ export const useSimulatorStore = create<State & Actions>()(
               newIndex,
             );
             state.playerConfig.cards = newCards;
-            state.steps = runWrapper(state.monsterConfig, state.playerConfig);
+            runSimulationAndUpdateWinrate(state, get().actions);
           }),
         setCardAttributeOverrides: (
           cardIndex: number,
@@ -197,7 +250,7 @@ export const useSimulatorStore = create<State & Actions>()(
               state.playerConfig.cards[cardIndex].attributeOverrides =
                 attributeOverrides;
             }
-            state.steps = runWrapper(state.monsterConfig, state.playerConfig);
+            runSimulationAndUpdateWinrate(state, get().actions);
           }),
         setCardEnchantment: (cardIndex: number, enchantment: EnchantmentType) =>
           set((state) => {
@@ -206,7 +259,7 @@ export const useSimulatorStore = create<State & Actions>()(
               card.enchantment = enchantment;
               card.attributeOverrides = {};
             }
-            state.steps = runWrapper(state.monsterConfig, state.playerConfig);
+            runSimulationAndUpdateWinrate(state, get().actions);
           }),
         setCardTier: (cardIndex: number, tier: Tier) =>
           set((state) => {
@@ -214,11 +267,91 @@ export const useSimulatorStore = create<State & Actions>()(
               state.playerConfig.cards[cardIndex].tier = tier;
               state.playerConfig.cards[cardIndex].attributeOverrides = {};
             }
-            state.steps = runWrapper(state.monsterConfig, state.playerConfig);
+            runSimulationAndUpdateWinrate(state, get().actions);
           }),
         setEditingCardIndex: (index: number | null) =>
           set((state) => {
             state.editingCardIndex = index;
+          }),
+        calculateWinrate: (numSimulations = 100) => {
+          const state = get();
+          const monsterConfig = { ...state.monsterConfig };
+          const playerConfig = { ...state.playerConfig };
+
+          // Generate a new calculation ID
+          const calculationId = generateCalculationId();
+
+          // Reset winrate calculation state
+          set((state) => {
+            state.isCalculatingWinrate = true;
+            state.winrate = null;
+            state.targetSimulations = numSimulations;
+            state.completedSimulations = 0;
+            state.calculationId = calculationId;
+          });
+
+          let playerWins = 0;
+          let currentSeed = 0;
+
+          // Process simulations in batches to allow UI updates
+          const processBatch = () => {
+            // Get the current calculation ID to check if we should continue
+            const currentState = get();
+            const currentCalculationId = currentState.calculationId;
+
+            // If the calculation ID has changed, this calculation is obsolete
+            if (currentCalculationId !== calculationId) {
+              return;
+            }
+
+            // Process a small batch of simulations (10 at a time)
+            const batchSize = 10;
+            const endSeed = Math.min(currentSeed + batchSize, numSimulations);
+
+            for (let seed = currentSeed; seed < endSeed; seed++) {
+              const steps = runWrapper(monsterConfig, playerConfig, seed);
+              const winner = steps.at(-1)?.winner;
+
+              // Count wins
+              if (winner === "Player" || winner === "Draw") {
+                playerWins++;
+              }
+            }
+
+            // Update UI with progress (only if this calculation is still valid)
+            set((state) => {
+              if (state.calculationId === calculationId) {
+                state.completedSimulations = endSeed;
+              }
+            });
+
+            // If there are more simulations to run, schedule the next batch
+            if (endSeed < numSimulations) {
+              currentSeed = endSeed;
+              setTimeout(processBatch, 0);
+            } else {
+              // All done, calculate final winrate (only if this calculation is still valid)
+              const finalWinrate = playerWins / numSimulations;
+              set((state) => {
+                if (state.calculationId === calculationId) {
+                  state.winrate = finalWinrate;
+                  state.isCalculatingWinrate = false;
+                }
+              });
+            }
+          };
+
+          // Start the first batch
+          setTimeout(processBatch, 0);
+        },
+        resetWinrateCalculation: () =>
+          set((state) => {
+            state.isCalculatingWinrate = false;
+            state.winrate = null;
+            state.targetSimulations = 0;
+            state.completedSimulations = 0;
+            // Reset the calculation ID when canceling calculations
+            state.calculationId = "";
           }),
       },
     })),
@@ -255,3 +388,14 @@ export const useBattleSpeed = () =>
 export const useStepCount = () => useSimulatorStore((state) => state.stepCount);
 export const useEditingCardIndex = () =>
   useSimulatorStore((state) => state.editingCardIndex);
+export const useWinrateCalculation = () => {
+  const isCalculating = useSimulatorStore(
+    (state) => state.isCalculatingWinrate,
+  );
+  const winrate = useSimulatorStore((state) => state.winrate);
+  const total = useSimulatorStore((state) => state.targetSimulations);
+  const completed = useSimulatorStore((state) => state.completedSimulations);
+  const progress = completed / (total || 1);
+
+  return { isCalculating, winrate, progress, total, completed };
+};
