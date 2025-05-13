@@ -136,7 +136,7 @@ export default function WinrateCalculator() {
             <div className="w-full">
               <Progress value={progress * 100} className="h-2 w-full" />
             </div>
-            <p className="text-xs whitespace-nowrap">
+            <p className="text-xs whitespace-nowrap font-mono">
               {completed}/{total}
             </p>
           </div>
