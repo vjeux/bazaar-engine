@@ -7,7 +7,6 @@ import {
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import FramedCardOrSkill from "./FramedCardOrSkill";
-import TooltipWithGameState from "./TooltipWithGameState";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
 import { useSimulatorStore, useEditingCardIndex } from "@/lib/simulatorStore";
 import { useSortable } from "@dnd-kit/sortable";
@@ -31,6 +30,7 @@ import { Label } from "./ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger } from "./ui/select";
 import { SelectValue } from "@radix-ui/react-select";
 import { EnchantmentType, Tier } from "@/types/shared";
+import CardTooltip from "./CardTooltip";
 
 export function BoardCardElement({
   boardCard,
@@ -493,6 +493,11 @@ export function BoardCardElement({
                     top: (CARD_HEIGHT * paddingTop) / 2,
                   }}
                 >
+                  {boardCard.Enchantment && (
+                    <div className="m-[0_2px] rounded-[5px] bg-gray-500 p-[2px_5px] text-white">
+                      {boardCard.Enchantment}
+                    </div>
+                  )}
                   {DamageAmount !== undefined && (
                     <div
                       className={cn(
@@ -571,7 +576,7 @@ export function BoardCardElement({
           </div>
         </TooltipTrigger>
         <TooltipContent>
-          <TooltipWithGameState
+          <CardTooltip
             card={boardCard.card}
             gameState={gameState}
             playerID={playerIdx}

@@ -2,7 +2,7 @@ import { memo, useCallback, useMemo, useState } from "react";
 import { Card, Cards, CardType } from "../types/cardTypes.ts";
 import Fuse from "fuse.js";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip.tsx";
-import TooltipWithoutGameState from "./TooltipWithoutGameState.tsx";
+import CardTooltip from "./CardTooltip";
 import FramedCardOrSkill from "./FramedCardOrSkill.tsx";
 import { useSimulatorStore } from "@/lib/simulatorStore.ts";
 import { PlayerCardConfig, PlayerSkillConfig } from "@/engine/GameState.ts";
@@ -130,7 +130,7 @@ function SearchResultItem_({
         />
       </TooltipTrigger>
       <TooltipContent>
-        <TooltipWithoutGameState card={item} />
+        <CardTooltip card={item} />
       </TooltipContent>
     </Tooltip>
   );
