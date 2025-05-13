@@ -146,14 +146,8 @@ const persistentStorage: StateStorage = {
 // Handle browser back/forward navigation
 if (typeof window !== "undefined") {
   window.addEventListener("popstate", (event) => {
-    // When the browser's back/forward buttons are used,
-    // reload the page with the new state from the URL
     if (event.state) {
-      // Optional: you can access state from event.state
-      // and apply it directly if needed
-
       // Force reinitialization with the new URL params
-      // This will trigger a re-read from the URL
       window.location.reload();
     }
   });
