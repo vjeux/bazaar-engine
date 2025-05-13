@@ -1,6 +1,6 @@
 import { useSimulatorStore, useWinrateCalculation } from "@/lib/simulatorStore";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Input } from "./ui/input";
 import { Progress } from "./ui/progress";
 import { Button } from "./ui/button";
@@ -18,6 +18,9 @@ export default function WinrateCalculator() {
   const [simCount, setSimCount] = useState(
     targetSimulations > 0 ? targetSimulations : 100,
   );
+  const lastCalculatedCountRef = useRef(
+    targetSimulations > 0 ? targetSimulations : 100,
+  );
   const isEnabled = isCalculating || winrate !== null;
 
   const handleCalculateWinrate = () => {
@@ -25,6 +28,7 @@ export default function WinrateCalculator() {
       simulatorStoreActions.resetWinrateCalculation();
     } else {
       simulatorStoreActions.calculateWinrate(simCount);
+      lastCalculatedCountRef.current = simCount;
     }
   };
 
@@ -37,8 +41,10 @@ export default function WinrateCalculator() {
   // Handle input blur or Enter key - trigger recalculation
   const handleSimCountUpdate = () => {
     // Only recalculate if winrate tracking is already enabled
-    if (isEnabled) {
+    // and the simulation count has changed
+    if (isEnabled && simCount !== lastCalculatedCountRef.current) {
       simulatorStoreActions.calculateWinrate(simCount);
+      lastCalculatedCountRef.current = simCount;
     }
   };
 
