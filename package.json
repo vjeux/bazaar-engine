@@ -48,6 +48,7 @@
     "nuqs": "^2.4.3",
     "pako": "2.1.0",
     "postcss": "^8.5.3",
+    "pure-rand": "^7.0.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
     "react-scan": "^0.3.3",

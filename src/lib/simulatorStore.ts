@@ -14,6 +14,7 @@ import { arrayMove } from "@dnd-kit/sortable";
 import { AttributeType } from "@/types/cardTypes";
 import { Tier } from "@/types/shared";
 import { EnchantmentType } from "@/types/shared";
+import { v4 as uuidv4 } from "uuid";
 const { Cards: CardsData, Encounters: EncounterData } =
   await genCardsAndEncounters();
 
@@ -30,6 +31,7 @@ type State = {
   winrate: number | null;
   completedSimulations: number;
   targetSimulations: number;
+  calculationId: string;
 };
 
 type Actions = {
@@ -111,7 +113,11 @@ const initialState: State = {
   winrate: null,
   completedSimulations: 0,
   targetSimulations: 100,
+  calculationId: "",
 };
+
+// Helper to generate random ID
+const generateCalculationId = () => uuidv4();
 
 // URL Persistance
 const persistentStorage: StateStorage = {
@@ -257,12 +263,16 @@ export const useSimulatorStore = create<State & Actions>()(
           const monsterConfig = { ...state.monsterConfig };
           const playerConfig = { ...state.playerConfig };
 
+          // Generate a new calculation ID
+          const calculationId = generateCalculationId();
+
           // Reset winrate calculation state
           set((state) => {
             state.isCalculatingWinrate = true;
             state.winrate = null;
             state.targetSimulations = numSimulations;
             state.completedSimulations = 0;
+            state.calculationId = calculationId;
           });
 
           let playerWins = 0;
@@ -270,6 +280,15 @@ export const useSimulatorStore = create<State & Actions>()(
 
           // Process simulations in batches to allow UI updates
           const processBatch = () => {
+            // Get the current calculation ID to check if we should continue
+            const currentState = get();
+            const currentCalculationId = currentState.calculationId;
+
+            // If the calculation ID has changed, this calculation is obsolete
+            if (currentCalculationId !== calculationId) {
+              return;
+            }
+
             // Process a small batch of simulations (10 at a time)
             const batchSize = 10;
             const endSeed = Math.min(currentSeed + batchSize, numSimulations);
@@ -284,9 +303,11 @@ export const useSimulatorStore = create<State & Actions>()(
               }
             }
 
-            // Update UI with progress
+            // Update UI with progress (only if this calculation is still valid)
             set((state) => {
-              state.completedSimulations = endSeed;
+              if (state.calculationId === calculationId) {
+                state.completedSimulations = endSeed;
+              }
             });
 
             // If there are more simulations to run, schedule the next batch
@@ -294,11 +315,13 @@ export const useSimulatorStore = create<State & Actions>()(
               currentSeed = endSeed;
               setTimeout(processBatch, 0);
             } else {
-              // All done, calculate final winrate
+              // All done, calculate final winrate (only if this calculation is still valid)
               const finalWinrate = playerWins / numSimulations;
               set((state) => {
-                state.winrate = finalWinrate;
-                state.isCalculatingWinrate = false;
+                if (state.calculationId === calculationId) {
+                  state.winrate = finalWinrate;
+                  state.isCalculatingWinrate = false;
+                }
               });
             }
           };
@@ -312,6 +335,8 @@ export const useSimulatorStore = create<State & Actions>()(
             state.winrate = null;
             state.targetSimulations = 0;
             state.completedSimulations = 0;
+            // Reset the calculation ID when canceling calculations
+            state.calculationId = "";
           }),
       },
     })),

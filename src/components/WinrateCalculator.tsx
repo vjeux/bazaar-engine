@@ -2,8 +2,10 @@ import { useSimulatorStore, useWinrateCalculation } from "@/lib/simulatorStore";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { Input } from "./ui/input";
-import { Checkbox } from "./ui/checkbox";
 import { Progress } from "./ui/progress";
+import { Button } from "./ui/button";
+import { Calculator } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 export default function WinrateCalculator() {
   const { isCalculating, winrate, progress, total, completed } =
@@ -14,13 +16,12 @@ export default function WinrateCalculator() {
   );
   const steps = useSimulatorStore((state) => state.steps);
   const [simCount, setSimCount] = useState(
-    targetSimulations.toString() || "100",
+    targetSimulations > 0 ? targetSimulations.toString() : "100",
   );
-
-  const isWinrateTrackingEnabled = isCalculating || winrate !== null;
+  const isEnabled = isCalculating || winrate !== null;
 
   const handleCalculateWinrate = () => {
-    if (isWinrateTrackingEnabled) {
+    if (isEnabled) {
       simulatorStoreActions.resetWinrateCalculation();
     } else {
       const numSimulations = parseInt(simCount) || 100;
@@ -35,8 +36,8 @@ export default function WinrateCalculator() {
 
   // Handle input blur or Enter key - trigger recalculation
   const handleSimCountUpdate = () => {
-    // Only recalculate if winrate tracking is already enabled and not currently calculating
-    if (isWinrateTrackingEnabled && !isCalculating) {
+    // Only recalculate if winrate tracking is already enabled
+    if (isEnabled) {
       const numSimulations = parseInt(simCount) || 100;
       simulatorStoreActions.calculateWinrate(numSimulations);
     }
@@ -57,19 +58,7 @@ export default function WinrateCalculator() {
   return (
     <div className="flex flex-col items-end gap-2">
       <div className="flex items-center gap-2">
-        <Checkbox
-          id="calculate-winrate"
-          checked={isWinrateTrackingEnabled}
-          onCheckedChange={handleCalculateWinrate}
-        />
-        <label
-          htmlFor="calculate-winrate"
-          className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-        >
-          Calculate Winrate
-        </label>
-
-        {isWinrateTrackingEnabled && (
+        {isEnabled && (
           <>
             <Input
               type="number"
@@ -79,15 +68,32 @@ export default function WinrateCalculator() {
               onChange={handleSimCountChange}
               onBlur={handleSimCountUpdate}
               onKeyDown={handleKeyDown}
-              className="h-8 w-20 text-xs"
+              className="h-8 w-20 text-xs [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
               disabled={isCalculating}
               placeholder="Sims"
             />
             <span className="text-muted-foreground text-sm leading-none font-medium">
-              x simulations
+              simulations
             </span>
           </>
         )}
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              variant={isEnabled ? "default" : "outline"}
+              size="icon"
+              onClick={handleCalculateWinrate}
+              className="h-8 w-8 hover:cursor-pointer"
+              disabled={isCalculating}
+            >
+              <Calculator className="h-4 w-4" />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Winrate calculation</p>
+          </TooltipContent>
+        </Tooltip>
       </div>
 
       {/* Combined Winner, Winrate, and Progress display */}

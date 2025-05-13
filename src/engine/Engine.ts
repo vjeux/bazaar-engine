@@ -23,13 +23,15 @@ import {
 } from "../types/cardTypes.ts";
 
 import type { Hero, Tag, Tier } from "../types/shared.ts";
+import { RandomGenerator } from "pure-rand/types/RandomGenerator";
+import prand from "pure-rand";
 
 export interface GameState {
   tick: number;
   isPlaying: boolean;
   players: Player[];
   multicast: Multicast[];
-  getRand: () => number;
+  randomGen: RandomGenerator;
   winner?: "Player" | "Enemy" | "Draw";
   sandstormStartTick: number;
 }
@@ -1029,7 +1031,10 @@ function runAction(
         throw new Error("Damage amount must exist for action player damage");
       }
       if (critChance > 0) {
-        if (gameState.getRand() * 100 < critChance) {
+        if (
+          prand.unsafeUniformIntDistribution(0, 100, gameState.randomGen) <
+          critChance
+        ) {
           amount *= 2;
           const damageCrit = getCardAttribute(
             gameState,
@@ -1115,7 +1120,10 @@ function runAction(
         AttributeType.CritChance,
       );
       if (critChance && critChance > 0) {
-        if (gameState.getRand() * 100 < critChance) {
+        if (
+          prand.unsafeUniformIntDistribution(0, 100, gameState.randomGen) <
+          critChance
+        ) {
           amount *= 2;
           hasCritted = true;
         }
@@ -1190,7 +1198,10 @@ function runAction(
         AttributeType.CritChance,
       );
       if (critChance && critChance > 0) {
-        if (gameState.getRand() * 100 < critChance) {
+        if (
+          prand.unsafeUniformIntDistribution(0, 100, gameState.randomGen) <
+          critChance
+        ) {
           amount *= 2;
           hasCritted = true;
         }
@@ -1238,7 +1249,10 @@ function runAction(
         AttributeType.CritChance,
       );
       if (critChance && critChance > 0) {
-        if (gameState.getRand() * 100 < critChance) {
+        if (
+          prand.unsafeUniformIntDistribution(0, 100, gameState.randomGen) <
+          critChance
+        ) {
           amount *= 2;
           hasCritted = true;
         }
@@ -1316,7 +1330,10 @@ function runAction(
         AttributeType.CritChance,
       );
       if (critChance && critChance > 0) {
-        if (gameState.getRand() * 100 < critChance) {
+        if (
+          prand.unsafeUniformIntDistribution(0, 100, gameState.randomGen) <
+          critChance
+        ) {
           amount *= 2;
           hasCritted = true;
         }
@@ -1393,7 +1410,10 @@ function runAction(
         AttributeType.CritChance,
       );
       if (critChance && critChance > 0) {
-        if (gameState.getRand() * 100 < critChance) {
+        if (
+          prand.unsafeUniformIntDistribution(0, 100, gameState.randomGen) <
+          critChance
+        ) {
           amount *= 2;
           hasCritted = true;
         }
@@ -2187,7 +2207,11 @@ function getTargetCards(
         // Shuffle
         let currentIndex = results.length;
         while (currentIndex != 0) {
-          const randomIndex = Math.floor(gameState.getRand() * currentIndex);
+          const randomIndex = prand.unsafeUniformIntDistribution(
+            0,
+            currentIndex - 1,
+            gameState.randomGen,
+          );
           currentIndex--;
           [results[currentIndex], results[randomIndex]] = [
             results[randomIndex],
