@@ -31,6 +31,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger } from "./ui/select";
 import { SelectValue } from "@radix-ui/react-select";
 import { EnchantmentType, Tier } from "@/types/shared";
 import CardTooltip from "./CardTooltip";
+import { Button } from "./ui/button";
+import { Bug, Settings, X } from "lucide-react";
 
 // Enchantment color mappings
 const ENCHANTMENT_COLORS: Record<EnchantmentType, string> = {
@@ -261,15 +263,16 @@ export function BoardCardElement({
               >
                 <DialogTrigger asChild>
                   <div className="tooltip absolute top-0.5 right-0.5 z-10">
-                    <button
-                      type="button"
-                      className="hover:cursor-pointer"
+                    <Button
+                      variant="secondary"
+                      size="icon"
+                      className="h-6 w-6 p-0 hover:cursor-pointer"
                       onClick={() => {
                         simulatorStoreActions.setAutoScroll(false);
                       }}
                     >
-                      ⚙️
-                    </button>
+                      <Settings className="h-4 w-4" />
+                    </Button>
                   </div>
                 </DialogTrigger>
                 <DialogContent className="max-h-[90vh] overflow-y-auto">
@@ -405,15 +408,16 @@ export function BoardCardElement({
             {/* Remove button */}
             {playerIdx == PLAYER_PLAYER_IDX && !isSorting && (
               <div className="tooltip absolute top-0.5 left-0.5 z-50">
-                <button
-                  type="button"
-                  className="hover:cursor-pointer"
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="h-6 w-6 p-0 hover:cursor-pointer"
                   onClick={() =>
                     simulatorStoreActions.removePlayerCard(boardCardIdx)
                   }
                 >
-                  ❌
-                </button>
+                  <X className="h-4 w-4" />
+                </Button>
               </div>
             )}
             {/* Debug button */}
@@ -421,9 +425,10 @@ export function BoardCardElement({
               !isSorting &&
               process.env.NODE_ENV === "development" && (
                 <div className="tooltip absolute right-0.5 bottom-0.5 z-50">
-                  <button
-                    type="button"
-                    className="hover:cursor-pointer"
+                  <Button
+                    variant="secondary"
+                    size="icon"
+                    className="h-6 w-6 p-0 hover:cursor-pointer"
                     onClick={() => {
                       console.log("boardCard", boardCard);
                       const attrObject = {} as Record<AttributeType, unknown>;
@@ -438,8 +443,8 @@ export function BoardCardElement({
                       console.log("getAttributes", attrObject);
                     }}
                   >
-                    🐛
-                  </button>
+                    <Bug className="h-4 w-4" />
+                  </Button>
                 </div>
               )}
             {/* Card container */}

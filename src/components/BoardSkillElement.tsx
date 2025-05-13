@@ -6,6 +6,9 @@ import CardTooltip from "./CardTooltip";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
 import { useSimulatorStore } from "@/lib/simulatorStore";
 import { PLAYER_PLAYER_IDX } from "@/lib/constants";
+import { Button } from "./ui/button";
+import { X } from "lucide-react";
+import { CardType } from "@/types/cardTypes";
 
 export function BoardSkillElement({
   boardSkill,
@@ -29,7 +32,9 @@ export function BoardSkillElement({
         <div
           className="tooltipContainer relative"
           onClick={() => {
-            console.log(boardSkill);
+            if (process.env.NODE_ENV === "development") {
+              console.log(boardSkill);
+            }
           }}
         >
           <FramedCardOrSkill
@@ -39,18 +44,27 @@ export function BoardSkillElement({
           />
           {/* Remove button */}
           {playerID == PLAYER_PLAYER_IDX && (
-            <button
-              type="button"
-              className="tooltip absolute top-0.5 left-0.5 z-50 hover:cursor-pointer"
-              onClick={() => {
-                const skillIndex = gameState.players[playerID].board.findIndex(
-                  (x) => x.card.Id === boardSkill.card.Id,
-                );
-                simulatorStoreActions.removePlayerSkill(skillIndex);
-              }}
-            >
-              ❌
-            </button>
+            <div className="tooltip absolute top-0.5 left-0.5 z-50">
+              <Button
+                variant="secondary"
+                size="icon"
+                className="h-6 w-6 p-0 hover:cursor-pointer"
+                onClick={() => {
+                  const actualIndex = gameState.players[
+                    playerID
+                  ].board.findIndex((x) => x.uuid === boardSkill.uuid);
+                  const lastCardIndex = gameState.players[
+                    playerID
+                  ].board.findLastIndex(
+                    (x) => x.card.$type === CardType.TCardItem,
+                  );
+                  const skillIndex = actualIndex - lastCardIndex - 1;
+                  simulatorStoreActions.removePlayerSkill(skillIndex);
+                }}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
           )}
         </div>
       </TooltipTrigger>
