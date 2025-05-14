@@ -61,7 +61,7 @@ export type BoardCard = {
   card: Card;
   uuid: string; // Used to identify similar cards in drag and drop
   tick: number;
-  tags: string[]; // visible tags on the card. Dynamic as certain auras can append tags.
+  Tags: string[]; // visible tags on the card. Dynamic as certain auras can append tags.
   HiddenTags: string[];
   tier: Tier;
   Enchantment?: keyof Enchantments | null;
@@ -261,9 +261,9 @@ export function getCardAttribute<K extends keyof BoardCard>(
   const value = boardCard[attribute];
 
   switch (attribute) {
-    case "tags": {
+    case "Tags": {
       let tags: Set<string> = new Set(
-        gameState.players[playerID].board[boardCardID].tags,
+        gameState.players[playerID].board[boardCardID].Tags,
       );
       forEachAura(
         gameState,
@@ -300,7 +300,7 @@ export function getCardAttribute<K extends keyof BoardCard>(
               tags = new Set([
                 ...tags,
                 ...gameState.players[targetPlayerID].board[targetBoardCardID]
-                  .tags,
+                  .Tags,
                 // TODO: works for now, should use getCardAttribute but it results in an infinite loop
                 // ...getCardAttribute(
                 //   gameState,
@@ -2012,7 +2012,7 @@ function getActionValue(
       );
       const foundTags = new Set<string>();
       targetCards.forEach(([playerID, boardCardID]) => {
-        getCardAttribute(gameState, playerID, boardCardID, "tags").forEach(
+        getCardAttribute(gameState, playerID, boardCardID, "Tags").forEach(
           (tag) => {
             foundTags.add(tag);
           },

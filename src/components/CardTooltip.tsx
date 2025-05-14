@@ -56,7 +56,7 @@ export default function CardTooltip({
   );
 
   const visibleTags = gameState
-    ? getCardAttribute(effectiveGameState, playerID, boardCardID, "tags")
+    ? getCardAttribute(effectiveGameState, playerID, boardCardID, "Tags")
     : card.Tags;
 
   return (

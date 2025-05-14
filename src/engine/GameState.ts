@@ -139,7 +139,7 @@ function _createBoardCardFromCard(
     card: card,
     uuid: uuid,
     tick: 0,
-    tags: card.Tags,
+    Tags: card.Tags,
     HiddenTags: attributes.HiddenTags,
     tier: tier,
     Enchantment: enchantment,
