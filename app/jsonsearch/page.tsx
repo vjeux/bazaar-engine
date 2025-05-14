@@ -107,7 +107,13 @@ export default function JsonSearchPage() {
         <ul className="flex list-inside list-disc flex-col gap-1">
           <li>
             <code>{`$[Abilities.*[Trigger != null and Trigger.Target != null]]`}</code>{" "}
-            - All cards with an ability that has a trigger and target
+            <span>
+              - All cards with an ability that has a trigger and target
+            </span>
+          </li>
+          <li>
+            <code>{`$[InternalName="Crow's Nest"]`}</code>{" "}
+            <span>- The card with the internal name Crow&apos;s Nest</span>
           </li>
         </ul>
       );
