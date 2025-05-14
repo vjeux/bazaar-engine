@@ -23,6 +23,17 @@ export default function Navbar() {
         >
           Home
         </Link>
+        <Link
+          href="/jsonsearch"
+          className={cn(
+            "hover:text-primary text-sm font-medium transition-colors",
+            pathname === "/jsonsearch"
+              ? "text-primary font-bold"
+              : "text-muted-foreground",
+          )}
+        >
+          JSON Search
+        </Link>
         <ModeToggle />
         <Link href="https://github.com/vjeux/bazaar-engine" target="_blank">
           <svg
