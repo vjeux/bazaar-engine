@@ -30,7 +30,7 @@ export default function JsonSearchPage() {
   const [hasSearched, setHasSearched] = useState<boolean>(false);
   const [queryEngine, setQueryEngine] = useState<
     "jmespath" | "jsonpath" | "jsonata"
-  >("jmespath");
+  >("jsonata");
 
   const searchCards = async () => {
     if (!searchPath) {
