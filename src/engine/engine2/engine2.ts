@@ -12,33 +12,102 @@ export type BoardCardID = {
 };
 
 /**
- * Event data type for EventBus
+ * Define all game event types with their payload structures
  */
-export interface EventData {
-  [key: string]: unknown;
+export interface GameEvents {
+  // Game events
+  "game:tick": { tick: number };
+  "game:fightStarted": Record<string, never>;
+  "game:ended": { winner: string };
+
+  // Card events
+  "card:triggered": { boardCardID: BoardCardID; card: unknown };
+  "card:attributeChanged": {
+    boardCardID: BoardCardID;
+    attribute: AttributeType | "tick";
+    oldValue: number;
+    newValue: number;
+  };
+
+  // Player events
+  "player:damaged": {
+    playerID: number;
+    amount: number;
+    sourceCardID: BoardCardID | null;
+  };
+  "player:healed": {
+    playerID: number;
+    amount: number;
+    sourceCardID: BoardCardID | null;
+  };
+  "player:overhealed": {
+    playerID: number;
+    amount: number;
+    sourceCardID: BoardCardID | null;
+  };
+  "player:attributeChanged": {
+    playerID: number;
+    attribute: string;
+    oldValue: number;
+    newValue: number;
+  };
+  "player:attributeChangeHandled": {
+    playerID: number;
+    attribute: string;
+    oldValue: number;
+    newValue: number;
+  };
+  "player:died": { playerID: number };
+  "player:shieldApplied": {
+    playerID: number;
+    amount: number;
+    sourceCardID: BoardCardID | null;
+  };
+  "player:poisonApplied": {
+    playerID: number;
+    amount: number;
+    sourceCardID: BoardCardID | null;
+  };
+  "player:burnApplied": {
+    playerID: number;
+    amount: number;
+    sourceCardID: BoardCardID | null;
+  };
+  "player:healHandled": {
+    playerID: number;
+    amount: number;
+    sourceCardID: BoardCardID | null;
+  };
 }
 
 /**
- * EventBus for game events
+ * Type-safe EventBus for game events
  */
 export class EventBus {
-  private listeners: Map<string, Array<(data: EventData) => void>> = new Map();
+  private listeners: {
+    [K in keyof GameEvents]?: Array<(data: GameEvents[K]) => void>;
+  } = {};
 
   /**
    * Register a listener for a specific event
    */
-  on(eventName: string, callback: (data: EventData) => void): void {
-    if (!this.listeners.has(eventName)) {
-      this.listeners.set(eventName, []);
+  on<K extends keyof GameEvents>(
+    eventName: K,
+    callback: (data: GameEvents[K]) => void,
+  ): void {
+    if (!this.listeners[eventName]) {
+      this.listeners[eventName] = [];
     }
-    this.listeners.get(eventName)?.push(callback);
+    this.listeners[eventName]?.push(
+      callback as (data: GameEvents[keyof GameEvents]) => void,
+    );
   }
 
   /**
    * Emit an event with data
    */
-  emit(eventName: string, data: EventData): void {
-    const eventListeners = this.listeners.get(eventName);
+  emit<K extends keyof GameEvents>(eventName: K, data: GameEvents[K]): void {
+    const eventListeners = this.listeners[eventName];
     if (eventListeners) {
       for (const listener of eventListeners) {
         listener(data);
@@ -49,10 +118,15 @@ export class EventBus {
   /**
    * Remove a listener for a specific event
    */
-  off(eventName: string, callback: (data: EventData) => void): void {
-    const eventListeners = this.listeners.get(eventName);
+  off<K extends keyof GameEvents>(
+    eventName: K,
+    callback: (data: GameEvents[K]) => void,
+  ): void {
+    const eventListeners = this.listeners[eventName];
     if (eventListeners) {
-      const index = eventListeners.indexOf(callback);
+      const index = eventListeners.indexOf(
+        callback as (data: GameEvents[keyof GameEvents]) => void,
+      );
       if (index !== -1) {
         eventListeners.splice(index, 1);
       }
@@ -63,7 +137,7 @@ export class EventBus {
    * Clear all listeners
    */
   clear(): void {
-    this.listeners.clear();
+    this.listeners = {};
   }
 }
 

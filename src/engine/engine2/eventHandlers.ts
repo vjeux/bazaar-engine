@@ -17,53 +17,53 @@ export function setupEventHandlers(gameState: GameState): void {
   const eventBus = gameState.eventBus;
 
   // Handle game tick events
-  eventBus.on("game:tick", (data: Record<string, unknown>) => {
-    handleGameTick(gameState, data.tick as number);
+  eventBus.on("game:tick", (data) => {
+    handleGameTick(gameState, data.tick);
   });
 
   // Handle card triggers
-  eventBus.on("card:triggered", (data: Record<string, unknown>) => {
-    handleCardTriggered(gameState, data.boardCardID as BoardCardID);
+  eventBus.on("card:triggered", (data) => {
+    handleCardFired(gameState, data.boardCardID);
   });
 
   // Handle player damage
-  eventBus.on("player:damaged", (data: Record<string, unknown>) => {
+  eventBus.on("player:damaged", (data) => {
     handlePlayerDamaged(
       gameState,
-      data.playerID as number,
-      data.amount as number,
-      data.sourceCardID as BoardCardID | null,
+      data.playerID,
+      data.amount,
+      data.sourceCardID,
     );
   });
 
   // Handle player healing
-  eventBus.on("player:healed", (data: Record<string, unknown>) => {
+  eventBus.on("player:healed", (data) => {
     handlePlayerHealed(
       gameState,
-      data.playerID as number,
-      data.amount as number,
-      data.sourceCardID as BoardCardID | null,
+      data.playerID,
+      data.amount,
+      data.sourceCardID,
     );
   });
 
   // Handle attribute changes
-  eventBus.on("card:attributeChanged", (data: Record<string, unknown>) => {
+  eventBus.on("card:attributeChanged", (data) => {
     handleCardAttributeChanged(
       gameState,
-      data.boardCardID as BoardCardID,
-      data.attribute as AttributeType | "tick",
-      data.oldValue as number,
-      data.newValue as number,
+      data.boardCardID,
+      data.attribute,
+      data.oldValue,
+      data.newValue,
     );
   });
 
-  eventBus.on("player:attributeChanged", (data: Record<string, unknown>) => {
+  eventBus.on("player:attributeChanged", (data) => {
     handlePlayerAttributeChanged(
       gameState,
-      data.playerID as number,
+      data.playerID,
       data.attribute as keyof Player,
-      data.oldValue as number,
-      data.newValue as number,
+      data.oldValue,
+      data.newValue,
     );
   });
 
@@ -333,16 +333,16 @@ function checkPlayerDeaths(gameState: GameState): void {
 }
 
 /**
- * Handle card triggered event
+ * Handle card fired event
  */
-function handleCardTriggered(
+function handleCardFired(
   gameState: GameState,
   boardCardID: BoardCardID,
 ): void {
   const { playerID, cardID } = boardCardID;
   const card = gameState.players[playerID].board[cardID];
 
-  // Process abilities when card is triggered
+  // Process abilities when card is fired
   card.AbilityIds.forEach((abilityId) => {
     const ability = card.Abilities[abilityId];
     if (!ability) return;
