@@ -316,66 +316,68 @@ export function getCardAttribute<K extends keyof BoardCard>(
       return Array.from(tags) as BoardCard[K];
     }
     default: {
-      // For numerical attributes only
-      if (typeof value === "number") {
-        let numericValue = value as number;
-
-        forEachAura(
-          gameState,
-          (
-            targetPlayer,
-            targetPlayerID,
-            targetBoardCard,
-            targetBoardCardID,
-            aura,
-          ) => {
-            const action = aura.Action;
-            if (
-              action.$type !== "TAuraActionCardModifyAttribute" ||
-              action.AttributeType !== attribute
-            ) {
-              return;
-            }
-            const targetCards = getTargetCards(
-              gameState,
-              action.Target,
-              playerID,
-              boardCardID,
-              targetPlayerID,
-              targetBoardCardID,
-            );
-
-            targetCards.forEach(
-              ([actionTargetPlayerID, actionTargetBoardCardID]) => {
-                if (
-                  actionTargetPlayerID !== playerID ||
-                  actionTargetBoardCardID !== boardCardID
-                ) {
-                  return;
-                }
-
-                const actionValue = getActionValue(
-                  gameState,
-                  action.Value,
-                  playerID,
-                  boardCardID,
-                  targetPlayerID,
-                  targetBoardCardID,
-                );
-
-                numericValue =
-                  action.Operation === "Add"
-                    ? numericValue + actionValue
-                    : action.Operation === "Multiply"
-                      ? numericValue * actionValue
-                      : numericValue - actionValue;
-              },
-            );
-          },
-        );
-
-        return numericValue as unknown as BoardCard[K];
+      // Should be for numerical attributes only
+      let numericValue = value as number;
+      // If it was undefined, assume it should be 0 instead of throwing an error
+      if (value === undefined) {
+        numericValue = 0;
       }
+
+      forEachAura(
+        gameState,
+        (
+          targetPlayer,
+          targetPlayerID,
+          targetBoardCard,
+          targetBoardCardID,
+          aura,
+        ) => {
+          const action = aura.Action;
+          if (
+            action.$type !== "TAuraActionCardModifyAttribute" ||
+            action.AttributeType !== attribute
+          ) {
+            return;
+          }
+          const targetCards = getTargetCards(
+            gameState,
+            action.Target,
+            playerID,
+            boardCardID,
+            targetPlayerID,
+            targetBoardCardID,
+          );
+
+          targetCards.forEach(
+            ([actionTargetPlayerID, actionTargetBoardCardID]) => {
+              if (
+                actionTargetPlayerID !== playerID ||
+                actionTargetBoardCardID !== boardCardID
+              ) {
+                return;
+              }
+
+              const actionValue = getActionValue(
+                gameState,
+                action.Value,
+                playerID,
+                boardCardID,
+                targetPlayerID,
+                targetBoardCardID,
+              );
+
+              numericValue =
+                action.Operation === "Add"
+                  ? numericValue + actionValue
+                  : action.Operation === "Multiply"
+                    ? numericValue * actionValue
+                    : numericValue - actionValue;
+            },
+          );
+        },
+      );
+
+      return numericValue as unknown as BoardCard[K];
 
       console.warn("Returning undefined for attribute " + attribute);
 
