@@ -53,6 +53,24 @@ const ENCHANTMENT_COLORS: Record<EnchantmentType, string> = {
     "bg-gradient-to-r from-pink-400 to-indigo-400 text-white",
 };
 
+// Helper function to get all attributes for a card at once
+const getCardAttributes = (
+  gameState: GameState,
+  playerIdx: number,
+  boardCardIdx: number,
+) => {
+  const attributes: Partial<Record<AttributeType, number>> = {};
+
+  Object.values(AttributeType).forEach((attr) => {
+    const value = getCardAttribute(gameState, playerIdx, boardCardIdx, attr);
+    if (value !== undefined) {
+      attributes[attr] = value;
+    }
+  });
+
+  return attributes;
+};
+
 export function BoardCardElement({
   boardCard,
   gameState,
@@ -127,96 +145,25 @@ export function BoardCardElement({
   const paddingBottom = 0.1;
   const paddingRight = 0.04;
 
-  const DamageAmount = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.DamageAmount,
-  );
-  const HealAmount = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.HealAmount,
-  );
-  const BurnApplyAmount = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.BurnApplyAmount,
-  );
-  const PoisonApplyAmount = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.PoisonApplyAmount,
-  );
-  const ShieldApplyAmount = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.ShieldApplyAmount,
-  );
-  const Freeze = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.Freeze,
-  );
-  const Slow = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.Slow,
-  );
-  const Haste = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.Haste,
-  );
-  const CritChance = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.CritChance,
-  );
-  const SellPrice = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.SellPrice,
-  );
-  const Multicast = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.Multicast,
-  );
-  const AmmoMax = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.AmmoMax,
-  );
-  const Ammo = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.Ammo,
-  );
-  const CooldownMax = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.CooldownMax,
-  );
-  const Lifesteal = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.Lifesteal,
-  );
+  const cardAttributes = getCardAttributes(gameState, playerIdx, boardCardIdx);
+
+  const {
+    DamageAmount,
+    HealAmount,
+    BurnApplyAmount,
+    PoisonApplyAmount,
+    ShieldApplyAmount,
+    Freeze,
+    Slow,
+    Haste,
+    CritChance,
+    SellPrice,
+    Multicast,
+    AmmoMax,
+    Ammo,
+    CooldownMax,
+    Lifesteal,
+  } = cardAttributes;
 
   return (
     <div>
@@ -431,16 +378,10 @@ export function BoardCardElement({
                     className="h-6 w-6 p-0 hover:cursor-pointer"
                     onClick={() => {
                       console.log("boardCard", boardCard);
-                      const attrObject = {} as Record<AttributeType, unknown>;
-                      for (const attr of Object.values(AttributeType)) {
-                        attrObject[attr] = getCardAttribute(
-                          gameState,
-                          playerIdx,
-                          boardCardIdx,
-                          attr,
-                        );
-                      }
-                      console.log("getAttributes", attrObject);
+                      console.log(
+                        "getAttributes",
+                        getCardAttributes(gameState, playerIdx, boardCardIdx),
+                      );
                     }}
                   >
                     <Bug className="h-4 w-4" />
