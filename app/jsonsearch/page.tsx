@@ -9,9 +9,10 @@ import { Button } from "../../src/components/ui/button";
 import { ScrollArea } from "../../src/components/ui/scroll-area";
 import { Label } from "../../src/components/ui/label";
 import * as jmespath from "jmespath";
+import jsonata from "jsonata";
 import { CARDS_VERSION } from "@/lib/constants";
 import { JSONPath } from "jsonpath-plus";
-import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsList, TabsTrigger } from "../../src/components/ui/tabs";
 
 export default function JsonSearchPage() {
   const {
@@ -27,9 +28,11 @@ export default function JsonSearchPage() {
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isSearching, setIsSearching] = useState<boolean>(false);
   const [hasSearched, setHasSearched] = useState<boolean>(false);
-  const [useJsonPathPlus, setUseJsonPathPlus] = useState<boolean>(false);
+  const [queryEngine, setQueryEngine] = useState<
+    "jmespath" | "jsonpath" | "jsonata"
+  >("jmespath");
 
-  const searchCards = () => {
+  const searchCards = async () => {
     if (!searchPath) {
       setErrorMessage("Please enter a valid query.");
       return;
@@ -42,9 +45,13 @@ export default function JsonSearchPage() {
       // Use selected search method to search the JSON data
       let searchResults;
       try {
-        if (useJsonPathPlus) {
+        if (queryEngine === "jsonpath") {
           // Use JSONPath-Plus
           searchResults = JSONPath({ path: searchPath, json: cards });
+        } else if (queryEngine === "jsonata") {
+          // Use JSONata
+          const expression = jsonata(searchPath);
+          searchResults = await expression.evaluate(cards);
         } else {
           // Use JMESPath
           searchResults = jmespath.search(cards, searchPath);
@@ -52,7 +59,13 @@ export default function JsonSearchPage() {
       } catch (error) {
         console.warn("Search error:", error);
         setErrorMessage(
-          `Invalid ${useJsonPathPlus ? "JSONPath" : "JMESPath"} query syntax.`,
+          `Invalid ${
+            queryEngine === "jsonpath"
+              ? "JSONPath"
+              : queryEngine === "jsonata"
+                ? "JSONata"
+                : "JMESPath"
+          } query syntax.`,
         );
         setResult([]);
         setIsSearching(false);
@@ -66,10 +79,15 @@ export default function JsonSearchPage() {
         return;
       }
 
+      // Ensure the result is an array
+      const resultsArray = Array.isArray(searchResults)
+        ? searchResults
+        : [searchResults];
+
       // Set the results
-      setResult(searchResults);
+      setResult(resultsArray);
       setErrorMessage(
-        searchResults.length === 0 ? "No items found matching the query." : "",
+        resultsArray.length === 0 ? "No items found matching the query." : "",
       );
     } catch (errorObj) {
       console.error("Error searching:", errorObj);
@@ -80,31 +98,100 @@ export default function JsonSearchPage() {
     }
   };
 
+  // Get examples based on selected query engine
+  const getExamples = () => {
+    if (queryEngine === "jsonpath") {
+      return (
+        <ul className="flex list-inside list-disc flex-col gap-1">
+          <li>
+            <code>{`$[?(@.$type=='TCardSkill')]`}</code> - All skill cards
+          </li>
+          <li>
+            <code>{`$[?(@.Tags.indexOf('Damage') !== -1)]`}</code> - Cards with
+            the Damage tag
+          </li>
+          <li>
+            <code>{`$[?(@.Localization.Title.Text.indexOf('Fire') !== -1)]`}</code>{" "}
+            - Cards with &apos;Fire&apos; in the title
+          </li>
+          <li>
+            <code>{`$[?(@.Attributes.DamageAmount > 5)]`}</code> - Cards with
+            damage greater than 5
+          </li>
+        </ul>
+      );
+    } else if (queryEngine === "jsonata") {
+      return (
+        <ul className="flex list-inside list-disc flex-col gap-1">
+          <li>
+            <code>{`[$[$type='TCardSkill']]`}</code> - All skill cards
+          </li>
+          <li>
+            <code>{`[$[Tags[Damage in $]]]`}</code> - Cards with the Damage tag
+          </li>
+          <li>
+            <code>{`[$[Localization.Title.Text ~> $contains('Fire')]]`}</code> -
+            Cards with &apos;Fire&apos; in the title
+          </li>
+          <li>
+            <code>{`[$[Attributes.DamageAmount > 5]]`}</code> - Cards with
+            damage greater than 5
+          </li>
+        </ul>
+      );
+    } else {
+      return (
+        <ul className="flex list-inside list-disc flex-col gap-1">
+          <li>
+            <code>{`[?"$type"=='TCardSkill']`}</code> - All skill cards
+          </li>
+          <li>
+            <code>{`[?contains(to_string(Tags), 'Damage')]`}</code> - Cards with
+            the Damage tag
+          </li>
+          <li>
+            <code>{`[?contains(Localization.Title.Text, 'Fire')]`}</code> -
+            Cards with &apos;Fire&apos; in the title
+          </li>
+          <li>
+            <code>{`[?Attributes.DamageAmount > '5']`}</code> - Cards with
+            damage greater than 5
+          </li>
+        </ul>
+      );
+    }
+  };
+
   return (
     <div className="bg-background text-foreground flex h-[calc(100dvh-64px)] w-full flex-col gap-4 p-4">
       <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between">
-          <Label htmlFor="search-path">
-            {useJsonPathPlus ? "JSONPath" : "JMESPath"} Query
-          </Label>
-          <div className="flex items-center gap-2">
-            <Label htmlFor="query-toggle" className="text-sm">
-              JMESPath
-            </Label>
-            <Switch
-              id="query-toggle"
-              checked={useJsonPathPlus}
-              onCheckedChange={setUseJsonPathPlus}
-            />
-            <Label htmlFor="query-toggle" className="text-sm">
-              JSONPath
-            </Label>
+        <Tabs
+          value={queryEngine}
+          onValueChange={(value: string) =>
+            setQueryEngine(value as "jmespath" | "jsonpath" | "jsonata")
+          }
+          className="w-full"
+        >
+          <div className="flex items-center justify-between">
+            <Label htmlFor="search-path">Query Engine</Label>
+            <TabsList>
+              <TabsTrigger value="jmespath">JMESPath</TabsTrigger>
+              <TabsTrigger value="jsonpath">JSONPath</TabsTrigger>
+              <TabsTrigger value="jsonata">JSONata</TabsTrigger>
+            </TabsList>
           </div>
-        </div>
+        </Tabs>
+
         <div className="flex gap-2">
           <Input
             id="search-path"
-            placeholder={`Enter ${useJsonPathPlus ? "JSONPath" : "JMESPath"} query`}
+            placeholder={`Enter ${
+              queryEngine === "jsonpath"
+                ? "JSONPath"
+                : queryEngine === "jsonata"
+                  ? "JSONata"
+                  : "JMESPath"
+            } query`}
             value={searchPath}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setSearchPath(e.target.value);
@@ -127,43 +214,7 @@ export default function JsonSearchPage() {
 
         <div className="text-muted-foreground pt-2 text-xs">
           <p>Example queries:</p>
-          {useJsonPathPlus ? (
-            <ul className="flex list-inside list-disc flex-col gap-1">
-              <li>
-                <code>{`$[?(@.$type=='TCardSkill')]`}</code> - All skill cards
-              </li>
-              <li>
-                <code>{`$[?(@.Tags.indexOf('Damage') !== -1)]`}</code> - Cards
-                with the Damage tag
-              </li>
-              <li>
-                <code>{`$[?(@.Localization.Title.Text.indexOf('Fire') !== -1)]`}</code>{" "}
-                - Cards with &apos;Fire&apos; in the title
-              </li>
-              <li>
-                <code>{`$[?(@.Attributes.DamageAmount > 5)]`}</code> - Cards
-                with damage greater than 5
-              </li>
-            </ul>
-          ) : (
-            <ul className="flex list-inside list-disc flex-col gap-1">
-              <li>
-                <code>{`[?"$type"=='TCardSkill']`}</code> - All skill cards
-              </li>
-              <li>
-                <code>{`[?contains(to_string(Tags), 'Damage')]`}</code> - Cards
-                with the Damage tag
-              </li>
-              <li>
-                <code>{`[?contains(Localization.Title.Text, 'Fire')]`}</code> -
-                Cards with &apos;Fire&apos; in the title
-              </li>
-              <li>
-                <code>{`[?Attributes.DamageAmount > '5']`}</code> - Cards with
-                damage greater than 5
-              </li>
-            </ul>
-          )}
+          {getExamples()}
         </div>
       </div>
 

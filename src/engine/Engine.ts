@@ -363,14 +363,12 @@ export function getCardAttribute<K extends keyof BoardCard>(
                   targetBoardCardID,
                 );
 
-                if (typeof actionValue === "number") {
-                  numericValue =
-                    action.Operation === "Add"
-                      ? numericValue + actionValue
-                      : action.Operation === "Multiply"
-                        ? numericValue * actionValue
-                        : numericValue - actionValue;
-                }
+                numericValue =
+                  action.Operation === "Add"
+                    ? numericValue + actionValue
+                    : action.Operation === "Multiply"
+                      ? numericValue * actionValue
+                      : numericValue - actionValue;
               },
             );
           },
@@ -378,6 +376,8 @@ export function getCardAttribute<K extends keyof BoardCard>(
 
         return numericValue as unknown as BoardCard[K];
       }
+
+      console.warn("Returning undefined for attribute " + attribute);
 
       // For non-numeric attributes
       return value;
