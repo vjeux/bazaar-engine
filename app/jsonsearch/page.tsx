@@ -13,7 +13,7 @@ import jsonata from "jsonata";
 import { CARDS_VERSION } from "@/lib/constants";
 import { JSONPath } from "jsonpath-plus";
 import { Tabs, TabsList, TabsTrigger } from "../../src/components/ui/tabs";
-
+import { JSONTree } from "react-json-tree";
 export default function JsonSearchPage() {
   const {
     cardsData,
@@ -101,64 +101,18 @@ export default function JsonSearchPage() {
   // Get examples based on selected query engine
   const getExamples = () => {
     if (queryEngine === "jsonpath") {
-      return (
-        <ul className="flex list-inside list-disc flex-col gap-1">
-          <li>
-            <code>{`$[?(@.$type=='TCardSkill')]`}</code> - All skill cards
-          </li>
-          <li>
-            <code>{`$[?(@.Tags.indexOf('Damage') !== -1)]`}</code> - Cards with
-            the Damage tag
-          </li>
-          <li>
-            <code>{`$[?(@.Localization.Title.Text.indexOf('Fire') !== -1)]`}</code>{" "}
-            - Cards with &apos;Fire&apos; in the title
-          </li>
-          <li>
-            <code>{`$[?(@.Attributes.DamageAmount > 5)]`}</code> - Cards with
-            damage greater than 5
-          </li>
-        </ul>
-      );
+      return <ul className="flex list-inside list-disc flex-col gap-1"></ul>;
     } else if (queryEngine === "jsonata") {
       return (
         <ul className="flex list-inside list-disc flex-col gap-1">
           <li>
-            <code>{`[$[$type='TCardSkill']]`}</code> - All skill cards
-          </li>
-          <li>
-            <code>{`[$[Tags[Damage in $]]]`}</code> - Cards with the Damage tag
-          </li>
-          <li>
-            <code>{`[$[Localization.Title.Text ~> $contains('Fire')]]`}</code> -
-            Cards with &apos;Fire&apos; in the title
-          </li>
-          <li>
-            <code>{`[$[Attributes.DamageAmount > 5]]`}</code> - Cards with
-            damage greater than 5
+            <code>{`$[Abilities.*[Trigger != null and Trigger.Target != null]]`}</code>{" "}
+            - All cards with an ability that has a trigger and target
           </li>
         </ul>
       );
     } else {
-      return (
-        <ul className="flex list-inside list-disc flex-col gap-1">
-          <li>
-            <code>{`[?"$type"=='TCardSkill']`}</code> - All skill cards
-          </li>
-          <li>
-            <code>{`[?contains(to_string(Tags), 'Damage')]`}</code> - Cards with
-            the Damage tag
-          </li>
-          <li>
-            <code>{`[?contains(Localization.Title.Text, 'Fire')]`}</code> -
-            Cards with &apos;Fire&apos; in the title
-          </li>
-          <li>
-            <code>{`[?Attributes.DamageAmount > '5']`}</code> - Cards with
-            damage greater than 5
-          </li>
-        </ul>
-      );
+      return <ul className="flex list-inside list-disc flex-col gap-1"></ul>;
     }
   };
 
@@ -229,9 +183,7 @@ export default function JsonSearchPage() {
               <h2 className="text-lg font-semibold">
                 Results ({result.length} items)
               </h2>
-              <pre className="bg-background mt-4 max-h-[80vh] overflow-auto rounded-md p-2 text-xs">
-                {JSON.stringify(result, null, 2)}
-              </pre>
+              <JSONTree data={result} />
             </div>
           ) : hasSearched ? (
             <div className="p-4">No results found</div>

@@ -57,6 +57,7 @@
     "pure-rand": "^7.0.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-json-tree": "^0.20.0",
     "react-scan": "^0.3.3",
     "react-spinners": "^0.17.0",
     "react-tooltip": "^5.28.1",
