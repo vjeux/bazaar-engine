@@ -261,6 +261,9 @@ export function getCardAttribute<K extends keyof BoardCard>(
   const value = boardCard[attribute];
 
   switch (attribute) {
+    case AttributeType.Ammo: {
+      return boardCard[AttributeType.Ammo] as BoardCard[K];
+    }
     case "Tags": {
       let tags: Set<string> = new Set(
         gameState.players[playerID].board[boardCardID].Tags,
