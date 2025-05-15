@@ -1,145 +1,15 @@
 import { GameState as OriginalGameState } from "../Engine";
 import { AttributeType } from "../../types/cardTypes";
-import { setupEventHandlers } from "./eventHandlers";
+import { EventBus, setupEventHandlers } from "./eventHandlers";
 import { ProcessTickCommand } from "./commands";
 
 /**
  * Represents a unique identifier for a board card
  */
 export type BoardCardID = {
-  playerID: number;
-  cardID: number;
+  playerIdx: number;
+  cardIdx: number;
 };
-
-/**
- * Define all game event types with their payload structures
- */
-export interface GameEvents {
-  // Game events
-  "game:tick": { tick: number };
-  "game:fightStarted": Record<string, never>;
-  "game:ended": { winner: string };
-
-  // Card events
-  "card:triggered": { boardCardID: BoardCardID; card: unknown };
-  "card:attributeChanged": {
-    boardCardID: BoardCardID;
-    attribute: AttributeType | "tick";
-    oldValue: number;
-    newValue: number;
-  };
-
-  // Player events
-  "player:damaged": {
-    playerID: number;
-    amount: number;
-    sourceCardID: BoardCardID | null;
-  };
-  "player:healed": {
-    playerID: number;
-    amount: number;
-    sourceCardID: BoardCardID | null;
-  };
-  "player:overhealed": {
-    playerID: number;
-    amount: number;
-    sourceCardID: BoardCardID | null;
-  };
-  "player:attributeChanged": {
-    playerID: number;
-    attribute: string;
-    oldValue: number;
-    newValue: number;
-  };
-  "player:attributeChangeHandled": {
-    playerID: number;
-    attribute: string;
-    oldValue: number;
-    newValue: number;
-  };
-  "player:died": { playerID: number };
-  "player:shieldApplied": {
-    playerID: number;
-    amount: number;
-    sourceCardID: BoardCardID | null;
-  };
-  "player:poisonApplied": {
-    playerID: number;
-    amount: number;
-    sourceCardID: BoardCardID | null;
-  };
-  "player:burnApplied": {
-    playerID: number;
-    amount: number;
-    sourceCardID: BoardCardID | null;
-  };
-  "player:healHandled": {
-    playerID: number;
-    amount: number;
-    sourceCardID: BoardCardID | null;
-  };
-}
-
-/**
- * Type-safe EventBus for game events
- */
-export class EventBus {
-  private listeners: {
-    [K in keyof GameEvents]?: Array<(data: GameEvents[K]) => void>;
-  } = {};
-
-  /**
-   * Register a listener for a specific event
-   */
-  on<K extends keyof GameEvents>(
-    eventName: K,
-    callback: (data: GameEvents[K]) => void,
-  ): void {
-    if (!this.listeners[eventName]) {
-      this.listeners[eventName] = [];
-    }
-    this.listeners[eventName]?.push(
-      callback as (data: GameEvents[keyof GameEvents]) => void,
-    );
-  }
-
-  /**
-   * Emit an event with data
-   */
-  emit<K extends keyof GameEvents>(eventName: K, data: GameEvents[K]): void {
-    const eventListeners = this.listeners[eventName];
-    if (eventListeners) {
-      for (const listener of eventListeners) {
-        listener(data);
-      }
-    }
-  }
-
-  /**
-   * Remove a listener for a specific event
-   */
-  off<K extends keyof GameEvents>(
-    eventName: K,
-    callback: (data: GameEvents[K]) => void,
-  ): void {
-    const eventListeners = this.listeners[eventName];
-    if (eventListeners) {
-      const index = eventListeners.indexOf(
-        callback as (data: GameEvents[keyof GameEvents]) => void,
-      );
-      if (index !== -1) {
-        eventListeners.splice(index, 1);
-      }
-    }
-  }
-
-  /**
-   * Clear all listeners
-   */
-  clear(): void {
-    this.listeners = {};
-  }
-}
 
 /**
  * Extended GameState that includes EventBus
@@ -262,6 +132,6 @@ export function getCardAttribute(
   cardID: BoardCardID,
   attribute: AttributeType,
 ): number {
-  const card = gameState.players[cardID.playerID].board[cardID.cardID];
+  const card = gameState.players[cardID.playerIdx].board[cardID.cardIdx];
   return (card[attribute] as number) || 0;
 }

@@ -4,10 +4,144 @@ import * as Commands from "./commands";
 import { Ability, AbilityAction, AttributeType } from "../../types/cardTypes";
 
 /**
+ * Define all game event types with their payload structures
+ */
+
+export interface GameEvents {
+  // Game events
+  "game:tick": { tick: number };
+  "game:fightStarted": Record<string, never>;
+  "game:ended": { winner: string };
+
+  // Card events
+  "card:triggered": { boardCardID: BoardCardID; card: unknown };
+  "card:attributeChanged": {
+    boardCardID: BoardCardID;
+    attribute: AttributeType | "tick";
+    oldValue: number;
+    newValue: number;
+  };
+  "card:added": {
+    boardCardID: BoardCardID;
+    card: unknown;
+  };
+  "card:removed": {
+    boardCardID: BoardCardID;
+  };
+
+  // Player events
+  "player:damaged": {
+    playerIdx: number;
+    amount: number;
+    sourceCardID: BoardCardID | null;
+  };
+  "player:healed": {
+    playerIdx: number;
+    amount: number;
+    sourceCardID: BoardCardID | null;
+  };
+  "player:overhealed": {
+    playerIdx: number;
+    amount: number;
+    sourceCardID: BoardCardID | null;
+  };
+  "player:attributeChanged": {
+    playerIdx: number;
+    attribute: string;
+    oldValue: number;
+    newValue: number;
+  };
+  "player:attributeChangeHandled": {
+    playerIdx: number;
+    attribute: string;
+    oldValue: number;
+    newValue: number;
+  };
+  "player:died": { playerID: number };
+  "player:shieldApplied": {
+    playerIdx: number;
+    amount: number;
+    sourceCardID: BoardCardID | null;
+  };
+  "player:poisonApplied": {
+    playerIdx: number;
+    amount: number;
+    sourceCardID: BoardCardID | null;
+  };
+  "player:burnApplied": {
+    playerIdx: number;
+    amount: number;
+    sourceCardID: BoardCardID | null;
+  };
+};
+
+/**
+ * Type-safe EventBus for game events
+ */
+
+export class EventBus {
+  private listeners: {
+    [K in keyof GameEvents]?: Array<(data: GameEvents[K]) => void>;
+  } = {};
+
+  /**
+   * Register a listener for a specific event
+   */
+  on<K extends keyof GameEvents>(
+    eventName: K,
+    callback: (data: GameEvents[K]) => void,
+  ): void {
+    if (!this.listeners[eventName]) {
+      this.listeners[eventName] = [];
+    }
+    this.listeners[eventName]?.push(
+      callback as (data: GameEvents[keyof GameEvents]) => void,
+    );
+  }
+
+  /**
+   * Emit an event with data
+   */
+  emit<K extends keyof GameEvents>(eventName: K, data: GameEvents[K]): void {
+    const eventListeners = this.listeners[eventName];
+    if (eventListeners) {
+      for (const listener of eventListeners) {
+        listener(data);
+      }
+    }
+  }
+
+  /**
+   * Remove a listener for a specific event
+   */
+  off<K extends keyof GameEvents>(
+    eventName: K,
+    callback: (data: GameEvents[K]) => void,
+  ): void {
+    const eventListeners = this.listeners[eventName];
+    if (eventListeners) {
+      const index = eventListeners.indexOf(
+        callback as (data: GameEvents[keyof GameEvents]) => void,
+      );
+      if (index !== -1) {
+        eventListeners.splice(index, 1);
+      }
+    }
+  }
+
+  /**
+   * Clear all listeners
+   */
+  clear(): void {
+    this.listeners = {};
+  }
+}
+
+/**
  * Create a BoardCardID
  */
 function createBoardCardID(playerID: number, cardID: number): BoardCardID {
-  return { playerID, cardID };
+  return { playerIdx: playerID, cardIdx: cardID };
 }
 
 /**
@@ -30,17 +164,7 @@ export function setupEventHandlers(gameState: GameState): void {
   eventBus.on("player:damaged", (data) => {
     handlePlayerDamaged(
       gameState,
-      data.playerID,
-      data.amount,
-      data.sourceCardID,
-    );
-  });
-
-  // Handle player healing
-  eventBus.on("player:healed", (data) => {
-    handlePlayerHealed(
-      gameState,
-      data.playerID,
+      data.playerIdx,
       data.amount,
       data.sourceCardID,
     );
@@ -60,11 +184,16 @@ export function setupEventHandlers(gameState: GameState): void {
   eventBus.on("player:attributeChanged", (data) => {
     handlePlayerAttributeChanged(
       gameState,
-      data.playerID,
+      data.playerIdx,
       data.attribute as keyof Player,
       data.oldValue,
       data.newValue,
     );
+  });
+
+  // Handle card addition and registration
+  eventBus.on("card:added", (data) => {
+    handleCardAdded(gameState, data.boardCardID);
   });
 
   // Setup more event handlers as needed
@@ -258,7 +387,7 @@ function processCardCooldowns(gameState: GameState): void {
 
   // Trigger cards
   cardTriggers.forEach((boardCardID) => {
-    const { playerID, cardID } = boardCardID;
+    const { playerIdx: playerID, cardIdx: cardID } = boardCardID;
     // Reduce ammo if needed
     const card = gameState.players[playerID].board[cardID];
     const ammoMax = card[AttributeType.AmmoMax] as number | undefined;
@@ -335,11 +464,8 @@ function checkPlayerDeaths(gameState: GameState): void {
 /**
  * Handle card fired event
  */
-function handleCardFired(
-  gameState: GameState,
-  boardCardID: BoardCardID,
-): void {
-  const { playerID, cardID } = boardCardID;
+function handleCardFired(gameState: GameState, boardCardID: BoardCardID): void {
+  const { playerIdx: playerID, cardIdx: cardID } = boardCardID;
   const card = gameState.players[playerID].board[cardID];
 
   // Process abilities when card is fired
@@ -408,8 +534,8 @@ function checkIfCardIsSubject(
 
   if (typedSubject.$type === "TTargetCardSelf") {
     return (
-      sourceCardID.playerID === abilityCardID.playerID &&
-      sourceCardID.cardID === abilityCardID.cardID
+      sourceCardID.playerIdx === abilityCardID.playerIdx &&
+      sourceCardID.cardIdx === abilityCardID.cardIdx
     );
   }
 
@@ -455,7 +581,7 @@ function processAction(
   switch (action.$type) {
     case "TActionPlayerDamage":
       // Get damage amount from the card
-      const { playerID, cardID } = abilityCardID;
+      const { playerIdx: playerID, cardIdx: cardID } = abilityCardID;
       const damageCard = gameState.players[playerID].board[cardID];
       const damage = damageCard[AttributeType.DamageAmount] as number;
 
@@ -472,13 +598,13 @@ function processAction(
     case "TActionPlayerHeal":
       // Get heal amount from the card
       const healCard =
-        gameState.players[abilityCardID.playerID].board[abilityCardID.cardID];
+        gameState.players[abilityCardID.playerIdx].board[abilityCardID.cardIdx];
       const healAmount = healCard[AttributeType.HealAmount] as number;
 
       if (healAmount) {
         // In a real implementation, would determine target players
         new Commands.HealPlayerCommand(
-          abilityCardID.playerID, // Heal self for now
+          abilityCardID.playerIdx, // Heal self for now
           healAmount,
           abilityCardID,
         ).execute(gameState);
@@ -553,7 +679,7 @@ function handlePlayerAttributeChanged(
 
   // Emit a generic player attribute changed event that other systems can listen for
   eventBus.emit("player:attributeChangeHandled", {
-    playerID,
+    playerIdx: playerID,
     attribute,
     oldValue,
     newValue,
@@ -574,14 +700,14 @@ function handlePlayerDamaged(
   if (sourceCardID) {
     // Check for lifesteal
     const sourceCard =
-      gameState.players[sourceCardID.playerID].board[sourceCardID.cardID];
+      gameState.players[sourceCardID.playerIdx].board[sourceCardID.cardIdx];
     const lifesteal = sourceCard[AttributeType.Lifesteal] as number | undefined;
 
     if (lifesteal && lifesteal > 0) {
       const healAmount = amount * (lifesteal / 100);
       if (healAmount > 0) {
         new Commands.HealPlayerCommand(
-          sourceCardID.playerID,
+          sourceCardID.playerIdx,
           healAmount,
           sourceCardID,
         ).execute(gameState);
@@ -591,21 +717,15 @@ function handlePlayerDamaged(
 }
 
 /**
- * Handle player healed event
+ * Handle card added event
  */
-function handlePlayerHealed(
+function handleCardAdded(
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   gameState: GameState,
-  playerID: number,
-  amount: number,
-  sourceCardID: BoardCardID | null,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  boardCardID: BoardCardID,
 ): void {
-  // Check for abilities that trigger on healing
-  const eventBus = gameState.eventBus;
-
-  // Emit a heal handled event for other systems to respond to
-  eventBus.emit("player:healHandled", {
-    playerID,
-    amount,
-    sourceCardID,
-  });
-}
+  // This is a placeholder for potential future processing
+  // Any additional initialization for newly added cards would go here
+  // This is called before card registration
+} 

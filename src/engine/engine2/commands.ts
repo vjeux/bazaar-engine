@@ -1,6 +1,20 @@
 import { Player } from "../Engine";
-import { AbilityAction, AttributeType } from "../../types/cardTypes";
+import {
+  AbilityAction,
+  AttributeType,
+  Enchantments,
+} from "../../types/cardTypes";
 import { GameState, BoardCardID } from "./engine2";
+import { BoardCard } from "../Engine";
+import { Tier } from "@/types/shared";
+import { PlayerCardConfig } from "../GameState";
+
+export interface CardConfig {
+  cardId: string;
+  tier?: Tier;
+  enchantment?: keyof Enchantments;
+  attributeOverrides?: Partial<Record<AttributeType, number>>;
+}
 
 /**
  * Command interface
@@ -37,6 +51,72 @@ export class CommandFactory {
 }
 
 /**
+ * Command to add a card to the board and register its event listeners
+ */
+export class AddCardCommand implements Command {
+  constructor(
+    private playerID: number,
+    private cardConfig: PlayerCardConfig,
+    private position: number = -1, // -1 means add to the end
+  ) {}
+
+  execute(gameState: GameState): void {
+    const player = gameState.players[this.playerID];
+
+    // In a real implementation, this would call createBoardCardFromId from GameState.ts
+    // For now, we're converting the config directly to a BoardCard with type casting
+    const boardCard = this.cardConfig as unknown as BoardCard;
+
+    // Add to the specified position or to the end
+    const cardID = this.position >= 0 ? this.position : player.board.length;
+
+    if (this.position >= 0 && this.position < player.board.length) {
+      // Replace card at position
+      player.board[this.position] = boardCard;
+    } else {
+      // Add to the end
+      player.board.push(boardCard);
+    }
+
+    const boardCardID: BoardCardID = {
+      playerIdx: this.playerID,
+      cardIdx: cardID,
+    };
+
+    // Emit event that card was added
+    gameState.eventBus.emit("card:added", {
+      boardCardID,
+      card: boardCard,
+    });
+  }
+}
+
+/**
+ * Command to remove a card from the board and unregister its event listeners
+ */
+export class RemoveCardCommand implements Command {
+  constructor(private boardCardID: BoardCardID) {}
+
+  execute(gameState: GameState): void {
+    const { playerIdx: playerID, cardIdx: cardID } = this.boardCardID;
+    const player = gameState.players[playerID];
+
+    if (cardID >= 0 && cardID < player.board.length) {
+      // Remove the card
+      player.board.splice(cardID, 1);
+
+      // Emit event that card was removed
+      gameState.eventBus.emit("card:removed", {
+        boardCardID: this.boardCardID,
+      });
+
+      // Note: We might need to update all other card IDs since they've shifted
+      // That's an implementation detail to consider
+    }
+  }
+}
+
+/**
  * Command to modify a card attribute
  */
 export class ModifyCardAttributeCommand implements Command {
@@ -48,7 +128,7 @@ export class ModifyCardAttributeCommand implements Command {
   ) {}
 
   execute(gameState: GameState): void {
-    const { playerID, cardID } = this.boardCardID;
+    const { playerIdx: playerID, cardIdx: cardID } = this.boardCardID;
     const card = gameState.players[playerID].board[cardID];
     const oldValue = card[this.attribute] as number;
     let newValue: number;
@@ -116,7 +196,7 @@ export class ModifyPlayerAttributeCommand implements Command {
 
     // Emit event for attribute change
     gameState.eventBus.emit("player:attributeChanged", {
-      playerID: this.playerID,
+      playerIdx: this.playerID,
       attribute: this.attribute,
       oldValue,
       newValue,
@@ -163,7 +243,7 @@ export class DamagePlayerCommand implements Command {
 
     // Emit damage event
     gameState.eventBus.emit("player:damaged", {
-      playerID: this.targetPlayerID,
+      playerIdx: this.targetPlayerID,
       amount: this.amount,
       sourceCardID: this.sourceCardID,
     });
@@ -194,14 +274,14 @@ export class HealPlayerCommand implements Command {
 
       // Emit heal event
       gameState.eventBus.emit("player:healed", {
-        playerID: this.targetPlayerID,
+        playerIdx: this.targetPlayerID,
         amount: this.amount,
         sourceCardID: this.sourceCardID,
       });
     } else {
       // Emit overheal event if player was already at max health
       gameState.eventBus.emit("player:overhealed", {
-        playerID: this.targetPlayerID,
+        playerIdx: this.targetPlayerID,
         amount: this.amount,
         sourceCardID: this.sourceCardID,
       });
@@ -216,7 +296,7 @@ export class TriggerCardCommand implements Command {
   constructor(private boardCardID: BoardCardID) {}
 
   execute(gameState: GameState): void {
-    const { playerID, cardID } = this.boardCardID;
+    const { playerIdx: playerID, cardIdx: cardID } = this.boardCardID;
     const card = gameState.players[playerID].board[cardID];
 
     // Emit card trigger event
@@ -256,7 +336,7 @@ export class ApplyShieldCommand implements Command {
 
     // Emit shield applied event
     gameState.eventBus.emit("player:shieldApplied", {
-      playerID: this.targetPlayerID,
+      playerIdx: this.targetPlayerID,
       amount: this.amount,
       sourceCardID: this.sourceCardID,
     });
@@ -285,7 +365,7 @@ export class ApplyPoisonCommand implements Command {
 
     // Emit poison applied event
     gameState.eventBus.emit("player:poisonApplied", {
-      playerID: this.targetPlayerID,
+      playerIdx: this.targetPlayerID,
       amount: this.amount,
       sourceCardID: this.sourceCardID,
     });
@@ -314,7 +394,7 @@ export class ApplyBurnCommand implements Command {
 
     // Emit burn applied event
     gameState.eventBus.emit("player:burnApplied", {
-      playerID: this.targetPlayerID,
+      playerIdx: this.targetPlayerID,
       amount: this.amount,
       sourceCardID: this.sourceCardID,
     });

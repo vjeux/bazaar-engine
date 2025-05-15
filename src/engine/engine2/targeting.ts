@@ -32,7 +32,7 @@ export function getTargetCards(
     case "TTargetCardPositional": {
       const originCard =
         targetConfig.Origin === "TriggerSource" ? triggerCard : sourceCard;
-      const { playerID, cardID } = originCard;
+      const { playerIdx: playerID, cardIdx: cardID } = originCard;
 
       switch (targetConfig.TargetMode) {
         case "AllRightCards": {
@@ -46,7 +46,7 @@ export function getTargetCards(
             i < lengthCardItems;
             ++i
           ) {
-            results.push({ playerID, cardID: i });
+            results.push({ playerIdx: playerID, cardIdx: i });
           }
           break;
         }
@@ -57,7 +57,7 @@ export function getTargetCards(
             i < cardID - (targetConfig.IncludeOrigin ? 0 : 1);
             ++i
           ) {
-            results.push({ playerID, cardID: i });
+            results.push({ playerIdx: playerID, cardIdx: i });
           }
           break;
         }
@@ -68,7 +68,7 @@ export function getTargetCards(
           }
 
           if (cardID !== 0) {
-            results.push({ playerID, cardID: cardID - 1 });
+            results.push({ playerIdx: playerID, cardIdx: cardID - 1 });
           }
 
           const lengthCardItems =
@@ -77,7 +77,7 @@ export function getTargetCards(
             ) + 1;
 
           if (cardID < lengthCardItems - 1) {
-            results.push({ playerID, cardID: cardID + 1 });
+            results.push({ playerIdx: playerID, cardIdx: cardID + 1 });
           }
           break;
         }
@@ -93,7 +93,7 @@ export function getTargetCards(
             ) + 1;
 
           if (cardID < lengthCardItems - 1) {
-            results.push({ playerID, cardID: cardID + 1 });
+            results.push({ playerIdx: playerID, cardIdx: cardID + 1 });
           }
           break;
         }
@@ -104,7 +104,7 @@ export function getTargetCards(
           }
 
           if (cardID !== 0) {
-            results.push({ playerID, cardID: cardID - 1 });
+            results.push({ playerIdx: playerID, cardIdx: cardID - 1 });
           }
           break;
         }
@@ -124,16 +124,16 @@ export function getTargetCards(
         case "SelfHand":
         case "SelfBoard": {
           const lengthCardItems =
-            gameState.players[sourceCard.playerID].board.findLastIndex(
+            gameState.players[sourceCard.playerIdx].board.findLastIndex(
               (boardCard) => boardCard.card.$type === "TCardItem",
             ) + 1;
 
           for (let i = 0; i < lengthCardItems; ++i) {
             if (
-              i !== sourceCard.cardID ||
-              (i === sourceCard.cardID && !targetConfig.ExcludeSelf)
+              i !== sourceCard.cardIdx ||
+              (i === sourceCard.cardIdx && !targetConfig.ExcludeSelf)
             ) {
-              results.push({ playerID: sourceCard.playerID, cardID: i });
+              results.push({ playerIdx: sourceCard.playerIdx, cardIdx: i });
             }
           }
           break;
@@ -141,14 +141,14 @@ export function getTargetCards(
 
         case "OpponentHand":
         case "OpponentBoard": {
-          const opponentPlayerID = (sourceCard.playerID + 1) % 2;
+          const opponentPlayerID = (sourceCard.playerIdx + 1) % 2;
           const lengthCardItems =
             gameState.players[opponentPlayerID].board.findLastIndex(
               (boardCard) => boardCard.card.$type === "TCardItem",
             ) + 1;
 
           for (let i = 0; i < lengthCardItems; ++i) {
-            results.push({ playerID: opponentPlayerID, cardID: i });
+            results.push({ playerIdx: opponentPlayerID, cardIdx: i });
           }
           break;
         }
@@ -162,11 +162,11 @@ export function getTargetCards(
 
             for (let i = 0; i < lengthCardItems; ++i) {
               if (
-                playerID !== sourceCard.playerID ||
-                i !== sourceCard.cardID ||
-                (i === sourceCard.cardID && !targetConfig.ExcludeSelf)
+                playerID !== sourceCard.playerIdx ||
+                i !== sourceCard.cardIdx ||
+                (i === sourceCard.cardIdx && !targetConfig.ExcludeSelf)
               ) {
-                results.push({ playerID, cardID: i });
+                results.push({ playerIdx: playerID, cardIdx: i });
               }
             }
           });
@@ -174,22 +174,22 @@ export function getTargetCards(
         }
 
         case "SelfNeighbors": {
-          if (sourceCard.cardID !== 0) {
+          if (sourceCard.cardIdx !== 0) {
             results.push({
-              playerID: sourceCard.playerID,
-              cardID: sourceCard.cardID - 1,
+              playerIdx: sourceCard.playerIdx,
+              cardIdx: sourceCard.cardIdx - 1,
             });
           }
 
           const lengthCardItems =
-            gameState.players[sourceCard.playerID].board.findLastIndex(
+            gameState.players[sourceCard.playerIdx].board.findLastIndex(
               (boardCard) => boardCard.card.$type === "TCardItem",
             ) + 1;
 
-          if (sourceCard.cardID < lengthCardItems - 1) {
+          if (sourceCard.cardIdx < lengthCardItems - 1) {
             results.push({
-              playerID: sourceCard.playerID,
-              cardID: sourceCard.cardID + 1,
+              playerIdx: sourceCard.playerIdx,
+              cardIdx: sourceCard.cardIdx + 1,
             });
           }
           break;
@@ -222,16 +222,16 @@ export function getTargetCards(
 
     case "TTargetCardXMost": {
       const lengthCardItems =
-        gameState.players[sourceCard.playerID].board.findLastIndex(
+        gameState.players[sourceCard.playerIdx].board.findLastIndex(
           (boardCard) => boardCard.card.$type === "TCardItem",
         ) + 1;
 
       for (let i = 0; i < lengthCardItems; ++i) {
         if (
-          i !== sourceCard.cardID ||
-          (i === sourceCard.cardID && !targetConfig.ExcludeSelf)
+          i !== sourceCard.cardIdx ||
+          (i === sourceCard.cardIdx && !targetConfig.ExcludeSelf)
         ) {
-          results.push({ playerID: sourceCard.playerID, cardID: i });
+          results.push({ playerIdx: sourceCard.playerIdx, cardIdx: i });
         }
       }
       break;
@@ -243,7 +243,7 @@ export function getTargetCards(
 
   // Filter by conditions
   const filteredResults = results.filter((cardID) => {
-    const { playerID, cardID: boardCardID } = cardID;
+    const { playerIdx: playerID, cardIdx: boardCardID } = cardID;
     return (
       !gameState.players[playerID].board[boardCardID].isDisabled &&
       testCardConditions(
@@ -267,7 +267,7 @@ export function getTargetCards(
     let extremeCard: BoardCardID | null = null;
 
     filteredResults.forEach((cardID) => {
-      const { playerID, cardID: boardCardID } = cardID;
+      const { playerIdx: playerID, cardIdx: boardCardID } = cardID;
       if (!targetConfig.Conditions?.AttributeType) {
         throw new Error(
           "Attribute type must exist for card conditional attribute highest/lowest",
@@ -319,10 +319,10 @@ export function getTargetPlayers(
     case "TTargetPlayerRelative":
       switch (targetConfig.TargetMode) {
         case "Opponent":
-          results = [(sourceCard.playerID + 1) % 2];
+          results = [(sourceCard.playerIdx + 1) % 2];
           break;
         case "Self":
-          results = [sourceCard.playerID];
+          results = [sourceCard.playerIdx];
           break;
         default:
           throw new Error(
@@ -334,17 +334,17 @@ export function getTargetPlayers(
     case "TTargetCardSection":
       switch (targetConfig.TargetSection) {
         case "SelfBoard":
-          results = [sourceCard.playerID];
+          results = [sourceCard.playerIdx];
           break;
         default:
-          results = [(sourceCard.playerID + 1) % 2];
+          results = [(sourceCard.playerIdx + 1) % 2];
           break;
       }
       break;
 
     case "TTargetPlayer":
       if (targetConfig.TargetMode === "Both") {
-        results = [sourceCard.playerID, (sourceCard.playerID + 1) % 2];
+        results = [sourceCard.playerIdx, (sourceCard.playerIdx + 1) % 2];
       } else {
         throw new Error(
           `Not implemented TargetMode: ${targetConfig.TargetMode}`,
@@ -384,7 +384,7 @@ export function testCardConditions(
     return true;
   }
 
-  const { playerID, cardID } = targetCard;
+  const { playerIdx: playerID, cardIdx: cardID } = targetCard;
   const card = gameState.players[playerID].board[cardID];
 
   switch (conditions.$type) {
@@ -528,8 +528,8 @@ export function testCardConditions(
 
     case "TCardConditionalTriggerSource": {
       const is =
-        triggerCard.playerID === targetCard.playerID &&
-        triggerCard.cardID === targetCard.cardID;
+        triggerCard.playerIdx === targetCard.playerIdx &&
+        triggerCard.cardIdx === targetCard.cardIdx;
       return conditions.IsNot ? !is : is;
     }
 
