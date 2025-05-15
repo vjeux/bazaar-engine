@@ -106,9 +106,13 @@ export type EventHandler<T extends keyof GameEvents> = (
   data: GameEvents[T],
 ) => void;
 
-// Event listener with priority information
+// Type for the test function that determines if an event should be handled
+export type EventTester = (gameState: GameState) => boolean;
+
+// Event listener with priority information and test function
 interface PrioritizedEventHandler<T extends keyof GameEvents> {
   handler: EventHandler<T>;
+  tester: EventTester | null;
   priority: Priority;
 }
 
@@ -123,12 +127,13 @@ export class EventBus {
   }
 
   /**
-   * Register a listener for a specific event with priority
+   * Register a listener for a specific event with priority and test function
    */
   on<K extends keyof GameEvents>(
     eventName: K,
     callback: EventHandler<K>,
     priority: Priority = Priority.Medium,
+    tester: EventTester | null = null,
   ): void {
     if (!this.listeners[eventName]) {
       this.listeners[eventName] = [];
@@ -137,6 +142,7 @@ export class EventBus {
     // Create prioritized event handler
     const prioritizedHandler: PrioritizedEventHandler<K> = {
       handler: callback,
+      tester,
       priority,
     };
 
@@ -157,7 +163,10 @@ export class EventBus {
     if (eventListeners) {
       // Execute handlers in priority order (already sorted)
       for (const listener of eventListeners) {
-        listener.handler(this.gameState, data);
+        // Only call handler if there's no test function or if the test function returns true
+        if (!listener.tester || listener.tester(this.gameState)) {
+          listener.handler(this.gameState, data);
+        }
       }
     }
   }
@@ -244,36 +253,35 @@ export function setupEventHandlers(gameState: GameState): void {
   gameState.players.forEach((player, playerID) => {
     player.board.forEach((card, cardID) => {
       Object.values(card.Abilities).forEach((ability: Ability) => {
+        const boardCardID = { playerIdx: playerID, cardIdx: cardID };
+
         const eventTrigger = triggerToEvent(ability.Trigger);
         const triggerCheck = createTriggerCheck();
-        const prerequisiteCheck = createPrerequisitesCheck(ability, {
-          cardIdx: cardID,
-          playerIdx: playerID,
-        });
-        const createCommand = (gs: GameState) =>
-          Commands.CommandFactory.createFromAction(
-            ability.Action,
-            {
-              cardIdx: cardID,
-              playerIdx: playerID,
-            },
-            gs,
-          );
+        const prerequisiteCheck = createPrerequisitesCheck(
+          ability,
+          boardCardID,
+        );
+        const shouldReceiveEvent = (gs: GameState) => {
+          return prerequisiteCheck(gs) && triggerCheck(gs);
+        };
 
         const eventHandler = (gs: GameState) => {
-          if (prerequisiteCheck(gs) && triggerCheck(gs)) {
-            const command = createCommand(gs);
-            if (command) {
-              command.execute(gs);
-            }
+          const command = Commands.CommandFactory.createFromAction(
+            ability.Action,
+            boardCardID,
+            gs,
+          );
+          if (command) {
+            command.execute(gs);
           }
         };
 
-        // Register the event handler with the ability's priority
+        // Register the event handler with the ability's priority and test function
         eventBus.on(
           eventTrigger,
           eventHandler,
           ability.Priority || Priority.Medium,
+          shouldReceiveEvent,
         );
       });
     });
