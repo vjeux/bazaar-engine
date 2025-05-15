@@ -107,12 +107,15 @@ export type EventHandler<T extends keyof GameEvents> = (
 ) => void;
 
 // Type for the test function that determines if an event should be handled
-export type EventTester = (gameState: GameState) => boolean;
+export type EventTester<T extends keyof GameEvents> = (
+  gameState: GameState,
+  data: GameEvents[T],
+) => boolean;
 
 // Event listener with priority information and test function
 interface PrioritizedEventHandler<T extends keyof GameEvents> {
   handler: EventHandler<T>;
-  tester: EventTester | null;
+  tester: EventTester<T> | null;
   priority: Priority;
 }
 
@@ -133,7 +136,7 @@ export class EventBus {
     eventName: K,
     callback: EventHandler<K>,
     priority: Priority = Priority.Medium,
-    tester: EventTester | null = null,
+    tester: EventTester<K> | null = null,
   ): void {
     if (!this.listeners[eventName]) {
       this.listeners[eventName] = [];
@@ -164,7 +167,7 @@ export class EventBus {
       // Execute handlers in priority order (already sorted)
       for (const listener of eventListeners) {
         // Only call handler if there's no test function or if the test function returns true
-        if (!listener.tester || listener.tester(this.gameState)) {
+        if (!listener.tester || listener.tester(this.gameState, data)) {
           listener.handler(this.gameState, data);
         }
       }
@@ -234,11 +237,29 @@ function triggerToEvent(trigger: { $type?: string }): keyof GameEvents {
 
 /**
  * Create a trigger check
- *
- * Will be the function to check for things like
  */
-function createTriggerCheck(): (gs: GameState) => boolean {
-  return () => true;
+function createTriggerCheck(
+  ability: Ability,
+  boardCardID: BoardCardID,
+): <T extends keyof GameEvents>(gs: GameState, e: GameEvents[T]) => boolean {
+  return <T extends keyof GameEvents>(gs: GameState, e: GameEvents[T]) => {
+    switch (ability.Trigger.$type) {
+      case "TTriggerOnCardFired":
+        // Check if the fired card was the correct one
+        if ("boardCardID" in e) {
+          const firedEvent = e as GameEvents["card:fired"];
+          if (
+            firedEvent.boardCardID.playerIdx === boardCardID.playerIdx &&
+            firedEvent.boardCardID.cardIdx === boardCardID.cardIdx
+          ) {
+            return true;
+          }
+        }
+        break;
+    }
+
+    return false;
+  };
 }
 
 /**
@@ -256,13 +277,18 @@ export function setupEventHandlers(gameState: GameState): void {
         const boardCardID = { playerIdx: playerID, cardIdx: cardID };
 
         const eventTrigger = triggerToEvent(ability.Trigger);
-        const triggerCheck = createTriggerCheck();
+        const triggerCheck = createTriggerCheck(ability, boardCardID);
         const prerequisiteCheck = createPrerequisitesCheck(
           ability,
           boardCardID,
         );
-        const shouldReceiveEvent = (gs: GameState) => {
-          return prerequisiteCheck(gs) && triggerCheck(gs);
+
+        // Create a combined test function that checks both prerequisites and trigger conditions
+        const shouldReceiveEvent = <T extends keyof GameEvents>(
+          gs: GameState,
+          data: GameEvents[T],
+        ) => {
+          return prerequisiteCheck(gs) && triggerCheck(gs, data);
         };
 
         const eventHandler = (gs: GameState) => {
