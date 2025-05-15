@@ -65,7 +65,7 @@ The targeting module handles the complex logic of determining which cards or pla
 
 ## Event Flow
 
-1. Events are emitted (e.g., `game:tick`, `card:triggered`)
+1. Events are emitted (e.g., `game:tick`, `card:fired`)
 2. Event handlers respond by creating commands
 3. Commands execute, changing game state
 4. Commands may emit additional events

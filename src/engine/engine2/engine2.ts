@@ -1,7 +1,23 @@
-import { GameState as OriginalGameState } from "../Engine";
-import { AttributeType } from "../../types/cardTypes";
-import { EventBus, setupEventHandlers } from "./eventHandlers";
+import { Multicast, GameState as OriginalGameState } from "../Engine";
+import {
+  Ability,
+  Attr,
+  Card,
+  EnchantmentsibuteType,
+  Aura,
+  Tooltip,
+  AttributeType,
+  Enchantments,
+} from "../../types/cardTypes";
+import {
+  EventBus,
+  EventHandler,
+  GameEvents,
+  setupEventHandlers,
+} from "./eventHandlers";
 import { ProcessTickCommand } from "./commands";
+import { RandomGenerator } from "pure-rand/types/RandomGenerator";
+import { Tier } from "@/types/shared";
 
 /**
  * Represents a unique identifier for a board card
@@ -11,10 +27,57 @@ export type BoardCardID = {
   cardIdx: number;
 };
 
+export type BoardCard = {
+  [key in AttributeType]: number | undefined;
+} & {
+  card: Card;
+  uuid: string; // Used to identify similar cards in drag and drop
+  tick: number;
+  tags: string[]; // visible tags on the card. Dynamic as certain auras can append tags.
+  HiddenTags: string[];
+  tier: Tier;
+  Enchantment?: keyof Enchantments | null;
+  isDisabled: boolean;
+  Auras: { [key: string]: Aura };
+  AbilityIds: string[];
+  AuraIds: string[];
+  TooltipIds: number[];
+  Abilities: { [key: string]: Ability };
+  Localization: {
+    Title: {
+      Text: string;
+    };
+    Tooltips: Tooltip[];
+  };
+  internalCommandQueue: Command[];
+  internalCommandQueuetick: number;
+  eventBusCallbacks: EventHandler<keyof GameEvents>[];
+};
+
+export interface Player {
+  HealthMax: number;
+  Health: number;
+  HealthRegen: number;
+  Shield: number;
+  Burn: number;
+  Poison: number;
+  Gold: number;
+  Income: number;
+  Hero: string; // hero name
+  board: BoardCard[];
+}
+
 /**
  * Extended GameState that includes EventBus
  */
-export interface GameState extends OriginalGameState {
+export interface GameState {
+  tick: number;
+  isPlaying: boolean;
+  players: Player[];
+  multicast: Multicast[];
+  randomGen: RandomGenerator;
+  winner?: "Player" | "Enemy" | "Draw";
+  sandstormStartTick: number;
   eventBus: EventBus;
 }
 
@@ -32,12 +95,18 @@ export class Engine2 {
   private gameState: GameState;
   private commandQueue: Command[] = [];
 
-  constructor(initialGameState: OriginalGameState) {
+  constructor(initialGameState: GameState) {
+    // Create EventBus with reference to gameState
+    const eventBus = new EventBus({} as GameState); // Temporary until gameState is created
+
     // Create a new GameState with EventBus
     this.gameState = {
       ...initialGameState,
-      eventBus: new EventBus(),
+      eventBus,
     };
+
+    // Update the EventBus reference to the real gameState
+    eventBus.updateGameState(this.gameState);
 
     // Set up event handlers
     setupEventHandlers(this.gameState);
@@ -106,7 +175,7 @@ export class Engine2 {
    */
   private createGameStateCopy(): GameState {
     // Create a new GameState with the same EventBus
-    return {
+    const copy = {
       ...this.gameState,
       players: this.gameState.players.map((player) => ({
         ...player,
@@ -114,6 +183,11 @@ export class Engine2 {
       })),
       multicast: [...this.gameState.multicast],
     };
+
+    // Update the EventBus with the new gameState reference
+    this.gameState.eventBus.updateGameState(copy);
+
+    return copy;
   }
 
   /**

@@ -9,6 +9,7 @@ import { BoardCard } from "../Engine";
 import { Tier } from "@/types/shared";
 import { PlayerCardConfig } from "../GameState";
 import { GameEvents } from "./eventHandlers";
+import { getTargetPlayers } from "./targeting";
 
 export interface CardConfig {
   cardId: string;
@@ -52,28 +53,53 @@ export class CommandFactory {
     sourceCardID: BoardCardID,
     gameState: GameState,
   ): Command | null {
+    const commands = new CommandList();
+
     switch (action.$type) {
-      case "TActionPlayerDamage":
+      case "TActionPlayerDamage": {
         // get damage attribute from source card
         const damage = getCardAttribute(
           gameState,
           sourceCardID,
           AttributeType.DamageAmount,
         );
-        const targetPlayersIdx = getTargetPlayersIdx(action.Target);
-        const commands = new CommandList();
-        for (const targetPlayerIdx of targetPlayersIdx) {
+        if (!action.Target) {
+          throw new Error("Target is required for damage action");
+        }
+        const targetPlayers = getTargetPlayers(
+          gameState,
+          action.Target,
+          sourceCardID,
+        );
+        for (const targetPlayer of targetPlayers) {
           commands.addCommand(
-            new DamagePlayerCommand(targetPlayerIdx, damage, sourceCardID),
+            new DamagePlayerCommand(targetPlayer, damage, sourceCardID),
           );
         }
         return commands;
+      }
 
-      case "TActionPlayerHeal":
-        // Logic to determine heal amount from the action
-        return new HealPlayerCommand(targetPlayerID, 5, sourceCardID);
-
-      // Add more case statements for other action types
+      case "TActionPlayerHeal": {
+        const healAmount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.HealAmount,
+        );
+        if (!action.Target) {
+          throw new Error("Target is required for heal action");
+        }
+        const targetPlayers = getTargetPlayers(
+          gameState,
+          action.Target,
+          sourceCardID,
+        );
+        for (const targetPlayer of targetPlayers) {
+          commands.addCommand(
+            new HealPlayerCommand(targetPlayer, healAmount, sourceCardID),
+          );
+        }
+        return commands;
+      }
 
       default:
         console.error(`Unhandled action type: ${action.$type}`);
@@ -377,7 +403,7 @@ export class HealPlayerCommand implements Command {
 /**
  * Command to trigger a card's ability
  */
-export class TriggerCardCommand implements Command {
+export class FireCardCommand implements Command {
   constructor(private boardCardID: BoardCardID) {}
 
   execute(gameState: GameState): void {
@@ -385,7 +411,7 @@ export class TriggerCardCommand implements Command {
     const card = gameState.players[playerID].board[cardID];
 
     // Emit card trigger event
-    gameState.eventBus.emit("card:triggered", {
+    gameState.eventBus.emit("card:fired", {
       boardCardID: this.boardCardID,
       card,
     });

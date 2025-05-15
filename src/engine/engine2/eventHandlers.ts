@@ -1,7 +1,13 @@
 import { Player } from "../Engine";
 import { GameState, BoardCardID } from "./engine2";
 import * as Commands from "./commands";
-import { Ability, AbilityAction, AbilityPrerequisite, AttributeType } from "../../types/cardTypes";
+import {
+  Ability,
+  AbilityAction,
+  AbilityPrerequisite,
+  AttributeType,
+} from "../../types/cardTypes";
+import { createPrerequisitesCheck } from "./prereq";
 
 /**
  * Define all game event types with their payload structures
@@ -14,7 +20,7 @@ export interface GameEvents {
   "game:ended": { winner: string };
 
   // Card events
-  "card:triggered": { boardCardID: BoardCardID; card: unknown };
+  "card:fired": { boardCardID: BoardCardID; card: unknown };
   "card:attributeChanged": {
     boardCardID: BoardCardID;
     attribute: AttributeType | "tick";
@@ -84,24 +90,32 @@ export interface GameEvents {
  * Type-safe EventBus for game events
  */
 
+export type EventHandler<T extends keyof GameEvents> = (
+  gameState: GameState,
+  data: GameEvents[T],
+) => void;
+
 export class EventBus {
   private listeners: {
-    [K in keyof GameEvents]?: Array<(data: GameEvents[K]) => void>;
+    [K in keyof GameEvents]?: Array<EventHandler<K>>;
   } = {};
+  private gameState: GameState;
+
+  constructor(gameState: GameState) {
+    this.gameState = gameState;
+  }
 
   /**
    * Register a listener for a specific event
    */
   on<K extends keyof GameEvents>(
     eventName: K,
-    callback: (data: GameEvents[K]) => void,
+    callback: EventHandler<K>,
   ): void {
     if (!this.listeners[eventName]) {
       this.listeners[eventName] = [];
     }
-    this.listeners[eventName]?.push(
-      callback as (data: GameEvents[keyof GameEvents]) => void,
-    );
+    this.listeners[eventName]?.push(callback);
   }
 
   /**
@@ -111,7 +125,7 @@ export class EventBus {
     const eventListeners = this.listeners[eventName];
     if (eventListeners) {
       for (const listener of eventListeners) {
-        listener(data);
+        listener(this.gameState, data);
       }
     }
   }
@@ -121,13 +135,11 @@ export class EventBus {
    */
   off<K extends keyof GameEvents>(
     eventName: K,
-    callback: (data: GameEvents[K]) => void,
+    callback: EventHandler<K>,
   ): void {
     const eventListeners = this.listeners[eventName];
     if (eventListeners) {
-      const index = eventListeners.indexOf(
-        callback as (data: GameEvents[keyof GameEvents]) => void,
-      );
+      const index = eventListeners.indexOf(callback);
       if (index !== -1) {
         eventListeners.splice(index, 1);
       }
@@ -140,6 +152,14 @@ export class EventBus {
   clear(): void {
     this.listeners = {};
   }
+
+  /**
+   * Update the gameState reference
+   * This should be called whenever a new gameState is created
+   */
+  updateGameState(gameState: GameState): void {
+    this.gameState = gameState;
+  }
 }
 
 /**
@@ -150,7 +170,38 @@ function createBoardCardID(playerID: number, cardID: number): BoardCardID {
 }
 
 /**
+ * Convert ability trigger to event name
+ */
+function triggerToEvent(trigger: { $type?: string }): keyof GameEvents {
+  // Simple implementation - in a real system, this would be more complex
+  if (!trigger || !trigger.$type) return "game:tick";
+
+  switch (trigger.$type) {
+    case "TTriggerOnCardFired":
+      return "card:fired";
+    case "TTriggerOnTick":
+      return "game:tick";
+    case "TTriggerOnFightStart":
+      return "game:fightStarted";
+    // Add more mappings as needed
+    default:
+      return "game:tick"; // Default fallback
+  }
+}
+
+/**
+ * Create a trigger check
+ */
+function createTriggerCheck(trigger: {
+  $type?: string;
+}): (gs: GameState) => boolean {
+  return () => true;
+}
+
+/**
  * Setup event handlers for the game engine
+ *
+ * Event handlers are mostly used for ability triggers
  */
 export function setupEventHandlers(gameState: GameState): void {
   const eventBus = gameState.eventBus;
@@ -160,7 +211,11 @@ export function setupEventHandlers(gameState: GameState): void {
     player.board.forEach((card, cardID) => {
       Object.values(card.Abilities).forEach((ability: Ability) => {
         const eventTrigger = triggerToEvent(ability.Trigger);
-        const prerequisiteCheck = createPrerequisiteCheck(ability.Prerequisites);
+        const triggerCheck = createTriggerCheck(ability.Trigger);
+        const prerequisiteCheck = createPrerequisitesCheck(ability, {
+          cardIdx: cardID,
+          playerIdx: playerID,
+        });
         const createCommand = (gs: GameState) =>
           Commands.CommandFactory.createFromAction(
             ability.Action,
@@ -171,29 +226,32 @@ export function setupEventHandlers(gameState: GameState): void {
             gs,
           );
 
-        const eventHandler = createEventHandler(
-          eventTrigger,
-          prerequisiteCheck,
-          createCommand,
-        );
+        const eventHandler = (gs: GameState) => {
+          if (prerequisiteCheck(gs) && triggerCheck(gs)) {
+            const command = createCommand(gs);
+            if (command) {
+              command.execute(gs);
+            }
+          }
+        };
         eventBus.on(eventTrigger, eventHandler);
-        card.eventHandlers;
+        
       });
     });
   });
 
   // Handle game tick events
-  eventBus.on("game:tick", (data) => {
+  eventBus.on("game:tick", (gameState, data) => {
     handleGameTick(gameState, data.tick);
   });
 
   // Handle card triggers
-  eventBus.on("card:triggered", (data) => {
+  eventBus.on("card:fired", (gameState, data) => {
     handleCardFired(gameState, data.boardCardID);
   });
 
   // Handle player damage
-  eventBus.on("player:damaged", (data) => {
+  eventBus.on("player:damaged", (gameState, data) => {
     handlePlayerDamaged(
       gameState,
       data.playerIdx,
@@ -203,7 +261,7 @@ export function setupEventHandlers(gameState: GameState): void {
   });
 
   // Handle attribute changes
-  eventBus.on("card:attributeChanged", (data) => {
+  eventBus.on("card:attributeChanged", (gameState, data) => {
     handleCardAttributeChanged(
       gameState,
       data.boardCardID,
@@ -213,7 +271,7 @@ export function setupEventHandlers(gameState: GameState): void {
     );
   });
 
-  eventBus.on("player:attributeChanged", (data) => {
+  eventBus.on("player:attributeChanged", (gameState, data) => {
     handlePlayerAttributeChanged(
       gameState,
       data.playerIdx,
@@ -224,7 +282,7 @@ export function setupEventHandlers(gameState: GameState): void {
   });
 
   // Handle card addition and registration
-  eventBus.on("card:added", (data) => {
+  eventBus.on("card:added", (gameState, data) => {
     handleCardAdded(gameState, data.boardCardID);
   });
 
@@ -235,6 +293,9 @@ export function setupEventHandlers(gameState: GameState): void {
  * Handle game tick event
  */
 function handleGameTick(gameState: GameState, tick: number): void {
+  // Process card cooldowns
+  processCardCooldowns(gameState);
+
   // Process poison and regen on 1000 tick intervals
   if (tick % 1000 === 0) {
     processPoisonAndRegen(gameState);
@@ -244,9 +305,6 @@ function handleGameTick(gameState: GameState, tick: number): void {
   if (tick % 500 === 0) {
     processBurn(gameState);
   }
-
-  // Process card cooldowns
-  processCardCooldowns(gameState);
 
   // Process sandstorm damage
   processSandstorm(gameState);
@@ -270,8 +328,8 @@ function processPoisonAndRegen(gameState: GameState): void {
         new Commands.ModifyPlayerAttributeCommand(
           playerID,
           "Health",
-          nextHealth,
           "set",
+          nextHealth,
         ).execute(gameState);
       }
     }
@@ -304,8 +362,8 @@ function processBurn(gameState: GameState): void {
       new Commands.ModifyPlayerAttributeCommand(
         playerID,
         "Burn",
-        player.Burn - 1,
         "set",
+        player.Burn - 1,
       ).execute(gameState);
     }
   });
@@ -435,7 +493,7 @@ function processCardCooldowns(gameState: GameState): void {
     }
 
     // Trigger the card
-    new Commands.TriggerCardCommand(boardCardID).execute(gameState);
+    new Commands.FireCardCommand(boardCardID).execute(gameState);
   });
 }
 
