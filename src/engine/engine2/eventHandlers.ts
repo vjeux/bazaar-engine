@@ -1,13 +1,6 @@
-import { Player } from "../Engine";
 import { GameState, BoardCardID } from "./engine2";
 import * as Commands from "./commands";
-import {
-  Ability,
-  AbilityAction,
-  AbilityPrerequisite,
-  AttributeType,
-  Priority,
-} from "../../types/cardTypes";
+import { Ability, AttributeType, Priority } from "../../types/cardTypes";
 import { createPrerequisitesCheck } from "./prereq";
 
 /**
