@@ -18,6 +18,25 @@ export interface CardConfig {
 }
 
 /**
+ * Helper function to get a value from an action's Value property
+ * This is a simplified version that handles basic fixed values
+ */
+function getActionValue(
+  _gameState: GameState,
+  value: { $type: string; Value?: number },
+): number {
+  // For now, only handle simple fixed values
+  // In a complete implementation, this would handle different value types
+  if (value.$type === "TFixedValue") {
+    return value.Value || 0;
+  }
+
+  // Default to 0 for unsupported value types
+  console.warn(`Unsupported value type: ${value.$type}`);
+  return 0;
+}
+
+/**
  * Command interface
  */
 export interface Command {
@@ -564,6 +583,61 @@ export class CommandFactory {
             });
           },
         });
+        return commands;
+      }
+
+      case "TActionCardModifyAttribute": {
+        if (!action.Target) {
+          throw new Error("Target is required for modify attribute action");
+        }
+
+        if (!action.AttributeType) {
+          throw new Error(
+            "AttributeType is required for modify attribute action",
+          );
+        }
+
+        const targetCards = getTargetCards(
+          gameState,
+          action.Target,
+          sourceCardID,
+          event,
+        );
+
+        // Get the attribute value from the action
+        let attributeValue = 0;
+        if (action.Value) {
+          attributeValue = getActionValue(gameState, action.Value);
+        }
+
+        // Map the operation string to the expected format
+        let operation: "set" | "add" | "subtract" | "multiply" = "set";
+        if (action.Operation) {
+          switch (action.Operation) {
+            case "Add":
+              operation = "add";
+              break;
+            case "Subtract":
+              operation = "subtract";
+              break;
+            case "Multiply":
+              operation = "multiply";
+              break;
+          }
+        }
+
+        // Apply the modification to each target card
+        for (const targetCard of targetCards) {
+          commands.addCommand(
+            new ModifyCardAttributeCommand(
+              targetCard,
+              action.AttributeType as AttributeType,
+              attributeValue,
+              operation,
+            ),
+          );
+        }
+
         return commands;
       }
 
