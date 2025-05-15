@@ -6,6 +6,7 @@ import {
   AbilityAction,
   AbilityPrerequisite,
   AttributeType,
+  Priority,
 } from "../../types/cardTypes";
 import { createPrerequisitesCheck } from "./prereq";
 
@@ -86,6 +87,16 @@ export interface GameEvents {
   };
 }
 
+// Priority order mapping for sorting
+const priorityOrder = {
+  [Priority.Immediate]: 0,
+  [Priority.Highest]: 1,
+  [Priority.High]: 2,
+  [Priority.Medium]: 3,
+  [Priority.Low]: 4,
+  [Priority.Lowest]: 5,
+};
+
 /**
  * Type-safe EventBus for game events
  */
@@ -95,9 +106,15 @@ export type EventHandler<T extends keyof GameEvents> = (
   data: GameEvents[T],
 ) => void;
 
+// Event listener with priority information
+interface PrioritizedEventHandler<T extends keyof GameEvents> {
+  handler: EventHandler<T>;
+  priority: Priority;
+}
+
 export class EventBus {
   private listeners: {
-    [K in keyof GameEvents]?: Array<EventHandler<K>>;
+    [K in keyof GameEvents]?: Array<PrioritizedEventHandler<K>>;
   } = {};
   private gameState: GameState;
 
@@ -106,16 +123,30 @@ export class EventBus {
   }
 
   /**
-   * Register a listener for a specific event
+   * Register a listener for a specific event with priority
    */
   on<K extends keyof GameEvents>(
     eventName: K,
     callback: EventHandler<K>,
+    priority: Priority = Priority.Medium,
   ): void {
     if (!this.listeners[eventName]) {
       this.listeners[eventName] = [];
     }
-    this.listeners[eventName]?.push(callback);
+
+    // Create prioritized event handler
+    const prioritizedHandler: PrioritizedEventHandler<K> = {
+      handler: callback,
+      priority,
+    };
+
+    // Add to listeners array
+    this.listeners[eventName]?.push(prioritizedHandler);
+
+    // Sort the listeners by priority (lower priority value = higher precedence)
+    this.listeners[eventName]?.sort(
+      (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority],
+    );
   }
 
   /**
@@ -124,8 +155,9 @@ export class EventBus {
   emit<K extends keyof GameEvents>(eventName: K, data: GameEvents[K]): void {
     const eventListeners = this.listeners[eventName];
     if (eventListeners) {
+      // Execute handlers in priority order (already sorted)
       for (const listener of eventListeners) {
-        listener(this.gameState, data);
+        listener.handler(this.gameState, data);
       }
     }
   }
@@ -139,7 +171,9 @@ export class EventBus {
   ): void {
     const eventListeners = this.listeners[eventName];
     if (eventListeners) {
-      const index = eventListeners.indexOf(callback);
+      const index = eventListeners.findIndex(
+        (item) => item.handler === callback,
+      );
       if (index !== -1) {
         eventListeners.splice(index, 1);
       }
@@ -192,11 +226,9 @@ function triggerToEvent(trigger: { $type?: string }): keyof GameEvents {
 /**
  * Create a trigger check
  *
- * Wil be the function to check for things like
+ * Will be the function to check for things like
  */
-function createTriggerCheck(trigger: {
-  $type?: string;
-}): (gs: GameState) => boolean {
+function createTriggerCheck(): (gs: GameState) => boolean {
   return () => true;
 }
 
@@ -213,7 +245,7 @@ export function setupEventHandlers(gameState: GameState): void {
     player.board.forEach((card, cardID) => {
       Object.values(card.Abilities).forEach((ability: Ability) => {
         const eventTrigger = triggerToEvent(ability.Trigger);
-        const triggerCheck = createTriggerCheck(ability.Trigger);
+        const triggerCheck = createTriggerCheck();
         const prerequisiteCheck = createPrerequisitesCheck(ability, {
           cardIdx: cardID,
           playerIdx: playerID,
@@ -236,15 +268,25 @@ export function setupEventHandlers(gameState: GameState): void {
             }
           }
         };
-        eventBus.on(eventTrigger, eventHandler);
+
+        // Register the event handler with the ability's priority
+        eventBus.on(
+          eventTrigger,
+          eventHandler,
+          ability.Priority || Priority.Medium,
+        );
       });
     });
   });
 
-  // Handle game tick events
-  eventBus.on("game:tick", (gameState, data) => {
-    handleGameTick(gameState, data.tick);
-  });
+  // Handle game tick events with Highest priority
+  eventBus.on(
+    "game:tick",
+    (gameState, data) => {
+      handleGameTick(gameState, data.tick);
+    },
+    Priority.Highest,
+  );
 }
 
 /**
