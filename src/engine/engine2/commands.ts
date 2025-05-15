@@ -100,6 +100,28 @@ export class CommandFactory {
         return commands;
       }
 
+      case "TActionPlayerBurnApply": {
+        const burnAmount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.BurnApplyAmount,
+        );
+        if (!action.Target) {
+          throw new Error("Target is required for burn apply action");
+        }
+        const targetPlayers = getTargetPlayers(
+          gameState,
+          action.Target,
+          sourceCardID,
+        );
+        for (const targetPlayer of targetPlayers) {
+          commands.addCommand(
+            new ApplyBurnCommand(targetPlayer, burnAmount, sourceCardID),
+          );
+        }
+        return commands;
+      }
+
       default:
         console.error(`Unhandled action type: ${action.$type}`);
         return null;
