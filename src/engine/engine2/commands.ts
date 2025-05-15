@@ -8,7 +8,7 @@ import { GameState, BoardCardID, getCardAttribute, BoardCard } from "./engine2";
 import { Tier } from "@/types/shared";
 import { PlayerCardConfig } from "../GameState";
 import { GameEvents } from "./eventHandlers";
-import { getTargetPlayers } from "./targeting";
+import { getTargetCards, getTargetPlayers } from "./targeting";
 
 export interface CardConfig {
   cardId: string;
@@ -118,6 +118,34 @@ export class CommandFactory {
         for (const targetPlayer of targetPlayers) {
           commands.addCommand(
             new ApplyBurnCommand(targetPlayer, burnAmount, sourceCardID),
+          );
+        }
+        return commands;
+      }
+
+      case "TActionCardSlow": {
+        const slowAmount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.SlowAmount,
+        );
+        if (!action.Target) {
+          throw new Error("Target is required for slow action");
+        }
+        const targetCards = getTargetCards(
+          gameState,
+          action.Target,
+          sourceCardID,
+          event,
+        );
+        for (const targetCard of targetCards) {
+          commands.addCommand(
+            new ModifyCardAttributeCommand(
+              targetCard,
+              AttributeType.Slow,
+              slowAmount,
+              "add",
+            ),
           );
         }
         return commands;
@@ -446,11 +474,11 @@ export class FireCardCommand implements Command {
 
     // Emit card trigger event
     gameState.eventBus.emit("card:fired", {
-      boardCardID: this.boardCardID,
+      sourceCardID: this.boardCardID,
     });
     // Emit card:itemused event
     gameState.eventBus.emit("card:itemused", {
-      boardCardID: this.boardCardID,
+      sourceCardID: this.boardCardID,
     });
 
     // Reset the card's tick if it has a cooldown

@@ -14,8 +14,8 @@ export interface GameEvents {
   "game:ended": { winner: string };
 
   // Card events
-  "card:fired": { boardCardID: BoardCardID };
-  "card:itemused": { boardCardID: BoardCardID };
+  "card:fired": { sourceCardID: BoardCardID };
+  "card:itemused": { sourceCardID: BoardCardID };
   "card:attributeChanged": {
     boardCardID: BoardCardID;
     attribute: AttributeType | "tick";
@@ -243,8 +243,8 @@ function createTriggerCheck(
         if ("boardCardID" in e) {
           const firedEvent = e as GameEvents["card:fired"];
           if (
-            firedEvent.boardCardID.playerIdx === boardCardID.playerIdx &&
-            firedEvent.boardCardID.cardIdx === boardCardID.cardIdx
+            firedEvent.sourceCardID.playerIdx === boardCardID.playerIdx &&
+            firedEvent.sourceCardID.cardIdx === boardCardID.cardIdx
           ) {
             return true;
           }

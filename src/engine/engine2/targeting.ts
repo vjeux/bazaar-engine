@@ -1,11 +1,7 @@
 import { GameState, BoardCardID } from "./engine2";
-import {
-  Source,
-  Target,
-  Subject,
-  Conditions,
-} from "../../types/cardTypes";
+import { Source, Target, Subject, Conditions } from "../../types/cardTypes";
 import prand from "pure-rand";
+import { GameEvents } from "./eventHandlers";
 
 export type TargetConfig = Source | Target | Subject;
 
@@ -16,35 +12,41 @@ export function getTargetCards(
   gameState: GameState,
   targetConfig: TargetConfig,
   sourceCard: BoardCardID,
+  event: GameEvents[keyof GameEvents],
 ): BoardCardID[] {
   const results: BoardCardID[] = [];
 
   switch (targetConfig.$type) {
-    case "TTargetCardSelf":
+    case "TTargetCardSelf": {
       results.push(sourceCard);
       break;
+    }
 
-    case "TTargetCardTriggerSource":
-      results.push(sourceCard);
+    case "TTargetCardTriggerSource": {
+      if ("sourceCardID" in event && event.sourceCardID) {
+        results.push(event.sourceCardID);
+      } else {
+        throw new Error(
+          "sourceCardID is required for TTargetCardTriggerSource",
+        );
+      }
       break;
+    }
 
     case "TTargetCardPositional": {
-      const originCard = sourceCard;
-      const { playerIdx: playerID, cardIdx: cardID } = originCard;
-
       switch (targetConfig.TargetMode) {
         case "AllRightCards": {
           const lengthCardItems =
-            gameState.players[playerID].board.findLastIndex(
+            gameState.players[sourceCard.playerIdx].board.findLastIndex(
               (boardCard) => boardCard.card.$type === "TCardItem",
             ) + 1;
 
           for (
-            let i = cardID + (targetConfig.IncludeOrigin ? 0 : 1);
+            let i = sourceCard.cardIdx + (targetConfig.IncludeOrigin ? 0 : 1);
             i < lengthCardItems;
             ++i
           ) {
-            results.push({ playerIdx: playerID, cardIdx: i });
+            results.push({ playerIdx: sourceCard.playerIdx, cardIdx: i });
           }
           break;
         }
@@ -52,57 +54,69 @@ export function getTargetCards(
         case "AllLeftCards": {
           for (
             let i = 0;
-            i < cardID - (targetConfig.IncludeOrigin ? 0 : 1);
+            i < sourceCard.cardIdx - (targetConfig.IncludeOrigin ? 0 : 1);
             ++i
           ) {
-            results.push({ playerIdx: playerID, cardIdx: i });
+            results.push({ playerIdx: sourceCard.playerIdx, cardIdx: i });
           }
           break;
         }
 
         case "Neighbor": {
           if (targetConfig.IncludeOrigin) {
-            results.push(originCard);
+            results.push(sourceCard);
           }
 
-          if (cardID !== 0) {
-            results.push({ playerIdx: playerID, cardIdx: cardID - 1 });
+          if (sourceCard.cardIdx !== 0) {
+            results.push({
+              playerIdx: sourceCard.playerIdx,
+              cardIdx: sourceCard.cardIdx - 1,
+            });
           }
 
           const lengthCardItems =
-            gameState.players[playerID].board.findLastIndex(
+            gameState.players[sourceCard.playerIdx].board.findLastIndex(
               (boardCard) => boardCard.card.$type === "TCardItem",
             ) + 1;
 
-          if (cardID < lengthCardItems - 1) {
-            results.push({ playerIdx: playerID, cardIdx: cardID + 1 });
+          if (sourceCard.cardIdx < lengthCardItems - 1) {
+            results.push({
+              playerIdx: sourceCard.playerIdx,
+              cardIdx: sourceCard.cardIdx + 1,
+            });
           }
           break;
         }
 
         case "RightCard": {
           if (targetConfig.IncludeOrigin) {
-            results.push(originCard);
+            results.push(sourceCard);
           }
 
           const lengthCardItems =
-            gameState.players[playerID].board.findLastIndex(
+            gameState.players[sourceCard.playerIdx].board.findLastIndex(
               (boardCard) => boardCard.card.$type === "TCardItem",
             ) + 1;
 
-          if (cardID < lengthCardItems - 1) {
-            results.push({ playerIdx: playerID, cardIdx: cardID + 1 });
+          if (sourceCard.cardIdx < lengthCardItems - 1) {
+            results.push({
+              playerIdx: sourceCard.playerIdx,
+              cardIdx: sourceCard.cardIdx + 1,
+            });
           }
           break;
         }
 
         case "LeftCard": {
           if (targetConfig.IncludeOrigin) {
-            results.push(originCard);
+            results.push(sourceCard);
           }
 
-          if (cardID !== 0) {
-            results.push({ playerIdx: playerID, cardIdx: cardID - 1 });
+          if (sourceCard.cardIdx !== 0) {
+            results.push({
+              playerIdx: sourceCard.playerIdx,
+              cardIdx: sourceCard.cardIdx - 1,
+            });
           }
           break;
         }
