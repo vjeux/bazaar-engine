@@ -446,7 +446,10 @@ export class FireCardCommand implements Command {
     // Emit card trigger event
     gameState.eventBus.emit("card:fired", {
       boardCardID: this.boardCardID,
-      card,
+    });
+    // Emit card:itemused event
+    gameState.eventBus.emit("card:itemused", {
+      boardCardID: this.boardCardID,
     });
 
     // Reset the card's tick if it has a cooldown

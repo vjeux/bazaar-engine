@@ -12,13 +12,15 @@ The Engine2 implementation adopts event-driven architecture with the Command pat
 
 ## Key Components
 
-### EventBus (`engine2.ts`)
+### EventBus (`eventHandlers.ts`)
 
-The EventBus acts as a central messaging system that enables loose coupling between components. It allows for:
+The EventBus acts as a central messaging system that enables loose coupling between components. It is initialized within the `Engine2` constructor and a reference to the `GameState` is provided to it, allowing event handlers to access and modify the game state. It provides:
 
-- Publishing events with data
-- Subscribing to events with handler functions
-- Unsubscribing from events
+- Publishing events with data (`emit` method)
+- Subscribing to events with handler functions (`on` method with priority)
+- Unsubscribing from events (`off` method)
+- Testing functions to conditionally handle events 
+- Priority-based event handling (Immediate, Highest, High, Medium, Low, Lowest)
 
 ### BoardCardID (`engine2.ts`)
 
@@ -26,8 +28,8 @@ Rather than passing separate player and card indices, we now use a `BoardCardID`
 
 ```typescript
 type BoardCardID = {
-  playerID: number;
-  cardID: number;
+  playerIdx: number;
+  cardIdx: number;
 };
 ```
 
@@ -44,32 +46,78 @@ Commands are self-contained operations that perform specific state changes. Each
 Key examples:
 - `ModifyCardAttributeCommand`: Changes a card attribute value
 - `ModifyPlayerAttributeCommand`: Changes a player attribute value
-- `DamagePlayerCommand`: Applies damage to a player
-- `TriggerCardCommand`: Triggers a card's abilities
+- `DamagePlayerCommand`: Applies damage to a player and handles shields
+- `FireCardCommand`: Triggers a card's firing sequence
+- `AddCardCommand`: Adds a card to the board
+- `RemoveCardCommand`: Removes a card from the board
+- `ProcessTickCommand`: Updates the game state for each tick
 
 ### Event Handlers (`eventHandlers.ts`)
 
-Event handlers respond to events by creating and executing commands. They contain the business logic that was previously in the monolithic engine. Examples:
+Event handlers respond to events by creating and executing commands. They contain the business logic for game mechanics:
 
-- `handleGameTick`: Processes what happens each tick
-- `handleCardTriggered`: Processes card trigger logic
-- `handlePlayerDamaged`: Responds to player damage events
+- `handleGameTick`: Processes what happens each tick (poison, burn, regen, cooldowns)
+- `setupEventHandlers`: Registers card abilities to appropriate events
+- `processSandstorm`: Applies environmental damage over time
+- `processCardCooldowns`: Manages card firing and multicasts
 
 ### Targeting System (`targeting.ts`)
 
 The targeting module handles the complex logic of determining which cards or players are affected by abilities:
 
-- `getTargetCards`: Resolves target cards based on targeting configuration
+- `getTargetCards`: Resolves target cards based on positioning, attributes, or other criteria
 - `getTargetPlayers`: Resolves target players based on targeting configuration
-- `testCardConditions`/`testPlayerConditions`: Checks if targets meet condition requirements
+- `testCardConditions`: Checks if cards meet condition requirements
+- `testPlayerConditions`: Checks if players meet condition requirements
+
+### Prerequisites (`prereq.ts`)
+
+The prerequisites system determines whether abilities should trigger:
+
+- `createPrerequisitesCheck`: Creates a function to check if prerequisites are met
+- `checkPrerequisite`: Tests individual prerequisites
 
 ## Event Flow
 
-1. Events are emitted (e.g., `game:tick`, `card:fired`)
-2. Event handlers respond by creating commands
-3. Commands execute, changing game state
-4. Commands may emit additional events
-5. The cycle continues
+1. The game starts with the engine's `run` method or individual `processTick` calls.
+2. On first tick, a `game:fightStarted` event is emitted.
+3. Each tick emits a `game:tick` event, which triggers the following cascade:
+   - Process poison damage and health regeneration (every 1000ms)
+   - Process burn damage (every 500ms)
+   - Process card cooldowns and emit the fire card events
+   - Process sandstorm damage
+   - Check for player deaths
+
+4. When a card is ready to fire:
+   - A `card:fired` event is emitted
+   - Registered event handlers for that card respond by executing appropriate commands. Other card's abilities can also responds to events like `card:itemused`
+   - Commands may emit additional events (e.g., `player:damaged`, `player:attributeChanged`)
+
+5. Actions like dealing damage create additional events like `player:damaged` which can trigger other abilities
+
+## Card Registration and Firing
+
+Cards register their abilities to the EventBus when the game starts:
+
+1. Each card's abilities are analyzed and mapped to appropriate event types
+2. Abilities include:
+   - Trigger conditions (e.g., on tick, on card fired)
+   - Prerequisites that must be met
+   - Actions to perform
+   - Priority level
+
+When a card's cooldown reaches its maximum:
+1. The card fires and may perform multicasts if configured
+2. Ammo is decremented if applicable
+3. The card's internal cooldown is reset
+
+## Internal Cooldown System
+
+Cards have internal cooldown mechanics to limit firing frequency:
+
+- Most cards have an internal cooldown for max firing per second
+- Cards can be affected by status effects like Freeze (prevents firing), Slow (half speed), and Haste (double speed)
+- Multicast abilities trigger multiple times with a delay between each cast
 
 ## Benefits of this Architecture
 
@@ -83,11 +131,15 @@ The targeting module handles the complex logic of determining which cards or pla
 
 ```typescript
 // Create engine
-const engine = createEngine(initialGameState);
+const engine = new Engine2(initialGameState);
 
 // Run the game for 10 ticks
 const gameStates = engine.run(10);
+// The 'game:fightStarted' event is emitted automatically on the first tick within the run method.
 
 // Or process ticks individually
 engine.processTick();
+
+// Get the current game state (returns a deep copy)
+const currentState = engine.getGameState();
 ``` 

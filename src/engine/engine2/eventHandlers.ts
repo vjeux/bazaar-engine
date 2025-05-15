@@ -14,7 +14,8 @@ export interface GameEvents {
   "game:ended": { winner: string };
 
   // Card events
-  "card:fired": { boardCardID: BoardCardID; card: unknown };
+  "card:fired": { boardCardID: BoardCardID };
+  "card:itemused": { boardCardID: BoardCardID };
   "card:attributeChanged": {
     boardCardID: BoardCardID;
     attribute: AttributeType | "tick";
