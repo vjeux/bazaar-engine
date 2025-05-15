@@ -542,9 +542,14 @@ function processSandstorm(gameState: GameState): void {
   if (sandstormTick < 0) return;
 
   // Calculate sandstorm damage based on ticks
+  // Start at 1 damage
   let sandstormDamage = 1;
-  if (sandstormTick > 1000) {
-    sandstormDamage += Math.floor((sandstormTick - 1000) / 100) * 2;
+
+  // Increase by 2 every tick after the first 10 ticks (1000 ms)
+  // This matches the original implementation where damage increases after 9 ticks
+  const ticksAfterStart = Math.floor(sandstormTick / 100); // Convert to 0.1 second ticks
+  if (ticksAfterStart > 9) {
+    sandstormDamage += (ticksAfterStart - 9) * 2;
   }
 
   if (sandstormDamage > 0) {
