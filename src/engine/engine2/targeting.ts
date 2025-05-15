@@ -4,7 +4,6 @@ import {
   Target,
   Subject,
   Conditions,
-  AttributeType,
 } from "../../types/cardTypes";
 import prand from "pure-rand";
 
@@ -26,12 +25,11 @@ export function getTargetCards(
       break;
 
     case "TTargetCardTriggerSource":
-      results.push(triggerCard);
+      results.push(sourceCard);
       break;
 
     case "TTargetCardPositional": {
-      const originCard =
-        targetConfig.Origin === "TriggerSource" ? triggerCard : sourceCard;
+      const originCard = sourceCard;
       const { playerIdx: playerID, cardIdx: cardID } = originCard;
 
       switch (targetConfig.TargetMode) {
@@ -246,12 +244,7 @@ export function getTargetCards(
     const { playerIdx: playerID, cardIdx: boardCardID } = cardID;
     return (
       !gameState.players[playerID].board[boardCardID].isDisabled &&
-      testCardConditions(
-        gameState,
-        targetConfig.Conditions,
-        triggerCard,
-        cardID,
-      )
+      testCardConditions(gameState, targetConfig.Conditions, sourceCard, cardID)
     );
   });
 
@@ -361,7 +354,7 @@ export function getTargetPlayers(
       return testPlayerConditions(
         gameState,
         targetConfig.Conditions,
-        triggerCard,
+        sourceCard,
         playerID,
       );
     });
@@ -376,7 +369,7 @@ export function getTargetPlayers(
 export function testCardConditions(
   gameState: GameState,
   conditions: Conditions | null,
-  triggerCard: BoardCardID,
+  sourceCard: BoardCardID,
   targetCard: BoardCardID,
 ): boolean {
   if (conditions == null) {
@@ -501,7 +494,7 @@ export function testCardConditions(
       }
 
       for (const condition of conditions.Conditions) {
-        if (testCardConditions(gameState, condition, triggerCard, targetCard)) {
+        if (testCardConditions(gameState, condition, sourceCard, targetCard)) {
           return true;
         }
       }
@@ -515,9 +508,7 @@ export function testCardConditions(
       }
 
       for (const condition of conditions.Conditions) {
-        if (
-          !testCardConditions(gameState, condition, triggerCard, targetCard)
-        ) {
+        if (!testCardConditions(gameState, condition, sourceCard, targetCard)) {
           return false;
         }
       }
@@ -527,8 +518,8 @@ export function testCardConditions(
 
     case "TCardConditionalTriggerSource": {
       const is =
-        triggerCard.playerIdx === targetCard.playerIdx &&
-        triggerCard.cardIdx === targetCard.cardIdx;
+        sourceCard.playerIdx === targetCard.playerIdx &&
+        sourceCard.cardIdx === targetCard.cardIdx;
       return conditions.IsNot ? !is : is;
     }
 
@@ -543,7 +534,7 @@ export function testCardConditions(
 export function testPlayerConditions(
   gameState: GameState,
   conditions: Conditions | null,
-  triggerCard: BoardCardID,
+  sourceCard: BoardCardID,
   targetPlayerID: number,
 ): boolean {
   if (conditions == null) {
@@ -558,8 +549,9 @@ export function testPlayerConditions(
         );
       }
 
-      const value =
-        gameState.players[targetPlayerID][conditions.Attribute as keyof Player];
+      // Access player attribute safely using string indexing
+      const player = gameState.players[targetPlayerID];
+      const value = player[conditions.Attribute as keyof typeof player];
 
       if (!conditions.ComparisonValue) {
         throw new Error(
