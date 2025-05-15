@@ -4,8 +4,7 @@ import {
   AttributeType,
   Enchantments,
 } from "../../types/cardTypes";
-import { GameState, BoardCardID, getCardAttribute } from "./engine2";
-import { BoardCard } from "../Engine";
+import { GameState, BoardCardID, getCardAttribute, BoardCard } from "./engine2";
 import { Tier } from "@/types/shared";
 import { PlayerCardConfig } from "../GameState";
 import { GameEvents } from "./eventHandlers";
@@ -108,6 +107,12 @@ export class CommandFactory {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function createCardFromConfig(cardConfig: PlayerCardConfig): BoardCard {
+  throw new Error("Not implemented");
+  return {} as BoardCard;
+}
+
 /**
  * Command to add a card to the board and register its event listeners
  */
@@ -123,14 +128,23 @@ export class AddCardCommand implements Command {
 
     // In a real implementation, this would call createBoardCardFromId from GameState.ts
     // For now, we're converting the config directly to a BoardCard with type casting
-    const boardCard = this.cardConfig as unknown as BoardCard;
+    const boardCard = createCardFromConfig(this.cardConfig);
 
     // Add to the specified position or to the end
-    const cardID = this.position >= 0 ? this.position : player.board.length;
+    const insertPosition =
+      this.position >= 0 ? this.position : player.board.length;
 
-    if (this.position >= 0 && this.position < player.board.length) {
-      // Replace card at position
-      player.board[this.position] = boardCard;
+    // Check if we're replacing an existing card
+    if (insertPosition < player.board.length) {
+      // Create and execute a RemoveCardCommand to properly remove the existing card
+      const removeCommand = new RemoveCardCommand({
+        playerIdx: this.playerID,
+        cardIdx: this.position,
+      });
+      removeCommand.execute(gameState);
+
+      // Now insert the new card at the position
+      player.board.splice(insertPosition, 0, boardCard);
     } else {
       // Add to the end
       player.board.push(boardCard);
@@ -138,7 +152,7 @@ export class AddCardCommand implements Command {
 
     const boardCardID: BoardCardID = {
       playerIdx: this.playerID,
-      cardIdx: cardID,
+      cardIdx: insertPosition,
     };
 
     // Emit event that card was added
@@ -156,20 +170,17 @@ export class RemoveCardCommand implements Command {
   constructor(private boardCardID: BoardCardID) {}
 
   execute(gameState: GameState): void {
-    const { playerIdx: playerID, cardIdx: cardID } = this.boardCardID;
-    const player = gameState.players[playerID];
+    const { playerIdx, cardIdx } = this.boardCardID;
+    const player = gameState.players[playerIdx];
 
-    if (cardID >= 0 && cardID < player.board.length) {
+    if (cardIdx >= 0 && cardIdx < player.board.length) {
       // Remove the card
-      player.board.splice(cardID, 1);
+      player.board.splice(cardIdx, 1);
 
       // Emit event that card was removed
       gameState.eventBus.emit("card:removed", {
         boardCardID: this.boardCardID,
       });
-
-      // Note: We might need to update all other card IDs since they've shifted
-      // That's an implementation detail to consider
     }
   }
 }

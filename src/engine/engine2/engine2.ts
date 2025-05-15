@@ -1,9 +1,7 @@
-import { Multicast, GameState as OriginalGameState } from "../Engine";
+import { Multicast } from "../Engine";
 import {
   Ability,
-  Attr,
   Card,
-  EnchantmentsibuteType,
   Aura,
   Tooltip,
   AttributeType,
