@@ -329,9 +329,6 @@ export function setupEventHandlers(gameState: GameState): void {
  * This is effectively the main game loop
  */
 function handleGameTick(gameState: GameState, tick: number): void {
-  // Process card cooldowns
-  processCardCooldowns(gameState);
-
   // Process poison and regen on 1000 tick intervals
   if (tick % 1000 === 0) {
     processPoisonAndRegen(gameState);
@@ -341,6 +338,9 @@ function handleGameTick(gameState: GameState, tick: number): void {
   if (tick % 500 === 0) {
     processBurn(gameState);
   }
+
+  // Process card cooldowns
+  processCardCooldowns(gameState);
 
   // Process sandstorm damage
   processSandstorm(gameState);
