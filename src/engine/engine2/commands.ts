@@ -51,6 +51,7 @@ export class CommandFactory {
     action: AbilityAction,
     sourceCardID: BoardCardID,
     gameState: GameState,
+    event: GameEvents[keyof GameEvents],
   ): Command | null {
     const commands = new CommandList();
 

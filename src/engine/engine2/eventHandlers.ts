@@ -285,11 +285,15 @@ export function setupEventHandlers(gameState: GameState): void {
           return prerequisiteCheck(gs) && triggerCheck(gs, data);
         };
 
-        const eventHandler = (gs: GameState) => {
+        const eventHandler = (
+          gs: GameState,
+          event: GameEvents[keyof GameEvents],
+        ) => {
           const command = Commands.CommandFactory.createFromAction(
             ability.Action,
             boardCardID,
             gs,
+            event,
           );
           if (command) {
             command.execute(gs);
