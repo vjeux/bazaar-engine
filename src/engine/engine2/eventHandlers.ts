@@ -240,7 +240,7 @@ function createTriggerCheck(
     switch (ability.Trigger.$type) {
       case "TTriggerOnCardFired":
         // Check if the fired card was the correct one
-        if ("boardCardID" in e) {
+        if ("sourceCardID" in e) {
           const firedEvent = e as GameEvents["card:fired"];
           if (
             firedEvent.sourceCardID.playerIdx === boardCardID.playerIdx &&

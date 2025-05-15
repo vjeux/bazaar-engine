@@ -1,9 +1,7 @@
 import { genCardsAndEncounters, getCardId } from "../lib/Data.ts";
-import { run } from "../engine/Engine.ts";
-import {
-  getFlattenedEncounters,
-  getInitialGameState,
-} from "../engine/GameState.ts";
+import { run } from "../engine/engine2Adapter.ts";
+import { getFlattenedEncounters } from "../engine/GameState.ts";
+import { getInitialGameState2 } from "../engine/engine2Adapter.ts";
 import { describe, expect, it, test } from "vitest";
 
 type DiffObject = Record<string, unknown>;
@@ -54,7 +52,7 @@ const { Cards, Encounters } = await genCardsAndEncounters();
 describe("Encounter snapshots should match", () => {
   getFlattenedEncounters(Encounters).forEach((encounter) => {
     test(`Matches snapshot for "Day ${encounter.day} - ${encounter.name}"`, () => {
-      const gameState = getInitialGameState(Cards, Encounters, [
+      const gameState = getInitialGameState2(Cards, Encounters, [
         { type: "monster", name: encounter.name, day: Number(encounter.day) },
         {
           type: "player",
@@ -92,7 +90,7 @@ describe("Encounter snapshots should match", () => {
 describe("Encounters should not throw", () => {
   getFlattenedEncounters(Encounters).forEach((encounter) => {
     it(`Encounter "Day ${encounter.day} - ${encounter.name}" should not throw`, () => {
-      const gameState = getInitialGameState(Cards, Encounters, [
+      const gameState = getInitialGameState2(Cards, Encounters, [
         { type: "monster", name: encounter.name, day: Number(encounter.day) },
         {
           type: "player",

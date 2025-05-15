@@ -1,9 +1,14 @@
-import { Engine2 } from "./engine2/engine2";
+import {
+  Engine2,
+  getCardAttribute as getCardAttribute2,
+  BoardCardID,
+} from "./engine2/engine2";
 import { GameState as Engine2GameState } from "./engine2/engine2";
 import { getInitialGameState } from "./GameState";
 import { MonsterConfig, PlayerConfig } from "./GameState";
-import { Cards } from "@/types/cardTypes";
+import { Cards, AttributeType } from "@/types/cardTypes";
 import { EncounterDays } from "@/types/encounterTypes";
+import { getTooltips as originalGetTooltips } from "./Engine";
 
 /**
  * Create a game state compatible with Engine2 from the parameters used by original getInitialGameState
@@ -22,7 +27,7 @@ import { EncounterDays } from "@/types/encounterTypes";
 export function getInitialGameState2(
   cards: Cards,
   encounters: EncounterDays,
-  configs: [MonsterConfig, PlayerConfig],
+  configs: [MonsterConfig | PlayerConfig, PlayerConfig],
   randomSeed: number = 1,
 ): Engine2GameState {
   // First, get the initial game state from the original function
@@ -106,4 +111,19 @@ export function runWithConfig(
 
   // Run simulation
   return run(initialState, maxTicks);
+}
+
+/**
+ * Adapter for the getTooltips function to work with Engine2
+ *
+ * This function converts the Engine2 parameters to the format expected by the original getTooltips function,
+ * allowing tooltip functionality to work with the Engine2 implementation.
+ */
+export function getTooltips(
+  gameState: Engine2GameState,
+  playerID: number,
+  boardCardID: number,
+): string[] {
+  // Use the original implementation but with the Engine2 game state
+  return originalGetTooltips(gameState, playerID, boardCardID);
 }

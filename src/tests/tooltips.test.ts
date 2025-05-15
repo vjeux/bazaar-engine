@@ -1,7 +1,7 @@
-import { getInitialGameState } from "../engine/GameState";
 import validItemIds from "../../public/json/ValidItemIds.json";
 import validSkillIds from "../../public/json/ValidSkillIds.json";
-import { getTooltips } from "../engine/Engine";
+import { getTooltips } from "../engine/engine2Adapter";
+import { getInitialGameState2 } from "../engine/engine2Adapter";
 import { describe, expect, it } from "vitest";
 import { genCardsAndEncounters } from "../lib/Data";
 import { Tier } from "../types/shared";
@@ -40,7 +40,7 @@ describe("Tooltips should not throw", () => {
         const extension = validItemIds.includes(cardId)
           ? { cards: [{ cardId, tier }] }
           : { skills: [{ cardId, tier }] };
-        const gameState = getInitialGameState(Cards, Encounters, [
+        const gameState = getInitialGameState2(Cards, Encounters, [
           { type: "player", health: 1000, ...extension },
           { type: "player", health: 1000 },
         ]);
@@ -67,7 +67,7 @@ describe("Tooltip snapshots", () => {
           const extension = validItemIds.includes(cardId)
             ? { cards: [{ cardId: cardId, tier }] }
             : { skills: [{ cardId: cardId, tier }] };
-          const gameState = getInitialGameState(Cards, Encounters, [
+          const gameState = getInitialGameState2(Cards, Encounters, [
             { type: "player", health: 1000, ...extension },
             { type: "player", health: 1000 },
           ]);

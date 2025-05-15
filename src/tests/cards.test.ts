@@ -1,8 +1,5 @@
-import {
-  getInitialGameState,
-  getFlattenedEncounters,
-} from "../engine/GameState";
-import { run } from "../engine/Engine";
+import { getFlattenedEncounters } from "../engine/GameState";
+import { getInitialGameState2, run } from "../engine/engine2Adapter";
 import { genCardsAndEncounters } from "../lib/Data";
 import { CARDS_VERSION } from "../lib/constants";
 import validItemIds from "../../public/json/ValidItemIds.json";
@@ -58,7 +55,7 @@ describe("Single card battle simulations (Items and Skills)", () => {
           day: Number(firstEncounter.day),
         };
 
-        const gameState = getInitialGameState(Cards, Encounters, [
+        const gameState = getInitialGameState2(Cards, Encounters, [
           monsterEntityConfig,
           playerEntityConfig,
         ]);
@@ -86,7 +83,7 @@ describe("Single card battle simulations (Items and Skills)", () => {
           day: Number(firstEncounter.day),
         };
 
-        const gameState = getInitialGameState(Cards, Encounters, [
+        const gameState = getInitialGameState2(Cards, Encounters, [
           monsterEntityConfig,
           playerEntityConfig,
         ]);
