@@ -151,6 +151,422 @@ export class CommandFactory {
         return commands;
       }
 
+      case "TActionCardForceUse": {
+        if (!action.Target) {
+          throw new Error("Target is required for force use action");
+        }
+        const targetCards = getTargetCards(
+          gameState,
+          action.Target,
+          sourceCardID,
+          event,
+        );
+        for (const targetCard of targetCards) {
+          commands.addCommand(new FireCardCommand(targetCard));
+        }
+        return commands;
+      }
+
+      case "TActionPlayerRegenApply": {
+        const regenAmount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.RegenApplyAmount,
+        );
+        if (!action.Target) {
+          throw new Error("Target is required for regen apply action");
+        }
+        const targetPlayers = getTargetPlayers(
+          gameState,
+          action.Target,
+          sourceCardID,
+        );
+        for (const targetPlayer of targetPlayers) {
+          commands.addCommand(
+            new ModifyPlayerAttributeCommand(
+              targetPlayer,
+              "HealthRegen",
+              "add",
+              regenAmount,
+            ),
+          );
+        }
+        return commands;
+      }
+
+      case "TActionPlayerPoisonApply": {
+        const poisonAmount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.PoisonApplyAmount,
+        );
+        if (!action.Target) {
+          throw new Error("Target is required for poison apply action");
+        }
+        const targetPlayers = getTargetPlayers(
+          gameState,
+          action.Target,
+          sourceCardID,
+        );
+        for (const targetPlayer of targetPlayers) {
+          commands.addCommand(
+            new ApplyPoisonCommand(targetPlayer, poisonAmount, sourceCardID),
+          );
+        }
+        return commands;
+      }
+
+      case "TActionPlayerPoisonRemove": {
+        const poisonRemoveAmount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.PoisonRemoveAmount,
+        );
+        if (!action.Target) {
+          throw new Error("Target is required for poison remove action");
+        }
+        const targetPlayers = getTargetPlayers(
+          gameState,
+          action.Target,
+          sourceCardID,
+        );
+        for (const targetPlayer of targetPlayers) {
+          commands.addCommand(
+            new ModifyPlayerAttributeCommand(
+              targetPlayer,
+              "Poison",
+              "subtract",
+              poisonRemoveAmount,
+            ),
+          );
+        }
+        return commands;
+      }
+
+      case "TActionPlayerBurnRemove": {
+        const burnRemoveAmount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.BurnRemoveAmount,
+        );
+        if (!action.Target) {
+          throw new Error("Target is required for burn remove action");
+        }
+        const targetPlayers = getTargetPlayers(
+          gameState,
+          action.Target,
+          sourceCardID,
+        );
+        for (const targetPlayer of targetPlayers) {
+          commands.addCommand(
+            new ModifyPlayerAttributeCommand(
+              targetPlayer,
+              "Burn",
+              "subtract",
+              burnRemoveAmount,
+            ),
+          );
+        }
+        return commands;
+      }
+
+      case "TActionPlayerShieldApply": {
+        const shieldAmount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.ShieldApplyAmount,
+        );
+        if (!action.Target) {
+          throw new Error("Target is required for shield apply action");
+        }
+        const targetPlayers = getTargetPlayers(
+          gameState,
+          action.Target,
+          sourceCardID,
+        );
+        for (const targetPlayer of targetPlayers) {
+          commands.addCommand(
+            new ApplyShieldCommand(targetPlayer, shieldAmount, sourceCardID),
+          );
+        }
+        return commands;
+      }
+
+      case "TActionPlayerShieldRemove": {
+        const shieldRemoveAmount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.ShieldRemoveAmount,
+        );
+        if (!action.Target) {
+          throw new Error("Target is required for shield remove action");
+        }
+        const targetPlayers = getTargetPlayers(
+          gameState,
+          action.Target,
+          sourceCardID,
+        );
+        for (const targetPlayer of targetPlayers) {
+          commands.addCommand(
+            new ModifyPlayerAttributeCommand(
+              targetPlayer,
+              "Shield",
+              "subtract",
+              shieldRemoveAmount,
+            ),
+          );
+        }
+        return commands;
+      }
+
+      case "TActionPlayerReviveHeal": {
+        if (!action.Target) {
+          throw new Error("Target is required for revive heal action");
+        }
+        const targetPlayers = getTargetPlayers(
+          gameState,
+          action.Target,
+          sourceCardID,
+        );
+        for (const targetPlayer of targetPlayers) {
+          commands.addCommand(
+            new ModifyPlayerAttributeCommand(targetPlayer, "Health", "set", 0),
+          );
+        }
+        return commands;
+      }
+
+      case "TActionCardDisable": {
+        if (!action.Target) {
+          throw new Error("Target is required for card disable action");
+        }
+        const targetCards = getTargetCards(
+          gameState,
+          action.Target,
+          sourceCardID,
+          event,
+        );
+        const targetCount =
+          getCardAttribute(
+            gameState,
+            sourceCardID,
+            AttributeType.DisableTargets,
+          ) || 1;
+
+        for (const targetCard of targetCards.slice(0, targetCount)) {
+          // Create a command to set isDisabled to true
+          commands.addCommand({
+            execute: (gameState: GameState) => {
+              const { playerIdx, cardIdx } = targetCard;
+              // Simply set the disabled flag without emitting an event
+              gameState.players[playerIdx].board[cardIdx].isDisabled = true;
+            },
+          });
+        }
+        return commands;
+      }
+
+      case "TActionCardFreeze": {
+        const freezeAmount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.FreezeAmount,
+        );
+        const targetCount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.FreezeTargets,
+        );
+
+        if (!action.Target) {
+          throw new Error("Target is required for freeze action");
+        }
+
+        const targetCards = getTargetCards(
+          gameState,
+          action.Target,
+          sourceCardID,
+          event,
+        );
+
+        for (const targetCard of targetCards.slice(0, targetCount)) {
+          commands.addCommand(
+            new ModifyCardAttributeCommand(
+              targetCard,
+              AttributeType.Freeze,
+              freezeAmount,
+              "add",
+            ),
+          );
+        }
+        return commands;
+      }
+
+      case "TActionCardHaste": {
+        const hasteAmount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.HasteAmount,
+        );
+        const targetCount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.HasteTargets,
+        );
+
+        if (!action.Target) {
+          throw new Error("Target is required for haste action");
+        }
+
+        const targetCards = getTargetCards(
+          gameState,
+          action.Target,
+          sourceCardID,
+          event,
+        );
+
+        for (const targetCard of targetCards.slice(0, targetCount)) {
+          commands.addCommand(
+            new ModifyCardAttributeCommand(
+              targetCard,
+              AttributeType.Haste,
+              hasteAmount,
+              "add",
+            ),
+          );
+        }
+        return commands;
+      }
+
+      case "TActionCardReload": {
+        const reloadAmount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.ReloadAmount,
+        );
+        const targetCount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.ReloadTargets,
+        );
+
+        if (!action.Target) {
+          throw new Error("Target is required for reload action");
+        }
+
+        const targetCards = getTargetCards(
+          gameState,
+          action.Target,
+          sourceCardID,
+          event,
+        );
+
+        for (const targetCard of targetCards.slice(0, targetCount)) {
+          commands.addCommand({
+            execute: (gameState: GameState) => {
+              const currentAmmo = getCardAttribute(
+                gameState,
+                targetCard,
+                AttributeType.Ammo,
+              );
+              const ammoMax = getCardAttribute(
+                gameState,
+                targetCard,
+                AttributeType.AmmoMax,
+              );
+
+              // If the card has no ammo or ammo max, don't do anything
+              if (currentAmmo === undefined || ammoMax === undefined) {
+                return;
+              }
+
+              const newValue = Math.min(ammoMax, currentAmmo + reloadAmount);
+              if (currentAmmo !== newValue) {
+                new ModifyCardAttributeCommand(
+                  targetCard,
+                  AttributeType.Ammo,
+                  newValue,
+                  "set",
+                ).execute(gameState);
+              }
+            },
+          });
+        }
+        return commands;
+      }
+
+      case "TActionCardCharge": {
+        const chargeAmount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.ChargeAmount,
+        );
+        const targetCount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.ChargeTargets,
+        );
+
+        if (!action.Target) {
+          throw new Error("Target is required for charge action");
+        }
+
+        const targetCards = getTargetCards(
+          gameState,
+          action.Target,
+          sourceCardID,
+          event,
+        );
+
+        for (const targetCard of targetCards.slice(0, targetCount)) {
+          commands.addCommand({
+            execute: (gameState: GameState) => {
+              const { playerIdx, cardIdx } = targetCard;
+              const cooldownMax = getCardAttribute(
+                gameState,
+                targetCard,
+                AttributeType.CooldownMax,
+              );
+
+              // If the card has no cooldown max, don't do anything
+              if (cooldownMax === undefined) {
+                return;
+              }
+
+              const currentTick =
+                gameState.players[playerIdx].board[cardIdx].tick || 0;
+              const newValue = Math.min(
+                cooldownMax,
+                currentTick + chargeAmount,
+              );
+
+              if (currentTick !== newValue) {
+                new ModifyCardAttributeCommand(
+                  targetCard,
+                  "tick",
+                  newValue,
+                  "set",
+                ).execute(gameState);
+              }
+            },
+          });
+        }
+        return commands;
+      }
+
+      case "TActionCardBeginSandstorm": {
+        commands.addCommand({
+          execute: (gameState: GameState) => {
+            gameState.sandstormStartTick = gameState.tick;
+            // Emit tick event instead of custom event
+            gameState.eventBus.emit("game:tick", {
+              tick: gameState.tick,
+            });
+          },
+        });
+        return commands;
+      }
+
       default:
         console.error(`Unhandled action type: ${action.$type}`);
         return null;
