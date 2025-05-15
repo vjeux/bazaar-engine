@@ -149,7 +149,6 @@ export class Engine2 {
    * Run the game for a specified number of ticks
    */
   run(maxTicks: number = Infinity): GameState[] {
-    console.log("running with maxTicks", maxTicks);
     const steps: GameState[] = [this.createGameStateCopy()];
 
     // Emit fight started event on first tick
