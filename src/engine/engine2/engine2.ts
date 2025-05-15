@@ -18,6 +18,11 @@ import { RandomGenerator } from "pure-rand/types/RandomGenerator";
 import { Tier } from "@/types/shared";
 
 /**
+ * Tick rate in milliseconds
+ */
+export const TICK_RATE = 100;
+
+/**
  * Represents a unique identifier for a board card
  */
 export type BoardCardID = {

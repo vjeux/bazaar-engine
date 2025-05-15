@@ -1,5 +1,4 @@
-import { GameState } from "../Engine";
-import { BoardCardID } from "./engine2";
+import { GameState, BoardCardID } from "./engine2";
 import {
   Source,
   Target,

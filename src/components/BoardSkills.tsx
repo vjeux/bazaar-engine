@@ -1,14 +1,14 @@
 "use client";
 import type { BoardCard, GameState } from "@/engine/Engine";
+import type { GameState as Engine2GameState } from "@/engine/engine2/engine2";
 import { BoardSkillElement } from "@/components/BoardSkillElement";
 
-export function BoardSkills({
-  gameState,
-  playerId,
-}: {
-  gameState: GameState;
+interface BoardSkillsProps {
+  gameState: GameState | Engine2GameState;
   playerId: number;
-}) {
+}
+
+export function BoardSkills({ gameState, playerId }: BoardSkillsProps) {
   return (
     <div className="my-2 flex min-h-12 flex-wrap items-center gap-1">
       {gameState.players[playerId].board
