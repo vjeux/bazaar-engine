@@ -1,7 +1,7 @@
 import { Player } from "../Engine";
 import { GameState, BoardCardID } from "./engine2";
 import * as Commands from "./commands";
-import { Ability, AbilityAction, AttributeType } from "../../types/cardTypes";
+import { Ability, AbilityAction, AbilityPrerequisite, AttributeType } from "../../types/cardTypes";
 
 /**
  * Define all game event types with their payload structures
@@ -45,6 +45,11 @@ export interface GameEvents {
     amount: number;
     sourceCardID: BoardCardID | null;
   };
+  "player:lifestealheal": {
+    playerIdx: number;
+    amount: number;
+    sourceCardID: BoardCardID | null;
+  };
   "player:attributeChanged": {
     playerIdx: number;
     attribute: string;
@@ -73,7 +78,7 @@ export interface GameEvents {
     amount: number;
     sourceCardID: BoardCardID | null;
   };
-};
+}
 
 /**
  * Type-safe EventBus for game events
@@ -149,6 +154,33 @@ function createBoardCardID(playerID: number, cardID: number): BoardCardID {
  */
 export function setupEventHandlers(gameState: GameState): void {
   const eventBus = gameState.eventBus;
+
+  // For each card, register the cards abilities to the event bus
+  gameState.players.forEach((player, playerID) => {
+    player.board.forEach((card, cardID) => {
+      Object.values(card.Abilities).forEach((ability: Ability) => {
+        const eventTrigger = triggerToEvent(ability.Trigger);
+        const prerequisiteCheck = createPrerequisiteCheck(ability.Prerequisites);
+        const createCommand = (gs: GameState) =>
+          Commands.CommandFactory.createFromAction(
+            ability.Action,
+            {
+              cardIdx: cardID,
+              playerIdx: playerID,
+            },
+            gs,
+          );
+
+        const eventHandler = createEventHandler(
+          eventTrigger,
+          prerequisiteCheck,
+          createCommand,
+        );
+        eventBus.on(eventTrigger, eventHandler);
+        card.eventHandlers;
+      });
+    });
+  });
 
   // Handle game tick events
   eventBus.on("game:tick", (data) => {
@@ -728,4 +760,4 @@ function handleCardAdded(
   // This is a placeholder for potential future processing
   // Any additional initialization for newly added cards would go here
   // This is called before card registration
-} 
+}

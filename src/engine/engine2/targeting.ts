@@ -9,13 +9,14 @@ import {
 } from "../../types/cardTypes";
 import prand from "pure-rand";
 
+export type TargetConfig = Source | Target | Subject;
+
 /**
  * Get target cards based on targeting configuration
  */
 export function getTargetCards(
   gameState: GameState,
-  targetConfig: Source | Target | Subject,
-  triggerCard: BoardCardID,
+  targetConfig: TargetConfig,
   sourceCard: BoardCardID,
 ): BoardCardID[] {
   const results: BoardCardID[] = [];
@@ -309,8 +310,7 @@ export function getTargetCards(
  */
 export function getTargetPlayers(
   gameState: GameState,
-  targetConfig: Target | Subject,
-  triggerCard: BoardCardID,
+  targetConfig: TargetConfig,
   sourceCard: BoardCardID,
 ): number[] {
   let results: number[] = [];

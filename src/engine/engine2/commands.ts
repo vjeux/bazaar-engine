@@ -4,10 +4,11 @@ import {
   AttributeType,
   Enchantments,
 } from "../../types/cardTypes";
-import { GameState, BoardCardID } from "./engine2";
+import { GameState, BoardCardID, getCardAttribute } from "./engine2";
 import { BoardCard } from "../Engine";
 import { Tier } from "@/types/shared";
 import { PlayerCardConfig } from "../GameState";
+import { GameEvents } from "./eventHandlers";
 
 export interface CardConfig {
   cardId: string;
@@ -24,18 +25,49 @@ export interface Command {
 }
 
 /**
+ * List of commands to be executed
+ */
+class CommandList implements Command {
+  private commands: Command[] = [];
+
+  constructor(commands?: Command[]) {
+    this.commands = commands ?? [];
+  }
+
+  addCommand(command: Command) {
+    this.commands.push(command);
+  }
+
+  execute(gameState: GameState): void {
+    this.commands.forEach((command) => command.execute(gameState));
+  }
+}
+
+/**
  * Factory for creating commands based on action types
  */
 export class CommandFactory {
   static createFromAction(
     action: AbilityAction,
     sourceCardID: BoardCardID,
-    targetPlayerID: number,
+    gameState: GameState,
   ): Command | null {
     switch (action.$type) {
       case "TActionPlayerDamage":
-        // This is a simplified example - real implementation would determine damage from ability
-        return new DamagePlayerCommand(targetPlayerID, 10, sourceCardID);
+        // get damage attribute from source card
+        const damage = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.DamageAmount,
+        );
+        const targetPlayersIdx = getTargetPlayersIdx(action.Target);
+        const commands = new CommandList();
+        for (const targetPlayerIdx of targetPlayersIdx) {
+          commands.addCommand(
+            new DamagePlayerCommand(targetPlayerIdx, damage, sourceCardID),
+          );
+        }
+        return commands;
 
       case "TActionPlayerHeal":
         // Logic to determine heal amount from the action
@@ -165,15 +197,17 @@ export class ModifyCardAttributeCommand implements Command {
  */
 export class ModifyPlayerAttributeCommand implements Command {
   constructor(
-    private playerID: number,
-    private attribute: keyof Player,
-    private value: number,
+    private playerIdx: number,
+    private attribute: keyof {
+      [K in keyof Player as Player[K] extends number ? K : never]: Player[K];
+    }, // ensures player attribute being changed is a number
     private operation: "set" | "add" | "subtract" | "multiply" = "set",
+    private value: number,
   ) {}
 
   execute(gameState: GameState): void {
-    const player = gameState.players[this.playerID];
-    const oldValue = player[this.attribute] as number;
+    const player = gameState.players[this.playerIdx];
+    const oldValue = player[this.attribute];
     let newValue: number;
 
     switch (this.operation) {
@@ -191,12 +225,11 @@ export class ModifyPlayerAttributeCommand implements Command {
         break;
     }
 
-    // Using type assertion to handle the attribute update
-    (player[this.attribute] as unknown) = newValue;
+    player[this.attribute] = newValue;
 
     // Emit event for attribute change
     gameState.eventBus.emit("player:attributeChanged", {
-      playerIdx: this.playerID,
+      playerIdx: this.playerIdx,
       attribute: this.attribute,
       oldValue,
       newValue,
@@ -206,46 +239,98 @@ export class ModifyPlayerAttributeCommand implements Command {
 
 /**
  * Command to apply damage to a player
+ *
+ * Can have null source as Sandstorm damage is not from a card
  */
 export class DamagePlayerCommand implements Command {
   constructor(
-    private targetPlayerID: number,
+    private targetPlayerIdx: number,
     private amount: number,
     private sourceCardID: BoardCardID | null,
   ) {}
 
   execute(gameState: GameState): void {
-    const player = gameState.players[this.targetPlayerID];
-    const shield = player.Shield;
+    const targetPlayer = gameState.players[this.targetPlayerIdx];
+    const targetPlayerShield = targetPlayer.Shield;
 
-    if (shield >= this.amount) {
+    if (targetPlayerShield >= this.amount) {
       new ModifyPlayerAttributeCommand(
-        this.targetPlayerID,
+        this.targetPlayerIdx,
         "Shield",
-        shield - this.amount,
-        "set",
+        "subtract",
+        this.amount,
       ).execute(gameState);
     } else {
-      const remainingDamage = this.amount - shield;
+      const remainingDamage = this.amount - targetPlayerShield;
       new ModifyPlayerAttributeCommand(
-        this.targetPlayerID,
+        this.targetPlayerIdx,
         "Shield",
-        0,
         "set",
+        0,
       ).execute(gameState);
       new ModifyPlayerAttributeCommand(
-        this.targetPlayerID,
+        this.targetPlayerIdx,
         "Health",
-        player.Health - remainingDamage,
         "set",
+        targetPlayer.Health - remainingDamage,
       ).execute(gameState);
     }
 
-    // Emit damage event
-    gameState.eventBus.emit("player:damaged", {
-      playerIdx: this.targetPlayerID,
-      amount: this.amount,
-      sourceCardID: this.sourceCardID,
+    // Delay events as we want to process them after the command is executed
+    const delayedEvents: Array<{
+      eventName: keyof GameEvents;
+      eventData: GameEvents[keyof GameEvents];
+    }> = [];
+
+    // If lifesteal amount > 0, add health to source player, emit lifestealheal event
+    if (
+      this.sourceCardID &&
+      getCardAttribute(gameState, this.sourceCardID, AttributeType.Lifesteal) >
+        0
+    ) {
+      const lifestealPercent = getCardAttribute(
+        gameState,
+        this.sourceCardID,
+        AttributeType.Lifesteal,
+      );
+      const sourcePlayer = gameState.players[this.sourceCardID.playerIdx];
+      const sourcePlayerHealth = sourcePlayer.Health;
+      const sourcePlayerHealthMax = sourcePlayer.HealthMax;
+      const newSourcePlayerHealth = Math.min(
+        sourcePlayerHealth + this.amount * (lifestealPercent / 100),
+        sourcePlayerHealthMax,
+      );
+      new ModifyPlayerAttributeCommand(
+        this.sourceCardID.playerIdx,
+        "Health",
+        "set",
+        newSourcePlayerHealth,
+      ).execute(gameState);
+      delayedEvents.push({
+        eventName: "player:lifestealheal",
+        eventData: {
+          playerIdx: this.sourceCardID.playerIdx,
+          amount: this.amount * (lifestealPercent / 100),
+          sourceCardID: this.sourceCardID,
+        },
+      });
+    }
+
+    if (this.sourceCardID) {
+      // Emit damage event
+      delayedEvents.push({
+        eventName: "player:damaged",
+        eventData: {
+          playerIdx: this.targetPlayerIdx,
+          amount: this.amount,
+          sourceCardID: this.sourceCardID,
+        },
+      });
+    }
+
+    // Emit delayed events
+    delayedEvents.forEach((event) => {
+      gameState.eventBus.emit(event.eventName, event.eventData);
     });
   }
 }
@@ -268,8 +353,8 @@ export class HealPlayerCommand implements Command {
       new ModifyPlayerAttributeCommand(
         this.targetPlayerID,
         "Health",
-        newHealth,
         "set",
+        newHealth,
       ).execute(gameState);
 
       // Emit heal event
@@ -325,13 +410,11 @@ export class ApplyShieldCommand implements Command {
   ) {}
 
   execute(gameState: GameState): void {
-    const player = gameState.players[this.targetPlayerID];
-
     new ModifyPlayerAttributeCommand(
       this.targetPlayerID,
       "Shield",
-      player.Shield + this.amount,
-      "set",
+      "add",
+      this.amount,
     ).execute(gameState);
 
     // Emit shield applied event
@@ -359,8 +442,8 @@ export class ApplyPoisonCommand implements Command {
     new ModifyPlayerAttributeCommand(
       this.targetPlayerID,
       "Poison",
-      player.Poison + this.amount,
       "set",
+      player.Poison + this.amount,
     ).execute(gameState);
 
     // Emit poison applied event
@@ -383,13 +466,11 @@ export class ApplyBurnCommand implements Command {
   ) {}
 
   execute(gameState: GameState): void {
-    const player = gameState.players[this.targetPlayerID];
-
     new ModifyPlayerAttributeCommand(
       this.targetPlayerID,
       "Burn",
-      player.Burn + this.amount,
-      "set",
+      "add",
+      this.amount,
     ).execute(gameState);
 
     // Emit burn applied event

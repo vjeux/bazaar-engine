@@ -233,7 +233,7 @@ enum ConditionType {
   TRunConditionalCurrentDay = "TRunConditionalCurrentDay",
 }
 
-enum Comparison {
+export enum Comparison {
   Equal = "Equal",
   GreaterThan = "GreaterThan",
   GreaterThanOrEqual = "GreaterThanOrEqual",
