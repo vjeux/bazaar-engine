@@ -137,21 +137,19 @@ export class Engine2 {
   /**
    * Process a single game tick
    */
-  processTick(): GameState {
+  processTick() {
     // Queue tick processing command
     this.queueCommand(new ProcessTickCommand());
 
     // Execute all commands
     this.executeCommands();
-
-    // Return the updated game state
-    return this.createGameStateCopy();
   }
 
   /**
    * Run the game for a specified number of ticks
    */
   run(maxTicks: number = Infinity): GameState[] {
+    console.log("running with maxTicks", maxTicks);
     const steps: GameState[] = [this.createGameStateCopy()];
 
     // Emit fight started event on first tick
@@ -161,11 +159,11 @@ export class Engine2 {
 
     for (let i = 0; i < maxTicks; i++) {
       // Process a tick
-      const updatedState = this.processTick();
-      steps.push(updatedState);
+      this.processTick();
+      steps.push(this.createGameStateCopy());
 
       // Check if game is still active
-      if (!this.gameState.isPlaying) {
+      if (steps.at(-1)?.isPlaying === false) {
         break;
       }
     }
@@ -186,9 +184,6 @@ export class Engine2 {
       })),
       multicast: [...this.gameState.multicast],
     };
-
-    // Update the EventBus with the new gameState reference
-    this.gameState.eventBus.updateGameState(copy);
 
     return copy;
   }

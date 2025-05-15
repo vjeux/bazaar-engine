@@ -1,6 +1,5 @@
 import { GameState } from "@/engine/Engine";
 import {
-  getInitialGameState,
   MonsterConfig,
   PlayerCardConfig,
   PlayerConfig,
