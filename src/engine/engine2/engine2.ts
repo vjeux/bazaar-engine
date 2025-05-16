@@ -15,7 +15,7 @@ import {
 import { Command, ProcessTickCommand } from "./commands";
 import { RandomGenerator } from "pure-rand/types/RandomGenerator";
 import { Hero, Tier } from "@/types/shared";
-import { getTargetCards } from "./targeting";
+import { getTargetCards, getTargetPlayers } from "./targeting";
 import { getActionValue } from "./getActionValue";
 
 /**
@@ -382,6 +382,80 @@ export function getCardAttribute(
       });
     });
   });
+
+  return value;
+}
+
+/**
+ * Get player attribute value with all aura modifications applied
+ */
+export function getPlayerAttribute<K extends keyof Player>(
+  gameState: GameState,
+  playerID: number,
+  attribute: K,
+): Player[K] {
+  const value = gameState.players[playerID][attribute];
+
+  if (typeof value === "number") {
+    let numericValue = value as number;
+
+    // Apply aura effects
+    gameState.players.forEach((player, playerIdx) => {
+      player.board.forEach((boardCard, cardIdx) => {
+        // Skip if card has no auras
+        if (!boardCard.Auras || Object.keys(boardCard.Auras).length === 0) {
+          return;
+        }
+
+        // Check each aura on the card
+        Object.values(boardCard.Auras).forEach((aura) => {
+          // Skip if not player attribute modification aura
+          if (
+            aura.Action.$type !== "TAuraActionPlayerModifyAttribute" ||
+            aura.Action.AttributeType !== attribute
+          ) {
+            return;
+          }
+
+          const auraSourceCardID: BoardCardID = { playerIdx, cardIdx };
+
+          // Get target players for this aura
+          const targetPlayers = getTargetPlayers(
+            gameState,
+            aura.Action.Target,
+            auraSourceCardID,
+            undefined,
+          );
+
+          // Check if our player is among the targets
+          if (targetPlayers.includes(playerID)) {
+            // Get the value to apply from the aura
+            const actionValue = getActionValue(
+              gameState,
+              aura.Action.Value,
+              auraSourceCardID,
+              undefined,
+            );
+
+            // Apply the modification based on operation type
+            switch (aura.Action.Operation) {
+              case "Add":
+                numericValue += actionValue;
+                break;
+              case "Multiply":
+                numericValue *= actionValue;
+                break;
+              case "Subtract":
+                numericValue -= actionValue;
+                break;
+            }
+          }
+        });
+      });
+    });
+
+    return numericValue as unknown as Player[K];
+  }
 
   return value;
 }
