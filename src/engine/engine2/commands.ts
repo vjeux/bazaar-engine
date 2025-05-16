@@ -130,7 +130,14 @@ export class CommandFactory {
           sourceCardID,
           event,
         );
-        for (const targetCard of targetCards) {
+
+        // Filter by SlowTargets amount
+        const targetCount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.SlowTargets,
+        );
+        for (const targetCard of targetCards.slice(0, targetCount)) {
           commands.addCommand(
             new ModifyCardAttributeCommand(
               targetCard,
@@ -345,12 +352,11 @@ export class CommandFactory {
           sourceCardID,
           event,
         );
-        const targetCount =
-          getCardAttribute(
-            gameState,
-            sourceCardID,
-            AttributeType.DisableTargets,
-          ) || 1;
+        const targetCount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.DisableTargets,
+        );
 
         for (const targetCard of targetCards.slice(0, targetCount)) {
           // Create a command to set isDisabled to true
