@@ -342,7 +342,7 @@ export interface Conditions {
   IsSameAsPlayerHero?: boolean;
   Operator?: Operator;
   Sizes?: Size[];
-  Tags?: Tag[];
+  Tags?: Tag[] | HiddenTag[];
   Tiers?: Tier[];
 }
 

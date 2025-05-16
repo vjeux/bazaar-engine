@@ -2,6 +2,8 @@ import { GameState, BoardCardID } from "./engine2";
 import { Source, Target, Subject, Conditions } from "../../types/cardTypes";
 import prand from "pure-rand";
 import { GameEvents } from "./eventHandlers";
+import { getActionValue } from "./getActionValue";
+import { HiddenTag, Tag } from "../../types/shared";
 
 export type TargetConfig = Source | Target | Subject;
 
@@ -397,13 +399,15 @@ export function testCardConditions(
   conditions: Conditions | null,
   sourceCard: BoardCardID,
   targetCard: BoardCardID,
+  event?: GameEvents[keyof GameEvents],
 ): boolean {
   if (conditions == null) {
     return true;
   }
 
-  const { playerIdx: playerID, cardIdx: cardID } = targetCard;
-  const card = gameState.players[playerID].board[cardID];
+  const { playerIdx: targetPlayerIdx, cardIdx: targetCardIdx } = targetCard;
+  const targetBoardCard =
+    gameState.players[targetPlayerIdx].board[targetCardIdx];
 
   switch (conditions.$type) {
     case "TCardConditionalAttribute": {
@@ -411,7 +415,8 @@ export function testCardConditions(
         throw new Error("Attribute must exist for card conditional attribute");
       }
 
-      const value = card[conditions.Attribute as keyof typeof card];
+      const targetBoardCardAtrributeValue =
+        targetBoardCard[conditions.Attribute];
 
       if (!conditions.ComparisonValue) {
         throw new Error(
@@ -419,32 +424,36 @@ export function testCardConditions(
         );
       }
 
-      // Note: getActionValue would need to be implemented
-      // const comparisonValue = getActionValue(...);
-      const comparisonValue = 0; // Placeholder
+      const comparisonValue = getActionValue(
+        gameState,
+        conditions.ComparisonValue,
+        sourceCard,
+        targetCard,
+        event,
+      );
 
       switch (conditions.ComparisonOperator) {
         case "Equal":
-          return value === comparisonValue;
+          return targetBoardCardAtrributeValue === comparisonValue;
         case "GreaterThan":
-          return typeof value === "number" &&
+          return typeof targetBoardCardAtrributeValue === "number" &&
             typeof comparisonValue === "number"
-            ? value > comparisonValue
+            ? targetBoardCardAtrributeValue > comparisonValue
             : false;
         case "GreaterThanOrEqual":
-          return typeof value === "number" &&
+          return typeof targetBoardCardAtrributeValue === "number" &&
             typeof comparisonValue === "number"
-            ? value >= comparisonValue
+            ? targetBoardCardAtrributeValue >= comparisonValue
             : false;
         case "LessThan":
-          return typeof value === "number" &&
+          return typeof targetBoardCardAtrributeValue === "number" &&
             typeof comparisonValue === "number"
-            ? value < comparisonValue
+            ? targetBoardCardAtrributeValue < comparisonValue
             : false;
         case "LessThanOrEqual":
-          return typeof value === "number" &&
+          return typeof targetBoardCardAtrributeValue === "number" &&
             typeof comparisonValue === "number"
-            ? value <= comparisonValue
+            ? targetBoardCardAtrributeValue <= comparisonValue
             : false;
         default:
           throw new Error(
@@ -458,12 +467,12 @@ export function testCardConditions(
         throw new Error("Sizes must exist for card conditional size");
       }
 
-      const is = conditions.Sizes.includes(card.card.Size);
+      const is = conditions.Sizes.includes(targetBoardCard.card.Size);
       return conditions.IsNot ? !is : is;
     }
 
     case "TCardConditionalId": {
-      const is = card.card.Id === conditions.Id;
+      const is = targetBoardCard.card.Id === conditions.Id;
       return conditions.IsNot ? !is : is;
     }
 
@@ -472,43 +481,57 @@ export function testCardConditions(
         throw new Error("Tiers must exist for card conditional tier");
       }
 
-      const is = conditions.Tiers.includes(card.tier);
+      const is = conditions.Tiers.includes(targetBoardCard.tier);
       return conditions.IsNot ? !is : is;
     }
 
     case "TCardConditionalPlayerHero": {
-      const targetHeroes = card.card.Heroes;
-      const is = targetHeroes.includes(gameState.players[playerID].Hero);
+      const targetHeroes = targetBoardCard.card.Heroes;
+      const is = targetHeroes.includes(gameState.players[targetPlayerIdx].Hero);
       return conditions.IsSameAsPlayerHero ? is : !is;
     }
 
     case "TCardConditionalHasEnchantment": {
-      const is = card.Enchantment === conditions.Enchantment;
+      const is = targetBoardCard.Enchantment === conditions.Enchantment;
       return conditions.IsNot ? !is : is;
     }
 
     case "TCardConditionalHiddenTag":
     case "TCardConditionalTag": {
-      const tags =
-        card.card[
-          conditions.$type === "TCardConditionalHiddenTag"
-            ? "HiddenTags"
-            : "Tags"
-        ];
+      const isHiddenTag = conditions.$type === "TCardConditionalHiddenTag";
+      const tags = isHiddenTag
+        ? targetBoardCard.card.HiddenTags
+        : targetBoardCard.card.Tags;
 
       if (!conditions.Tags) {
         throw new Error("Tags must exist for card conditional tag");
       }
 
+      const conditionTags = conditions.Tags;
+
       switch (conditions.Operator) {
         case "Any":
-          return (
-            tags.filter((tag) => conditions.Tags?.includes(tag)).length > 0
-          );
+          return tags.some((tag) => {
+            // For hidden tags
+            if (isHiddenTag) {
+              return (conditionTags as unknown as HiddenTag[]).includes(
+                tag as HiddenTag,
+              );
+            }
+            // For regular tags
+            return (conditionTags as unknown as Tag[]).includes(tag as Tag);
+          });
         case "None":
-          return (
-            tags.filter((tag) => conditions.Tags?.includes(tag)).length === 0
-          );
+          return !tags.some((tag) => {
+            // For hidden tags
+            if (isHiddenTag) {
+              return (conditionTags as unknown as HiddenTag[]).includes(
+                tag as HiddenTag,
+              );
+            }
+            // For regular tags
+            return (conditionTags as unknown as Tag[]).includes(tag as Tag);
+          });
         default:
           throw new Error(`Operator not implemented: ${conditions.Operator}`);
       }

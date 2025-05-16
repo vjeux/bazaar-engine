@@ -11,3 +11,9 @@ Slop actions
 
 TODOS:
 add event/command log
+
+add better multicast
+add critchance to values
+
+
+make cardconditions use getcardattribute for numbers and tags

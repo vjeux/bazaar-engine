@@ -15,7 +15,7 @@ import {
 } from "./eventHandlers";
 import { ProcessTickCommand } from "./commands";
 import { RandomGenerator } from "pure-rand/types/RandomGenerator";
-import { Tier } from "@/types/shared";
+import { Hero, Tier } from "@/types/shared";
 
 /**
  * Represents a unique identifier for a board card
@@ -68,7 +68,7 @@ export interface Player {
   Poison: number;
   Gold: number;
   Income: number;
-  Hero: string; // hero name
+  Hero: Hero;
   board: BoardCard[];
 }
 

@@ -13,6 +13,7 @@ export function getActionValue(
   value: Value,
   sourceCardID: BoardCardID,
   targetCardID?: BoardCardID,
+  event?: GameEvents[keyof GameEvents],
   metadata?: { changeValue?: number },
 ): number {
   let amount: number | undefined = undefined;
