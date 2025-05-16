@@ -1,9 +1,10 @@
 import { GameState, BoardCardID } from "./engine2";
 import { Source, Target, Subject, Conditions } from "../../types/cardTypes";
 import prand from "pure-rand";
-import { GameEvent, CardFiredEvent } from "./eventHandlers";
+import { GameEvent, CardFiredEvent, CardItemUsedEvent } from "./eventHandlers";
 import { getActionValue } from "./getActionValue";
 import { HiddenTag, Tag } from "../../types/shared";
+import { PLAYER_PLAYER_IDX } from "@/lib/constants";
 
 export type TargetConfig = Source | Target | Subject;
 
@@ -25,7 +26,10 @@ export function getTargetCards(
     }
 
     case "TTargetCardTriggerSource": {
-      if (event && event instanceof CardFiredEvent) {
+      if (
+        (event && event instanceof CardFiredEvent) ||
+        event instanceof CardItemUsedEvent
+      ) {
         results.push(event.sourceCardID);
       } else {
         throw new Error(
@@ -212,6 +216,16 @@ export function getTargetCards(
               cardIdx: sourceCard.cardIdx + 1,
             });
           }
+          break;
+        }
+
+        // All players items in both hand and stash
+        case "AbsolutePlayerHandAndStash": {
+          gameState.players[PLAYER_PLAYER_IDX].board.forEach((card, index) => {
+            if (card.card.$type === "TCardItem") {
+              results.push({ playerIdx: PLAYER_PLAYER_IDX, cardIdx: index });
+            }
+          });
           break;
         }
 

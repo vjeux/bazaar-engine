@@ -1,4 +1,9 @@
-import { GameState, BoardCardID, LogEntry } from "./engine2";
+import {
+  GameState,
+  BoardCardID,
+  LogEntry,
+  boardCardIdIsEqual,
+} from "./engine2";
 import * as Commands from "./commands";
 import {
   Ability,
@@ -8,7 +13,7 @@ import {
 } from "../../types/cardTypes";
 import { createPrerequisitesCheck } from "./prereq";
 import { playerName } from "./commands";
-import { getTargetCards } from "./targeting";
+import { getTargetCards, getTargetPlayers } from "./targeting";
 
 /**
  * Base Game Event class
@@ -178,21 +183,21 @@ export class PlayerDamagedEvent extends GameEvent {
   }
 }
 
-export class PlayerHealedEvent extends GameEvent {
+export class CardPerformedHealEvent extends GameEvent {
   readonly type = "player:healed";
   constructor(
-    public readonly playerIdx: number,
+    public readonly targetPlayerIdx: number,
     public readonly amount: number,
-    public readonly sourceCardID: BoardCardID | null,
+    public readonly sourceCardID: BoardCardID,
   ) {
     super();
   }
 
   getDescription(): string {
     if (!this.sourceCardID) {
-      return `${playerName(this.playerIdx)} was healed for ${this.amount}`;
+      return `${playerName(this.targetPlayerIdx)} was healed for ${this.amount}`;
     }
-    return `${playerName(this.playerIdx)} was healed for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+    return `${playerName(this.targetPlayerIdx)} was healed for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
@@ -275,57 +280,57 @@ export class PlayerDiedEvent extends GameEvent {
   }
 }
 
-export class PlayerShieldAppliedEvent extends GameEvent {
+export class CardPerformedShieldEvent extends GameEvent {
   readonly type = "player:shieldApplied";
   constructor(
-    public readonly playerIdx: number,
+    public readonly targetPlayerIdx: number,
     public readonly amount: number,
-    public readonly sourceCardID: BoardCardID | null,
+    public readonly sourceCardID: BoardCardID,
   ) {
     super();
   }
 
   getDescription(): string {
     if (!this.sourceCardID) {
-      return `${playerName(this.playerIdx)} gained ${this.amount} shield`;
+      return `${playerName(this.targetPlayerIdx)} gained ${this.amount} shield`;
     }
-    return `${playerName(this.playerIdx)} gained ${this.amount} shield from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+    return `${playerName(this.targetPlayerIdx)} gained ${this.amount} shield from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
-export class PlayerPoisonAppliedEvent extends GameEvent {
-  readonly type = "player:poisonApplied";
+export class CardPerformedPoisonEvent extends GameEvent {
+  readonly type = "card:performedPoison";
   constructor(
-    public readonly playerIdx: number,
+    public readonly targetPlayerIdx: number,
     public readonly amount: number,
-    public readonly sourceCardID: BoardCardID | null,
+    public readonly sourceCardID: BoardCardID,
   ) {
     super();
   }
 
   getDescription(): string {
     if (!this.sourceCardID) {
-      return `${playerName(this.playerIdx)} was poisoned for ${this.amount}`;
+      return `${playerName(this.targetPlayerIdx)} was poisoned for ${this.amount}`;
     }
-    return `${playerName(this.playerIdx)} was poisoned for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+    return `${playerName(this.targetPlayerIdx)} was poisoned for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
-export class PlayerBurnAppliedEvent extends GameEvent {
-  readonly type = "player:burnApplied";
+export class CardPerformedBurnEvent extends GameEvent {
+  readonly type = "card:performedBurn";
   constructor(
-    public readonly playerIdx: number,
+    public readonly targetPlayerIdx: number,
     public readonly amount: number,
-    public readonly sourceCardID: BoardCardID | null,
+    public readonly sourceCardID: BoardCardID,
   ) {
     super();
   }
 
   getDescription(): string {
     if (!this.sourceCardID) {
-      return `${playerName(this.playerIdx)} was burned for ${this.amount}`;
+      return `${playerName(this.targetPlayerIdx)} was burned for ${this.amount}`;
     }
-    return `${playerName(this.playerIdx)} was burned for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+    return `${playerName(this.targetPlayerIdx)} was burned for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
@@ -635,11 +640,11 @@ const triggerToEventMap: Record<
   TTriggerOnItemUsed: CardItemUsedEvent,
 
   // Card actions
-  TTriggerOnCardPerformedBurn: PlayerBurnAppliedEvent,
-  TTriggerOnCardPerformedPoison: PlayerPoisonAppliedEvent,
-  TTriggerOnCardPerformedHeal: PlayerHealedEvent,
+  TTriggerOnCardPerformedBurn: CardPerformedBurnEvent,
+  TTriggerOnCardPerformedPoison: CardPerformedPoisonEvent,
+  TTriggerOnCardPerformedHeal: CardPerformedHealEvent,
   TTriggerOnCardPerformedOverHeal: PlayerOverhealedEvent,
-  TTriggerOnCardPerformedShield: PlayerShieldAppliedEvent,
+  TTriggerOnCardPerformedShield: CardPerformedShieldEvent,
 
   // Player events
   TTriggerOnPlayerDied: PlayerDiedEvent,
@@ -697,7 +702,7 @@ function createTriggerCheck(
 
   const checker = (gs: GameState, e: GameEvent): boolean => {
     switch (triggerType) {
-      case "TTriggerOnCardFired": {
+      case TriggerType.TTriggerOnCardFired: {
         if (e instanceof CardFiredEvent) {
           return (
             e.sourceCardID.playerIdx === boardCardID.playerIdx &&
@@ -706,10 +711,10 @@ function createTriggerCheck(
         }
         return false;
       }
-      case "TTriggerOnFightStarted": {
+      case TriggerType.TTriggerOnFightStarted: {
         return e instanceof GameFightStartedEvent;
       }
-      case "TTriggerOnItemUsed": {
+      case TriggerType.TTriggerOnItemUsed: {
         if (e instanceof CardItemUsedEvent) {
           if (!ability.Trigger.Subject) {
             console.warn(
@@ -724,15 +729,13 @@ function createTriggerCheck(
             boardCardID,
           );
           // Return true if any of the subjects are the source card
-          return subjects.some(
-            (subject) =>
-              subject.playerIdx === boardCardID.playerIdx &&
-              subject.cardIdx === boardCardID.cardIdx,
+          return subjects.some((subject) =>
+            boardCardIdIsEqual(subject, e.sourceCardID),
           );
         }
         return false;
       }
-      case "TTriggerOnCardAttributeChanged": {
+      case TriggerType.TTriggerOnCardAttributeChanged: {
         if (e instanceof CardAttributeChangedEvent) {
           if (!ability.Trigger.Subject) {
             console.warn(
@@ -740,18 +743,148 @@ function createTriggerCheck(
             );
             return false;
           }
-          // Make sure attribute is same, and change goes same way as ChangeType
-          if (
-            e.attribute === ability.Trigger.AttributeChanged &&
-            ((ability.Trigger.ChangeType === "Gain" &&
-              e.newValue > e.oldValue) ||
-              (ability.Trigger.ChangeType === "Loss" &&
-                e.newValue < e.oldValue))
-          ) {
-            return true;
-          }
-          return false;
+          // Check subjects include source card
+          const subjects = getTargetCards(
+            gs,
+            ability.Trigger.Subject,
+            boardCardID,
+          );
+          return subjects.some((subject) => {
+            if (boardCardIdIsEqual(subject, e.modifiedBoardCardID)) {
+              if (
+                e.attribute === ability.Trigger.AttributeChanged &&
+                ((ability.Trigger.ChangeType === "Gain" &&
+                  e.newValue > e.oldValue) ||
+                  (ability.Trigger.ChangeType === "Loss" &&
+                    e.newValue < e.oldValue))
+              ) {
+                return true;
+              }
+            }
+            return false;
+          });
         }
+      }
+      case TriggerType.TTriggerOnFightEnded: {
+        return e instanceof GameEndedEvent;
+      }
+      case TriggerType.TTriggerOnCardPerformedHeal: {
+        if (e instanceof CardPerformedHealEvent) {
+          if (!ability.Trigger.Subject) {
+            console.warn(
+              `Ability ${ability.InternalName} has no subject, skipping trigger check`,
+            );
+            return false;
+          }
+          // Check subjects include source card
+          const subjects = getTargetCards(
+            gs,
+            ability.Trigger.Subject,
+            boardCardID,
+          );
+          return subjects.some((subject) =>
+            boardCardIdIsEqual(subject, e.sourceCardID),
+          );
+        }
+        return false;
+      }
+      case TriggerType.TTriggerOnCardPerformedBurn: {
+        if (e instanceof CardPerformedBurnEvent) {
+          if (!ability.Trigger.Subject) {
+            console.warn(
+              `Ability ${ability.InternalName} has no subject, skipping trigger check`,
+            );
+            return false;
+          }
+          // Check subjects include source card
+          const subjects = getTargetCards(
+            gs,
+            ability.Trigger.Subject,
+            boardCardID,
+          );
+          return subjects.some(
+            (subject) => subject.cardIdx === boardCardID.cardIdx,
+          );
+        }
+        return false;
+      }
+
+      case TriggerType.TTriggerOnCardPerformedShield: {
+        if (e instanceof CardPerformedShieldEvent) {
+          if (!ability.Trigger.Subject) {
+            console.warn(
+              `Ability ${ability.InternalName} has no subject, skipping trigger check`,
+            );
+            return false;
+          }
+          // Check subjects include source card
+          const subjects = getTargetCards(
+            gs,
+            ability.Trigger.Subject,
+            boardCardID,
+          );
+          return subjects.some((subject) =>
+            boardCardIdIsEqual(subject, e.sourceCardID),
+          );
+        }
+        return false;
+      }
+      case TriggerType.TTriggerOnCardPerformedPoison: {
+        if (e instanceof CardPerformedPoisonEvent) {
+          if (!ability.Trigger.Subject) {
+            console.warn(
+              `Ability ${ability.InternalName} has no subject, skipping trigger check`,
+            );
+            return false;
+          }
+          // Check subjects include source card
+          const subjects = getTargetCards(
+            gs,
+            ability.Trigger.Subject,
+            boardCardID,
+          );
+          return subjects.some((subject) =>
+            boardCardIdIsEqual(subject, e.sourceCardID),
+          );
+        }
+        return false;
+      }
+
+      case TriggerType.TTriggerOnPlayerAttributeChanged: {
+        if (e instanceof PlayerAttributeChangedEvent) {
+          if (!ability.Trigger.Subject) {
+            console.warn(
+              `Ability ${ability.InternalName} has no subject, skipping trigger check`,
+            );
+            return false;
+          }
+          // Check if subjects include source player
+          const subjects = getTargetPlayers(
+            gs,
+            ability.Trigger.Subject,
+            boardCardID,
+          );
+          return subjects.some((subject) => subject === e.playerIdx);
+        }
+      }
+
+      case TriggerType.TTriggerOnPlayerDied: {
+        if (e instanceof PlayerDiedEvent) {
+          if (!ability.Trigger.Subject) {
+            console.warn(
+              `Ability ${ability.InternalName} has no subject, skipping trigger check`,
+            );
+            return false;
+          }
+          // Check if subjects include source player
+          const subjects = getTargetPlayers(
+            gs,
+            ability.Trigger.Subject,
+            boardCardID,
+          );
+          return subjects.some((subject) => subject === e.playerID);
+        }
+        return false;
       }
       default: {
         console.warn(

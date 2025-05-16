@@ -14,13 +14,13 @@ import {
   CardAddedEvent,
   CardRemovedEvent,
   PlayerDamagedEvent,
-  PlayerHealedEvent,
+  CardPerformedHealEvent,
   PlayerOverhealedEvent,
   PlayerLifestealHealEvent,
   PlayerAttributeChangedEvent,
-  PlayerShieldAppliedEvent,
-  PlayerPoisonAppliedEvent,
-  PlayerBurnAppliedEvent,
+  CardPerformedShieldEvent,
+  CardPerformedPoisonEvent,
+  CardPerformedBurnEvent,
   GameTickEvent,
 } from "./eventHandlers";
 import { getTargetCards, getTargetPlayers } from "./targeting";
@@ -517,8 +517,6 @@ export class CommandFactory {
           event,
         );
 
-        console.log("Target cards", targetCards);
-
         if (hasteAmount === undefined) {
           console.warn("Haste amount is undefined");
           return commands;
@@ -1005,7 +1003,7 @@ export class HealPlayerCommand implements Command {
   constructor(
     private targetPlayerID: number,
     private amount: number,
-    private sourceCardID: BoardCardID | null,
+    private sourceCardID: BoardCardID,
   ) {}
 
   execute(gameState: GameState): void {
@@ -1022,7 +1020,7 @@ export class HealPlayerCommand implements Command {
 
       // Emit heal event
       gameState.eventBus.emit(
-        new PlayerHealedEvent(
+        new CardPerformedHealEvent(
           this.targetPlayerID,
           this.amount,
           this.sourceCardID,
@@ -1097,7 +1095,7 @@ export class ApplyShieldCommand implements Command {
 
     // Emit shield applied event
     gameState.eventBus.emit(
-      new PlayerShieldAppliedEvent(
+      new CardPerformedShieldEvent(
         this.targetPlayerID,
         this.amount,
         this.sourceCardID,
@@ -1136,7 +1134,7 @@ export class ApplyPoisonCommand implements Command {
 
     // Emit poison applied event
     gameState.eventBus.emit(
-      new PlayerPoisonAppliedEvent(
+      new CardPerformedPoisonEvent(
         this.targetPlayerID,
         this.amount,
         this.sourceCardID,
@@ -1173,7 +1171,7 @@ export class ApplyBurnCommand implements Command {
 
     // Emit burn applied event
     gameState.eventBus.emit(
-      new PlayerBurnAppliedEvent(
+      new CardPerformedBurnEvent(
         this.targetPlayerID,
         this.amount,
         this.sourceCardID,

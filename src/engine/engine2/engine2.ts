@@ -26,6 +26,10 @@ export type BoardCardID = {
   cardIdx: number;
 };
 
+export function boardCardIdIsEqual(a: BoardCardID, b: BoardCardID): boolean {
+  return a.playerIdx === b.playerIdx && a.cardIdx === b.cardIdx;
+}
+
 /**
  * Command log entry interface
  */
