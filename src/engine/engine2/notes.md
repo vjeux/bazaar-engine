@@ -6,22 +6,10 @@ Card fired vs used
 - used is multicast
 
 
-
-
-Fix:
-
-Targeting
-GetACtionValue
-Slop actions
-
 TODOS:
-add event/command log
-
 add better multicast
-add critchance to values
-
-
-make cardconditions use getcardattribute for numbers and tags
+Dont fire events until after the card has finished executing its commands. Some internal queue maybe idk.
+use getPlayerAttribute for the palces where it's needed.
 
 
 BUGS:
