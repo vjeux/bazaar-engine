@@ -267,6 +267,12 @@ export function getTargetCards(
   // Filter out disabled cards and test conditions
   const filteredResults = results.filter((cardID) => {
     const { playerIdx, cardIdx } = cardID;
+    if (
+      targetConfig.Conditions?.$type === "TCardConditionalAttributeHighest" ||
+      targetConfig.Conditions?.$type === "TCardConditionalAttributeLowest"
+    ) {
+      return true;
+    }
     return (
       !gameState.players[playerIdx].board[cardIdx].isDisabled &&
       testCardConditions(

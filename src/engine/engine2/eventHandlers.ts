@@ -757,7 +757,9 @@ function createTriggerCheck(
         console.warn(
           `Unhandled trigger type: ${triggerType} for ability ${ability.InternalName}`,
         );
-        return false;
+        throw new Error(
+          `Unhandled trigger type: ${triggerType} for ability ${ability.InternalName}`,
+        );
       }
     }
   };
