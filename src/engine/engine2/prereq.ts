@@ -3,7 +3,7 @@ import {
   AbilityPrerequisite,
   Comparison,
 } from "../../types/cardTypes";
-import { BoardCardID, GameState } from "./engine2";
+import { BoardCardID, GameState, getCardAttribute } from "./engine2";
 import { GameEvent } from "./eventHandlers";
 import { getTargetCards, getTargetPlayers } from "./targeting";
 
@@ -15,6 +15,8 @@ export function compareUsingComparator(
   switch (comparator) {
     case "Equal":
       return value1 === value2;
+    case "NotEqual":
+      return value1 !== value2;
     case "GreaterThan":
       return value1 > value2;
     case "GreaterThanOrEqual":
@@ -82,6 +84,69 @@ function checkPrerequisite(
       }
       const players = getTargetPlayers(gs, prereq.Subject, boardCardID, event);
       return players.length > 0;
+    }
+    case "TPrerequisiteCardAttributeComparator": {
+      // Get subject card
+      if (!prereq.Subject) {
+        throw new Error(
+          "Subject and SubjectOther must exist for card attribute comparator prerequisite",
+        );
+      }
+      if (!prereq.Attribute || !prereq.AttributeOther) {
+        throw new Error(
+          "Attribute and AttributeOther must exist for card attribute comparator prerequisite",
+        );
+      }
+      const subjectCard = getTargetCards(
+        gs,
+        prereq.Subject,
+        boardCardID,
+        event,
+      )[0];
+
+      let subjectOtherCard: BoardCardID;
+
+      // If no other subject is defined, compare against self
+      if (prereq.SubjectOther) {
+        subjectOtherCard = getTargetCards(
+          gs,
+          prereq.SubjectOther,
+          boardCardID,
+          event,
+        )[0];
+      } else {
+        subjectOtherCard = subjectCard;
+      }
+
+      // Get attribute value
+      const attributeValue = getCardAttribute(
+        gs,
+        subjectCard,
+        prereq.Attribute,
+      );
+
+      const attributeValueOther = getCardAttribute(
+        gs,
+        subjectOtherCard,
+        prereq.AttributeOther,
+      );
+
+      if (attributeValue === undefined || attributeValueOther === undefined) {
+        throw new Error(
+          "Attribute value must exist for card attribute comparator prerequisite",
+        );
+      }
+      if (!prereq.Comparison) {
+        throw new Error(
+          "Comparison must exist for card attribute comparator prerequisite",
+        );
+      }
+
+      return compareUsingComparator(
+        attributeValue,
+        attributeValueOther,
+        prereq.Comparison,
+      );
     }
     // Rest of prerequisites are only required to decide which choices show during days, so we don't need to handle them.
     default:
