@@ -5,6 +5,14 @@ import { PlayerCardConfig } from "../GameState";
 import { GameEvents } from "./eventHandlers";
 import { getTargetCards, getTargetPlayers } from "./targeting";
 import { getActionValue } from "./getActionValue";
+import { PLAYER_PLAYER_IDX } from "@/lib/constants";
+
+/**
+ * Helper function to convert player index to readable name
+ */
+export function playerName(playerIdx: number): string {
+  return playerIdx === PLAYER_PLAYER_IDX ? "Player" : "Enemy";
+}
 
 /**
  * Command interface
@@ -637,7 +645,7 @@ export class AddCardCommand implements Command {
   }
 
   toLogString(): string {
-    return `Add card to player ${this.playerID} at position ${this.position}`;
+    return `Add card to ${playerName(this.playerID)}'s board at position ${this.position}`;
   }
 }
 
@@ -663,7 +671,7 @@ export class RemoveCardCommand implements Command {
   }
 
   toLogString(): string {
-    return `Remove card from player ${this.boardCardID.playerIdx} at position ${this.boardCardID.cardIdx}`;
+    return `Remove card from ${playerName(this.boardCardID.playerIdx)}'s board at position ${this.boardCardID.cardIdx}`;
   }
 }
 
@@ -711,7 +719,16 @@ export class ModifyCardAttributeCommand implements Command {
   }
 
   toLogString(): string {
-    return `${this.operation} card [${this.boardCardID.playerIdx},${this.boardCardID.cardIdx}] ${this.attribute} to ${this.value}`;
+    const operation =
+      this.operation === "set"
+        ? "set"
+        : this.operation === "add"
+          ? "increased"
+          : this.operation === "subtract"
+            ? "decreased"
+            : "multiplied";
+
+    return `${operation.charAt(0).toUpperCase() + operation.slice(1)} ${playerName(this.boardCardID.playerIdx)}'s card ${this.boardCardID.cardIdx} ${this.attribute} to ${this.value}`;
   }
 }
 
@@ -750,17 +767,28 @@ export class ModifyPlayerAttributeCommand implements Command {
 
     player[this.attribute] = newValue;
 
-    // Emit event for attribute change
-    gameState.eventBus.emit("player:attributeChanged", {
-      playerIdx: this.playerIdx,
-      attribute: this.attribute,
-      oldValue,
-      newValue,
-    });
+    if (!(oldValue === newValue)) {
+      // Emit event for attribute change
+      gameState.eventBus.emit("player:attributeChanged", {
+        playerIdx: this.playerIdx,
+        attribute: this.attribute,
+        oldValue,
+        newValue,
+      });
+    }
   }
 
   toLogString(): string {
-    return `Modify player ${this.playerIdx} attribute ${this.attribute} to ${this.value}`;
+    const operation =
+      this.operation === "set"
+        ? "set"
+        : this.operation === "add"
+          ? "increased"
+          : this.operation === "subtract"
+            ? "decreased"
+            : "multiplied";
+
+    return `${operation.charAt(0).toUpperCase() + operation.slice(1)} ${playerName(this.playerIdx)}'s ${this.attribute} to ${this.value}`;
   }
 }
 
@@ -862,11 +890,11 @@ export class DamagePlayerCommand implements Command {
   }
 
   toLogString(): string {
-    return `Damage player ${this.targetPlayerIdx} for ${this.amount} damage${
-      this.sourceCardID
-        ? ` from card [${this.sourceCardID.playerIdx},${this.sourceCardID.cardIdx}]`
-        : " (system)"
-    }`;
+    if (!this.sourceCardID) {
+      return `Dealt ${this.amount} damage to ${playerName(this.targetPlayerIdx)}`;
+    }
+
+    return `Dealt ${this.amount} damage to ${playerName(this.targetPlayerIdx)} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
@@ -909,11 +937,11 @@ export class HealPlayerCommand implements Command {
   }
 
   toLogString(): string {
-    return `Heal player ${this.targetPlayerID} for ${this.amount} health${
-      this.sourceCardID
-        ? ` from card [${this.sourceCardID.playerIdx},${this.sourceCardID.cardIdx}]`
-        : " (system)"
-    }`;
+    if (!this.sourceCardID) {
+      return `Healed ${playerName(this.targetPlayerID)} for ${this.amount} health`;
+    }
+
+    return `Healed ${playerName(this.targetPlayerID)} for ${this.amount} health from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
@@ -945,7 +973,7 @@ export class FireCardCommand implements Command {
   }
 
   toLogString(): string {
-    return `Fire card [${this.boardCardID.playerIdx},${this.boardCardID.cardIdx}]`;
+    return `Fired ${playerName(this.boardCardID.playerIdx)}'s card ${this.boardCardID.cardIdx}`;
   }
 }
 
@@ -976,11 +1004,11 @@ export class ApplyShieldCommand implements Command {
   }
 
   toLogString(): string {
-    return `Apply shield to player ${this.targetPlayerID} for ${this.amount} amount${
-      this.sourceCardID
-        ? ` from card [${this.sourceCardID.playerIdx},${this.sourceCardID.cardIdx}]`
-        : " (system)"
-    }`;
+    if (!this.sourceCardID) {
+      return `Applied ${this.amount} shield to ${playerName(this.targetPlayerID)}`;
+    }
+
+    return `Applied ${this.amount} shield to ${playerName(this.targetPlayerID)} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
@@ -1013,11 +1041,11 @@ export class ApplyPoisonCommand implements Command {
   }
 
   toLogString(): string {
-    return `Apply poison to player ${this.targetPlayerID} for ${this.amount} amount${
-      this.sourceCardID
-        ? ` from card [${this.sourceCardID.playerIdx},${this.sourceCardID.cardIdx}]`
-        : " (system)"
-    }`;
+    if (!this.sourceCardID) {
+      return `Applied ${this.amount} poison to ${playerName(this.targetPlayerID)}`;
+    }
+
+    return `Applied ${this.amount} poison to ${playerName(this.targetPlayerID)} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
@@ -1048,11 +1076,11 @@ export class ApplyBurnCommand implements Command {
   }
 
   toLogString(): string {
-    return `Apply burn to player ${this.targetPlayerID} for ${this.amount} amount${
-      this.sourceCardID
-        ? ` from card [${this.sourceCardID.playerIdx},${this.sourceCardID.cardIdx}]`
-        : " (system)"
-    }`;
+    if (!this.sourceCardID) {
+      return `Applied ${this.amount} burn to ${playerName(this.targetPlayerID)}`;
+    }
+
+    return `Applied ${this.amount} burn to ${playerName(this.targetPlayerID)} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
@@ -1087,7 +1115,7 @@ export class DisableCardCommand implements Command {
   }
 
   toLogString(): string {
-    return `Disable card [${this.boardCardID.playerIdx},${this.boardCardID.cardIdx}]`;
+    return `Disabled ${playerName(this.boardCardID.playerIdx)}'s card ${this.boardCardID.cardIdx}`;
   }
 }
 
@@ -1129,7 +1157,7 @@ export class ReloadCardCommand implements Command {
   }
 
   toLogString(): string {
-    return `Reload card [${this.boardCardID.playerIdx},${this.boardCardID.cardIdx}] by ${this.reloadAmount}`;
+    return `Reloaded ${playerName(this.boardCardID.playerIdx)}'s card ${this.boardCardID.cardIdx} with ${this.reloadAmount} ammo`;
   }
 }
 
@@ -1169,7 +1197,7 @@ export class ChargeCardCommand implements Command {
   }
 
   toLogString(): string {
-    return `Charge card [${this.boardCardID.playerIdx},${this.boardCardID.cardIdx}] by ${this.chargeAmount}`;
+    return `Charged ${playerName(this.boardCardID.playerIdx)}'s card ${this.boardCardID.cardIdx} by ${this.chargeAmount}`;
   }
 }
 
@@ -1182,7 +1210,7 @@ export class BeginSandstormCommand implements Command {
   }
 
   toLogString(): string {
-    return "Begin sandstorm";
+    return "Started sandstorm";
   }
 }
 

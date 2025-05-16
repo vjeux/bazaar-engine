@@ -2,6 +2,7 @@ import { GameState, BoardCardID, LogEntry } from "./engine2";
 import * as Commands from "./commands";
 import { Ability, AttributeType, Priority } from "../../types/cardTypes";
 import { createPrerequisitesCheck } from "./prereq";
+import { playerName } from "./commands";
 
 /**
  * Define all game event types with their payload structures
@@ -237,13 +238,43 @@ export class EventBus {
         return `Game ended - Winner: ${(eventData as GameEvents["game:ended"]).winner}`;
       case "card:fired":
         const { sourceCardID } = eventData as GameEvents["card:fired"];
-        return `Card fired [${sourceCardID.playerIdx},${sourceCardID.cardIdx}]`;
+        return `${playerName(sourceCardID.playerIdx)}'s card ${sourceCardID.cardIdx} was fired`;
       case "player:damaged":
         const damageData = eventData as GameEvents["player:damaged"];
-        return `Player ${damageData.playerIdx} damaged for ${damageData.amount}`;
+        if (!damageData.sourceCardID) {
+          return `${playerName(damageData.playerIdx)} took ${damageData.amount} damage`;
+        }
+        return `${playerName(damageData.playerIdx)} took ${damageData.amount} damage from ${playerName(damageData.sourceCardID.playerIdx)}'s card ${damageData.sourceCardID.cardIdx}`;
       case "player:healed":
         const healData = eventData as GameEvents["player:healed"];
-        return `Player ${healData.playerIdx} healed for ${healData.amount}`;
+        if (!healData.sourceCardID) {
+          return `${playerName(healData.playerIdx)} was healed for ${healData.amount}`;
+        }
+        return `${playerName(healData.playerIdx)} was healed for ${healData.amount} by ${playerName(healData.sourceCardID.playerIdx)}'s card ${healData.sourceCardID.cardIdx}`;
+      case "player:shieldApplied":
+        const shieldData = eventData as GameEvents["player:shieldApplied"];
+        if (!shieldData.sourceCardID) {
+          return `${playerName(shieldData.playerIdx)} gained ${shieldData.amount} shield`;
+        }
+        return `${playerName(shieldData.playerIdx)} gained ${shieldData.amount} shield from ${playerName(shieldData.sourceCardID.playerIdx)}'s card ${shieldData.sourceCardID.cardIdx}`;
+      case "player:poisonApplied":
+        const poisonData = eventData as GameEvents["player:poisonApplied"];
+        if (!poisonData.sourceCardID) {
+          return `${playerName(poisonData.playerIdx)} was poisoned for ${poisonData.amount}`;
+        }
+        return `${playerName(poisonData.playerIdx)} was poisoned for ${poisonData.amount} by ${playerName(poisonData.sourceCardID.playerIdx)}'s card ${poisonData.sourceCardID.cardIdx}`;
+      case "player:burnApplied":
+        const burnData = eventData as GameEvents["player:burnApplied"];
+        if (!burnData.sourceCardID) {
+          return `${playerName(burnData.playerIdx)} was burned for ${burnData.amount}`;
+        }
+        return `${playerName(burnData.playerIdx)} was burned for ${burnData.amount} by ${playerName(burnData.sourceCardID.playerIdx)}'s card ${burnData.sourceCardID.cardIdx}`;
+      case "player:attributeChanged":
+        const attrData = eventData as GameEvents["player:attributeChanged"];
+        return `${playerName(attrData.playerIdx)}'s ${attrData.attribute} changed from ${attrData.oldValue} to ${attrData.newValue}`;
+      case "card:attributeChanged":
+        const cardAttrData = eventData as GameEvents["card:attributeChanged"];
+        return `${playerName(cardAttrData.boardCardID.playerIdx)}'s card ${cardAttrData.boardCardID.cardIdx} ${cardAttrData.attribute} changed from ${cardAttrData.oldValue} to ${cardAttrData.newValue}`;
       default:
         return `${eventName}`;
     }
