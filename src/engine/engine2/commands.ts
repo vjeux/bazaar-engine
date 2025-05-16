@@ -591,7 +591,6 @@ export class CommandFactory {
             gameState,
             action.Value,
             sourceCardID,
-            targetCards.length > 0 ? targetCards[0] : undefined, // Use first target card if available
             undefined, // No metadata
           );
         }

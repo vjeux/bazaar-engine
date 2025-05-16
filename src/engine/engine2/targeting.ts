@@ -428,7 +428,6 @@ export function testCardConditions(
         gameState,
         conditions.ComparisonValue,
         sourceCard,
-        targetCard,
         event,
       );
 
