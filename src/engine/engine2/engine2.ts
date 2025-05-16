@@ -79,6 +79,7 @@ export interface Player {
  */
 export interface GameState {
   tick: number;
+  step: number;
   isPlaying: boolean;
   players: Player[];
   multicast: Multicast[];
@@ -110,6 +111,7 @@ export class Engine2 {
     this.gameState = {
       ...initialGameState,
       eventBus,
+      step: 0,
     };
 
     // Update the EventBus reference to the real gameState
@@ -153,7 +155,8 @@ export class Engine2 {
    * Run the game for a specified number of ticks
    */
   run(maxTicks: number = Infinity): GameState[] {
-    const steps: GameState[] = [this.createGameStateCopy()];
+    const firstStep = this.createGameStateCopy();
+    const steps: GameState[] = [firstStep];
 
     // Emit fight started event on first tick
     if (this.gameState.tick === 0) {
@@ -161,9 +164,13 @@ export class Engine2 {
     }
 
     for (let i = 0; i < maxTicks; i++) {
+      this.gameState.step++;
       // Process a tick
       this.processTick();
-      steps.push(this.createGameStateCopy());
+
+      // Create a step copy with the current step index
+      const stepCopy = this.createGameStateCopy();
+      steps.push(stepCopy);
 
       // Check if game is still active
       if (steps.at(-1)?.isPlaying === false) {

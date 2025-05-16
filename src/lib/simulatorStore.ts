@@ -1,4 +1,3 @@
-import { GameState } from "@/engine/Engine";
 import {
   MonsterConfig,
   PlayerCardConfig,
@@ -15,6 +14,8 @@ import { Tier } from "@/types/shared";
 import { EnchantmentType } from "@/types/shared";
 import { v4 as uuidv4 } from "uuid";
 import { getInitialGameState2, run } from "@/engine/engine2/engine2Adapter";
+import { GameState } from "@/engine/engine2/engine2";
+import { Draft } from "immer";
 
 const { Cards: CardsData, Encounters: EncounterData } =
   await genCardsAndEncounters();
@@ -139,7 +140,7 @@ const persistentStorage: StateStorage = {
 
 // Run simulation and recalculate winrate if enabled
 const runSimulationAndUpdateWinrate = (
-  state: State,
+  state: Draft<State>,
   actions: Actions["actions"],
 ) => {
   // Run the simulation and update steps

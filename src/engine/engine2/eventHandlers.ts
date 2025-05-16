@@ -113,14 +113,24 @@ interface PrioritizedEventHandler<T extends keyof GameEvents> {
   priority: Priority;
 }
 
+export interface EventLogEntry {
+  eventName: keyof GameEvents;
+  data: GameEvents[keyof GameEvents];
+  timestamp: number;
+  step: number;
+}
+
 export class EventBus {
   private listeners: {
     [K in keyof GameEvents]?: Array<PrioritizedEventHandler<K>>;
   } = {};
   private gameState: GameState;
+  private eventLog: Array<EventLogEntry> = [];
 
   constructor(gameState: GameState) {
     this.gameState = gameState;
+    this.listeners = {};
+    this.eventLog = [];
   }
 
   /**
@@ -155,14 +165,29 @@ export class EventBus {
   /**
    * Emit an event with data
    */
-  emit<K extends keyof GameEvents>(eventName: K, data: GameEvents[K]): void {
+  emit<K extends keyof GameEvents>(
+    eventName: K,
+    eventData: GameEvents[K],
+  ): void {
     const eventListeners = this.listeners[eventName];
+
+    // Get the step from the gameState
+    const step = this.gameState.step;
+
+    // Log the event
+    this.eventLog.push({
+      eventName,
+      data: JSON.parse(JSON.stringify(eventData)), // Deep copy data to avoid mutations
+      timestamp: Date.now(),
+      step: step,
+    });
+
     if (eventListeners) {
       // Execute handlers in priority order (already sorted)
       for (const listener of eventListeners) {
         // Only call handler if there's no test function or if the test function returns true
-        if (!listener.tester || listener.tester(this.gameState, data)) {
-          listener.handler(this.gameState, data);
+        if (!listener.tester || listener.tester(this.gameState, eventData)) {
+          listener.handler(this.gameState, eventData);
         }
       }
     }
@@ -192,6 +217,15 @@ export class EventBus {
   clear(): void {
     this.listeners = {};
   }
+
+  /**
+   * Returns a copy of the event log.
+   */
+  getEventLog = (step: number): Array<EventLogEntry> => {
+    return JSON.parse(
+      JSON.stringify(this.eventLog.filter((event) => event.step === step)),
+    ); // Return a deep copy
+  };
 
   /**
    * Update the gameState reference
@@ -477,7 +511,7 @@ function processCardCooldowns(gameState: GameState): void {
       ).execute(gameState);
 
       // Check if card should trigger
-      if (newTick === cooldownMax) {
+      if (newTick >= cooldownMax) {
         const ammo = card[AttributeType.Ammo] as number | undefined;
         const ammoMax = card[AttributeType.AmmoMax] as number | undefined;
 

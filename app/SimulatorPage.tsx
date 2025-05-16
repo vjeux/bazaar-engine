@@ -30,6 +30,8 @@ import SandstormParticles from "../src/components/SandStormParticles";
 import { ENEMY_PLAYER_IDX, PLAYER_PLAYER_IDX } from "@/lib/constants";
 import { PlayerStatsDialog } from "../src/components/PlayerStatsDialog";
 import WinrateCalculator from "@/components/WinrateCalculator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { EventLog } from "@/components/EventLog";
 
 // Memoized version of SandstormParticles to prevent re-renders
 const MemoizedSandstormParticles = memo(SandstormParticles);
@@ -221,8 +223,28 @@ export default function SimulatorPage() {
           </div>
         </div>
       </div>
-      {/* Right Sidebar - Card and skill search */}
-      <SearchableCardSkillList Cards={cardsData} />
+      {/* Right Sidebar - Tabs for Cards/Skills and Event Log */}
+      <div className="flex h-[calc(100dvh-90px)] w-96 flex-col">
+        <Tabs defaultValue="cards" className="flex h-full w-full flex-col">
+          <TabsList className="w-full">
+            <TabsTrigger value="cards" className="flex-grow">
+              Cards & Skills
+            </TabsTrigger>
+            <TabsTrigger value="events" className="flex-grow">
+              Event Log
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="cards" className="h-[calc(100%-45px)]">
+            <SearchableCardSkillList Cards={cardsData} />
+          </TabsContent>
+          <TabsContent
+            value="events"
+            className="h-[calc(100%-45px)] overflow-hidden"
+          >
+            <EventLog gameState={currentGameState} />
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 }
