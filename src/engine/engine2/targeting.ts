@@ -66,7 +66,7 @@ export function getTargetCards(
           if (targetConfig.IncludeOrigin) {
             results.push(sourceCard);
           }
-
+          // If not the first card, add the left neighbor
           if (sourceCard.cardIdx !== 0) {
             results.push({
               playerIdx: sourceCard.playerIdx,
@@ -79,6 +79,7 @@ export function getTargetCards(
               (boardCard) => boardCard.card.$type === "TCardItem",
             ) + 1;
 
+          // If not the last card, add the right neighbor
           if (sourceCard.cardIdx < lengthCardItems - 1) {
             results.push({
               playerIdx: sourceCard.playerIdx,
@@ -98,6 +99,7 @@ export function getTargetCards(
               (boardCard) => boardCard.card.$type === "TCardItem",
             ) + 1;
 
+          // If not the last card, add the right neighbor
           if (sourceCard.cardIdx < lengthCardItems - 1) {
             results.push({
               playerIdx: sourceCard.playerIdx,
@@ -112,6 +114,7 @@ export function getTargetCards(
             results.push(sourceCard);
           }
 
+          // If not the first card, add the left neighbor
           if (sourceCard.cardIdx !== 0) {
             results.push({
               playerIdx: sourceCard.playerIdx,
@@ -153,7 +156,7 @@ export function getTargetCards(
 
         case "OpponentHand":
         case "OpponentBoard": {
-          const opponentPlayerID = (sourceCard.playerIdx + 1) % 2;
+          const opponentPlayerID = sourceCard.playerIdx === 0 ? 1 : 0;
           const lengthCardItems =
             gameState.players[opponentPlayerID].board.findLastIndex(
               (boardCard) => boardCard.card.$type === "TCardItem",
@@ -166,6 +169,10 @@ export function getTargetCards(
         }
 
         case "AllHands": {
+          if (!targetConfig.ExcludeSelf) {
+            results.push(sourceCard);
+          }
+
           gameState.players.forEach((player, playerID) => {
             const lengthCardItems =
               player.board.findLastIndex(
@@ -174,9 +181,8 @@ export function getTargetCards(
 
             for (let i = 0; i < lengthCardItems; ++i) {
               if (
-                playerID !== sourceCard.playerIdx ||
-                i !== sourceCard.cardIdx ||
-                (i === sourceCard.cardIdx && !targetConfig.ExcludeSelf)
+                i !== sourceCard.cardIdx &&
+                playerID !== sourceCard.playerIdx
               ) {
                 results.push({ playerIdx: playerID, cardIdx: i });
               }
@@ -211,6 +217,8 @@ export function getTargetCards(
           throw new Error(
             `Not implemented Target.TargetSection: ${targetConfig.TargetSection}`,
           );
+
+        // no break as we want to fallthrough to next if random
       }
 
       if (targetConfig.$type === "TTargetCardRandom") {
@@ -233,16 +241,17 @@ export function getTargetCards(
     }
 
     case "TTargetCardXMost": {
+      // Just add everything, filter on condition later
       const lengthCardItems =
         gameState.players[sourceCard.playerIdx].board.findLastIndex(
           (boardCard) => boardCard.card.$type === "TCardItem",
         ) + 1;
+      if (!targetConfig.ExcludeSelf) {
+        results.push(sourceCard);
+      }
 
       for (let i = 0; i < lengthCardItems; ++i) {
-        if (
-          i !== sourceCard.cardIdx ||
-          (i === sourceCard.cardIdx && !targetConfig.ExcludeSelf)
-        ) {
+        if (i !== sourceCard.cardIdx) {
           results.push({ playerIdx: sourceCard.playerIdx, cardIdx: i });
         }
       }
@@ -253,11 +262,11 @@ export function getTargetCards(
       throw new Error(`Not implemented Target.$type: ${targetConfig.$type}`);
   }
 
-  // Filter by conditions
+  // Filter out disabled cards and test conditions
   const filteredResults = results.filter((cardID) => {
-    const { playerIdx: playerID, cardIdx: boardCardID } = cardID;
+    const { playerIdx, cardIdx } = cardID;
     return (
-      !gameState.players[playerID].board[boardCardID].isDisabled &&
+      !gameState.players[playerIdx].board[cardIdx].isDisabled &&
       testCardConditions(gameState, targetConfig.Conditions, sourceCard, cardID)
     );
   });
@@ -274,19 +283,20 @@ export function getTargetCards(
     let extremeCard: BoardCardID | null = null;
 
     filteredResults.forEach((cardID) => {
-      const { playerIdx: playerID, cardIdx: boardCardID } = cardID;
+      const { playerIdx, cardIdx } = cardID;
       if (!targetConfig.Conditions?.AttributeType) {
         throw new Error(
           "Attribute type must exist for card conditional attribute highest/lowest",
         );
       }
 
-      const value = gameState.players[playerID].board[boardCardID][
-        targetConfig.Conditions.AttributeType
-      ] as number | undefined;
+      const value =
+        gameState.players[playerIdx].board[cardIdx][
+          targetConfig.Conditions.AttributeType
+        ];
 
       if (
-        !gameState.players[playerID].board[boardCardID].isDisabled &&
+        !gameState.players[playerIdx].board[cardIdx].isDisabled &&
         value !== undefined &&
         (isHighest ? value > extremeValue : value < extremeValue)
       ) {
@@ -318,6 +328,7 @@ export function getTargetPlayers(
   gameState: GameState,
   targetConfig: TargetConfig,
   sourceCard: BoardCardID,
+  event: GameEvents[keyof GameEvents],
 ): number[] {
   let results: number[] = [];
 

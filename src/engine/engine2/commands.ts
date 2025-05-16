@@ -59,6 +59,7 @@ export class CommandFactory {
           gameState,
           action.Target,
           sourceCardID,
+          event,
         );
         for (const targetPlayer of targetPlayers) {
           commands.addCommand(
@@ -81,6 +82,7 @@ export class CommandFactory {
           gameState,
           action.Target,
           sourceCardID,
+          event,
         );
         for (const targetPlayer of targetPlayers) {
           commands.addCommand(
@@ -103,6 +105,7 @@ export class CommandFactory {
           gameState,
           action.Target,
           sourceCardID,
+          event,
         );
         for (const targetPlayer of targetPlayers) {
           commands.addCommand(
@@ -169,6 +172,7 @@ export class CommandFactory {
           gameState,
           action.Target,
           sourceCardID,
+          event,
         );
         for (const targetPlayer of targetPlayers) {
           commands.addCommand(
@@ -196,6 +200,7 @@ export class CommandFactory {
           gameState,
           action.Target,
           sourceCardID,
+          event,
         );
         for (const targetPlayer of targetPlayers) {
           commands.addCommand(
@@ -218,6 +223,7 @@ export class CommandFactory {
           gameState,
           action.Target,
           sourceCardID,
+          event,
         );
         for (const targetPlayer of targetPlayers) {
           commands.addCommand(
@@ -245,6 +251,7 @@ export class CommandFactory {
           gameState,
           action.Target,
           sourceCardID,
+          event,
         );
         for (const targetPlayer of targetPlayers) {
           commands.addCommand(
@@ -272,6 +279,7 @@ export class CommandFactory {
           gameState,
           action.Target,
           sourceCardID,
+          event,
         );
         for (const targetPlayer of targetPlayers) {
           commands.addCommand(
@@ -294,6 +302,7 @@ export class CommandFactory {
           gameState,
           action.Target,
           sourceCardID,
+          event,
         );
         for (const targetPlayer of targetPlayers) {
           commands.addCommand(
@@ -316,6 +325,7 @@ export class CommandFactory {
           gameState,
           action.Target,
           sourceCardID,
+          event,
         );
         for (const targetPlayer of targetPlayers) {
           commands.addCommand(

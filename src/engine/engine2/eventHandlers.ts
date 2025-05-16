@@ -280,9 +280,11 @@ export function setupEventHandlers(gameState: GameState): void {
         // Create a combined test function that checks both prerequisites and trigger conditions
         const shouldReceiveEvent = <T extends keyof GameEvents>(
           gs: GameState,
-          data: GameEvents[T],
+          eventData: GameEvents[T],
         ) => {
-          return prerequisiteCheck(gs) && triggerCheck(gs, data);
+          return (
+            prerequisiteCheck(gs, eventData) && triggerCheck(gs, eventData)
+          );
         };
 
         const eventHandler = (

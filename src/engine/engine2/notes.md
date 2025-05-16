@@ -8,3 +8,6 @@ Fix:
 Targeting
 GetACtionValue
 Slop actions
+
+TODOS:
+add event/command log

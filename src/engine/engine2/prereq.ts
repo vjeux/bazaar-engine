@@ -4,6 +4,7 @@ import {
   Comparison,
 } from "../../types/cardTypes";
 import { BoardCardID, GameState } from "./engine2";
+import { GameEvents } from "./eventHandlers";
 import { getTargetCards, getTargetPlayers } from "./targeting";
 
 export function compareUsingComparator(
@@ -30,8 +31,8 @@ export function compareUsingComparator(
 export function createPrerequisitesCheck(
   ability: Ability,
   boardCardID: BoardCardID,
-): (gs: GameState) => boolean {
-  return (gs: GameState) => {
+): (gs: GameState, event: GameEvents[keyof GameEvents]) => boolean {
+  return (gs: GameState, event: GameEvents[keyof GameEvents]) => {
     if (!ability.Prerequisites) {
       return true;
     }
@@ -39,7 +40,7 @@ export function createPrerequisitesCheck(
       return true;
     }
     return ability.Prerequisites.every((prereq) => {
-      return checkPrerequisite(prereq, boardCardID, gs);
+      return checkPrerequisite(prereq, boardCardID, gs, event);
     });
   };
 }
@@ -48,13 +49,19 @@ function checkPrerequisite(
   prereq: AbilityPrerequisite,
   boardCardID: BoardCardID,
   gs: GameState,
+  event: GameEvents[keyof GameEvents],
 ): boolean {
   switch (prereq.$type) {
     case "TPrerequisiteCardCount":
       if (prereq.Subject === undefined) {
         throw new Error("Subject must exist for card count prerequisite");
       }
-      const cardCount = getTargetCards(gs, prereq.Subject, boardCardID).length;
+      const cardCount = getTargetCards(
+        gs,
+        prereq.Subject,
+        boardCardID,
+        event,
+      ).length;
       const comparisonValue = prereq.Amount;
       if (comparisonValue === undefined) {
         throw new Error(
@@ -73,7 +80,7 @@ function checkPrerequisite(
       if (!prereq.Subject) {
         throw new Error("Subject must exist for player prerequisite");
       }
-      const players = getTargetPlayers(gs, prereq.Subject, boardCardID);
+      const players = getTargetPlayers(gs, prereq.Subject, boardCardID, event);
       return players.length > 0;
     }
     // Rest of prerequisites are only required to decide which choices show during days, so we don't need to handle them.
