@@ -10,6 +10,7 @@ TODOS:
 add better multicast
 Dont fire events until after the card has finished executing its commands. Some internal queue maybe idk.
 use getPlayerAttribute for the palces where it's needed.
+Carry charge onto next use, instead of simply loosing it. maybe just let items charge past CooldownMax and minus CooldownMax on fire?
 
 
 BUGS:
