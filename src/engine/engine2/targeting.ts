@@ -328,6 +328,7 @@ export function getTargetPlayers(
   gameState: GameState,
   targetConfig: TargetConfig,
   sourceCard: BoardCardID,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   event: GameEvents[keyof GameEvents],
 ): number[] {
   let results: number[] = [];
@@ -336,14 +337,14 @@ export function getTargetPlayers(
     case "TTargetPlayerRelative":
       switch (targetConfig.TargetMode) {
         case "Opponent":
-          results = [(sourceCard.playerIdx + 1) % 2];
+          results = [sourceCard.playerIdx === 0 ? 1 : 0];
           break;
         case "Self":
           results = [sourceCard.playerIdx];
           break;
         default:
           throw new Error(
-            `Not implemented TargetMode: ${targetConfig.TargetMode}`,
+            `Not implemented player targeting TargetMode: ${targetConfig.TargetMode}`,
           );
       }
       break;
@@ -354,23 +355,23 @@ export function getTargetPlayers(
           results = [sourceCard.playerIdx];
           break;
         default:
-          results = [(sourceCard.playerIdx + 1) % 2];
+          results = [sourceCard.playerIdx === 0 ? 1 : 0];
           break;
       }
       break;
 
     case "TTargetPlayer":
       if (targetConfig.TargetMode === "Both") {
-        results = [sourceCard.playerIdx, (sourceCard.playerIdx + 1) % 2];
+        results = [sourceCard.playerIdx, sourceCard.playerIdx === 0 ? 1 : 0];
       } else {
         throw new Error(
-          `Not implemented TargetMode: ${targetConfig.TargetMode}`,
+          `Not implemented player targeting TargetMode: ${targetConfig.TargetMode}`,
         );
       }
       break;
 
     default:
-      throw new Error(`Unhandled target type: ${targetConfig.$type}`);
+      throw new Error(`Unhandled player targeting type: ${targetConfig.$type}`);
   }
 
   // Filter by conditions
