@@ -378,7 +378,7 @@ export function getTargetPlayers(
           break;
         default:
           throw new Error(
-            `Not implemented player targeting TargetMode: ${targetConfig.TargetMode}`,
+            `Not implemented TTargetPlayerRelative player targeting TargetMode: ${targetConfig.TargetMode}`,
           );
       }
       break;
@@ -395,12 +395,20 @@ export function getTargetPlayers(
       break;
 
     case "TTargetPlayer":
-      if (targetConfig.TargetMode === "Both") {
-        results = [sourceCard.playerIdx, sourceCard.playerIdx === 0 ? 1 : 0];
-      } else {
-        throw new Error(
-          `Not implemented player targeting TargetMode: ${targetConfig.TargetMode}`,
-        );
+      switch (targetConfig.TargetMode) {
+        case "Both":
+          results = [sourceCard.playerIdx, sourceCard.playerIdx === 0 ? 1 : 0];
+          break;
+        case "Self":
+          results = [sourceCard.playerIdx];
+          break;
+        case "Opponent":
+          results = [sourceCard.playerIdx === 0 ? 1 : 0];
+          break;
+        default:
+          throw new Error(
+            `Not implemented TTargetPlayer player targeting TargetMode: ${targetConfig.TargetMode}`,
+          );
       }
       break;
 
