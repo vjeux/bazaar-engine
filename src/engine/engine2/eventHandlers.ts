@@ -888,6 +888,24 @@ function createTriggerCheck(
         }
         return false;
       }
+
+      case TriggerType.TTriggerOnCardPerformedOverHeal: {
+        if (e instanceof PlayerOverhealedEvent) {
+          if (!ability.Trigger.Subject) {
+            console.warn(
+              `Ability ${ability.InternalName} has no subject, skipping trigger check`,
+            );
+            return false;
+          }
+          // Check if subjects include source card
+          const subjects = getTargetCards(
+            gs,
+            ability.Trigger.Subject,
+            boardCardID,
+          );
+          return subjects.some((subject) => subject === e.sourceCardID);
+        }
+      }
       default: {
         console.warn(
           `Unhandled trigger type: ${triggerType} for ability ${ability.InternalName}`,
