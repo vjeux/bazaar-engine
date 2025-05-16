@@ -8,6 +8,7 @@ import {
 } from "../../types/cardTypes";
 import { createPrerequisitesCheck } from "./prereq";
 import { playerName } from "./commands";
+import { getTargetCards } from "./targeting";
 
 /**
  * Base Game Event class
@@ -42,6 +43,9 @@ export class GameTickEvent extends GameEvent {
   }
 }
 
+/**
+ * Should never be emitted, only used as a placeholder
+ */
 export class NotImplementedEvent extends GameEvent {
   readonly type = "game:notImplemented";
   constructor(public readonly message: string) {
@@ -675,40 +679,12 @@ function triggerToEvent(trigger: {
   const eventClass = triggerToEventMap[triggerType];
 
   if (!eventClass) {
-    console.warn(
-      `Unhandled trigger type: ${triggerType}, using default GameTickEvent`,
-    );
-    return GameTickEvent as GameEventConstructor<GameEvent>;
+    console.warn(`Unhandled trigger type: ${triggerType}`);
+    return NotImplementedEvent;
   }
 
   return eventClass;
 }
-
-/**
- * Map of trigger type to checker functions
- */
-type TriggerCheckFn = (
-  boardCardID: BoardCardID,
-  gs: GameState,
-  e: GameEvent,
-) => boolean;
-
-const triggerCheckers: Record<string, TriggerCheckFn> = {
-  // Card events
-  TTriggerOnCardFired: (boardCardID, _gs, e) => {
-    if (e instanceof CardFiredEvent) {
-      return (
-        e.sourceCardID.playerIdx === boardCardID.playerIdx &&
-        e.sourceCardID.cardIdx === boardCardID.cardIdx
-      );
-    }
-    return false;
-  },
-  TTriggerOnFightStart: (_boardCardID, _gs, e) => {
-    return e instanceof GameFightStartedEvent;
-  },
-  // Add more trigger checkers as needed
-};
 
 /**
  * Create a trigger check function for an ability
@@ -718,19 +694,54 @@ function createTriggerCheck(
   boardCardID: BoardCardID,
 ): (gs: GameState, e: GameEvent) => boolean {
   const triggerType = ability.Trigger.$type || "";
-  const checker = triggerCheckers[triggerType];
 
-  if (!checker) {
-    console.warn(
-      `Unhandled trigger type: ${triggerType} for ability ${ability.InternalName}`,
-    );
+  const checker = (gs: GameState, e: GameEvent): boolean => {
+    switch (triggerType) {
+      case "TTriggerOnCardFired": {
+        if (e instanceof CardFiredEvent) {
+          return (
+            e.sourceCardID.playerIdx === boardCardID.playerIdx &&
+            e.sourceCardID.cardIdx === boardCardID.cardIdx
+          );
+        }
+        return false;
+      }
+      case "TTriggerOnFightStarted": {
+        return e instanceof GameFightStartedEvent;
+      }
+      case "TTriggerOnItemUsed": {
+        if (e instanceof CardItemUsedEvent) {
+          if (!ability.Trigger.Subject) {
+            console.warn(
+              `Ability ${ability.InternalName} has no subject, skipping trigger check`,
+            );
+            return false;
+          }
+          // Check subject
+          const subjects = getTargetCards(
+            gs,
+            ability.Trigger.Subject,
+            boardCardID,
+          );
+          // Return true if any of the subjects are the source card
+          return subjects.some(
+            (subject) =>
+              subject.playerIdx === boardCardID.playerIdx &&
+              subject.cardIdx === boardCardID.cardIdx,
+          );
+        }
+        return false;
+      }
+      default: {
+        console.warn(
+          `Unhandled trigger type: ${triggerType} for ability ${ability.InternalName}`,
+        );
+        return false;
+      }
+    }
+  };
 
-    // Default to a function that always returns false
-    return () => false;
-  }
-
-  // Return a function that calls the appropriate checker with the boardCardID
-  return (gs: GameState, e: GameEvent) => checker(boardCardID, gs, e);
+  return checker;
 }
 
 /**
