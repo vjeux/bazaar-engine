@@ -13,7 +13,7 @@ import {
   GameEvents,
   setupEventHandlers,
 } from "./eventHandlers";
-import { ProcessTickCommand } from "./commands";
+import { Command, ProcessTickCommand } from "./commands";
 import { RandomGenerator } from "pure-rand/types/RandomGenerator";
 import { Hero, Tier } from "@/types/shared";
 import { getTargetCards } from "./targeting";
@@ -26,6 +26,29 @@ export type BoardCardID = {
   playerIdx: number;
   cardIdx: number;
 };
+
+/**
+ * Command log entry interface
+ */
+export interface CommandLogEntry {
+  commandType: string;
+  params: Record<string, unknown>;
+  timestamp: number;
+  step: number;
+  description: string;
+}
+
+/**
+ * Unified log entry for both commands and events
+ */
+export interface LogEntry {
+  type: "command" | "event";
+  name: string;
+  description: string;
+  data?: Record<string, unknown>;
+  timestamp: number;
+  step: number;
+}
 
 export interface CardConfig {
   cardId: string;
@@ -90,13 +113,6 @@ export interface GameState {
 }
 
 /**
- * Command interface
- */
-export interface Command {
-  execute(gameState: GameState): void;
-}
-
-/**
  * Game Engine using EventBus and Command pattern
  */
 export class Engine2 {
@@ -135,6 +151,10 @@ export class Engine2 {
     while (this.commandQueue.length > 0) {
       const command = this.commandQueue.shift();
       if (command) {
+        // Log the command to the unified log
+        this.gameState.eventBus.addCommandToLog(command);
+
+        // Execute the command
         command.execute(this.gameState);
       }
     }
@@ -170,6 +190,7 @@ export class Engine2 {
 
       // Create a step copy with the current step index
       const stepCopy = this.createGameStateCopy();
+
       steps.push(stepCopy);
 
       // Check if game is still active

@@ -1,4 +1,4 @@
-import { GameState, BoardCardID } from "./engine2";
+import { GameState, BoardCardID, LogEntry } from "./engine2";
 import * as Commands from "./commands";
 import { Ability, AttributeType, Priority } from "../../types/cardTypes";
 import { createPrerequisitesCheck } from "./prereq";
@@ -125,12 +125,12 @@ export class EventBus {
     [K in keyof GameEvents]?: Array<PrioritizedEventHandler<K>>;
   } = {};
   private gameState: GameState;
-  private eventLog: Array<EventLogEntry> = [];
+  private unifiedLog: Array<LogEntry> = [];
 
   constructor(gameState: GameState) {
     this.gameState = gameState;
     this.listeners = {};
-    this.eventLog = [];
+    this.unifiedLog = [];
   }
 
   /**
@@ -174,10 +174,12 @@ export class EventBus {
     // Get the step from the gameState
     const step = this.gameState.step;
 
-    // Log the event
-    this.eventLog.push({
-      eventName,
-      data: JSON.parse(JSON.stringify(eventData)), // Deep copy data to avoid mutations
+    // Add to unified log
+    this.unifiedLog.push({
+      type: "event",
+      name: eventName as string,
+      description: this.getEventDescription(eventName, eventData),
+      data: eventData as Record<string, unknown>,
       timestamp: Date.now(),
       step: step,
     });
@@ -219,13 +221,74 @@ export class EventBus {
   }
 
   /**
-   * Returns a copy of the event log.
+   * Get a human-readable description of an event
    */
-  getEventLog = (step: number): Array<EventLogEntry> => {
-    return JSON.parse(
-      JSON.stringify(this.eventLog.filter((event) => event.step === step)),
-    ); // Return a deep copy
-  };
+  private getEventDescription<K extends keyof GameEvents>(
+    eventName: K,
+    eventData: GameEvents[K],
+  ): string {
+    // Create readable descriptions based on event type
+    switch (eventName) {
+      case "game:tick":
+        return `Tick: ${(eventData as GameEvents["game:tick"]).tick}`;
+      case "game:fightStarted":
+        return "Fight started";
+      case "game:ended":
+        return `Game ended - Winner: ${(eventData as GameEvents["game:ended"]).winner}`;
+      case "card:fired":
+        const { sourceCardID } = eventData as GameEvents["card:fired"];
+        return `Card fired [${sourceCardID.playerIdx},${sourceCardID.cardIdx}]`;
+      case "player:damaged":
+        const damageData = eventData as GameEvents["player:damaged"];
+        return `Player ${damageData.playerIdx} damaged for ${damageData.amount}`;
+      case "player:healed":
+        const healData = eventData as GameEvents["player:healed"];
+        return `Player ${healData.playerIdx} healed for ${healData.amount}`;
+      default:
+        return `${eventName}`;
+    }
+  }
+
+  /**
+   * Add a command entry to the unified log
+   */
+  addCommandToLog(command: Commands.Command): void {
+    this.unifiedLog.push({
+      type: "command",
+      name: command.constructor.name,
+      description:
+        command.toLogString?.() || `${command.constructor.name} executed`,
+      data: this.getCommandParams(command),
+      timestamp: Date.now(),
+      step: this.gameState.step,
+    });
+  }
+
+  /**
+   * Extract parameters from a command instance
+   */
+  private getCommandParams(command: Commands.Command): Record<string, unknown> {
+    // Extract command parameters by filtering out methods and converting to plain object
+    const params: Record<string, unknown> = {};
+    Object.entries(command).forEach(([key, value]) => {
+      if (typeof value !== "function" && key.startsWith("_") === false) {
+        params[key] = value;
+      }
+    });
+    return params;
+  }
+
+  /**
+   * Returns a copy of the unified log for a specific step.
+   */
+  getUnifiedLog(step?: number): Array<LogEntry> {
+    if (step !== undefined) {
+      return JSON.parse(
+        JSON.stringify(this.unifiedLog.filter((entry) => entry.step === step)),
+      );
+    }
+    return JSON.parse(JSON.stringify(this.unifiedLog));
+  }
 
   /**
    * Update the gameState reference

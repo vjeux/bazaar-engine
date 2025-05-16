@@ -11,6 +11,7 @@ import { getActionValue } from "./getActionValue";
  */
 export interface Command {
   execute(gameState: GameState): void;
+  toLogString?(): string;
 }
 
 /**
@@ -29,6 +30,14 @@ class CommandList implements Command {
 
   execute(gameState: GameState): void {
     this.commands.forEach((command) => command.execute(gameState));
+  }
+
+  toLogString(): string {
+    return this.commands
+      .map(
+        (command) => command.toLogString?.() || `${command.constructor.name}`,
+      )
+      .join("\n");
   }
 }
 
@@ -693,6 +702,10 @@ export class AddCardCommand implements Command {
       card: boardCard,
     });
   }
+
+  toLogString(): string {
+    return `Add card to player ${this.playerID} at position ${this.position}`;
+  }
 }
 
 /**
@@ -714,6 +727,10 @@ export class RemoveCardCommand implements Command {
         boardCardID: this.boardCardID,
       });
     }
+  }
+
+  toLogString(): string {
+    return `Remove card from player ${this.boardCardID.playerIdx} at position ${this.boardCardID.cardIdx}`;
   }
 }
 
@@ -759,6 +776,10 @@ export class ModifyCardAttributeCommand implements Command {
       newValue,
     });
   }
+
+  toLogString(): string {
+    return `${this.operation} card [${this.boardCardID.playerIdx},${this.boardCardID.cardIdx}] ${this.attribute} to ${this.value}`;
+  }
 }
 
 /**
@@ -803,6 +824,10 @@ export class ModifyPlayerAttributeCommand implements Command {
       oldValue,
       newValue,
     });
+  }
+
+  toLogString(): string {
+    return `Modify player ${this.playerIdx} attribute ${this.attribute} to ${this.value}`;
   }
 }
 
@@ -902,6 +927,14 @@ export class DamagePlayerCommand implements Command {
       gameState.eventBus.emit(event.eventName, event.eventData);
     });
   }
+
+  toLogString(): string {
+    return `Damage player ${this.targetPlayerIdx} for ${this.amount} damage${
+      this.sourceCardID
+        ? ` from card [${this.sourceCardID.playerIdx},${this.sourceCardID.cardIdx}]`
+        : " (system)"
+    }`;
+  }
 }
 
 /**
@@ -941,6 +974,14 @@ export class HealPlayerCommand implements Command {
       });
     }
   }
+
+  toLogString(): string {
+    return `Heal player ${this.targetPlayerID} for ${this.amount} health${
+      this.sourceCardID
+        ? ` from card [${this.sourceCardID.playerIdx},${this.sourceCardID.cardIdx}]`
+        : " (system)"
+    }`;
+  }
 }
 
 /**
@@ -969,6 +1010,10 @@ export class FireCardCommand implements Command {
       );
     }
   }
+
+  toLogString(): string {
+    return `Fire card [${this.boardCardID.playerIdx},${this.boardCardID.cardIdx}]`;
+  }
 }
 
 /**
@@ -995,6 +1040,14 @@ export class ApplyShieldCommand implements Command {
       amount: this.amount,
       sourceCardID: this.sourceCardID,
     });
+  }
+
+  toLogString(): string {
+    return `Apply shield to player ${this.targetPlayerID} for ${this.amount} amount${
+      this.sourceCardID
+        ? ` from card [${this.sourceCardID.playerIdx},${this.sourceCardID.cardIdx}]`
+        : " (system)"
+    }`;
   }
 }
 
@@ -1025,6 +1078,14 @@ export class ApplyPoisonCommand implements Command {
       sourceCardID: this.sourceCardID,
     });
   }
+
+  toLogString(): string {
+    return `Apply poison to player ${this.targetPlayerID} for ${this.amount} amount${
+      this.sourceCardID
+        ? ` from card [${this.sourceCardID.playerIdx},${this.sourceCardID.cardIdx}]`
+        : " (system)"
+    }`;
+  }
 }
 
 /**
@@ -1052,6 +1113,14 @@ export class ApplyBurnCommand implements Command {
       sourceCardID: this.sourceCardID,
     });
   }
+
+  toLogString(): string {
+    return `Apply burn to player ${this.targetPlayerID} for ${this.amount} amount${
+      this.sourceCardID
+        ? ` from card [${this.sourceCardID.playerIdx},${this.sourceCardID.cardIdx}]`
+        : " (system)"
+    }`;
+  }
 }
 
 /**
@@ -1066,5 +1135,9 @@ export class ProcessTickCommand implements Command {
     gameState.eventBus.emit("game:tick", {
       tick: gameState.tick,
     });
+  }
+
+  toLogString(): string {
+    return "Process game tick";
   }
 }

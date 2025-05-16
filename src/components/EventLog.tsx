@@ -1,84 +1,126 @@
+import { useSimulatorStore } from "@/lib/simulatorStore";
+import { LogEntry } from "@/engine/engine2/engine2";
+import { ScrollArea } from "./ui/scroll-area";
 import { useState } from "react";
+import { Badge } from "./ui/badge";
 import { Input } from "./ui/input";
-import { useSimulatorStore, useStepCount } from "@/lib/simulatorStore";
-import { EventLogEntry } from "@/engine/engine2/eventHandlers";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "./ui/select";
 
-// EventLog component that uses only the store
 export function EventLog() {
+  const stepCount = useSimulatorStore((state) => state.stepCount);
+  const steps = useSimulatorStore((state) => state.steps);
   const [filter, setFilter] = useState("");
-  const currentStep = useStepCount();
-  const gameState = useSimulatorStore(
-    (state) => state.steps[Math.min(state.stepCount, state.steps.length - 1)],
+  const [typeFilter, setTypeFilter] = useState<"all" | "command" | "event">(
+    "all",
   );
 
-  const eventLog = gameState.eventBus.getEventLog(currentStep);
+  // Get the unified log from the current step
+  const unifiedLog: LogEntry[] = steps[stepCount]?.eventBus
+    .getUnifiedLog()
+    .filter((entry) => entry.step === stepCount);
 
-  // Filter events based on search term
-  const filteredEvents = eventLog.filter((event: EventLogEntry) => {
-    if (!filter) return true;
+  // Apply filters
+  const filteredLog = unifiedLog.filter((entry) => {
+    // Filter by type
+    if (typeFilter !== "all" && entry.type !== typeFilter) {
+      return false;
+    }
 
-    const searchLower = filter.toLowerCase();
-    const eventNameMatch = event.eventName.toLowerCase().includes(searchLower);
-    const dataString = JSON.stringify(event.data).toLowerCase();
-    const dataMatch = dataString.includes(searchLower);
+    // Filter by text search
+    if (filter) {
+      const searchLower = filter.toLowerCase();
+      const nameMatch = entry.name.toLowerCase().includes(searchLower);
+      const descMatch = entry.description.toLowerCase().includes(searchLower);
+      const dataMatch = entry.data
+        ? JSON.stringify(entry.data).toLowerCase().includes(searchLower)
+        : false;
 
-    return eventNameMatch || dataMatch;
+      return nameMatch || descMatch || dataMatch;
+    }
+
+    return true;
   });
 
   return (
-    <div className="flex h-full flex-col gap-2 p-2">
-      <div className="flex items-center justify-between">
+    <div className="flex h-full flex-col p-2">
+      <div className="mb-2 flex gap-2">
         <Input
-          placeholder="Filter events..."
+          placeholder="Search log..."
           value={filter}
           onChange={(e) => setFilter(e.target.value)}
-          className="mb-2"
+          className="flex-grow"
         />
-        <div className="text-muted-foreground ml-2 text-sm whitespace-nowrap">
-          Step: {currentStep} ({(currentStep / 10).toFixed(1)}s)
+        <Select
+          value={typeFilter}
+          onValueChange={(value) =>
+            setTypeFilter(value as "all" | "command" | "event")
+          }
+        >
+          <SelectTrigger className="w-[120px]">
+            <SelectValue placeholder="Filter type" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All</SelectItem>
+            <SelectItem value="command">Commands</SelectItem>
+            <SelectItem value="event">Events</SelectItem>
+          </SelectContent>
+        </Select>
+      </div>
+
+      <div className="text-muted-foreground mb-2 text-xs">
+        {filteredLog.length} of {unifiedLog.length} entries
+      </div>
+
+      <ScrollArea className="flex-grow">
+        <div className="space-y-2">
+          {filteredLog.length === 0 ? (
+            <div className="text-muted-foreground py-4 text-center">
+              No matching entries for this step
+            </div>
+          ) : (
+            filteredLog.map((entry, index) => (
+              <LogEntryCard key={`${index}-${entry.timestamp}`} entry={entry} />
+            ))
+          )}
         </div>
-      </div>
-
-      <div className="text-muted-foreground mb-2 text-sm">
-        {filteredEvents.length} events found
-      </div>
-
-      <div className="flex h-[calc(100%-80px)] flex-col gap-2 overflow-y-auto">
-        {filteredEvents.map((event: EventLogEntry, index: number) => (
-          <EventCard key={index} event={event} />
-        ))}
-      </div>
+      </ScrollArea>
     </div>
   );
 }
 
-function EventCard({ event }: { event: EventLogEntry }) {
+function LogEntryCard({ entry }: { entry: LogEntry }) {
   const [expanded, setExpanded] = useState(false);
-
-  // Format timestamp to readable time
-  const formattedTime = new Date(event.timestamp).toLocaleTimeString();
 
   return (
     <div
-      className="bg-card hover:bg-accent/30 cursor-pointer rounded border p-2 transition-colors"
+      className="hover:bg-accent/10 cursor-pointer rounded-md border p-2 text-xs"
       onClick={() => setExpanded(!expanded)}
     >
-      <div className="flex justify-between">
-        <span className="font-medium">{event.eventName}</span>
-        <div className="flex flex-col items-end">
-          <span className="text-muted-foreground text-xs">{formattedTime}</span>
-          {event.step !== undefined && (
-            <span className="text-muted-foreground text-xs">
-              Step: {event.step} ({(event.step / 10).toFixed(1)}s)
-            </span>
-          )}
-        </div>
+      <div className="flex justify-between font-semibold">
+        <span>{entry.description}</span>
+        <Badge
+          variant={entry.type === "command" ? "secondary" : "outline"}
+          className="ml-2"
+        >
+          {entry.type}
+        </Badge>
+      </div>
+      <div className="text-muted-foreground">
+        {entry.name} - Step: {entry.step}
       </div>
 
-      {expanded && (
-        <pre className="bg-muted mt-2 max-h-96 overflow-auto rounded p-2 text-xs whitespace-pre-wrap">
-          {JSON.stringify(event.data, null, 2)}
-        </pre>
+      {expanded && entry.data && (
+        <div className="mt-2 border-t pt-2">
+          <pre className="bg-muted max-h-40 overflow-auto rounded p-2 text-xs whitespace-pre-wrap">
+            {JSON.stringify(entry.data, null, 2)}
+          </pre>
+        </div>
       )}
     </div>
   );
