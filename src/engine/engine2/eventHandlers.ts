@@ -736,6 +736,28 @@ function createTriggerCheck(
         }
         return false;
       }
+      case TriggerType.TTriggerOnCardCritted: {
+        if (e instanceof CardCrittedEvent) {
+          if (!ability.Trigger.Subject) {
+            console.warn(
+              `Ability ${ability.InternalName} has no subject, skipping trigger check`,
+            );
+            return false;
+          }
+          // Check subject
+          const subjects = getTargetCards(
+            gs,
+            ability.Trigger.Subject,
+            boardCardID,
+            e,
+          );
+          // Return true if any of the subjects are the source card
+          return subjects.some((subject) =>
+            boardCardIdIsEqual(subject, e.sourceCardID),
+          );
+        }
+        return false;
+      }
       // TODO implement  "PreviousValue": null, "CurrentValue": null, "Source": null, see Ramrod's ability 1
       case TriggerType.TTriggerOnCardAttributeChanged: {
         if (e instanceof CardAttributeChangedEvent) {

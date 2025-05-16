@@ -22,10 +22,12 @@ import {
   CardPerformedPoisonEvent,
   CardPerformedBurnEvent,
   GameTickEvent,
+  CardCrittedEvent,
 } from "./eventHandlers";
 import { getTargetCards, getTargetPlayers } from "./targeting";
 import { getActionValue } from "./getActionValue";
 import { PLAYER_PLAYER_IDX } from "@/lib/constants";
+import prand from "pure-rand";
 
 /**
  * Helper function to convert player index to readable name
@@ -79,6 +81,49 @@ class CommandList implements Command {
  * Factory for creating commands based on action types
  */
 export class CommandFactory {
+  /**
+   * Calculates critical hit for an action
+   * Returns the modified amount and whether it critted
+   */
+  static calculateCritical(
+    gameState: GameState,
+    sourceCardID: BoardCardID,
+    baseAmount: number,
+  ): { amount: number; hasCritted: boolean } {
+    let amount = baseAmount;
+    let hasCritted = false;
+
+    // Get critical chance from source card
+    const critChance =
+      getCardAttribute(gameState, sourceCardID, AttributeType.CritChance) ?? 0;
+
+    if (critChance > 0) {
+      // Roll for critical hit
+      if (
+        prand.unsafeUniformIntDistribution(0, 100, gameState.randomGen) <
+        critChance
+      ) {
+        // Base critical is 2x
+        amount *= 2;
+
+        // Apply additional critical damage modifier if available
+        const damageCrit = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.DamageCrit,
+        );
+
+        if (damageCrit !== undefined) {
+          amount *= 1 + damageCrit / 100;
+        }
+
+        hasCritted = true;
+      }
+    }
+
+    return { amount, hasCritted };
+  }
+
   static createFromAction(
     action: AbilityAction,
     sourceCardID: BoardCardID,
@@ -90,7 +135,7 @@ export class CommandFactory {
     switch (action.$type) {
       case ActionType.TActionPlayerDamage: {
         // get damage attribute from source card
-        const damage = getCardAttribute(
+        const baseDamage = getCardAttribute(
           gameState,
           sourceCardID,
           AttributeType.DamageAmount,
@@ -98,9 +143,17 @@ export class CommandFactory {
         if (!action.Target) {
           throw new Error("Target is required for damage action");
         }
-        if (damage === undefined) {
+        if (baseDamage === undefined) {
           throw new Error("Damage amount is undefined");
         }
+
+        // Calculate critical hit
+        const { amount: damage, hasCritted } = this.calculateCritical(
+          gameState,
+          sourceCardID,
+          baseDamage,
+        );
+
         const targetPlayers = getTargetPlayers(
           gameState,
           action.Target,
@@ -112,11 +165,17 @@ export class CommandFactory {
             new DamagePlayerCommand(targetPlayer, damage, sourceCardID),
           );
         }
+
+        // Emit crit event if it happened
+        if (hasCritted) {
+          commands.addCommand(new EmitCritEvent(sourceCardID));
+        }
+
         return commands;
       }
 
       case ActionType.TActionPlayerHeal: {
-        const healAmount = getCardAttribute(
+        const baseHealAmount = getCardAttribute(
           gameState,
           sourceCardID,
           AttributeType.HealAmount,
@@ -124,9 +183,17 @@ export class CommandFactory {
         if (!action.Target) {
           throw new Error("Target is required for heal action");
         }
-        if (healAmount === undefined) {
+        if (baseHealAmount === undefined) {
           throw new Error("Heal amount is undefined");
         }
+
+        // Calculate critical hit
+        const { amount: healAmount, hasCritted } = this.calculateCritical(
+          gameState,
+          sourceCardID,
+          baseHealAmount,
+        );
+
         const targetPlayers = getTargetPlayers(
           gameState,
           action.Target,
@@ -138,11 +205,17 @@ export class CommandFactory {
             new HealPlayerCommand(targetPlayer, healAmount, sourceCardID),
           );
         }
+
+        // Emit crit event if it happened
+        if (hasCritted) {
+          commands.addCommand(new EmitCritEvent(sourceCardID));
+        }
+
         return commands;
       }
 
       case ActionType.TActionPlayerBurnApply: {
-        const burnAmount = getCardAttribute(
+        const baseBurnAmount = getCardAttribute(
           gameState,
           sourceCardID,
           AttributeType.BurnApplyAmount,
@@ -150,9 +223,17 @@ export class CommandFactory {
         if (!action.Target) {
           throw new Error("Target is required for burn apply action");
         }
-        if (burnAmount === undefined) {
+        if (baseBurnAmount === undefined) {
           throw new Error("Burn amount is undefined");
         }
+
+        // Calculate critical hit
+        const { amount: burnAmount, hasCritted } = this.calculateCritical(
+          gameState,
+          sourceCardID,
+          baseBurnAmount,
+        );
+
         const targetPlayers = getTargetPlayers(
           gameState,
           action.Target,
@@ -164,81 +245,97 @@ export class CommandFactory {
             new ApplyBurnCommand(targetPlayer, burnAmount, sourceCardID),
           );
         }
+
+        // Emit crit event if it happened
+        if (hasCritted) {
+          commands.addCommand(new EmitCritEvent(sourceCardID));
+        }
+
         return commands;
       }
 
-      case ActionType.TActionCardSlow: {
-        const slowAmount = getCardAttribute(
+      case ActionType.TActionPlayerPoisonApply: {
+        const basePoisonAmount = getCardAttribute(
           gameState,
           sourceCardID,
-          AttributeType.SlowAmount,
+          AttributeType.PoisonApplyAmount,
         );
         if (!action.Target) {
-          throw new Error("Target is required for slow action");
+          throw new Error("Target is required for poison apply action");
         }
-        if (slowAmount === undefined) {
-          throw new Error("Slow amount is undefined");
+        if (basePoisonAmount === undefined) {
+          throw new Error("Poison amount is undefined");
         }
-        const targetCards = getTargetCards(
+
+        // Calculate critical hit
+        const { amount: poisonAmount, hasCritted } = this.calculateCritical(
+          gameState,
+          sourceCardID,
+          basePoisonAmount,
+        );
+
+        const targetPlayers = getTargetPlayers(
           gameState,
           action.Target,
           sourceCardID,
           event,
         );
-
-        // Filter by SlowTargets amount
-        const targetCount = getCardAttribute(
-          gameState,
-          sourceCardID,
-          AttributeType.SlowTargets,
-        );
-
-        if (targetCount === undefined) {
-          // Apply to all target cards
-          for (const targetCard of targetCards) {
-            commands.addCommand(
-              new ModifyCardAttributeCommand(
-                targetCard,
-                AttributeType.Slow,
-                slowAmount,
-                "add",
-              ),
-            );
-          }
-        } else {
-          // Apply to the first targetCount cards
-          for (const targetCard of targetCards.slice(0, targetCount)) {
-            commands.addCommand(
-              new ModifyCardAttributeCommand(
-                targetCard,
-                AttributeType.Slow,
-                slowAmount,
-                "add",
-              ),
-            );
-          }
+        for (const targetPlayer of targetPlayers) {
+          commands.addCommand(
+            new ApplyPoisonCommand(targetPlayer, poisonAmount, sourceCardID),
+          );
         }
+
+        // Emit crit event if it happened
+        if (hasCritted) {
+          commands.addCommand(new EmitCritEvent(sourceCardID));
+        }
+
         return commands;
       }
 
-      case ActionType.TActionCardForceUse: {
+      case ActionType.TActionPlayerShieldApply: {
+        const baseShieldAmount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.ShieldApplyAmount,
+        );
         if (!action.Target) {
-          throw new Error("Target is required for force use action");
+          throw new Error("Target is required for shield apply action");
         }
-        const targetCards = getTargetCards(
+        if (baseShieldAmount === undefined) {
+          throw new Error("Shield amount is undefined");
+        }
+
+        // Calculate critical hit
+        const { amount: shieldAmount, hasCritted } = this.calculateCritical(
+          gameState,
+          sourceCardID,
+          baseShieldAmount,
+        );
+
+        const targetPlayers = getTargetPlayers(
           gameState,
           action.Target,
           sourceCardID,
           event,
         );
-        for (const targetCard of targetCards) {
-          commands.addCommand(new FireCardCommand(targetCard));
+        for (const targetPlayer of targetPlayers) {
+          commands.addCommand(
+            new ApplyShieldCommand(targetPlayer, shieldAmount, sourceCardID),
+          );
         }
+
+        // Emit crit event if it happened
+        if (hasCritted) {
+          commands.addCommand(new EmitCritEvent(sourceCardID));
+        }
+
         return commands;
       }
 
       case ActionType.TActionPlayerRegenApply: {
-        const regenAmount = getCardAttribute(
+        const baseRegenAmount = getCardAttribute(
           gameState,
           sourceCardID,
           AttributeType.RegenApplyAmount,
@@ -246,9 +343,17 @@ export class CommandFactory {
         if (!action.Target) {
           throw new Error("Target is required for regen apply action");
         }
-        if (regenAmount === undefined) {
+        if (baseRegenAmount === undefined) {
           throw new Error("Regen amount is undefined");
         }
+
+        // Calculate critical hit
+        const { amount: regenAmount, hasCritted } = this.calculateCritical(
+          gameState,
+          sourceCardID,
+          baseRegenAmount,
+        );
+
         const targetPlayers = getTargetPlayers(
           gameState,
           action.Target,
@@ -265,32 +370,12 @@ export class CommandFactory {
             ),
           );
         }
-        return commands;
-      }
 
-      case ActionType.TActionPlayerPoisonApply: {
-        const poisonAmount = getCardAttribute(
-          gameState,
-          sourceCardID,
-          AttributeType.PoisonApplyAmount,
-        );
-        if (!action.Target) {
-          throw new Error("Target is required for poison apply action");
+        // Emit crit event if it happened
+        if (hasCritted) {
+          commands.addCommand(new EmitCritEvent(sourceCardID));
         }
-        if (poisonAmount === undefined) {
-          throw new Error("Poison amount is undefined");
-        }
-        const targetPlayers = getTargetPlayers(
-          gameState,
-          action.Target,
-          sourceCardID,
-          event,
-        );
-        for (const targetPlayer of targetPlayers) {
-          commands.addCommand(
-            new ApplyPoisonCommand(targetPlayer, poisonAmount, sourceCardID),
-          );
-        }
+
         return commands;
       }
 
@@ -356,32 +441,6 @@ export class CommandFactory {
         return commands;
       }
 
-      case ActionType.TActionPlayerShieldApply: {
-        const shieldAmount = getCardAttribute(
-          gameState,
-          sourceCardID,
-          AttributeType.ShieldApplyAmount,
-        );
-        if (!action.Target) {
-          throw new Error("Target is required for shield apply action");
-        }
-        if (shieldAmount === undefined) {
-          throw new Error("Shield amount is undefined");
-        }
-        const targetPlayers = getTargetPlayers(
-          gameState,
-          action.Target,
-          sourceCardID,
-          event,
-        );
-        for (const targetPlayer of targetPlayers) {
-          commands.addCommand(
-            new ApplyShieldCommand(targetPlayer, shieldAmount, sourceCardID),
-          );
-        }
-        return commands;
-      }
-
       case ActionType.TActionPlayerShieldRemove: {
         const shieldRemoveAmount = getCardAttribute(
           gameState,
@@ -427,6 +486,76 @@ export class CommandFactory {
           commands.addCommand(
             new ModifyPlayerAttributeCommand(targetPlayer, "Health", "set", 0),
           );
+        }
+        return commands;
+      }
+
+      case ActionType.TActionCardForceUse: {
+        if (!action.Target) {
+          throw new Error("Target is required for force use action");
+        }
+        const targetCards = getTargetCards(
+          gameState,
+          action.Target,
+          sourceCardID,
+          event,
+        );
+        for (const targetCard of targetCards) {
+          commands.addCommand(new FireCardCommand(targetCard));
+        }
+        return commands;
+      }
+
+      case ActionType.TActionCardSlow: {
+        const slowAmount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.SlowAmount,
+        );
+        if (!action.Target) {
+          throw new Error("Target is required for slow action");
+        }
+        if (slowAmount === undefined) {
+          throw new Error("Slow amount is undefined");
+        }
+        const targetCards = getTargetCards(
+          gameState,
+          action.Target,
+          sourceCardID,
+          event,
+        );
+
+        // Filter by SlowTargets amount
+        const targetCount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.SlowTargets,
+        );
+
+        if (targetCount === undefined) {
+          // Apply to all target cards
+          for (const targetCard of targetCards) {
+            commands.addCommand(
+              new ModifyCardAttributeCommand(
+                targetCard,
+                AttributeType.Slow,
+                slowAmount,
+                "add",
+              ),
+            );
+          }
+        } else {
+          // Apply to the first targetCount cards
+          for (const targetCard of targetCards.slice(0, targetCount)) {
+            commands.addCommand(
+              new ModifyCardAttributeCommand(
+                targetCard,
+                AttributeType.Slow,
+                slowAmount,
+                "add",
+              ),
+            );
+          }
         }
         return commands;
       }
@@ -1329,5 +1458,21 @@ export class SystemCommand implements Command {
 
   toLogString(): string {
     return this.description;
+  }
+}
+
+/**
+ * Command to emit a critical hit event
+ */
+export class EmitCritEvent implements Command {
+  constructor(private sourceCardID: BoardCardID) {}
+
+  execute(gameState: GameState): void {
+    // Emit crit event
+    gameState.eventBus.emit(new CardCrittedEvent(this.sourceCardID));
+  }
+
+  toLogString(): string {
+    return `Critical hit by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
