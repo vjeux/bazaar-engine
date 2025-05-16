@@ -132,6 +132,7 @@ export function getActionValue(
     }
     default:
       console.warn(`Unsupported value type: ${value.$type}`);
+      throw new Error(`Unsupported value type: ${value.$type}`);
       return 0;
   }
 

@@ -654,24 +654,16 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Angry Balloon B
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Antimatter Chamber" 1`] = `
 {
   "cardName": "Antimatter Chamber",
+  "error": "Unhandled trigger type: TTriggerOnBeforeCardDestroyed",
   "tier": "Gold",
-  "tooltips": [
-    "Destroy this.",
-    "When this is Destroyed, destroy {?ability.1.targets} enemy items for the fight.",
-    "When you use another Tech, charge this 2 second(s).",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Antimatter Chamber" 2`] = `
 {
   "cardName": "Antimatter Chamber",
+  "error": "Unhandled trigger type: TTriggerOnBeforeCardDestroyed",
   "tier": "Diamond",
-  "tooltips": [
-    "Destroy this.",
-    "When this is Destroyed, destroy {?ability.1.targets} enemy items for the fight.",
-    "When you use another Tech, charge this 2 second(s).",
-  ],
 }
 `;
 
@@ -3830,48 +3822,32 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "CPU Throttling"
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Calcinator" 1`] = `
 {
   "cardName": "Calcinator",
+  "error": "Unhandled trigger type: TTriggerOnCardTransformed",
   "tier": "Bronze",
-  "tooltips": [
-    "Burn 6.",
-    "When you transform a Reagent, this permanently gains +3 Burn.",
-    "At the start of each day, spend 3 Gold to get a Chunk of Lead.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Calcinator" 2`] = `
 {
   "cardName": "Calcinator",
+  "error": "Unhandled trigger type: TTriggerOnCardTransformed",
   "tier": "Silver",
-  "tooltips": [
-    "Burn 6.",
-    "When you transform a Reagent, this permanently gains +5 Burn.",
-    "At the start of each day, spend 3 Gold to get a Chunk of Lead.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Calcinator" 3`] = `
 {
   "cardName": "Calcinator",
+  "error": "Unhandled trigger type: TTriggerOnCardTransformed",
   "tier": "Gold",
-  "tooltips": [
-    "Burn 6.",
-    "When you transform a Reagent, this permanently gains +7 Burn.",
-    "At the start of each day, spend 3 Gold to get a Chunk of Lead.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Calcinator" 4`] = `
 {
   "cardName": "Calcinator",
+  "error": "Unhandled trigger type: TTriggerOnCardTransformed",
   "tier": "Diamond",
-  "tooltips": [
-    "Burn 6.",
-    "When you transform a Reagent, this permanently gains +9 Burn.",
-    "At the start of each day, spend 3 Gold to get a Chunk of Lead.",
-  ],
 }
 `;
 
@@ -5443,36 +5419,24 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Cog" 3`] = `
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Coincure" 1`] = `
 {
   "cardName": "Coincure",
+  "error": "Unhandled trigger type: TTriggerOnBeforeCardDestroyed",
   "tier": "Silver",
-  "tooltips": [
-    "Gain Regen for the fight equal to 1 times this item's value. [4]",
-    "When you win a fight with this in play, increase its value by +3.",
-    "When you lose a fight with this in play, permanently destroy this and gain Gold equal to its Value.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Coincure" 2`] = `
 {
   "cardName": "Coincure",
+  "error": "Unhandled trigger type: TTriggerOnBeforeCardDestroyed",
   "tier": "Gold",
-  "tooltips": [
-    "Gain Regen for the fight equal to 2 times this item's value. [16]",
-    "When you win a fight with this in play, increase its value by +6.",
-    "When you lose a fight with this in play, permanently destroy this and gain Gold equal to its Value.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Coincure" 3`] = `
 {
   "cardName": "Coincure",
+  "error": "Unhandled trigger type: TTriggerOnBeforeCardDestroyed",
   "tier": "Diamond",
-  "tooltips": [
-    "Gain Regen for the fight equal to 3 times this item's value. [48]",
-    "When you win a fight with this in play, increase its value by +9.",
-    "When you lose a fight with this in play, permanently destroy this and gain Gold equal to its Value.",
-  ],
 }
 `;
 
@@ -5590,30 +5554,24 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Combat Core" 3`
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Combat Medic" 1`] = `
 {
   "cardName": "Combat Medic",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Silver",
-  "tooltips": [
-    "When you Heal or gain Regen, an item gains 3% Crit Chance for the fight.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Combat Medic" 2`] = `
 {
   "cardName": "Combat Medic",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Gold",
-  "tooltips": [
-    "When you Heal or gain Regen, an item gains 6% Crit Chance for the fight.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Combat Medic" 3`] = `
 {
   "cardName": "Combat Medic",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Diamond",
-  "tooltips": [
-    "When you Heal or gain Regen, an item gains 9% Crit Chance for the fight.",
-  ],
 }
 `;
 
@@ -10571,44 +10529,32 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Goggles" 4`] = 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Golf Clubs" 1`] = `
 {
   "cardName": "Golf Clubs",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Bronze",
-  "tooltips": [
-    "Deal 50 damage.",
-    "When you Heal or gain Regen, this gains 10 damage for the fight.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Golf Clubs" 2`] = `
 {
   "cardName": "Golf Clubs",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Silver",
-  "tooltips": [
-    "Deal 50 damage.",
-    "When you Heal or gain Regen, this gains 20 damage for the fight.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Golf Clubs" 3`] = `
 {
   "cardName": "Golf Clubs",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Gold",
-  "tooltips": [
-    "Deal 50 damage.",
-    "When you Heal or gain Regen, this gains 30 damage for the fight.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Golf Clubs" 4`] = `
 {
   "cardName": "Golf Clubs",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Diamond",
-  "tooltips": [
-    "Deal 50 damage.",
-    "When you Heal or gain Regen, this gains 40 damage for the fight.",
-  ],
 }
 `;
 
@@ -11809,33 +11755,24 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Herbal Suppleme
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Hogwash" 1`] = `
 {
   "cardName": "Hogwash",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Silver",
-  "tooltips": [
-    "Heal equal to 10% of your Max Health.",
-    "When you Heal or gain Regen, gain 50 Max Health for the fight.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Hogwash" 2`] = `
 {
   "cardName": "Hogwash",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Gold",
-  "tooltips": [
-    "Heal equal to 10% of your Max Health.",
-    "When you Heal or gain Regen, gain 75 Max Health for the fight.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Hogwash" 3`] = `
 {
   "cardName": "Hogwash",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Diamond",
-  "tooltips": [
-    "Heal equal to 10% of your Max Health.",
-    "When you Heal or gain Regen, gain 100 Max Health for the fight.",
-  ],
 }
 `;
 
@@ -13162,33 +13099,24 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Infernal Greats
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Infinite Potion" 1`] = `
 {
   "cardName": "Infinite Potion",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Silver",
-  "tooltips": [
-    "Gain 1 Regen for the fight.",
-    "Reload this.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Infinite Potion" 2`] = `
 {
   "cardName": "Infinite Potion",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Gold",
-  "tooltips": [
-    "Gain 2 Regen for the fight.",
-    "Reload this.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Infinite Potion" 3`] = `
 {
   "cardName": "Infinite Potion",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Diamond",
-  "tooltips": [
-    "Gain 3 Regen for the fight.",
-    "Reload this.",
-  ],
 }
 `;
 
@@ -14141,44 +14069,32 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Knife Tricks" 1
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Kukri" 1`] = `
 {
   "cardName": "Kukri",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Bronze",
-  "tooltips": [
-    "Deal 15 damage.",
-    "When you heal or gain Regen, this gains +5 damage for the fight.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Kukri" 2`] = `
 {
   "cardName": "Kukri",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Silver",
-  "tooltips": [
-    "Deal 15 damage.",
-    "When you heal or gain Regen, this gains +10 damage for the fight.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Kukri" 3`] = `
 {
   "cardName": "Kukri",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Gold",
-  "tooltips": [
-    "Deal 15 damage.",
-    "When you heal or gain Regen, this gains +15 damage for the fight.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Kukri" 4`] = `
 {
   "cardName": "Kukri",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Diamond",
-  "tooltips": [
-    "Deal 15 damage.",
-    "When you heal or gain Regen, this gains +20 damage for the fight.",
-  ],
 }
 `;
 
@@ -16854,48 +16770,32 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Neural Toxin" 3
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Nightshade" 1`] = `
 {
   "cardName": "Nightshade",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Bronze",
-  "tooltips": [
-    "Poison 6.",
-    "When you Heal or gain Regen, this gains +2 Poison for the fight.",
-    "When this is transformed, enchant it with Toxic if able.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Nightshade" 2`] = `
 {
   "cardName": "Nightshade",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Silver",
-  "tooltips": [
-    "Poison 6.",
-    "When you Heal or gain Regen, this gains +4 Poison for the fight.",
-    "When this is transformed, enchant it with Toxic if able.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Nightshade" 3`] = `
 {
   "cardName": "Nightshade",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Gold",
-  "tooltips": [
-    "Poison 6.",
-    "When you Heal or gain Regen, this gains +6 Poison for the fight.",
-    "When this is transformed, enchant it with Toxic if able.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Nightshade" 4`] = `
 {
   "cardName": "Nightshade",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Diamond",
-  "tooltips": [
-    "Poison 6.",
-    "When you Heal or gain Regen, this gains +8 Poison for the fight.",
-    "When this is transformed, enchant it with Toxic if able.",
-  ],
 }
 `;
 
@@ -17069,33 +16969,24 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Octopus" 1`] = 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Oil Lantern" 1`] = `
 {
   "cardName": "Oil Lantern",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Silver",
-  "tooltips": [
-    "Burn 10.",
-    "When you gain Regen, charge this 2 second(s).",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Oil Lantern" 2`] = `
 {
   "cardName": "Oil Lantern",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Gold",
-  "tooltips": [
-    "Burn 10.",
-    "When you gain Regen, charge this 2 second(s).",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Oil Lantern" 3`] = `
 {
   "cardName": "Oil Lantern",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedRegen",
   "tier": "Diamond",
-  "tooltips": [
-    "Burn 10.",
-    "When you gain Regen, charge this 2 second(s).",
-  ],
 }
 `;
 
@@ -17824,44 +17715,32 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Peaceful Eye" 4
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Peacewrought" 1`] = `
 {
   "cardName": "Peacewrought",
+  "error": "Unhandled trigger type: TTriggerOnBeforeCardDestroyed",
   "tier": "Bronze",
-  "tooltips": [
-    "Gain 2 Regen for the fight.",
-    "When you visit a Merchant, permanently destroy the item to the left of this to increase this item's Regen by its Value, then get a Chunk of Lead.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Peacewrought" 2`] = `
 {
   "cardName": "Peacewrought",
+  "error": "Unhandled trigger type: TTriggerOnBeforeCardDestroyed",
   "tier": "Silver",
-  "tooltips": [
-    "Gain 2 Regen for the fight.",
-    "When you visit a Merchant, permanently destroy the item to the left of this to increase this item's Regen by its Value, then get a Chunk of Lead.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Peacewrought" 3`] = `
 {
   "cardName": "Peacewrought",
+  "error": "Unhandled trigger type: TTriggerOnBeforeCardDestroyed",
   "tier": "Gold",
-  "tooltips": [
-    "Gain 2 Regen for the fight.",
-    "When you visit a Merchant, permanently destroy the item to the left of this to increase this item's Regen by its Value, then get a Chunk of Lead.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Peacewrought" 4`] = `
 {
   "cardName": "Peacewrought",
+  "error": "Unhandled trigger type: TTriggerOnBeforeCardDestroyed",
   "tier": "Diamond",
-  "tooltips": [
-    "Gain 2 Regen for the fight.",
-    "When you visit a Merchant, permanently destroy the item to the left of this to increase this item's Regen by its Value, then get a Chunk of Lead.",
-  ],
 }
 `;
 
@@ -18142,48 +18021,32 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Petrifying Gaze
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Philosopher's Stone" 1`] = `
 {
   "cardName": "Philosopher's Stone",
+  "error": "Unhandled trigger type: TTriggerOnCardTransformed",
   "tier": "Bronze",
-  "tooltips": [
-    "Gain 1 Regen for the fight.",
-    "When you transform a Reagent, this permanently gains +2 Regen.",
-    "When you buy this, get a Catalyst.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Philosopher's Stone" 2`] = `
 {
   "cardName": "Philosopher's Stone",
+  "error": "Unhandled trigger type: TTriggerOnCardTransformed",
   "tier": "Silver",
-  "tooltips": [
-    "Gain 1 Regen for the fight.",
-    "When you transform a Reagent, this permanently gains +3 Regen.",
-    "When you buy this, get a Catalyst.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Philosopher's Stone" 3`] = `
 {
   "cardName": "Philosopher's Stone",
+  "error": "Unhandled trigger type: TTriggerOnCardTransformed",
   "tier": "Gold",
-  "tooltips": [
-    "Gain 1 Regen for the fight.",
-    "When you transform a Reagent, this permanently gains +4 Regen.",
-    "When you buy this, get a Catalyst.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Philosopher's Stone" 4`] = `
 {
   "cardName": "Philosopher's Stone",
+  "error": "Unhandled trigger type: TTriggerOnCardTransformed",
   "tier": "Diamond",
-  "tooltips": [
-    "Gain 1 Regen for the fight.",
-    "When you transform a Reagent, this permanently gains +5 Regen.",
-    "When you buy this, get a Catalyst.",
-  ],
 }
 `;
 
@@ -20053,30 +19916,24 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Rear Shielding"
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Recycling Bin" 1`] = `
 {
   "cardName": "Recycling Bin",
+  "error": "Unhandled trigger type: TTriggerOnBeforeCardTransformed",
   "tier": "Silver",
-  "tooltips": [
-    "When you use a Potion, transform it into a Potion for the fight and gain 2 Regen for the fight.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Recycling Bin" 2`] = `
 {
   "cardName": "Recycling Bin",
+  "error": "Unhandled trigger type: TTriggerOnBeforeCardTransformed",
   "tier": "Gold",
-  "tooltips": [
-    "When you use a Potion, transform it into a Potion for the fight and gain 3 Regen for the fight.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Recycling Bin" 3`] = `
 {
   "cardName": "Recycling Bin",
+  "error": "Unhandled trigger type: TTriggerOnBeforeCardTransformed",
   "tier": "Diamond",
-  "tooltips": [
-    "When you use a Potion, transform it into a Potion for the fight and gain 4 Regen for the fight.",
-  ],
 }
 `;
 
@@ -20694,48 +20551,32 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Retool" 1`] = `
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Retort" 1`] = `
 {
   "cardName": "Retort",
+  "error": "Unhandled trigger type: TTriggerOnCardTransformed",
   "tier": "Bronze",
-  "tooltips": [
-    "Poison 6.",
-    "When you transform a Reagent, this permanently gains +3 Poison.",
-    "At the start of each day, spend 3 Gold to get a Chunk of Lead.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Retort" 2`] = `
 {
   "cardName": "Retort",
+  "error": "Unhandled trigger type: TTriggerOnCardTransformed",
   "tier": "Silver",
-  "tooltips": [
-    "Poison 6.",
-    "When you transform a Reagent, this permanently gains +5 Poison.",
-    "At the start of each day, spend 3 Gold to get a Chunk of Lead.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Retort" 3`] = `
 {
   "cardName": "Retort",
+  "error": "Unhandled trigger type: TTriggerOnCardTransformed",
   "tier": "Gold",
-  "tooltips": [
-    "Poison 6.",
-    "When you transform a Reagent, this permanently gains +7 Poison.",
-    "At the start of each day, spend 3 Gold to get a Chunk of Lead.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Retort" 4`] = `
 {
   "cardName": "Retort",
+  "error": "Unhandled trigger type: TTriggerOnCardTransformed",
   "tier": "Diamond",
-  "tooltips": [
-    "Poison 6.",
-    "When you transform a Reagent, this permanently gains +9 Poison.",
-    "At the start of each day, spend 3 Gold to get a Chunk of Lead.",
-  ],
 }
 `;
 
@@ -21883,36 +21724,24 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Sat-Comm" 4`] =
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Satchel" 1`] = `
 {
   "cardName": "Satchel",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedReload",
   "tier": "Silver",
-  "tooltips": [
-    "Reload 2 items.",
-    "When you reload, gain 2 Regen for the fight.",
-    "When you buy a Potion, increase this item's Regen by +2.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Satchel" 2`] = `
 {
   "cardName": "Satchel",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedReload",
   "tier": "Gold",
-  "tooltips": [
-    "Reload 2 items.",
-    "When you reload, gain 2 Regen for the fight.",
-    "When you buy a Potion, increase this item's Regen by +4.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Satchel" 3`] = `
 {
   "cardName": "Satchel",
+  "error": "Unhandled trigger type: TTriggerOnCardPerformedReload",
   "tier": "Diamond",
-  "tooltips": [
-    "Reload 2 items.",
-    "When you reload, gain 2 Regen for the fight.",
-    "When you buy a Potion, increase this item's Regen by +6.",
-  ],
 }
 `;
 
@@ -25539,30 +25368,24 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "The Right Tool"
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "The Tome of Yyahan" 1`] = `
 {
   "cardName": "The Tome of Yyahan",
+  "error": "Unhandled trigger type: TTriggerOnCardTransformed",
   "tier": "Silver",
-  "tooltips": [
-    "When you transform a Reagent, permanently gain 5 Regen.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "The Tome of Yyahan" 2`] = `
 {
   "cardName": "The Tome of Yyahan",
+  "error": "Unhandled trigger type: TTriggerOnCardTransformed",
   "tier": "Gold",
-  "tooltips": [
-    "When you transform a Reagent, permanently gain 10 Regen.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "The Tome of Yyahan" 3`] = `
 {
   "cardName": "The Tome of Yyahan",
+  "error": "Unhandled trigger type: TTriggerOnCardTransformed",
   "tier": "Diamond",
-  "tooltips": [
-    "When you transform a Reagent, permanently gain 15 Regen.",
-  ],
 }
 `;
 
@@ -27120,33 +26943,24 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Venomous Vitali
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vial Launcher" 1`] = `
 {
   "cardName": "Vial Launcher",
+  "error": "Unhandled trigger type: TTriggerOnCardTransformed",
   "tier": "Silver",
-  "tooltips": [
-    "When you use a potion, deal 10 damage.",
-    "When you Reload or transform a potion, this gains +10 damage for the fight.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vial Launcher" 2`] = `
 {
   "cardName": "Vial Launcher",
+  "error": "Unhandled trigger type: TTriggerOnCardTransformed",
   "tier": "Gold",
-  "tooltips": [
-    "When you use a potion, deal 15 damage.",
-    "When you Reload or transform a potion, this gains +15 damage for the fight.",
-  ],
 }
 `;
 
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Vial Launcher" 3`] = `
 {
   "cardName": "Vial Launcher",
+  "error": "Unhandled trigger type: TTriggerOnCardTransformed",
   "tier": "Diamond",
-  "tooltips": [
-    "When you use a potion, deal 20 damage.",
-    "When you Reload or transform a potion, this gains +20 damage for the fight.",
-  ],
 }
 `;
 

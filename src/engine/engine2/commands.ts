@@ -810,9 +810,56 @@ export class CommandFactory {
 
         return commands;
       }
+      case ActionType.TActionPlayerModifyAttribute: {
+        if (!action.Target) {
+          throw new Error(
+            "Target is required for player modify attribute action",
+          );
+        }
+
+        if (!action.Value) {
+          throw new Error(
+            "Value is required for player modify attribute action",
+          );
+        }
+
+        if (!action.AttributeType) {
+          throw new Error(
+            "AttributeType is required for player modify attribute action",
+          );
+        }
+
+        const targetPlayers = getTargetPlayers(
+          gameState,
+          action.Target,
+          sourceCardID,
+          event,
+        );
+
+        const actionValue = getActionValue(
+          gameState,
+          action.Value,
+          sourceCardID,
+          event,
+        );
+
+        for (const targetPlayer of targetPlayers) {
+          commands.addCommand(
+            new ModifyPlayerAttributeCommand(
+              targetPlayer,
+              action.AttributeType as PlayerAttributeNumber,
+              "set",
+              actionValue,
+            ),
+          );
+        }
+
+        return commands;
+      }
 
       default:
         console.error(`Unhandled action type: ${action.$type}`);
+        throw new Error(`Unhandled action type: ${action.$type}`);
         return null;
     }
   }
@@ -958,15 +1005,17 @@ export class ModifyCardAttributeCommand implements Command {
   }
 }
 
+export type PlayerAttributeNumber = keyof {
+  [K in keyof Player as Player[K] extends number ? K : never]: Player[K];
+};
+
 /**
  * Command to modify a player attribute
  */
 export class ModifyPlayerAttributeCommand implements Command {
   constructor(
     private playerIdx: number,
-    private attribute: keyof {
-      [K in keyof Player as Player[K] extends number ? K : never]: Player[K];
-    }, // ensures player attribute being changed is a number
+    private attribute: PlayerAttributeNumber,
     private operation: "set" | "add" | "subtract" | "multiply" = "set",
     private value: number,
   ) {}

@@ -206,7 +206,7 @@ export class PlayerOverhealedEvent extends GameEvent {
   constructor(
     public readonly playerIdx: number,
     public readonly amount: number,
-    public readonly sourceCardID: BoardCardID | null,
+    public readonly sourceCardID: BoardCardID,
   ) {
     super();
   }
@@ -271,12 +271,12 @@ export class PlayerAttributeChangeHandledEvent extends GameEvent {
 
 export class PlayerDiedEvent extends GameEvent {
   readonly type = "player:died";
-  constructor(public readonly playerID: number) {
+  constructor(public readonly playerIdx: number) {
     super();
   }
 
   getDescription(): string {
-    return `${playerName(this.playerID)} died`;
+    return `${playerName(this.playerIdx)} died`;
   }
 }
 
@@ -387,6 +387,32 @@ export class CardPerformedSlowEvent extends GameEvent {
 
   getDescription(): string {
     return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} slowed ${playerName(this.slowedCardID.playerIdx)}'s card ${this.slowedCardID.cardIdx}`;
+  }
+}
+
+export class CardPerformedRegenEvent extends GameEvent {
+  readonly type = "card:performedRegen";
+  constructor(
+    public readonly sourceCardID: BoardCardID,
+    public readonly targetPlayerIdx: number,
+    public readonly amount: number,
+  ) {
+    super();
+  }
+
+  getDescription(): string {
+    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} gave ${playerName(this.targetPlayerIdx)} ${this.amount} health regeneration`;
+  }
+}
+
+export class CardReloadedEvent extends GameEvent {
+  readonly type = "card:reloaded";
+  constructor(public readonly sourceCardID: BoardCardID) {
+    super();
+  }
+
+  getDescription(): string {
+    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} reloaded`;
   }
 }
 
@@ -645,6 +671,8 @@ const triggerToEventMap: Record<
   TTriggerOnCardPerformedHeal: CardPerformedHealEvent,
   TTriggerOnCardPerformedOverHeal: PlayerOverhealedEvent,
   TTriggerOnCardPerformedShield: CardPerformedShieldEvent,
+  TTriggerOnCardReloaded: CardReloadedEvent,
+  TTriggerOnCardPerformedRegen: CardPerformedRegenEvent,
 
   // Player events
   TTriggerOnPlayerDied: PlayerDiedEvent,
@@ -685,6 +713,7 @@ function triggerToEvent(trigger: {
 
   if (!eventClass) {
     console.warn(`Unhandled trigger type: ${triggerType}`);
+    throw new Error(`Unhandled trigger type: ${triggerType}`);
     return NotImplementedEvent;
   }
 
@@ -911,7 +940,7 @@ function createTriggerCheck(
             ability.Trigger.Subject,
             boardCardID,
           );
-          return subjects.some((subject) => subject === e.playerID);
+          return subjects.some((subject) => subject === e.playerIdx);
         }
         return false;
       }
@@ -931,8 +960,52 @@ function createTriggerCheck(
             boardCardID,
             e,
           );
-          return subjects.some((subject) => subject === e.sourceCardID);
+          return subjects.some((subject) =>
+            boardCardIdIsEqual(subject, e.sourceCardID),
+          );
         }
+      }
+      case TriggerType.TTriggerOnCardPerformedRegen: {
+        if (e instanceof CardPerformedRegenEvent) {
+          if (!ability.Trigger.Subject) {
+            console.warn(
+              `Ability ${ability.InternalName} has no subject, skipping trigger check`,
+            );
+            return false;
+          }
+          // Check if subjects include source card
+          const subjects = getTargetCards(
+            gs,
+            ability.Trigger.Subject,
+            boardCardID,
+            e,
+          );
+          return subjects.some((subject) =>
+            boardCardIdIsEqual(subject, e.sourceCardID),
+          );
+        }
+      }
+
+      case TriggerType.TTriggerOnCardReloaded: {
+        if (e instanceof CardReloadedEvent) {
+          if (!ability.Trigger.Subject) {
+            console.warn(
+              `Ability ${ability.InternalName} has no subject, skipping trigger check`,
+            );
+            return false;
+          }
+          // Check if subjects include source card
+          const subjects = getTargetCards(
+            gs,
+            ability.Trigger.Subject,
+            boardCardID,
+            e,
+          );
+          return subjects.some((subject) =>
+            boardCardIdIsEqual(subject, e.sourceCardID),
+          );
+        }
+        return false;
       }
       default: {
         console.warn(
