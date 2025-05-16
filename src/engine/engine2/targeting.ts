@@ -412,6 +412,18 @@ export function getTargetPlayers(
       }
       break;
 
+    case "TTargetPlayerAbsolute": {
+      switch (targetConfig.TargetMode) {
+        case "Player":
+          return [PLAYER_PLAYER_IDX];
+        default:
+          throw new Error(
+            `Not implemented TTargetPlayerAbsolute player targeting TargetMode: ${targetConfig.TargetMode}`,
+          );
+      }
+      break;
+    }
+
     default:
       throw new Error(`Unhandled player targeting type: ${targetConfig.$type}`);
   }

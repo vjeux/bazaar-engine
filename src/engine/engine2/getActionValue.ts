@@ -141,6 +141,7 @@ export function getActionValue(
       gameState,
       value.Modifier.Value,
       sourceCardID,
+      event,
     );
     if (value.Modifier.ModifyMode === "Multiply") {
       amount *= modifierValue;
