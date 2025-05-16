@@ -1,14 +1,9 @@
-import {
-  Engine2,
-  getCardAttribute as getCardAttribute2,
-  BoardCardID,
-} from "./engine2";
+import { Engine2 } from "./engine2";
 import { GameState as Engine2GameState } from "./engine2";
 import { getInitialGameState } from "../GameState";
 import { MonsterConfig, PlayerConfig } from "../GameState";
-import { Cards, AttributeType } from "@/types/cardTypes";
+import { Cards } from "@/types/cardTypes";
 import { EncounterDays } from "@/types/encounterTypes";
-import { getTooltips as originalGetTooltips } from "../Engine";
 
 /**
  * Create a game state compatible with Engine2 from the parameters used by original getInitialGameState
