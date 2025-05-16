@@ -16,6 +16,8 @@ import {
 import { ProcessTickCommand } from "./commands";
 import { RandomGenerator } from "pure-rand/types/RandomGenerator";
 import { Hero, Tier } from "@/types/shared";
+import { getTargetCards } from "./targeting";
+import { getActionValue } from "./getActionValue";
 
 /**
  * Represents a unique identifier for a board card
@@ -200,13 +202,148 @@ export class Engine2 {
 }
 
 /**
- * Get attribute value from a card
+ * Get attribute value from a card with all aura modifications applied
  */
 export function getCardAttribute(
   gameState: GameState,
   cardID: BoardCardID,
+  attribute: "tags",
+): string[];
+export function getCardAttribute(
+  gameState: GameState,
+  cardID: BoardCardID,
   attribute: AttributeType,
-): number {
+): number;
+export function getCardAttribute(
+  gameState: GameState,
+  cardID: BoardCardID,
+  attribute: AttributeType | "tags",
+): number | string[] {
   const card = gameState.players[cardID.playerIdx].board[cardID.cardIdx];
-  return (card[attribute] as number) || 0;
+
+  // Special handling for tags
+  if (attribute === "tags") {
+    const tags: Set<string> = new Set(card.tags || []);
+
+    // Apply auras that add tags
+    gameState.players.forEach((player, playerIdx) => {
+      player.board.forEach((boardCard, cardIdx) => {
+        // Skip if card has no auras
+        if (!boardCard.Auras || Object.keys(boardCard.Auras).length === 0) {
+          return;
+        }
+
+        // Check each aura on the card
+        Object.values(boardCard.Auras).forEach((aura) => {
+          // Skip if not a tag-adding aura
+          if (aura.Action.$type !== "TAuraActionCardAddTagsBySource") {
+            return;
+          }
+
+          const auraSourceCardID: BoardCardID = { playerIdx, cardIdx };
+
+          // Check if the aura targets our card
+          const targetCards = getTargetCards(
+            gameState,
+            aura.Action.Target,
+            auraSourceCardID,
+            {} as GameEvents[keyof GameEvents],
+          );
+
+          // Check if our card is among the targets
+          const isTargeted = targetCards.some(
+            (target: BoardCardID) =>
+              target.playerIdx === cardID.playerIdx &&
+              target.cardIdx === cardID.cardIdx,
+          );
+
+          if (isTargeted) {
+            // Get tags from source cards
+            const sourceCards = getTargetCards(
+              gameState,
+              aura.Action.Source,
+              auraSourceCardID,
+              {} as GameEvents[keyof GameEvents],
+            );
+
+            // Add tags from each source card
+            sourceCards.forEach((sourceCard) => {
+              const sourceTags =
+                gameState.players[sourceCard.playerIdx].board[
+                  sourceCard.cardIdx
+                ].tags || [];
+              sourceTags.forEach((tag) => tags.add(tag));
+            });
+          }
+        });
+      });
+    });
+
+    return Array.from(tags);
+  }
+
+  // Handle numeric attributes with aura modifications
+  let value = (card[attribute] as number) || 0;
+
+  // Apply aura effects
+  gameState.players.forEach((player, playerIdx) => {
+    player.board.forEach((boardCard, cardIdx) => {
+      // Skip if card has no auras
+      if (!boardCard.Auras || Object.keys(boardCard.Auras).length === 0) {
+        return;
+      }
+
+      // Check each aura on the card
+      Object.values(boardCard.Auras).forEach((aura) => {
+        // Skip if not attribute modification aura
+        if (
+          aura.Action.$type !== "TAuraActionCardModifyAttribute" ||
+          aura.Action.AttributeType !== attribute
+        ) {
+          return;
+        }
+
+        // Check if the aura targets our card
+        const auraSourceCardID: BoardCardID = { playerIdx, cardIdx };
+        const targetCards = getTargetCards(
+          gameState,
+          aura.Action.Target,
+          auraSourceCardID,
+          {} as GameEvents[keyof GameEvents],
+        );
+
+        // Check if our card is among the targets
+        const isTargeted = targetCards.some(
+          (target: BoardCardID) =>
+            target.playerIdx === cardID.playerIdx &&
+            target.cardIdx === cardID.cardIdx,
+        );
+
+        if (isTargeted) {
+          // Get the value to apply from the aura
+          const actionValue = getActionValue(
+            gameState,
+            aura.Action.Value,
+            auraSourceCardID,
+            {} as GameEvents[keyof GameEvents],
+          );
+
+          // Apply the modification based on operation type
+          switch (aura.Action.Operation) {
+            case "Add":
+              value += actionValue;
+              break;
+            case "Multiply":
+              value *= actionValue;
+              break;
+            case "Subtract":
+              value -= actionValue;
+              break;
+          }
+        }
+      });
+    });
+  });
+
+  return value;
 }
