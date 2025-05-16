@@ -2724,6 +2724,7 @@ export function getTooltips(
   boardCardID: number,
 ): string[] {
   const boardCard = gameState.players[playerID].board[boardCardID];
+  const card = boardCard.card; // workaround to get abilitias and auras as they might not exist on the boardCard directly, if they are not a part of the tier, and the tooltips reference a different tiers values.
   return boardCard.TooltipIds.map((tooltipId: number) => {
     const tooltipObject = boardCard.Localization.Tooltips[tooltipId];
     if (!tooltipObject) {
@@ -2732,8 +2733,7 @@ export function getTooltips(
     const tooltip: string = tooltipObject.Content.Text.replace(
       /\{([a-z]+)\.([a-z0-9]+)\.targets\}/g,
       (_: string, type: string, id: string | number): string => {
-        const action =
-          boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
+        const action = card[type === "aura" ? "Auras" : "Abilities"][id].Action;
         if (action.$type === "TActionCardHaste") {
           return String(
             getCardAttribute(
@@ -2787,7 +2787,7 @@ export function getTooltips(
         /\{([a-z]+)\.([a-z0-9]+)\.mod\}/g,
         (_: string, type: string, id: string | number): string => {
           const action =
-            boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
+            card[type === "aura" ? "Auras" : "Abilities"][id].Action;
           if (!action.Value || !action.Value.Modifier) {
             return "";
           }
@@ -2808,7 +2808,7 @@ export function getTooltips(
         (_: string, type: string, id: string | number): string => {
           // Ensure a string is always returned
           const action =
-            boardCard[type === "aura" ? "Auras" : "Abilities"][id].Action;
+            card[type === "aura" ? "Auras" : "Abilities"][id].Action;
 
           if (action.Value) {
             const actionValue = getActionValue(
