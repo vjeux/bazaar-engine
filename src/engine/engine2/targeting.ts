@@ -13,6 +13,7 @@ import {
 import { getActionValue } from "./getActionValue";
 import { HiddenTag, Tag } from "../../types/shared";
 import { PLAYER_PLAYER_IDX } from "@/lib/constants";
+import { getCardAttribute } from "./engine2";
 
 export type TargetConfig = Source | Target | Subject;
 
@@ -475,8 +476,11 @@ export function testCardConditions(
         throw new Error("Attribute must exist for card conditional attribute");
       }
 
-      const targetBoardCardAtrributeValue =
-        targetBoardCard[conditions.Attribute]; // TODO: use the getcardattribute func to account for auras
+      const targetBoardCardAtrributeValue = getCardAttribute(
+        gameState,
+        targetCard,
+        conditions.Attribute,
+      );
 
       if (!conditions.ComparisonValue) {
         throw new Error(
@@ -560,7 +564,9 @@ export function testCardConditions(
       const isHiddenTag = conditions.$type === "TCardConditionalHiddenTag";
       const tags = isHiddenTag
         ? targetBoardCard.card.HiddenTags
-        : targetBoardCard.card.Tags;
+        : (getCardAttribute(gameState, targetCard, "tags") as
+            | string[]
+            | undefined) || targetBoardCard.card.Tags;
 
       if (!conditions.Tags) {
         throw new Error("Tags must exist for card conditional tag");
