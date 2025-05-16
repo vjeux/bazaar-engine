@@ -104,9 +104,7 @@ describe("Encounters should not throw", () => {
       ]);
 
       // This should not throw
-      expect(() => {
-        run(gameState);
-      }).not.toThrow();
+      run(gameState);
     });
   });
 });

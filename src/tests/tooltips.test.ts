@@ -46,9 +46,7 @@ describe("Tooltips should not throw", () => {
         ]);
 
         // This should not throw
-        expect(() => {
-          getTooltips(gameState, 0, 0);
-        }).not.toThrow();
+        getTooltips(gameState, 0, 0);
       });
     });
   });

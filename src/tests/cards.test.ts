@@ -60,9 +60,7 @@ describe("Single card battle simulations (Items and Skills)", () => {
           playerEntityConfig,
         ]);
 
-        expect(() => {
-          run(gameState);
-        }).not.toThrow();
+        run(gameState);
       });
     } else if (validSkillIds.some((id) => id === cardId)) {
       it(`Battle with skill "${cardTitle}" (Tier: ${currentCard.StartingTier}) should not throw`, () => {
@@ -88,9 +86,7 @@ describe("Single card battle simulations (Items and Skills)", () => {
           playerEntityConfig,
         ]);
 
-        expect(() => {
-          run(gameState);
-        }).not.toThrow();
+        run(gameState);
       });
     }
   });
