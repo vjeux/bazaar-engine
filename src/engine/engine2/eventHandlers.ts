@@ -119,7 +119,7 @@ export class CardItemUsedEvent extends GameEvent {
 export class CardAttributeChangedEvent extends GameEvent {
   readonly type = "card:attributeChanged";
   constructor(
-    public readonly boardCardID: BoardCardID,
+    public readonly modifiedBoardCardID: BoardCardID,
     public readonly attribute: AttributeType | "tick",
     public readonly oldValue: number,
     public readonly newValue: number,
@@ -128,7 +128,7 @@ export class CardAttributeChangedEvent extends GameEvent {
   }
 
   getDescription(): string {
-    return `${playerName(this.boardCardID.playerIdx)}'s card ${this.boardCardID.cardIdx} ${this.attribute} changed from ${this.oldValue} to ${this.newValue}`;
+    return `${playerName(this.modifiedBoardCardID.playerIdx)}'s card ${this.modifiedBoardCardID.cardIdx} ${this.attribute} changed from ${this.oldValue} to ${this.newValue}`;
   }
 }
 
@@ -731,6 +731,27 @@ function createTriggerCheck(
           );
         }
         return false;
+      }
+      case "TTriggerOnCardAttributeChanged": {
+        if (e instanceof CardAttributeChangedEvent) {
+          if (!ability.Trigger.Subject) {
+            console.warn(
+              `Ability ${ability.InternalName} has no subject, skipping trigger check`,
+            );
+            return false;
+          }
+          // Make sure attribute is same, and change goes same way as ChangeType
+          if (
+            e.attribute === ability.Trigger.AttributeChanged &&
+            ((ability.Trigger.ChangeType === "Gain" &&
+              e.newValue > e.oldValue) ||
+              (ability.Trigger.ChangeType === "Loss" &&
+                e.newValue < e.oldValue))
+          ) {
+            return true;
+          }
+          return false;
+        }
       }
       default: {
         console.warn(
