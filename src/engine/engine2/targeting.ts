@@ -336,7 +336,6 @@ export function getTargetPlayers(
   gameState: GameState,
   targetConfig: TargetConfig,
   sourceCard: BoardCardID,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   event?: GameEvent,
 ): number[] {
   let results: number[] = [];

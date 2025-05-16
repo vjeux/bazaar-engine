@@ -13,6 +13,16 @@ export abstract class GameEvent {
   abstract getDescription(): string;
 }
 
+// Priority order mapping for sorting
+const priorityOrder = {
+  [Priority.Immediate]: 0,
+  [Priority.Highest]: 1,
+  [Priority.High]: 2,
+  [Priority.Medium]: 3,
+  [Priority.Low]: 4,
+  [Priority.Lowest]: 5,
+};
+
 /**
  * Game Events
  */
@@ -288,51 +298,28 @@ export class PlayerBurnAppliedEvent extends GameEvent {
   }
 }
 
-// Type mapping for event handlers
-export type EventMap = {
-  "game:tick": GameTickEvent;
-  "game:fightStarted": GameFightStartedEvent;
-  "game:ended": GameEndedEvent;
-  "card:fired": CardFiredEvent;
-  "card:itemused": CardItemUsedEvent;
-  "card:attributeChanged": CardAttributeChangedEvent;
-  "card:added": CardAddedEvent;
-  "card:removed": CardRemovedEvent;
-  "player:damaged": PlayerDamagedEvent;
-  "player:healed": PlayerHealedEvent;
-  "player:overhealed": PlayerOverhealedEvent;
-  "player:lifestealheal": PlayerLifestealHealEvent;
-  "player:attributeChanged": PlayerAttributeChangedEvent;
-  "player:attributeChangeHandled": PlayerAttributeChangeHandledEvent;
-  "player:died": PlayerDiedEvent;
-  "player:shieldApplied": PlayerShieldAppliedEvent;
-  "player:poisonApplied": PlayerPoisonAppliedEvent;
-  "player:burnApplied": PlayerBurnAppliedEvent;
-};
-
-// Priority order mapping for sorting
-const priorityOrder = {
-  [Priority.Immediate]: 0,
-  [Priority.Highest]: 1,
-  [Priority.High]: 2,
-  [Priority.Medium]: 3,
-  [Priority.Low]: 4,
-  [Priority.Lowest]: 5,
-};
-
 /**
  * Type-safe EventBus for game events
  */
 
-export type EventHandler = (gameState: GameState, event: GameEvent) => void;
+export type EventHandler<T extends GameEvent = GameEvent> = (
+  gameState: GameState,
+  event: T,
+) => void;
 
-// Type for the test function that determines if an event should be handled
-export type EventTester = (gameState: GameState, event: GameEvent) => boolean;
+export type EventTester<T extends GameEvent = GameEvent> = (
+  gameState: GameState,
+  event: T,
+) => boolean;
 
-// Event listener with priority information and test function
-interface PrioritizedEventHandler {
-  handler: EventHandler;
-  tester: EventTester | null;
+// Type that represents any GameEvent constructor
+export type GameEventConstructor<T extends GameEvent = GameEvent> = {
+  new (...args: never[]): T;
+};
+
+interface PrioritizedEventHandler<T extends GameEvent = GameEvent> {
+  handler: EventHandler<T>;
+  tester: EventTester<T> | null;
   priority: Priority;
 }
 
@@ -344,53 +331,62 @@ export interface EventLogEntry {
 }
 
 export class EventBus {
-  private listeners: {
-    [eventName: string]: Array<PrioritizedEventHandler>;
-  } = {};
+  // Store listeners by event class constructor
+  private listeners: Map<
+    GameEventConstructor,
+    Array<PrioritizedEventHandler<GameEvent>>
+  > = new Map();
   private gameState: GameState;
   private unifiedLog: Array<LogEntry> = [];
 
   constructor(gameState: GameState) {
     this.gameState = gameState;
-    this.listeners = {};
+    this.listeners = new Map();
     this.unifiedLog = [];
   }
 
   /**
    * Register a listener for a specific event with priority and test function
    */
-  on(
-    eventName: string,
-    callback: EventHandler,
+  on<T extends GameEvent>(
+    eventClass: GameEventConstructor<T>,
+    callback: EventHandler<T>,
     priority: Priority = Priority.Medium,
-    tester: EventTester | null = null,
+    tester: EventTester<T> | null = null,
   ): void {
-    if (!this.listeners[eventName]) {
-      this.listeners[eventName] = [];
+    if (!this.listeners.has(eventClass)) {
+      this.listeners.set(eventClass, []);
     }
 
     // Create prioritized event handler
-    const prioritizedHandler: PrioritizedEventHandler = {
+    const prioritizedHandler: PrioritizedEventHandler<T> = {
       handler: callback,
       tester,
       priority,
     };
 
     // Add to listeners array
-    this.listeners[eventName]?.push(prioritizedHandler);
+    const eventListeners = this.listeners.get(eventClass);
+    if (eventListeners) {
+      eventListeners.push(
+        prioritizedHandler as PrioritizedEventHandler<GameEvent>,
+      );
 
-    // Sort the listeners by priority (lower priority value = higher precedence)
-    this.listeners[eventName]?.sort(
-      (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority],
-    );
+      // Sort the listeners by priority (lower priority value = higher precedence)
+      eventListeners.sort(
+        (a, b) => priorityOrder[a.priority] - priorityOrder[b.priority],
+      );
+    }
   }
 
   /**
-   * Emit an event
+   * Emit an event instance
    */
-  emit(event: GameEvent): void {
-    const eventName = event.type as keyof EventMap;
-    const eventListeners = this.listeners[eventName];
+  emit<T extends GameEvent>(event: T): void {
+    // Find the matching constructor for this event instance
+    const eventClass = Object.getPrototypeOf(event)
+      .constructor as GameEventConstructor<T>;
+    const eventListeners = this.listeners.get(eventClass);
 
     // Get the step from the gameState
     const step = this.gameState.step;
@@ -398,7 +394,7 @@ export class EventBus {
     // Add to unified log
     this.unifiedLog.push({
       type: "event",
-      name: eventName as string,
+      name: event.type,
       description: event.getDescription(),
       data: event as unknown as Record<string, unknown>,
       timestamp: Date.now(),
@@ -410,17 +406,35 @@ export class EventBus {
       for (const listener of eventListeners) {
         // Only call handler if there's no test function or if the test function returns true
         if (!listener.tester || listener.tester(this.gameState, event)) {
-          listener.handler(this.gameState, event);
+          (listener.handler as EventHandler<T>)(this.gameState, event);
         }
       }
     }
   }
 
   /**
+   * Type-safe method to create and emit an event in one step
+   *
+   * @example
+   * eventBus.emitEvent(GameTickEvent, 100); // Creates and emits a GameTickEvent with tick 100
+   */
+  emitEvent<T extends GameEvent, Args extends unknown[]>(
+    eventClass: { new (...args: Args): T },
+    ...args: Args
+  ): T {
+    const event = new eventClass(...args);
+    this.emit(event);
+    return event;
+  }
+
+  /**
    * Remove a listener for a specific event
    */
-  off(eventName: string, callback: EventHandler): void {
-    const eventListeners = this.listeners[eventName];
+  off<T extends GameEvent>(
+    eventClass: GameEventConstructor<T>,
+    callback: EventHandler<T>,
+  ): void {
+    const eventListeners = this.listeners.get(eventClass);
     if (eventListeners) {
       const index = eventListeners.findIndex(
         (item) => item.handler === callback,
@@ -435,7 +449,7 @@ export class EventBus {
    * Clear all listeners
    */
   clear(): void {
-    this.listeners = {};
+    this.listeners.clear();
   }
 
   /**
@@ -486,6 +500,32 @@ export class EventBus {
   updateGameState(gameState: GameState): void {
     this.gameState = gameState;
   }
+
+  /**
+   * Check if there are any listeners registered for a specific event type
+   */
+  hasListenersFor<T extends GameEvent>(
+    eventClass: GameEventConstructor<T>,
+  ): boolean {
+    const listeners = this.listeners.get(eventClass);
+    return !!listeners && listeners.length > 0;
+  }
+
+  /**
+   * Get all event types that have registered listeners
+   */
+  getRegisteredEventTypes(): GameEventConstructor[] {
+    return Array.from(this.listeners.keys());
+  }
+
+  /**
+   * Clear all listeners for a specific event type
+   */
+  clearEventType<T extends GameEvent>(
+    eventClass: GameEventConstructor<T>,
+  ): void {
+    this.listeners.delete(eventClass);
+  }
 }
 
 /**
@@ -496,49 +536,75 @@ function createBoardCardID(playerID: number, cardID: number): BoardCardID {
 }
 
 /**
- * Convert ability trigger to event name
+ * Map of trigger types to event constructors
  */
-function triggerToEvent(trigger: { $type?: string }): keyof EventMap {
-  // Simple implementation - in a real system, this would be more complex
-  if (!trigger || !trigger.$type) return "game:tick";
+const triggerToEventMap: Record<string, GameEventConstructor<GameEvent>> = {
+  TTriggerOnCardFired: CardFiredEvent as GameEventConstructor<GameEvent>,
+  TTriggerOnTick: GameTickEvent as GameEventConstructor<GameEvent>,
+  TTriggerOnFightStart:
+    GameFightStartedEvent as GameEventConstructor<GameEvent>,
+  // Add more mappings as needed
+};
 
-  switch (trigger.$type) {
-    case "TTriggerOnCardFired":
-      return "card:fired";
-    case "TTriggerOnTick":
-      return "game:tick";
-    case "TTriggerOnFightStart":
-      return "game:fightStarted";
-    // Add more mappings as needed
-    default:
-      return "game:tick"; // Default fallback
-  }
+/**
+ * Convert ability trigger to event class constructor
+ */
+function triggerToEvent(trigger: {
+  $type?: string;
+}): GameEventConstructor<GameEvent> {
+  const triggerType = trigger?.$type || "";
+  return triggerToEventMap[triggerType];
 }
 
 /**
- * Create a trigger check
+ * Map of trigger type to checker functions
+ */
+type TriggerCheckFn = (
+  boardCardID: BoardCardID,
+  gs: GameState,
+  e: GameEvent,
+) => boolean;
+
+const triggerCheckers: Record<string, TriggerCheckFn> = {
+  TTriggerOnCardFired: (boardCardID, _gs, e) => {
+    if (e instanceof CardFiredEvent) {
+      return (
+        e.sourceCardID.playerIdx === boardCardID.playerIdx &&
+        e.sourceCardID.cardIdx === boardCardID.cardIdx
+      );
+    }
+    return false;
+  },
+  TTriggerOnTick: (_boardCardID, _gs, e) => {
+    return e instanceof GameTickEvent;
+  },
+  TTriggerOnFightStart: (_boardCardID, _gs, e) => {
+    return e instanceof GameFightStartedEvent;
+  },
+  // Add more trigger checkers as needed
+};
+
+/**
+ * Create a trigger check function for an ability
  */
 function createTriggerCheck(
   ability: Ability,
   boardCardID: BoardCardID,
 ): (gs: GameState, e: GameEvent) => boolean {
-  return (gs: GameState, e: GameEvent) => {
-    switch (ability.Trigger.$type) {
-      case "TTriggerOnCardFired":
-        // Check if the fired card was the correct one
-        if (e instanceof CardFiredEvent) {
-          if (
-            e.sourceCardID.playerIdx === boardCardID.playerIdx &&
-            e.sourceCardID.cardIdx === boardCardID.cardIdx
-          ) {
-            return true;
-          }
-        }
-        break;
-    }
+  const triggerType = ability.Trigger.$type || "";
+  const checker = triggerCheckers[triggerType];
 
-    return false;
-  };
+  if (!checker) {
+    console.warn(
+      `Unhandled trigger type: ${triggerType} for ability ${ability.InternalName}`,
+    );
+
+    // Default to a function that always returns false
+    return () => false;
+  }
+
+  // Return a function that calls the appropriate checker with the boardCardID
+  return (gs: GameState, e: GameEvent) => checker(boardCardID, gs, e);
 }
 
 /**
@@ -555,7 +621,7 @@ export function setupEventHandlers(gameState: GameState): void {
       Object.values(card.Abilities).forEach((ability: Ability) => {
         const boardCardID = { playerIdx: playerID, cardIdx: cardID };
 
-        const eventTrigger = triggerToEvent(ability.Trigger);
+        const eventClass = triggerToEvent(ability.Trigger);
         const triggerCheck = createTriggerCheck(ability, boardCardID);
         const prerequisiteCheck = createPrerequisitesCheck(
           ability,
@@ -588,7 +654,7 @@ export function setupEventHandlers(gameState: GameState): void {
 
         // Register the event handler with the ability's priority and test function
         eventBus.on(
-          eventTrigger,
+          eventClass,
           eventHandler,
           ability.Priority || Priority.Medium,
           shouldReceiveEvent,
@@ -599,11 +665,10 @@ export function setupEventHandlers(gameState: GameState): void {
 
   // Handle game tick events with Highest priority
   eventBus.on(
-    "game:tick",
+    GameTickEvent,
     (gameState, event) => {
-      if (event instanceof GameTickEvent) {
-        handleGameTick(gameState, event.tick);
-      }
+      // No need to check instanceof since we're using typed handlers
+      handleGameTick(gameState, event.tick);
     },
     Priority.Highest,
   );
