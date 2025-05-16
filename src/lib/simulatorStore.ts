@@ -14,7 +14,7 @@ import { AttributeType } from "@/types/cardTypes";
 import { Tier } from "@/types/shared";
 import { EnchantmentType } from "@/types/shared";
 import { v4 as uuidv4 } from "uuid";
-import { getInitialGameState2, run } from "@/engine/engine2Adapter";
+import { getInitialGameState2, run } from "@/engine/engine2/engine2Adapter";
 
 const { Cards: CardsData, Encounters: EncounterData } =
   await genCardsAndEncounters();

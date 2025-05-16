@@ -1,11 +1,11 @@
 import validItemIds from "../../public/json/ValidItemIds.json";
 import validSkillIds from "../../public/json/ValidSkillIds.json";
-import { getTooltips } from "../engine/engine2Adapter";
-import { getInitialGameState2 } from "../engine/engine2Adapter";
+import { getInitialGameState2 } from "../engine/engine2/engine2Adapter";
 import { describe, expect, it } from "vitest";
 import { genCardsAndEncounters } from "../lib/Data";
 import { Tier } from "../types/shared";
 import { CARDS_VERSION } from "../lib/constants";
+import { getTooltips } from "@/engine/Engine";
 const { Cards, Encounters } = await genCardsAndEncounters();
 
 function getTiers(startingTier: Tier): Tier[] {

@@ -1,5 +1,5 @@
 import { getFlattenedEncounters } from "../engine/GameState";
-import { getInitialGameState2, run } from "../engine/engine2Adapter";
+import { getInitialGameState2, run } from "../engine/engine2/engine2Adapter";
 import { genCardsAndEncounters } from "../lib/Data";
 import { CARDS_VERSION } from "../lib/constants";
 import validItemIds from "../../public/json/ValidItemIds.json";

@@ -18,17 +18,19 @@ import { RandomGenerator } from "pure-rand/types/RandomGenerator";
 import { Tier } from "@/types/shared";
 
 /**
- * Tick rate in milliseconds
- */
-export const TICK_RATE = 100;
-
-/**
  * Represents a unique identifier for a board card
  */
 export type BoardCardID = {
   playerIdx: number;
   cardIdx: number;
 };
+
+export interface CardConfig {
+  cardId: string;
+  tier?: Tier;
+  enchantment?: keyof Enchantments;
+  attributeOverrides?: Partial<Record<AttributeType, number>>;
+}
 
 export type BoardCard = {
   [key in AttributeType]: number | undefined;

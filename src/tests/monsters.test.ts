@@ -1,7 +1,7 @@
 import { genCardsAndEncounters, getCardId } from "../lib/Data.ts";
-import { run } from "../engine/engine2Adapter.ts";
+import { run } from "../engine/engine2/engine2Adapter.ts";
 import { getFlattenedEncounters } from "../engine/GameState.ts";
-import { getInitialGameState2 } from "../engine/engine2Adapter.ts";
+import { getInitialGameState2 } from "../engine/engine2/engine2Adapter.ts";
 import { describe, expect, it, test } from "vitest";
 
 type DiffObject = Record<string, unknown>;

@@ -2,7 +2,7 @@
 import { memo, useEffect } from "react";
 import { useGameData } from "@/lib/Data.ts";
 import type { FlattenedEncounter } from "@/types/encounterTypes.ts";
-import { TICK_RATE } from "@/engine/engine2/engine2";
+import { TICK_RATE } from "@/engine/engine2/constants";
 import { SearchableCardSkillList } from "@/components/SearchableCardSkillList";
 import { ComboBox } from "@/components/ui/combobox.tsx";
 import { HealthBar } from "@/components/HealthBar.tsx";
