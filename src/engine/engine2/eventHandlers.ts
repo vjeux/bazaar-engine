@@ -973,7 +973,7 @@ function processCardCooldowns(gameState: GameState): void {
       }
 
       // Skip cards without cooldown
-      if (!("CooldownMax" in card)) {
+      if (card.CooldownMax === undefined) {
         return;
       }
 
