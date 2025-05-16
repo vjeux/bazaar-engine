@@ -395,6 +395,10 @@ export function setupEventHandlers(gameState: GameState): void {
             event,
           );
           if (command) {
+            // Log the command before execution
+            gs.eventBus.addCommandToLog(command);
+
+            // Execute the command
             command.execute(gs);
           }
         };
@@ -428,19 +432,36 @@ export function setupEventHandlers(gameState: GameState): void {
 function handleGameTick(gameState: GameState, tick: number): void {
   // Process poison and regen on 1000 tick intervals
   if (tick % 1000 === 0) {
+    // Log operation
+    gameState.eventBus.addCommandToLog(
+      new Commands.SystemCommand("Process poison and regeneration"),
+    );
     processPoisonAndRegen(gameState);
   }
 
   // Process burn on 500 tick intervals
   if (tick % 500 === 0) {
+    // Log operation
+    gameState.eventBus.addCommandToLog(
+      new Commands.SystemCommand("Process burn damage"),
+    );
     processBurn(gameState);
   }
 
   // Process card cooldowns
+  gameState.eventBus.addCommandToLog(
+    new Commands.SystemCommand("Process card cooldowns"),
+  );
   processCardCooldowns(gameState);
 
   // Process sandstorm damage
-  processSandstorm(gameState);
+  const sandstormTick = gameState.tick - gameState.sandstormStartTick;
+  if (sandstormTick >= 0) {
+    gameState.eventBus.addCommandToLog(
+      new Commands.SystemCommand("Process sandstorm damage"),
+    );
+    processSandstorm(gameState);
+  }
 
   // Check for player deaths
   checkPlayerDeaths(gameState);
@@ -458,6 +479,13 @@ function processPoisonAndRegen(gameState: GameState): void {
       const nextHealth = Math.min(healthMax, health + player.HealthRegen);
 
       if (health !== nextHealth) {
+        // Log specific player regen
+        gameState.eventBus.addCommandToLog(
+          new Commands.SystemCommand(
+            `Player ${playerID} regenerates ${player.HealthRegen} health`,
+          ),
+        );
+
         new Commands.ModifyPlayerAttributeCommand(
           playerID,
           "Health",
@@ -469,6 +497,13 @@ function processPoisonAndRegen(gameState: GameState): void {
 
     // Process poison damage
     if (player.Poison > 0) {
+      // Log specific player poison damage
+      gameState.eventBus.addCommandToLog(
+        new Commands.SystemCommand(
+          `Player ${playerID} takes ${player.Poison} poison damage`,
+        ),
+      );
+
       new Commands.DamagePlayerCommand(
         playerID,
         player.Poison,
@@ -484,14 +519,29 @@ function processPoisonAndRegen(gameState: GameState): void {
 function processBurn(gameState: GameState): void {
   gameState.players.forEach((player, playerID) => {
     if (player.Burn > 0) {
+      const burnDamage = player.Burn / 2;
+
+      // Log specific player burn damage
+      gameState.eventBus.addCommandToLog(
+        new Commands.SystemCommand(
+          `Player ${playerID} takes ${burnDamage} burn damage`,
+        ),
+      );
+
       // Apply burn damage
       new Commands.DamagePlayerCommand(
         playerID,
-        player.Burn / 2,
+        burnDamage,
         null, // System-caused damage
       ).execute(gameState);
 
       // Reduce burn counter
+      gameState.eventBus.addCommandToLog(
+        new Commands.SystemCommand(
+          `Player ${playerID} burn reduced from ${player.Burn} to ${player.Burn - 1}`,
+        ),
+      );
+
       new Commands.ModifyPlayerAttributeCommand(
         playerID,
         "Burn",
@@ -650,7 +700,21 @@ function processSandstorm(gameState: GameState): void {
   }
 
   if (sandstormDamage > 0) {
+    // Log sandstorm damage amount
+    gameState.eventBus.addCommandToLog(
+      new Commands.SystemCommand(
+        `Sandstorm damage: ${sandstormDamage} (tick ${ticksAfterStart})`,
+      ),
+    );
+
     gameState.players.forEach((player, playerID) => {
+      // Log specific player sandstorm damage
+      gameState.eventBus.addCommandToLog(
+        new Commands.SystemCommand(
+          `Player ${playerID} takes ${sandstormDamage} sandstorm damage`,
+        ),
+      );
+
       new Commands.DamagePlayerCommand(
         playerID,
         sandstormDamage,
@@ -670,6 +734,12 @@ function checkPlayerDeaths(gameState: GameState): void {
   gameState.players.forEach((player, playerID) => {
     if (player.Health <= 0) {
       isPlaying = false;
+
+      // Log player death
+      eventBus.addCommandToLog(
+        new Commands.SystemCommand(`Player ${playerID} has died`),
+      );
+
       eventBus.emit("player:died", { playerID });
     }
   });
@@ -679,12 +749,30 @@ function checkPlayerDeaths(gameState: GameState): void {
   // Determine winner
   if (gameState.players[0].Health <= 0 && gameState.players[1].Health <= 0) {
     gameState.winner = "Draw";
+
+    // Log game end
+    eventBus.addCommandToLog(
+      new Commands.SystemCommand("Game ended in a draw"),
+    );
+
     eventBus.emit("game:ended", { winner: "Draw" });
   } else if (gameState.players[0].Health <= 0) {
     gameState.winner = "Player";
+
+    // Log game end
+    eventBus.addCommandToLog(
+      new Commands.SystemCommand("Game ended - Player wins"),
+    );
+
     eventBus.emit("game:ended", { winner: "Player" });
   } else if (gameState.players[1].Health <= 0) {
     gameState.winner = "Enemy";
+
+    // Log game end
+    eventBus.addCommandToLog(
+      new Commands.SystemCommand("Game ended - Enemy wins"),
+    );
+
     eventBus.emit("game:ended", { winner: "Enemy" });
   }
 }

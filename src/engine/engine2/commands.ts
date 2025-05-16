@@ -29,7 +29,13 @@ class CommandList implements Command {
   }
 
   execute(gameState: GameState): void {
-    this.commands.forEach((command) => command.execute(gameState));
+    this.commands.forEach((command) => {
+      // Log the command before execution
+      //gameState.eventBus.addCommandToLog(command);
+
+      // Execute the command
+      command.execute(gameState);
+    });
   }
 
   toLogString(): string {
@@ -368,14 +374,7 @@ export class CommandFactory {
         );
 
         for (const targetCard of targetCards.slice(0, targetCount)) {
-          // Create a command to set isDisabled to true
-          commands.addCommand({
-            execute: (gameState: GameState) => {
-              const { playerIdx, cardIdx } = targetCard;
-              // Simply set the disabled flag without emitting an event
-              gameState.players[playerIdx].board[cardIdx].isDisabled = true;
-            },
-          });
+          commands.addCommand(new DisableCardCommand(targetCard));
         }
         return commands;
       }
@@ -476,35 +475,7 @@ export class CommandFactory {
         );
 
         for (const targetCard of targetCards.slice(0, targetCount)) {
-          commands.addCommand({
-            execute: (gameState: GameState) => {
-              const currentAmmo = getCardAttribute(
-                gameState,
-                targetCard,
-                AttributeType.Ammo,
-              );
-              const ammoMax = getCardAttribute(
-                gameState,
-                targetCard,
-                AttributeType.AmmoMax,
-              );
-
-              // If the card has no ammo or ammo max, don't do anything
-              if (currentAmmo === undefined || ammoMax === undefined) {
-                return;
-              }
-
-              const newValue = Math.min(ammoMax, currentAmmo + reloadAmount);
-              if (currentAmmo !== newValue) {
-                new ModifyCardAttributeCommand(
-                  targetCard,
-                  AttributeType.Ammo,
-                  newValue,
-                  "set",
-                ).execute(gameState);
-              }
-            },
-          });
+          commands.addCommand(new ReloadCardCommand(targetCard, reloadAmount));
         }
         return commands;
       }
@@ -533,51 +504,13 @@ export class CommandFactory {
         );
 
         for (const targetCard of targetCards.slice(0, targetCount)) {
-          commands.addCommand({
-            execute: (gameState: GameState) => {
-              const { playerIdx, cardIdx } = targetCard;
-              const cooldownMax = getCardAttribute(
-                gameState,
-                targetCard,
-                AttributeType.CooldownMax,
-              );
-
-              // If the card has no cooldown max, don't do anything
-              if (cooldownMax === undefined) {
-                return;
-              }
-
-              const currentTick =
-                gameState.players[playerIdx].board[cardIdx].tick || 0;
-              const newValue = Math.min(
-                cooldownMax,
-                currentTick + chargeAmount,
-              );
-
-              if (currentTick !== newValue) {
-                new ModifyCardAttributeCommand(
-                  targetCard,
-                  "tick",
-                  newValue,
-                  "set",
-                ).execute(gameState);
-              }
-            },
-          });
+          commands.addCommand(new ChargeCardCommand(targetCard, chargeAmount));
         }
         return commands;
       }
 
       case "TActionCardBeginSandstorm": {
-        commands.addCommand({
-          execute: (gameState: GameState) => {
-            gameState.sandstormStartTick = gameState.tick;
-            // Emit tick event instead of custom event
-            gameState.eventBus.emit("game:tick", {
-              tick: gameState.tick,
-            });
-          },
-        });
+        commands.addCommand(new BeginSandstormCommand());
         return commands;
       }
 
@@ -1139,5 +1072,132 @@ export class ProcessTickCommand implements Command {
 
   toLogString(): string {
     return "Process game tick";
+  }
+}
+
+/**
+ * Command to disable a card
+ */
+export class DisableCardCommand implements Command {
+  constructor(private boardCardID: BoardCardID) {}
+
+  execute(gameState: GameState): void {
+    const { playerIdx, cardIdx } = this.boardCardID;
+    gameState.players[playerIdx].board[cardIdx].isDisabled = true;
+  }
+
+  toLogString(): string {
+    return `Disable card [${this.boardCardID.playerIdx},${this.boardCardID.cardIdx}]`;
+  }
+}
+
+/**
+ * Command to reload a card's ammo
+ */
+export class ReloadCardCommand implements Command {
+  constructor(
+    private boardCardID: BoardCardID,
+    private reloadAmount: number,
+  ) {}
+
+  execute(gameState: GameState): void {
+    const currentAmmo = getCardAttribute(
+      gameState,
+      this.boardCardID,
+      AttributeType.Ammo,
+    );
+    const ammoMax = getCardAttribute(
+      gameState,
+      this.boardCardID,
+      AttributeType.AmmoMax,
+    );
+
+    // If the card has no ammo or ammo max, don't do anything
+    if (currentAmmo === undefined || ammoMax === undefined) {
+      return;
+    }
+
+    const newValue = Math.min(ammoMax, currentAmmo + this.reloadAmount);
+    if (currentAmmo !== newValue) {
+      new ModifyCardAttributeCommand(
+        this.boardCardID,
+        AttributeType.Ammo,
+        newValue,
+        "set",
+      ).execute(gameState);
+    }
+  }
+
+  toLogString(): string {
+    return `Reload card [${this.boardCardID.playerIdx},${this.boardCardID.cardIdx}] by ${this.reloadAmount}`;
+  }
+}
+
+/**
+ * Command to charge a card (advance its cooldown)
+ */
+export class ChargeCardCommand implements Command {
+  constructor(
+    private boardCardID: BoardCardID,
+    private chargeAmount: number,
+  ) {}
+
+  execute(gameState: GameState): void {
+    const { playerIdx, cardIdx } = this.boardCardID;
+    const cooldownMax = getCardAttribute(
+      gameState,
+      this.boardCardID,
+      AttributeType.CooldownMax,
+    );
+
+    // If the card has no cooldown max, don't do anything
+    if (cooldownMax === undefined) {
+      return;
+    }
+
+    const currentTick = gameState.players[playerIdx].board[cardIdx].tick || 0;
+    const newValue = Math.min(cooldownMax, currentTick + this.chargeAmount);
+
+    if (currentTick !== newValue) {
+      new ModifyCardAttributeCommand(
+        this.boardCardID,
+        "tick",
+        newValue,
+        "set",
+      ).execute(gameState);
+    }
+  }
+
+  toLogString(): string {
+    return `Charge card [${this.boardCardID.playerIdx},${this.boardCardID.cardIdx}] by ${this.chargeAmount}`;
+  }
+}
+
+/**
+ * Command to begin sandstorm
+ */
+export class BeginSandstormCommand implements Command {
+  execute(gameState: GameState): void {
+    gameState.sandstormStartTick = gameState.tick;
+  }
+
+  toLogString(): string {
+    return "Begin sandstorm";
+  }
+}
+
+/**
+ * Command for system-level operations
+ */
+export class SystemCommand implements Command {
+  constructor(private description: string) {}
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  execute(_: GameState): void {
+    // This is just a marker command for logging purposes
+  }
+
+  toLogString(): string {
+    return this.description;
   }
 }
