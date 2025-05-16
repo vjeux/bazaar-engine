@@ -231,7 +231,7 @@ export default function SimulatorPage() {
               Cards & Skills
             </TabsTrigger>
             <TabsTrigger value="events" className="flex-grow">
-              Event Log
+              Debug Log
             </TabsTrigger>
           </TabsList>
           <TabsContent value="cards" className="h-[calc(100%-45px)]">
