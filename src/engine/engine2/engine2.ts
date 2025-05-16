@@ -239,12 +239,12 @@ export function getCardAttribute(
   gameState: GameState,
   cardID: BoardCardID,
   attribute: AttributeType,
-): number;
+): number | undefined;
 export function getCardAttribute(
   gameState: GameState,
   cardID: BoardCardID,
   attribute: AttributeType | "tags",
-): number | string[] {
+): number | string[] | undefined {
   const card = gameState.players[cardID.playerIdx].board[cardID.cardIdx];
 
   // Special handling for tags
@@ -309,7 +309,7 @@ export function getCardAttribute(
   }
 
   // Handle numeric attributes with aura modifications
-  let value = (card[attribute] as number) || 0;
+  let value = card[attribute];
 
   // Apply aura effects
   gameState.players.forEach((player, playerIdx) => {
@@ -353,6 +353,14 @@ export function getCardAttribute(
             auraSourceCardID,
             undefined,
           );
+
+          // If targeted by an aura, assume the value is 0
+          if (value === undefined) {
+            console.warn(
+              `Attribute ${attribute} was undefined, but target ${cardID.playerIdx}-${cardID.cardIdx} was targeted by an aura, so it was set to 0`,
+            );
+            value = 0;
+          }
 
           // Apply the modification based on operation type
           switch (aura.Action.Operation) {

@@ -1,5 +1,9 @@
 import { Player } from "../Engine";
-import { AbilityAction, AttributeType } from "../../types/cardTypes";
+import {
+  AbilityAction,
+  ActionType,
+  AttributeType,
+} from "../../types/cardTypes";
 import { GameState, BoardCardID, getCardAttribute, BoardCard } from "./engine2";
 import { PlayerCardConfig } from "../GameState";
 import {
@@ -84,7 +88,7 @@ export class CommandFactory {
     const commands = new CommandList();
 
     switch (action.$type) {
-      case "TActionPlayerDamage": {
+      case ActionType.TActionPlayerDamage: {
         // get damage attribute from source card
         const damage = getCardAttribute(
           gameState,
@@ -93,6 +97,9 @@ export class CommandFactory {
         );
         if (!action.Target) {
           throw new Error("Target is required for damage action");
+        }
+        if (damage === undefined) {
+          throw new Error("Damage amount is undefined");
         }
         const targetPlayers = getTargetPlayers(
           gameState,
@@ -108,7 +115,7 @@ export class CommandFactory {
         return commands;
       }
 
-      case "TActionPlayerHeal": {
+      case ActionType.TActionPlayerHeal: {
         const healAmount = getCardAttribute(
           gameState,
           sourceCardID,
@@ -116,6 +123,9 @@ export class CommandFactory {
         );
         if (!action.Target) {
           throw new Error("Target is required for heal action");
+        }
+        if (healAmount === undefined) {
+          throw new Error("Heal amount is undefined");
         }
         const targetPlayers = getTargetPlayers(
           gameState,
@@ -131,7 +141,7 @@ export class CommandFactory {
         return commands;
       }
 
-      case "TActionPlayerBurnApply": {
+      case ActionType.TActionPlayerBurnApply: {
         const burnAmount = getCardAttribute(
           gameState,
           sourceCardID,
@@ -139,6 +149,9 @@ export class CommandFactory {
         );
         if (!action.Target) {
           throw new Error("Target is required for burn apply action");
+        }
+        if (burnAmount === undefined) {
+          throw new Error("Burn amount is undefined");
         }
         const targetPlayers = getTargetPlayers(
           gameState,
@@ -154,7 +167,7 @@ export class CommandFactory {
         return commands;
       }
 
-      case "TActionCardSlow": {
+      case ActionType.TActionCardSlow: {
         const slowAmount = getCardAttribute(
           gameState,
           sourceCardID,
@@ -162,6 +175,9 @@ export class CommandFactory {
         );
         if (!action.Target) {
           throw new Error("Target is required for slow action");
+        }
+        if (slowAmount === undefined) {
+          throw new Error("Slow amount is undefined");
         }
         const targetCards = getTargetCards(
           gameState,
@@ -176,20 +192,36 @@ export class CommandFactory {
           sourceCardID,
           AttributeType.SlowTargets,
         );
-        for (const targetCard of targetCards.slice(0, targetCount)) {
-          commands.addCommand(
-            new ModifyCardAttributeCommand(
-              targetCard,
-              AttributeType.Slow,
-              slowAmount,
-              "add",
-            ),
-          );
+
+        if (targetCount === undefined) {
+          // Apply to all target cards
+          for (const targetCard of targetCards) {
+            commands.addCommand(
+              new ModifyCardAttributeCommand(
+                targetCard,
+                AttributeType.Slow,
+                slowAmount,
+                "add",
+              ),
+            );
+          }
+        } else {
+          // Apply to the first targetCount cards
+          for (const targetCard of targetCards.slice(0, targetCount)) {
+            commands.addCommand(
+              new ModifyCardAttributeCommand(
+                targetCard,
+                AttributeType.Slow,
+                slowAmount,
+                "add",
+              ),
+            );
+          }
         }
         return commands;
       }
 
-      case "TActionCardForceUse": {
+      case ActionType.TActionCardForceUse: {
         if (!action.Target) {
           throw new Error("Target is required for force use action");
         }
@@ -205,7 +237,7 @@ export class CommandFactory {
         return commands;
       }
 
-      case "TActionPlayerRegenApply": {
+      case ActionType.TActionPlayerRegenApply: {
         const regenAmount = getCardAttribute(
           gameState,
           sourceCardID,
@@ -213,6 +245,9 @@ export class CommandFactory {
         );
         if (!action.Target) {
           throw new Error("Target is required for regen apply action");
+        }
+        if (regenAmount === undefined) {
+          throw new Error("Regen amount is undefined");
         }
         const targetPlayers = getTargetPlayers(
           gameState,
@@ -233,7 +268,7 @@ export class CommandFactory {
         return commands;
       }
 
-      case "TActionPlayerPoisonApply": {
+      case ActionType.TActionPlayerPoisonApply: {
         const poisonAmount = getCardAttribute(
           gameState,
           sourceCardID,
@@ -241,6 +276,9 @@ export class CommandFactory {
         );
         if (!action.Target) {
           throw new Error("Target is required for poison apply action");
+        }
+        if (poisonAmount === undefined) {
+          throw new Error("Poison amount is undefined");
         }
         const targetPlayers = getTargetPlayers(
           gameState,
@@ -256,7 +294,7 @@ export class CommandFactory {
         return commands;
       }
 
-      case "TActionPlayerPoisonRemove": {
+      case ActionType.TActionPlayerPoisonRemove: {
         const poisonRemoveAmount = getCardAttribute(
           gameState,
           sourceCardID,
@@ -264,6 +302,9 @@ export class CommandFactory {
         );
         if (!action.Target) {
           throw new Error("Target is required for poison remove action");
+        }
+        if (poisonRemoveAmount === undefined) {
+          throw new Error("Poison remove amount is undefined");
         }
         const targetPlayers = getTargetPlayers(
           gameState,
@@ -284,7 +325,7 @@ export class CommandFactory {
         return commands;
       }
 
-      case "TActionPlayerBurnRemove": {
+      case ActionType.TActionPlayerBurnRemove: {
         const burnRemoveAmount = getCardAttribute(
           gameState,
           sourceCardID,
@@ -292,6 +333,9 @@ export class CommandFactory {
         );
         if (!action.Target) {
           throw new Error("Target is required for burn remove action");
+        }
+        if (burnRemoveAmount === undefined) {
+          throw new Error("Burn remove amount is undefined");
         }
         const targetPlayers = getTargetPlayers(
           gameState,
@@ -312,7 +356,7 @@ export class CommandFactory {
         return commands;
       }
 
-      case "TActionPlayerShieldApply": {
+      case ActionType.TActionPlayerShieldApply: {
         const shieldAmount = getCardAttribute(
           gameState,
           sourceCardID,
@@ -320,6 +364,9 @@ export class CommandFactory {
         );
         if (!action.Target) {
           throw new Error("Target is required for shield apply action");
+        }
+        if (shieldAmount === undefined) {
+          throw new Error("Shield amount is undefined");
         }
         const targetPlayers = getTargetPlayers(
           gameState,
@@ -335,7 +382,7 @@ export class CommandFactory {
         return commands;
       }
 
-      case "TActionPlayerShieldRemove": {
+      case ActionType.TActionPlayerShieldRemove: {
         const shieldRemoveAmount = getCardAttribute(
           gameState,
           sourceCardID,
@@ -343,6 +390,9 @@ export class CommandFactory {
         );
         if (!action.Target) {
           throw new Error("Target is required for shield remove action");
+        }
+        if (shieldRemoveAmount === undefined) {
+          throw new Error("Shield remove amount is undefined");
         }
         const targetPlayers = getTargetPlayers(
           gameState,
@@ -363,7 +413,7 @@ export class CommandFactory {
         return commands;
       }
 
-      case "TActionPlayerReviveHeal": {
+      case ActionType.TActionPlayerReviveHeal: {
         if (!action.Target) {
           throw new Error("Target is required for revive heal action");
         }
@@ -381,7 +431,7 @@ export class CommandFactory {
         return commands;
       }
 
-      case "TActionCardDisable": {
+      case ActionType.TActionCardDisable: {
         if (!action.Target) {
           throw new Error("Target is required for card disable action");
         }
@@ -403,7 +453,7 @@ export class CommandFactory {
         return commands;
       }
 
-      case "TActionCardFreeze": {
+      case ActionType.TActionCardFreeze: {
         const freezeAmount = getCardAttribute(
           gameState,
           sourceCardID,
@@ -417,6 +467,11 @@ export class CommandFactory {
 
         if (!action.Target) {
           throw new Error("Target is required for freeze action");
+        }
+
+        if (freezeAmount === undefined) {
+          console.warn("Freeze amount is undefined");
+          return commands;
         }
 
         const targetCards = getTargetCards(
@@ -439,7 +494,7 @@ export class CommandFactory {
         return commands;
       }
 
-      case "TActionCardHaste": {
+      case ActionType.TActionCardHaste: {
         const hasteAmount = getCardAttribute(
           gameState,
           sourceCardID,
@@ -462,20 +517,43 @@ export class CommandFactory {
           event,
         );
 
-        for (const targetCard of targetCards.slice(0, targetCount)) {
-          commands.addCommand(
-            new ModifyCardAttributeCommand(
-              targetCard,
-              AttributeType.Haste,
-              hasteAmount,
-              "add",
-            ),
-          );
+        console.log("Target cards", targetCards);
+
+        if (hasteAmount === undefined) {
+          console.warn("Haste amount is undefined");
+          return commands;
         }
+
+        if (targetCount === undefined) {
+          // Apply to all target cards
+          for (const targetCard of targetCards) {
+            commands.addCommand(
+              new ModifyCardAttributeCommand(
+                targetCard,
+                AttributeType.Haste,
+                hasteAmount,
+                "add",
+              ),
+            );
+          }
+        } else {
+          // Apply to the first targetCount cards
+          for (const targetCard of targetCards.slice(0, targetCount)) {
+            commands.addCommand(
+              new ModifyCardAttributeCommand(
+                targetCard,
+                AttributeType.Haste,
+                hasteAmount,
+                "add",
+              ),
+            );
+          }
+        }
+
         return commands;
       }
 
-      case "TActionCardReload": {
+      case ActionType.TActionCardReload: {
         const reloadAmount = getCardAttribute(
           gameState,
           sourceCardID,
@@ -498,13 +576,17 @@ export class CommandFactory {
           event,
         );
 
+        if (reloadAmount === undefined) {
+          throw new Error("Reload amount is undefined");
+        }
+
         for (const targetCard of targetCards.slice(0, targetCount)) {
           commands.addCommand(new ReloadCardCommand(targetCard, reloadAmount));
         }
         return commands;
       }
 
-      case "TActionCardCharge": {
+      case ActionType.TActionCardCharge: {
         const chargeAmount = getCardAttribute(
           gameState,
           sourceCardID,
@@ -527,18 +609,22 @@ export class CommandFactory {
           event,
         );
 
+        if (chargeAmount === undefined) {
+          throw new Error("Charge amount is undefined");
+        }
+
         for (const targetCard of targetCards.slice(0, targetCount)) {
           commands.addCommand(new ChargeCardCommand(targetCard, chargeAmount));
         }
         return commands;
       }
 
-      case "TActionCardBeginSandstorm": {
+      case ActionType.TActionCardBeginSandstorm: {
         commands.addCommand(new BeginSandstormCommand());
         return commands;
       }
 
-      case "TActionCardModifyAttribute": {
+      case ActionType.TActionCardModifyAttribute: {
         if (!action.Target) {
           throw new Error("Target is required for modify attribute action");
         }
