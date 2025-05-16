@@ -241,7 +241,7 @@ export default function SimulatorPage() {
             value="events"
             className="h-[calc(100%-45px)] overflow-hidden"
           >
-            <EventLog gameState={currentGameState} />
+            <EventLog />
           </TabsContent>
         </Tabs>
       </div>
