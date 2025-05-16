@@ -6,6 +6,9 @@ import {
   CardFiredEvent,
   CardItemUsedEvent,
   CardAttributeChangedEvent,
+  CardPerformedPoisonEvent,
+  CardPerformedBurnEvent,
+  CardPerformedFreezeEvent,
 } from "./eventHandlers";
 import { getActionValue } from "./getActionValue";
 import { HiddenTag, Tag } from "../../types/shared";
@@ -30,10 +33,14 @@ export function getTargetCards(
       break;
     }
 
+    // TODO: improve this instanceof check, as many more events can probably trigger this path
     case "TTargetCardTriggerSource": {
       if (
         (event && event instanceof CardFiredEvent) ||
-        event instanceof CardItemUsedEvent
+        event instanceof CardItemUsedEvent ||
+        event instanceof CardPerformedPoisonEvent ||
+        event instanceof CardPerformedBurnEvent ||
+        event instanceof CardPerformedFreezeEvent
       ) {
         results.push(event.sourceCardID);
       } else if (event instanceof CardAttributeChangedEvent) {
