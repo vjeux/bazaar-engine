@@ -543,7 +543,15 @@ export function testCardConditions(
       }
 
       for (const condition of conditions.Conditions) {
-        if (testCardConditions(gameState, condition, sourceCard, targetCard)) {
+        if (
+          testCardConditions(
+            gameState,
+            condition,
+            sourceCard,
+            targetCard,
+            event,
+          )
+        ) {
           return true;
         }
       }
@@ -557,7 +565,15 @@ export function testCardConditions(
       }
 
       for (const condition of conditions.Conditions) {
-        if (!testCardConditions(gameState, condition, sourceCard, targetCard)) {
+        if (
+          !testCardConditions(
+            gameState,
+            condition,
+            sourceCard,
+            targetCard,
+            event,
+          )
+        ) {
           return false;
         }
       }
