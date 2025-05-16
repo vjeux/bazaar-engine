@@ -14,7 +14,7 @@ export function getTargetCards(
   gameState: GameState,
   targetConfig: TargetConfig,
   sourceCard: BoardCardID,
-  event: GameEvents[keyof GameEvents],
+  event?: GameEvents[keyof GameEvents],
 ): BoardCardID[] {
   const results: BoardCardID[] = [];
 
@@ -25,7 +25,7 @@ export function getTargetCards(
     }
 
     case "TTargetCardTriggerSource": {
-      if ("sourceCardID" in event && event.sourceCardID) {
+      if (event && "sourceCardID" in event && event.sourceCardID) {
         results.push(event.sourceCardID);
       } else {
         throw new Error(

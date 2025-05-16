@@ -13,7 +13,6 @@ export function getActionValue(
   value: Value,
   sourceCardID: BoardCardID,
   event?: GameEvents[keyof GameEvents],
-  metadata?: { changeValue?: number },
 ): number {
   let amount: number | undefined = undefined;
 
@@ -99,8 +98,13 @@ export function getActionValue(
       break;
     }
     case "TReferenceValuePlayerAttributeChange": {
-      // Use metadata if available, otherwise use default value
-      amount = metadata?.changeValue ?? value.DefaultValue;
+      if (event && "oldValue" in event && "newValue" in event) {
+        amount = event.newValue - event.oldValue;
+      } else {
+        throw new Error(
+          "TReferenceValuePlayerAttributeChange requires an event to be passed with oldValue and newValue",
+        );
+      }
       break;
     }
     case "TReferenceValueCardTagCount": {
@@ -113,7 +117,7 @@ export function getActionValue(
         gameState,
         value.Target,
         sourceCardID,
-        {} as GameEvents[keyof GameEvents],
+        event,
       );
       const foundTags = new Set<string>();
       targetCards.forEach((targetCard) => {
