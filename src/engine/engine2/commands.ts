@@ -938,14 +938,18 @@ export class DamagePlayerCommand implements Command {
     // If lifesteal amount > 0, add health to source player, emit lifestealheal event
     if (
       this.sourceCardID &&
-      getCardAttribute(gameState, this.sourceCardID, AttributeType.Lifesteal) >
-        0
-    ) {
-      const lifestealPercent = getCardAttribute(
+      (getCardAttribute(
         gameState,
         this.sourceCardID,
         AttributeType.Lifesteal,
-      );
+      ) ?? 0) > 0
+    ) {
+      const lifestealPercent =
+        getCardAttribute(
+          gameState,
+          this.sourceCardID,
+          AttributeType.Lifesteal,
+        ) ?? 0;
       const sourcePlayer = gameState.players[this.sourceCardID.playerIdx];
       const sourcePlayerHealth = sourcePlayer.Health;
       const sourcePlayerHealthMax = sourcePlayer.HealthMax;
