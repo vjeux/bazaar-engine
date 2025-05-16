@@ -68,7 +68,10 @@ function _createBoardCardFromCard(
     attributes = {
       ...attributes,
       ...(tierValues?.Attributes ?? {}), // Spread out the attributes like DamageAmount, HealAmount, etc, so we can store and change them dynamically
-      AbilityIds: tierValues?.AbilityIds || attributes.AbilityIds,
+      AbilityIds:
+        (tierValues?.AbilityIds || []).filter(
+          (id) => card.Abilities[id] != null && card.Abilities[id] != undefined,
+        ) || attributes.AbilityIds,
       AuraIds: tierValues?.AuraIds || attributes.AuraIds,
       TooltipIds: tierValues?.TooltipIds || attributes.TooltipIds,
     };
