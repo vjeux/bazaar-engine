@@ -112,6 +112,7 @@ When a card's cooldown reaches its maximum:
 3. The card's internal cooldown is reset
 
 ## Internal Cooldown System
+> ⚠️ **Warning**: The internal cooldown system is not fully implemented yet.
 
 Cards have internal cooldown mechanics to limit firing frequency:
 
