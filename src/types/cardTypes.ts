@@ -463,6 +463,7 @@ export enum TriggerType {
   TTriggerOnPlayerDied = "TTriggerOnPlayerDied",
   TTriggerOnCardPerformedRegen = "TTriggerOnCardPerformedRegen",
   TTriggerOnCardReloaded = "TTriggerOnCardReloaded",
+  TTriggerOnCardPerformedReload = "TTriggerOnCardPerformedReload",
 }
 
 enum ChangeType {

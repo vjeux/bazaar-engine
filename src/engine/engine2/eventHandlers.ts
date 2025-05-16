@@ -672,6 +672,7 @@ const triggerToEventMap: Record<
   TTriggerOnCardPerformedOverHeal: PlayerOverhealedEvent,
   TTriggerOnCardPerformedShield: CardPerformedShieldEvent,
   TTriggerOnCardReloaded: CardReloadedEvent,
+  TTriggerOnCardPerformedReload: CardReloadedEvent, // TODO: assume these two reload events are the same for now
   TTriggerOnCardPerformedRegen: CardPerformedRegenEvent,
 
   // Player events
