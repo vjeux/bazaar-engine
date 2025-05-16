@@ -2,7 +2,23 @@ import { Player } from "../Engine";
 import { AbilityAction, AttributeType } from "../../types/cardTypes";
 import { GameState, BoardCardID, getCardAttribute, BoardCard } from "./engine2";
 import { PlayerCardConfig } from "../GameState";
-import { GameEvents } from "./eventHandlers";
+import {
+  GameEvent,
+  CardFiredEvent,
+  CardItemUsedEvent,
+  CardAttributeChangedEvent,
+  CardAddedEvent,
+  CardRemovedEvent,
+  PlayerDamagedEvent,
+  PlayerHealedEvent,
+  PlayerOverhealedEvent,
+  PlayerLifestealHealEvent,
+  PlayerAttributeChangedEvent,
+  PlayerShieldAppliedEvent,
+  PlayerPoisonAppliedEvent,
+  PlayerBurnAppliedEvent,
+  GameTickEvent,
+} from "./eventHandlers";
 import { getTargetCards, getTargetPlayers } from "./targeting";
 import { getActionValue } from "./getActionValue";
 import { PLAYER_PLAYER_IDX } from "@/lib/constants";
@@ -63,7 +79,7 @@ export class CommandFactory {
     action: AbilityAction,
     sourceCardID: BoardCardID,
     gameState: GameState,
-    event: GameEvents[keyof GameEvents],
+    event: GameEvent,
   ): Command | null {
     const commands = new CommandList();
 
@@ -638,10 +654,7 @@ export class AddCardCommand implements Command {
     };
 
     // Emit event that card was added
-    gameState.eventBus.emit("card:added", {
-      boardCardID,
-      card: boardCard,
-    });
+    gameState.eventBus.emit(new CardAddedEvent(boardCardID, boardCard));
   }
 
   toLogString(): string {
@@ -664,9 +677,7 @@ export class RemoveCardCommand implements Command {
       player.board.splice(cardIdx, 1);
 
       // Emit event that card was removed
-      gameState.eventBus.emit("card:removed", {
-        boardCardID: this.boardCardID,
-      });
+      gameState.eventBus.emit(new CardRemovedEvent(this.boardCardID));
     }
   }
 
@@ -710,12 +721,14 @@ export class ModifyCardAttributeCommand implements Command {
     card[this.attribute] = newValue;
 
     // Emit event for attribute change
-    gameState.eventBus.emit("card:attributeChanged", {
-      boardCardID: this.boardCardID,
-      attribute: this.attribute,
-      oldValue,
-      newValue,
-    });
+    gameState.eventBus.emit(
+      new CardAttributeChangedEvent(
+        this.boardCardID,
+        this.attribute,
+        oldValue,
+        newValue,
+      ),
+    );
   }
 
   toLogString(): string {
@@ -769,12 +782,14 @@ export class ModifyPlayerAttributeCommand implements Command {
 
     if (!(oldValue === newValue)) {
       // Emit event for attribute change
-      gameState.eventBus.emit("player:attributeChanged", {
-        playerIdx: this.playerIdx,
-        attribute: this.attribute,
-        oldValue,
-        newValue,
-      });
+      gameState.eventBus.emit(
+        new PlayerAttributeChangedEvent(
+          this.playerIdx,
+          this.attribute,
+          oldValue,
+          newValue,
+        ),
+      );
     }
   }
 
@@ -832,10 +847,7 @@ export class DamagePlayerCommand implements Command {
     }
 
     // Delay events as we want to process them after the command is executed
-    const delayedEvents: Array<{
-      eventName: keyof GameEvents;
-      eventData: GameEvents[keyof GameEvents];
-    }> = [];
+    const delayedEvents: Array<GameEvent> = [];
 
     // If lifesteal amount > 0, add health to source player, emit lifestealheal event
     if (
@@ -861,31 +873,29 @@ export class DamagePlayerCommand implements Command {
         "set",
         newSourcePlayerHealth,
       ).execute(gameState);
-      delayedEvents.push({
-        eventName: "player:lifestealheal",
-        eventData: {
-          playerIdx: this.sourceCardID.playerIdx,
-          amount: this.amount * (lifestealPercent / 100),
-          sourceCardID: this.sourceCardID,
-        },
-      });
+      delayedEvents.push(
+        new PlayerLifestealHealEvent(
+          this.sourceCardID.playerIdx,
+          this.amount * (lifestealPercent / 100),
+          this.sourceCardID,
+        ),
+      );
     }
 
     if (this.sourceCardID) {
       // Emit damage event
-      delayedEvents.push({
-        eventName: "player:damaged",
-        eventData: {
-          playerIdx: this.targetPlayerIdx,
-          amount: this.amount,
-          sourceCardID: this.sourceCardID,
-        },
-      });
+      delayedEvents.push(
+        new PlayerDamagedEvent(
+          this.targetPlayerIdx,
+          this.amount,
+          this.sourceCardID,
+        ),
+      );
     }
 
     // Emit delayed events
     delayedEvents.forEach((event) => {
-      gameState.eventBus.emit(event.eventName, event.eventData);
+      gameState.eventBus.emit(event);
     });
   }
 
@@ -921,18 +931,22 @@ export class HealPlayerCommand implements Command {
       ).execute(gameState);
 
       // Emit heal event
-      gameState.eventBus.emit("player:healed", {
-        playerIdx: this.targetPlayerID,
-        amount: this.amount,
-        sourceCardID: this.sourceCardID,
-      });
+      gameState.eventBus.emit(
+        new PlayerHealedEvent(
+          this.targetPlayerID,
+          this.amount,
+          this.sourceCardID,
+        ),
+      );
     } else {
       // Emit overheal event if player was already at max health
-      gameState.eventBus.emit("player:overhealed", {
-        playerIdx: this.targetPlayerID,
-        amount: this.amount,
-        sourceCardID: this.sourceCardID,
-      });
+      gameState.eventBus.emit(
+        new PlayerOverhealedEvent(
+          this.targetPlayerID,
+          this.amount,
+          this.sourceCardID,
+        ),
+      );
     }
   }
 
@@ -952,19 +966,15 @@ export class FireCardCommand implements Command {
   constructor(private boardCardID: BoardCardID) {}
 
   execute(gameState: GameState): void {
-    const { playerIdx: playerID, cardIdx: cardID } = this.boardCardID;
-    const card = gameState.players[playerID].board[cardID];
-
     // Emit card trigger event
-    gameState.eventBus.emit("card:fired", {
-      sourceCardID: this.boardCardID,
-    });
+    gameState.eventBus.emit(new CardFiredEvent(this.boardCardID));
+
     // Emit card:itemused event
-    gameState.eventBus.emit("card:itemused", {
-      sourceCardID: this.boardCardID,
-    });
+    gameState.eventBus.emit(new CardItemUsedEvent(this.boardCardID));
 
     // Reset the card's tick if it has a cooldown
+    const { playerIdx: playerID, cardIdx: cardID } = this.boardCardID;
+    const card = gameState.players[playerID].board[cardID];
     if ("CooldownMax" in card) {
       new ModifyCardAttributeCommand(this.boardCardID, "tick", 0).execute(
         gameState,
@@ -996,11 +1006,13 @@ export class ApplyShieldCommand implements Command {
     ).execute(gameState);
 
     // Emit shield applied event
-    gameState.eventBus.emit("player:shieldApplied", {
-      playerIdx: this.targetPlayerID,
-      amount: this.amount,
-      sourceCardID: this.sourceCardID,
-    });
+    gameState.eventBus.emit(
+      new PlayerShieldAppliedEvent(
+        this.targetPlayerID,
+        this.amount,
+        this.sourceCardID,
+      ),
+    );
   }
 
   toLogString(): string {
@@ -1033,11 +1045,13 @@ export class ApplyPoisonCommand implements Command {
     ).execute(gameState);
 
     // Emit poison applied event
-    gameState.eventBus.emit("player:poisonApplied", {
-      playerIdx: this.targetPlayerID,
-      amount: this.amount,
-      sourceCardID: this.sourceCardID,
-    });
+    gameState.eventBus.emit(
+      new PlayerPoisonAppliedEvent(
+        this.targetPlayerID,
+        this.amount,
+        this.sourceCardID,
+      ),
+    );
   }
 
   toLogString(): string {
@@ -1068,11 +1082,13 @@ export class ApplyBurnCommand implements Command {
     ).execute(gameState);
 
     // Emit burn applied event
-    gameState.eventBus.emit("player:burnApplied", {
-      playerIdx: this.targetPlayerID,
-      amount: this.amount,
-      sourceCardID: this.sourceCardID,
-    });
+    gameState.eventBus.emit(
+      new PlayerBurnAppliedEvent(
+        this.targetPlayerID,
+        this.amount,
+        this.sourceCardID,
+      ),
+    );
   }
 
   toLogString(): string {
@@ -1093,9 +1109,7 @@ export class ProcessTickCommand implements Command {
     gameState.tick += 100;
 
     // Emit the tick event
-    gameState.eventBus.emit("game:tick", {
-      tick: gameState.tick,
-    });
+    gameState.eventBus.emit(new GameTickEvent(gameState.tick));
   }
 
   toLogString(): string {

@@ -1,7 +1,7 @@
 import { Value, AttributeType } from "@/types/cardTypes";
 import { Player } from "../Engine";
 import { GameState, BoardCardID, getCardAttribute } from "./engine2";
-import { GameEvents } from "./eventHandlers";
+import { GameEvent, PlayerAttributeChangedEvent } from "./eventHandlers";
 import { getTargetCards, getTargetPlayers } from "./targeting";
 
 /**
@@ -12,7 +12,7 @@ export function getActionValue(
   gameState: GameState,
   value: Value,
   sourceCardID: BoardCardID,
-  event?: GameEvents[keyof GameEvents],
+  event?: GameEvent,
 ): number {
   let amount: number | undefined = undefined;
 
@@ -31,7 +31,7 @@ export function getActionValue(
         gameState,
         value.Target,
         sourceCardID,
-        {} as GameEvents[keyof GameEvents],
+        event,
       );
       amount = value.DefaultValue;
       targetCards.forEach((valueTargetCard) => {
@@ -92,17 +92,17 @@ export function getActionValue(
         gameState,
         value.Target,
         sourceCardID,
-        {} as GameEvents[keyof GameEvents],
+        event,
       );
       amount = targetCards.length;
       break;
     }
     case "TReferenceValuePlayerAttributeChange": {
-      if (event && "oldValue" in event && "newValue" in event) {
+      if (event && event instanceof PlayerAttributeChangedEvent) {
         amount = event.newValue - event.oldValue;
       } else {
         throw new Error(
-          "TReferenceValuePlayerAttributeChange requires an event to be passed with oldValue and newValue",
+          "TReferenceValuePlayerAttributeChange requires a PlayerAttributeChangedEvent to be passed",
         );
       }
       break;

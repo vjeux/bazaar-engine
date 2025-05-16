@@ -5,82 +5,310 @@ import { createPrerequisitesCheck } from "./prereq";
 import { playerName } from "./commands";
 
 /**
- * Define all game event types with their payload structures
+ * Base Game Event class
  */
-
-export interface GameEvents {
-  // Game events
-  "game:tick": { tick: number };
-  "game:fightStarted": Record<string, never>;
-  "game:ended": { winner: string };
-
-  // Card events
-  "card:fired": { sourceCardID: BoardCardID };
-  "card:itemused": { sourceCardID: BoardCardID };
-  "card:attributeChanged": {
-    boardCardID: BoardCardID;
-    attribute: AttributeType | "tick";
-    oldValue: number;
-    newValue: number;
-  };
-  "card:added": {
-    boardCardID: BoardCardID;
-    card: unknown;
-  };
-  "card:removed": {
-    boardCardID: BoardCardID;
-  };
-
-  // Player events
-  "player:damaged": {
-    playerIdx: number;
-    amount: number;
-    sourceCardID: BoardCardID | null;
-  };
-  "player:healed": {
-    playerIdx: number;
-    amount: number;
-    sourceCardID: BoardCardID | null;
-  };
-  "player:overhealed": {
-    playerIdx: number;
-    amount: number;
-    sourceCardID: BoardCardID | null;
-  };
-  "player:lifestealheal": {
-    playerIdx: number;
-    amount: number;
-    sourceCardID: BoardCardID | null;
-  };
-  "player:attributeChanged": {
-    playerIdx: number;
-    attribute: string;
-    oldValue: number;
-    newValue: number;
-  };
-  "player:attributeChangeHandled": {
-    playerIdx: number;
-    attribute: string;
-    oldValue: number;
-    newValue: number;
-  };
-  "player:died": { playerID: number };
-  "player:shieldApplied": {
-    playerIdx: number;
-    amount: number;
-    sourceCardID: BoardCardID | null;
-  };
-  "player:poisonApplied": {
-    playerIdx: number;
-    amount: number;
-    sourceCardID: BoardCardID | null;
-  };
-  "player:burnApplied": {
-    playerIdx: number;
-    amount: number;
-    sourceCardID: BoardCardID | null;
-  };
+export abstract class GameEvent {
+  abstract readonly type: string;
+  readonly tick?: number;
+  abstract getDescription(): string;
 }
+
+/**
+ * Game Events
+ */
+export class GameTickEvent extends GameEvent {
+  readonly type = "game:tick";
+  constructor(public readonly tick: number) {
+    super();
+  }
+
+  getDescription(): string {
+    return `Tick: ${this.tick}`;
+  }
+}
+
+export class GameFightStartedEvent extends GameEvent {
+  readonly type = "game:fightStarted";
+
+  constructor() {
+    super();
+  }
+
+  getDescription(): string {
+    return "Fight started";
+  }
+}
+
+export class GameEndedEvent extends GameEvent {
+  readonly type = "game:ended";
+  constructor(public readonly winner: string) {
+    super();
+  }
+
+  getDescription(): string {
+    return `Game ended - Winner: ${this.winner}`;
+  }
+}
+
+/**
+ * Card Events
+ */
+export class CardFiredEvent extends GameEvent {
+  readonly type = "card:fired";
+  constructor(public readonly sourceCardID: BoardCardID) {
+    super();
+  }
+
+  getDescription(): string {
+    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} was fired`;
+  }
+}
+
+export class CardItemUsedEvent extends GameEvent {
+  readonly type = "card:itemused";
+  constructor(public readonly sourceCardID: BoardCardID) {
+    super();
+  }
+
+  getDescription(): string {
+    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} was used`;
+  }
+}
+
+export class CardAttributeChangedEvent extends GameEvent {
+  readonly type = "card:attributeChanged";
+  constructor(
+    public readonly boardCardID: BoardCardID,
+    public readonly attribute: AttributeType | "tick",
+    public readonly oldValue: number,
+    public readonly newValue: number,
+  ) {
+    super();
+  }
+
+  getDescription(): string {
+    return `${playerName(this.boardCardID.playerIdx)}'s card ${this.boardCardID.cardIdx} ${this.attribute} changed from ${this.oldValue} to ${this.newValue}`;
+  }
+}
+
+export class CardAddedEvent extends GameEvent {
+  readonly type = "card:added";
+  constructor(
+    public readonly boardCardID: BoardCardID,
+    public readonly card: unknown,
+  ) {
+    super();
+  }
+
+  getDescription(): string {
+    return `Card added to ${playerName(this.boardCardID.playerIdx)}'s board at position ${this.boardCardID.cardIdx}`;
+  }
+}
+
+export class CardRemovedEvent extends GameEvent {
+  readonly type = "card:removed";
+  constructor(public readonly boardCardID: BoardCardID) {
+    super();
+  }
+
+  getDescription(): string {
+    return `Card removed from ${playerName(this.boardCardID.playerIdx)}'s board at position ${this.boardCardID.cardIdx}`;
+  }
+}
+
+/**
+ * Player Events
+ */
+export class PlayerDamagedEvent extends GameEvent {
+  readonly type = "player:damaged";
+  constructor(
+    public readonly playerIdx: number,
+    public readonly amount: number,
+    public readonly sourceCardID: BoardCardID | null,
+  ) {
+    super();
+  }
+
+  getDescription(): string {
+    if (!this.sourceCardID) {
+      return `${playerName(this.playerIdx)} took ${this.amount} damage`;
+    }
+    return `${playerName(this.playerIdx)} took ${this.amount} damage from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+  }
+}
+
+export class PlayerHealedEvent extends GameEvent {
+  readonly type = "player:healed";
+  constructor(
+    public readonly playerIdx: number,
+    public readonly amount: number,
+    public readonly sourceCardID: BoardCardID | null,
+  ) {
+    super();
+  }
+
+  getDescription(): string {
+    if (!this.sourceCardID) {
+      return `${playerName(this.playerIdx)} was healed for ${this.amount}`;
+    }
+    return `${playerName(this.playerIdx)} was healed for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+  }
+}
+
+export class PlayerOverhealedEvent extends GameEvent {
+  readonly type = "player:overhealed";
+  constructor(
+    public readonly playerIdx: number,
+    public readonly amount: number,
+    public readonly sourceCardID: BoardCardID | null,
+  ) {
+    super();
+  }
+
+  getDescription(): string {
+    if (!this.sourceCardID) {
+      return `${playerName(this.playerIdx)} was overhealed for ${this.amount}`;
+    }
+    return `${playerName(this.playerIdx)} was overhealed for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+  }
+}
+
+export class PlayerLifestealHealEvent extends GameEvent {
+  readonly type = "player:lifestealheal";
+  constructor(
+    public readonly playerIdx: number,
+    public readonly amount: number,
+    public readonly sourceCardID: BoardCardID | null,
+  ) {
+    super();
+  }
+
+  getDescription(): string {
+    if (!this.sourceCardID) {
+      return `${playerName(this.playerIdx)} healed ${this.amount} from lifesteal`;
+    }
+    return `${playerName(this.playerIdx)} healed ${this.amount} from lifesteal via ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+  }
+}
+
+export class PlayerAttributeChangedEvent extends GameEvent {
+  readonly type = "player:attributeChanged";
+  constructor(
+    public readonly playerIdx: number,
+    public readonly attribute: string,
+    public readonly oldValue: number,
+    public readonly newValue: number,
+  ) {
+    super();
+  }
+
+  getDescription(): string {
+    return `${playerName(this.playerIdx)}'s ${this.attribute} changed from ${this.oldValue} to ${this.newValue}`;
+  }
+}
+
+export class PlayerAttributeChangeHandledEvent extends GameEvent {
+  readonly type = "player:attributeChangeHandled";
+  constructor(
+    public readonly playerIdx: number,
+    public readonly attribute: string,
+    public readonly oldValue: number,
+    public readonly newValue: number,
+  ) {
+    super();
+  }
+
+  getDescription(): string {
+    return `${playerName(this.playerIdx)}'s ${this.attribute} change was handled`;
+  }
+}
+
+export class PlayerDiedEvent extends GameEvent {
+  readonly type = "player:died";
+  constructor(public readonly playerID: number) {
+    super();
+  }
+
+  getDescription(): string {
+    return `${playerName(this.playerID)} died`;
+  }
+}
+
+export class PlayerShieldAppliedEvent extends GameEvent {
+  readonly type = "player:shieldApplied";
+  constructor(
+    public readonly playerIdx: number,
+    public readonly amount: number,
+    public readonly sourceCardID: BoardCardID | null,
+  ) {
+    super();
+  }
+
+  getDescription(): string {
+    if (!this.sourceCardID) {
+      return `${playerName(this.playerIdx)} gained ${this.amount} shield`;
+    }
+    return `${playerName(this.playerIdx)} gained ${this.amount} shield from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+  }
+}
+
+export class PlayerPoisonAppliedEvent extends GameEvent {
+  readonly type = "player:poisonApplied";
+  constructor(
+    public readonly playerIdx: number,
+    public readonly amount: number,
+    public readonly sourceCardID: BoardCardID | null,
+  ) {
+    super();
+  }
+
+  getDescription(): string {
+    if (!this.sourceCardID) {
+      return `${playerName(this.playerIdx)} was poisoned for ${this.amount}`;
+    }
+    return `${playerName(this.playerIdx)} was poisoned for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+  }
+}
+
+export class PlayerBurnAppliedEvent extends GameEvent {
+  readonly type = "player:burnApplied";
+  constructor(
+    public readonly playerIdx: number,
+    public readonly amount: number,
+    public readonly sourceCardID: BoardCardID | null,
+  ) {
+    super();
+  }
+
+  getDescription(): string {
+    if (!this.sourceCardID) {
+      return `${playerName(this.playerIdx)} was burned for ${this.amount}`;
+    }
+    return `${playerName(this.playerIdx)} was burned for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+  }
+}
+
+// Type mapping for event handlers
+export type EventMap = {
+  "game:tick": GameTickEvent;
+  "game:fightStarted": GameFightStartedEvent;
+  "game:ended": GameEndedEvent;
+  "card:fired": CardFiredEvent;
+  "card:itemused": CardItemUsedEvent;
+  "card:attributeChanged": CardAttributeChangedEvent;
+  "card:added": CardAddedEvent;
+  "card:removed": CardRemovedEvent;
+  "player:damaged": PlayerDamagedEvent;
+  "player:healed": PlayerHealedEvent;
+  "player:overhealed": PlayerOverhealedEvent;
+  "player:lifestealheal": PlayerLifestealHealEvent;
+  "player:attributeChanged": PlayerAttributeChangedEvent;
+  "player:attributeChangeHandled": PlayerAttributeChangeHandledEvent;
+  "player:died": PlayerDiedEvent;
+  "player:shieldApplied": PlayerShieldAppliedEvent;
+  "player:poisonApplied": PlayerPoisonAppliedEvent;
+  "player:burnApplied": PlayerBurnAppliedEvent;
+};
 
 // Priority order mapping for sorting
 const priorityOrder = {
@@ -96,34 +324,28 @@ const priorityOrder = {
  * Type-safe EventBus for game events
  */
 
-export type EventHandler<T extends keyof GameEvents> = (
-  gameState: GameState,
-  data: GameEvents[T],
-) => void;
+export type EventHandler = (gameState: GameState, event: GameEvent) => void;
 
 // Type for the test function that determines if an event should be handled
-export type EventTester<T extends keyof GameEvents> = (
-  gameState: GameState,
-  data: GameEvents[T],
-) => boolean;
+export type EventTester = (gameState: GameState, event: GameEvent) => boolean;
 
 // Event listener with priority information and test function
-interface PrioritizedEventHandler<T extends keyof GameEvents> {
-  handler: EventHandler<T>;
-  tester: EventTester<T> | null;
+interface PrioritizedEventHandler {
+  handler: EventHandler;
+  tester: EventTester | null;
   priority: Priority;
 }
 
 export interface EventLogEntry {
-  eventName: keyof GameEvents;
-  data: GameEvents[keyof GameEvents];
+  eventName: string;
+  data: GameEvent;
   timestamp: number;
   step: number;
 }
 
 export class EventBus {
   private listeners: {
-    [K in keyof GameEvents]?: Array<PrioritizedEventHandler<K>>;
+    [eventName: string]: Array<PrioritizedEventHandler>;
   } = {};
   private gameState: GameState;
   private unifiedLog: Array<LogEntry> = [];
@@ -137,18 +359,18 @@ export class EventBus {
   /**
    * Register a listener for a specific event with priority and test function
    */
-  on<K extends keyof GameEvents>(
-    eventName: K,
-    callback: EventHandler<K>,
+  on(
+    eventName: string,
+    callback: EventHandler,
     priority: Priority = Priority.Medium,
-    tester: EventTester<K> | null = null,
+    tester: EventTester | null = null,
   ): void {
     if (!this.listeners[eventName]) {
       this.listeners[eventName] = [];
     }
 
     // Create prioritized event handler
-    const prioritizedHandler: PrioritizedEventHandler<K> = {
+    const prioritizedHandler: PrioritizedEventHandler = {
       handler: callback,
       tester,
       priority,
@@ -164,12 +386,10 @@ export class EventBus {
   }
 
   /**
-   * Emit an event with data
+   * Emit an event
    */
-  emit<K extends keyof GameEvents>(
-    eventName: K,
-    eventData: GameEvents[K],
-  ): void {
+  emit(event: GameEvent): void {
+    const eventName = event.type as keyof EventMap;
     const eventListeners = this.listeners[eventName];
 
     // Get the step from the gameState
@@ -179,8 +399,8 @@ export class EventBus {
     this.unifiedLog.push({
       type: "event",
       name: eventName as string,
-      description: this.getEventDescription(eventName, eventData),
-      data: eventData as Record<string, unknown>,
+      description: event.getDescription(),
+      data: event as unknown as Record<string, unknown>,
       timestamp: Date.now(),
       step: step,
     });
@@ -189,8 +409,8 @@ export class EventBus {
       // Execute handlers in priority order (already sorted)
       for (const listener of eventListeners) {
         // Only call handler if there's no test function or if the test function returns true
-        if (!listener.tester || listener.tester(this.gameState, eventData)) {
-          listener.handler(this.gameState, eventData);
+        if (!listener.tester || listener.tester(this.gameState, event)) {
+          listener.handler(this.gameState, event);
         }
       }
     }
@@ -199,10 +419,7 @@ export class EventBus {
   /**
    * Remove a listener for a specific event
    */
-  off<K extends keyof GameEvents>(
-    eventName: K,
-    callback: EventHandler<K>,
-  ): void {
+  off(eventName: string, callback: EventHandler): void {
     const eventListeners = this.listeners[eventName];
     if (eventListeners) {
       const index = eventListeners.findIndex(
@@ -219,65 +436,6 @@ export class EventBus {
    */
   clear(): void {
     this.listeners = {};
-  }
-
-  /**
-   * Get a human-readable description of an event
-   */
-  private getEventDescription<K extends keyof GameEvents>(
-    eventName: K,
-    eventData: GameEvents[K],
-  ): string {
-    // Create readable descriptions based on event type
-    switch (eventName) {
-      case "game:tick":
-        return `Tick: ${(eventData as GameEvents["game:tick"]).tick}`;
-      case "game:fightStarted":
-        return "Fight started";
-      case "game:ended":
-        return `Game ended - Winner: ${(eventData as GameEvents["game:ended"]).winner}`;
-      case "card:fired":
-        const { sourceCardID } = eventData as GameEvents["card:fired"];
-        return `${playerName(sourceCardID.playerIdx)}'s card ${sourceCardID.cardIdx} was fired`;
-      case "player:damaged":
-        const damageData = eventData as GameEvents["player:damaged"];
-        if (!damageData.sourceCardID) {
-          return `${playerName(damageData.playerIdx)} took ${damageData.amount} damage`;
-        }
-        return `${playerName(damageData.playerIdx)} took ${damageData.amount} damage from ${playerName(damageData.sourceCardID.playerIdx)}'s card ${damageData.sourceCardID.cardIdx}`;
-      case "player:healed":
-        const healData = eventData as GameEvents["player:healed"];
-        if (!healData.sourceCardID) {
-          return `${playerName(healData.playerIdx)} was healed for ${healData.amount}`;
-        }
-        return `${playerName(healData.playerIdx)} was healed for ${healData.amount} by ${playerName(healData.sourceCardID.playerIdx)}'s card ${healData.sourceCardID.cardIdx}`;
-      case "player:shieldApplied":
-        const shieldData = eventData as GameEvents["player:shieldApplied"];
-        if (!shieldData.sourceCardID) {
-          return `${playerName(shieldData.playerIdx)} gained ${shieldData.amount} shield`;
-        }
-        return `${playerName(shieldData.playerIdx)} gained ${shieldData.amount} shield from ${playerName(shieldData.sourceCardID.playerIdx)}'s card ${shieldData.sourceCardID.cardIdx}`;
-      case "player:poisonApplied":
-        const poisonData = eventData as GameEvents["player:poisonApplied"];
-        if (!poisonData.sourceCardID) {
-          return `${playerName(poisonData.playerIdx)} was poisoned for ${poisonData.amount}`;
-        }
-        return `${playerName(poisonData.playerIdx)} was poisoned for ${poisonData.amount} by ${playerName(poisonData.sourceCardID.playerIdx)}'s card ${poisonData.sourceCardID.cardIdx}`;
-      case "player:burnApplied":
-        const burnData = eventData as GameEvents["player:burnApplied"];
-        if (!burnData.sourceCardID) {
-          return `${playerName(burnData.playerIdx)} was burned for ${burnData.amount}`;
-        }
-        return `${playerName(burnData.playerIdx)} was burned for ${burnData.amount} by ${playerName(burnData.sourceCardID.playerIdx)}'s card ${burnData.sourceCardID.cardIdx}`;
-      case "player:attributeChanged":
-        const attrData = eventData as GameEvents["player:attributeChanged"];
-        return `${playerName(attrData.playerIdx)}'s ${attrData.attribute} changed from ${attrData.oldValue} to ${attrData.newValue}`;
-      case "card:attributeChanged":
-        const cardAttrData = eventData as GameEvents["card:attributeChanged"];
-        return `${playerName(cardAttrData.boardCardID.playerIdx)}'s card ${cardAttrData.boardCardID.cardIdx} ${cardAttrData.attribute} changed from ${cardAttrData.oldValue} to ${cardAttrData.newValue}`;
-      default:
-        return `${eventName}`;
-    }
   }
 
   /**
@@ -340,7 +498,7 @@ function createBoardCardID(playerID: number, cardID: number): BoardCardID {
 /**
  * Convert ability trigger to event name
  */
-function triggerToEvent(trigger: { $type?: string }): keyof GameEvents {
+function triggerToEvent(trigger: { $type?: string }): keyof EventMap {
   // Simple implementation - in a real system, this would be more complex
   if (!trigger || !trigger.$type) return "game:tick";
 
@@ -363,16 +521,15 @@ function triggerToEvent(trigger: { $type?: string }): keyof GameEvents {
 function createTriggerCheck(
   ability: Ability,
   boardCardID: BoardCardID,
-): <T extends keyof GameEvents>(gs: GameState, e: GameEvents[T]) => boolean {
-  return <T extends keyof GameEvents>(gs: GameState, e: GameEvents[T]) => {
+): (gs: GameState, e: GameEvent) => boolean {
+  return (gs: GameState, e: GameEvent) => {
     switch (ability.Trigger.$type) {
       case "TTriggerOnCardFired":
         // Check if the fired card was the correct one
-        if ("sourceCardID" in e) {
-          const firedEvent = e as GameEvents["card:fired"];
+        if (e instanceof CardFiredEvent) {
           if (
-            firedEvent.sourceCardID.playerIdx === boardCardID.playerIdx &&
-            firedEvent.sourceCardID.cardIdx === boardCardID.cardIdx
+            e.sourceCardID.playerIdx === boardCardID.playerIdx &&
+            e.sourceCardID.cardIdx === boardCardID.cardIdx
           ) {
             return true;
           }
@@ -406,19 +563,14 @@ export function setupEventHandlers(gameState: GameState): void {
         );
 
         // Create a combined test function that checks both prerequisites and trigger conditions
-        const shouldReceiveEvent = <T extends keyof GameEvents>(
+        const shouldReceiveEvent = (
           gs: GameState,
-          eventData: GameEvents[T],
-        ) => {
-          return (
-            prerequisiteCheck(gs, eventData) && triggerCheck(gs, eventData)
-          );
+          event: GameEvent,
+        ): boolean => {
+          return prerequisiteCheck(gs, event) && triggerCheck(gs, event);
         };
 
-        const eventHandler = (
-          gs: GameState,
-          event: GameEvents[keyof GameEvents],
-        ) => {
+        const eventHandler = (gs: GameState, event: GameEvent): void => {
           const command = Commands.CommandFactory.createFromAction(
             ability.Action,
             boardCardID,
@@ -448,8 +600,10 @@ export function setupEventHandlers(gameState: GameState): void {
   // Handle game tick events with Highest priority
   eventBus.on(
     "game:tick",
-    (gameState, data) => {
-      handleGameTick(gameState, data.tick);
+    (gameState, event) => {
+      if (event instanceof GameTickEvent) {
+        handleGameTick(gameState, event.tick);
+      }
     },
     Priority.Highest,
   );
@@ -771,7 +925,7 @@ function checkPlayerDeaths(gameState: GameState): void {
         new Commands.SystemCommand(`Player ${playerID} has died`),
       );
 
-      eventBus.emit("player:died", { playerID });
+      eventBus.emit(new PlayerDiedEvent(playerID));
     }
   });
 
@@ -786,7 +940,7 @@ function checkPlayerDeaths(gameState: GameState): void {
       new Commands.SystemCommand("Game ended in a draw"),
     );
 
-    eventBus.emit("game:ended", { winner: "Draw" });
+    eventBus.emit(new GameEndedEvent("Draw"));
   } else if (gameState.players[0].Health <= 0) {
     gameState.winner = "Player";
 
@@ -795,7 +949,7 @@ function checkPlayerDeaths(gameState: GameState): void {
       new Commands.SystemCommand("Game ended - Player wins"),
     );
 
-    eventBus.emit("game:ended", { winner: "Player" });
+    eventBus.emit(new GameEndedEvent("Player"));
   } else if (gameState.players[1].Health <= 0) {
     gameState.winner = "Enemy";
 
@@ -804,6 +958,6 @@ function checkPlayerDeaths(gameState: GameState): void {
       new Commands.SystemCommand("Game ended - Enemy wins"),
     );
 
-    eventBus.emit("game:ended", { winner: "Enemy" });
+    eventBus.emit(new GameEndedEvent("Enemy"));
   }
 }

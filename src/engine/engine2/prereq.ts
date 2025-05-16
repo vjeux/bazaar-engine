@@ -4,7 +4,7 @@ import {
   Comparison,
 } from "../../types/cardTypes";
 import { BoardCardID, GameState } from "./engine2";
-import { GameEvents } from "./eventHandlers";
+import { GameEvent } from "./eventHandlers";
 import { getTargetCards, getTargetPlayers } from "./targeting";
 
 export function compareUsingComparator(
@@ -31,8 +31,8 @@ export function compareUsingComparator(
 export function createPrerequisitesCheck(
   ability: Ability,
   boardCardID: BoardCardID,
-): (gs: GameState, event: GameEvents[keyof GameEvents]) => boolean {
-  return (gs: GameState, event: GameEvents[keyof GameEvents]) => {
+): (gs: GameState, event: GameEvent) => boolean {
+  return (gs: GameState, event: GameEvent) => {
     if (!ability.Prerequisites) {
       return true;
     }
@@ -49,7 +49,7 @@ function checkPrerequisite(
   prereq: AbilityPrerequisite,
   boardCardID: BoardCardID,
   gs: GameState,
-  event: GameEvents[keyof GameEvents],
+  event: GameEvent,
 ): boolean {
   switch (prereq.$type) {
     case "TPrerequisiteCardCount":

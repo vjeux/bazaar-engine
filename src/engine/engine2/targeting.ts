@@ -1,7 +1,7 @@
 import { GameState, BoardCardID } from "./engine2";
 import { Source, Target, Subject, Conditions } from "../../types/cardTypes";
 import prand from "pure-rand";
-import { GameEvents } from "./eventHandlers";
+import { GameEvent, CardFiredEvent } from "./eventHandlers";
 import { getActionValue } from "./getActionValue";
 import { HiddenTag, Tag } from "../../types/shared";
 
@@ -14,7 +14,7 @@ export function getTargetCards(
   gameState: GameState,
   targetConfig: TargetConfig,
   sourceCard: BoardCardID,
-  event?: GameEvents[keyof GameEvents],
+  event?: GameEvent,
 ): BoardCardID[] {
   const results: BoardCardID[] = [];
 
@@ -25,7 +25,7 @@ export function getTargetCards(
     }
 
     case "TTargetCardTriggerSource": {
-      if (event && "sourceCardID" in event && event.sourceCardID) {
+      if (event && event instanceof CardFiredEvent) {
         results.push(event.sourceCardID);
       } else {
         throw new Error(
@@ -269,7 +269,13 @@ export function getTargetCards(
     const { playerIdx, cardIdx } = cardID;
     return (
       !gameState.players[playerIdx].board[cardIdx].isDisabled &&
-      testCardConditions(gameState, targetConfig.Conditions, sourceCard, cardID)
+      testCardConditions(
+        gameState,
+        targetConfig.Conditions,
+        sourceCard,
+        cardID,
+        event,
+      )
     );
   });
 
@@ -331,7 +337,7 @@ export function getTargetPlayers(
   targetConfig: TargetConfig,
   sourceCard: BoardCardID,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  event?: GameEvents[keyof GameEvents],
+  event?: GameEvent,
 ): number[] {
   let results: number[] = [];
 
@@ -384,6 +390,7 @@ export function getTargetPlayers(
         targetConfig.Conditions,
         sourceCard,
         playerID,
+        event,
       );
     });
   }
@@ -399,7 +406,7 @@ export function testCardConditions(
   conditions: Conditions | null,
   sourceCard: BoardCardID,
   targetCard: BoardCardID,
-  event?: GameEvents[keyof GameEvents],
+  event?: GameEvent,
 ): boolean {
   if (conditions == null) {
     return true;
@@ -600,7 +607,7 @@ export function testPlayerConditions(
   conditions: Conditions | null,
   sourceCard: BoardCardID,
   targetPlayerID: number,
-  event?: GameEvents[keyof GameEvents],
+  event?: GameEvent,
 ): boolean {
   if (conditions == null) {
     return true;

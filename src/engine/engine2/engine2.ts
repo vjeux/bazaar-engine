@@ -9,8 +9,7 @@ import {
 } from "../../types/cardTypes";
 import {
   EventBus,
-  EventHandler,
-  GameEvents,
+  GameFightStartedEvent,
   setupEventHandlers,
 } from "./eventHandlers";
 import { Command, ProcessTickCommand } from "./commands";
@@ -81,7 +80,6 @@ export type BoardCard = {
   };
   internalCommandQueue: Command[];
   internalCommandQueuetick: number;
-  eventBusCallbacks: EventHandler<keyof GameEvents>[];
 };
 
 export interface Player {
@@ -180,7 +178,7 @@ export class Engine2 {
 
     // Emit fight started event on first tick
     if (this.gameState.tick === 0) {
-      this.gameState.eventBus.emit("game:fightStarted", {});
+      this.gameState.eventBus.emit(new GameFightStartedEvent());
     }
 
     for (let i = 0; i < maxTicks; i++) {
@@ -275,7 +273,7 @@ export function getCardAttribute(
             gameState,
             aura.Action.Target,
             auraSourceCardID,
-            {} as GameEvents[keyof GameEvents],
+            undefined,
           );
 
           // Check if our card is among the targets
@@ -291,7 +289,7 @@ export function getCardAttribute(
               gameState,
               aura.Action.Source,
               auraSourceCardID,
-              {} as GameEvents[keyof GameEvents],
+              undefined,
             );
 
             // Add tags from each source card
@@ -337,7 +335,7 @@ export function getCardAttribute(
           gameState,
           aura.Action.Target,
           auraSourceCardID,
-          {} as GameEvents[keyof GameEvents],
+          undefined,
         );
 
         // Check if our card is among the targets
@@ -353,7 +351,7 @@ export function getCardAttribute(
             gameState,
             aura.Action.Value,
             auraSourceCardID,
-            {} as GameEvents[keyof GameEvents],
+            undefined,
           );
 
           // Apply the modification based on operation type
