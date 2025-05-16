@@ -42,11 +42,11 @@ export function getActionValue(
         }
         amount =
           (amount ?? 0) +
-          getCardAttribute(
+          (getCardAttribute(
             gameState,
             valueTargetCard,
             value.AttributeType as AttributeType,
-          );
+          ) ?? 0);
       });
       break;
     }

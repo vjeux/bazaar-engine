@@ -647,7 +647,7 @@ export class CommandFactory {
             gameState,
             action.Value,
             sourceCardID,
-            undefined, // No metadata
+            event,
           );
         }
 

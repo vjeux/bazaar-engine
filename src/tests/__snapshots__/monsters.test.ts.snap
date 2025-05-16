@@ -47438,8 +47438,1136 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 6 - Lich" 
 exports[`Encounter snapshots should match > Matches snapshot for "Day 6 - Loan Shark" 1`] = `
 [
   {
-    "error": "TReferenceValuePlayerAttributeChange requires a PlayerAttributeChangedEvent to be passed",
     "step": 1,
+  },
+  {
+    "step": 2,
+  },
+  {
+    "step": 3,
+  },
+  {
+    "step": 4,
+  },
+  {
+    "step": 5,
+  },
+  {
+    "step": 6,
+  },
+  {
+    "step": 7,
+  },
+  {
+    "step": 8,
+  },
+  {
+    "step": 9,
+  },
+  {
+    "step": 10,
+  },
+  {
+    "step": 11,
+  },
+  {
+    "step": 12,
+  },
+  {
+    "step": 13,
+  },
+  {
+    "step": 14,
+  },
+  {
+    "step": 15,
+  },
+  {
+    "step": 16,
+  },
+  {
+    "step": 17,
+  },
+  {
+    "step": 18,
+  },
+  {
+    "step": 19,
+  },
+  {
+    "step": 20,
+  },
+  {
+    "step": 21,
+  },
+  {
+    "step": 22,
+  },
+  {
+    "step": 23,
+  },
+  {
+    "step": 24,
+  },
+  {
+    "step": 25,
+  },
+  {
+    "step": 26,
+  },
+  {
+    "step": 27,
+  },
+  {
+    "step": 28,
+  },
+  {
+    "step": 29,
+  },
+  {
+    "players.0.Health": 1545,
+    "players.0.board.4.DamageAmount": 70,
+    "step": 30,
+  },
+  {
+    "step": 31,
+  },
+  {
+    "step": 32,
+  },
+  {
+    "step": 33,
+  },
+  {
+    "step": 34,
+  },
+  {
+    "step": 35,
+  },
+  {
+    "step": 36,
+  },
+  {
+    "step": 37,
+  },
+  {
+    "step": 38,
+  },
+  {
+    "step": 39,
+  },
+  {
+    "step": 40,
+  },
+  {
+    "step": 41,
+  },
+  {
+    "step": 42,
+  },
+  {
+    "step": 43,
+  },
+  {
+    "step": 44,
+  },
+  {
+    "step": 45,
+  },
+  {
+    "step": 46,
+  },
+  {
+    "step": 47,
+  },
+  {
+    "step": 48,
+  },
+  {
+    "step": 49,
+  },
+  {
+    "players.0.board.0.DamageAmount": 80,
+    "players.0.board.1.DamageAmount": 40,
+    "players.0.board.1.Haste": 1000,
+    "players.0.board.2.DamageAmount": 40,
+    "players.0.board.2.Haste": 1000,
+    "players.0.board.4.DamageAmount": 110,
+    "players.0.board.6.Custom_0": 2,
+    "players.1.Health": 1940,
+    "step": 50,
+  },
+  {
+    "players.0.board.1.Haste": 900,
+    "players.0.board.2.Haste": 900,
+    "step": 51,
+  },
+  {
+    "players.0.board.1.Haste": 800,
+    "players.0.board.2.Haste": 800,
+    "step": 52,
+  },
+  {
+    "players.0.board.1.Haste": 700,
+    "players.0.board.2.Haste": 700,
+    "step": 53,
+  },
+  {
+    "players.0.board.1.Haste": 600,
+    "players.0.board.2.Haste": 600,
+    "step": 54,
+  },
+  {
+    "players.0.board.1.Haste": 500,
+    "players.0.board.2.Haste": 500,
+    "step": 55,
+  },
+  {
+    "players.0.board.1.Haste": 400,
+    "players.0.board.2.Haste": 400,
+    "step": 56,
+  },
+  {
+    "players.0.board.1.Haste": 300,
+    "players.0.board.2.Haste": 300,
+    "step": 57,
+  },
+  {
+    "players.0.board.1.Haste": 200,
+    "players.0.board.2.Haste": 200,
+    "step": 58,
+  },
+  {
+    "players.0.board.1.Haste": 100,
+    "players.0.board.2.Haste": 100,
+    "step": 59,
+  },
+  {
+    "players.0.Health": 1540,
+    "players.0.board.1.Haste": 0,
+    "players.0.board.2.Haste": 0,
+    "players.0.board.4.DamageAmount": 80,
+    "step": 60,
+  },
+  {
+    "step": 61,
+  },
+  {
+    "step": 62,
+  },
+  {
+    "step": 63,
+  },
+  {
+    "step": 64,
+  },
+  {
+    "step": 65,
+  },
+  {
+    "step": 66,
+  },
+  {
+    "step": 67,
+  },
+  {
+    "step": 68,
+  },
+  {
+    "step": 69,
+  },
+  {
+    "players.0.board.2.Haste": 1000,
+    "players.0.board.6.Custom_0": 3,
+    "players.1.Health": 1780,
+    "step": 70,
+  },
+  {
+    "players.0.board.2.Haste": 900,
+    "step": 71,
+  },
+  {
+    "players.0.board.2.Haste": 800,
+    "step": 72,
+  },
+  {
+    "players.0.board.2.Haste": 700,
+    "step": 73,
+  },
+  {
+    "players.0.board.2.Haste": 600,
+    "step": 74,
+  },
+  {
+    "players.0.board.2.Haste": 500,
+    "step": 75,
+  },
+  {
+    "players.0.board.2.Haste": 400,
+    "step": 76,
+  },
+  {
+    "players.0.board.2.Haste": 300,
+    "step": 77,
+  },
+  {
+    "players.0.board.2.Haste": 200,
+    "step": 78,
+  },
+  {
+    "players.0.board.2.Haste": 100,
+    "step": 79,
+  },
+  {
+    "players.0.board.0.DamageAmount": 100,
+    "players.0.board.1.DamageAmount": 60,
+    "players.0.board.2.Haste": 1000,
+    "players.0.board.4.DamageAmount": 100,
+    "players.0.board.6.Custom_0": 4,
+    "players.1.Health": 1740,
+    "players.1.Shield": 10,
+    "step": 80,
+  },
+  {
+    "players.0.board.2.Haste": 900,
+    "step": 81,
+  },
+  {
+    "players.0.board.2.Haste": 800,
+    "step": 82,
+  },
+  {
+    "players.0.board.2.Haste": 700,
+    "step": 83,
+  },
+  {
+    "players.0.board.2.Haste": 600,
+    "step": 84,
+  },
+  {
+    "players.0.board.2.Haste": 500,
+    "step": 85,
+  },
+  {
+    "players.0.board.2.Haste": 400,
+    "step": 86,
+  },
+  {
+    "players.0.board.2.Haste": 300,
+    "step": 87,
+  },
+  {
+    "players.0.board.2.Haste": 200,
+    "step": 88,
+  },
+  {
+    "players.0.board.2.Haste": 100,
+    "step": 89,
+  },
+  {
+    "players.0.Health": 1535,
+    "players.0.board.0.DamageAmount": 120,
+    "players.0.board.2.DamageAmount": 60,
+    "players.0.board.2.Haste": 0,
+    "players.0.board.4.DamageAmount": 90,
+    "players.0.board.6.Custom_0": 5,
+    "players.1.Health": 1690,
+    "players.1.Shield": 0,
+    "step": 90,
+  },
+  {
+    "step": 91,
+  },
+  {
+    "step": 92,
+  },
+  {
+    "step": 93,
+  },
+  {
+    "step": 94,
+  },
+  {
+    "step": 95,
+  },
+  {
+    "step": 96,
+  },
+  {
+    "step": 97,
+  },
+  {
+    "step": 98,
+  },
+  {
+    "step": 99,
+  },
+  {
+    "step": 100,
+  },
+  {
+    "step": 101,
+  },
+  {
+    "step": 102,
+  },
+  {
+    "step": 103,
+  },
+  {
+    "step": 104,
+  },
+  {
+    "step": 105,
+  },
+  {
+    "step": 106,
+  },
+  {
+    "step": 107,
+  },
+  {
+    "step": 108,
+  },
+  {
+    "step": 109,
+  },
+  {
+    "step": 110,
+  },
+  {
+    "step": 111,
+  },
+  {
+    "step": 112,
+  },
+  {
+    "step": 113,
+  },
+  {
+    "step": 114,
+  },
+  {
+    "step": 115,
+  },
+  {
+    "step": 116,
+  },
+  {
+    "step": 117,
+  },
+  {
+    "step": 118,
+  },
+  {
+    "step": 119,
+  },
+  {
+    "players.0.Health": 1530,
+    "players.0.board.0.DamageAmount": 140,
+    "players.0.board.1.DamageAmount": 80,
+    "players.0.board.4.DamageAmount": 80,
+    "players.0.board.6.Custom_0": 6,
+    "players.1.Health": 1630,
+    "step": 120,
+  },
+  {
+    "step": 121,
+  },
+  {
+    "step": 122,
+  },
+  {
+    "step": 123,
+  },
+  {
+    "step": 124,
+  },
+  {
+    "step": 125,
+  },
+  {
+    "step": 126,
+  },
+  {
+    "step": 127,
+  },
+  {
+    "step": 128,
+  },
+  {
+    "step": 129,
+  },
+  {
+    "step": 130,
+  },
+  {
+    "step": 131,
+  },
+  {
+    "step": 132,
+  },
+  {
+    "step": 133,
+  },
+  {
+    "step": 134,
+  },
+  {
+    "step": 135,
+  },
+  {
+    "step": 136,
+  },
+  {
+    "step": 137,
+  },
+  {
+    "step": 138,
+  },
+  {
+    "step": 139,
+  },
+  {
+    "players.0.board.0.DamageAmount": 160,
+    "players.0.board.2.DamageAmount": 80,
+    "players.0.board.4.DamageAmount": 100,
+    "players.0.board.6.Custom_0": 8,
+    "players.1.Health": 1310,
+    "step": 140,
+  },
+  {
+    "step": 141,
+  },
+  {
+    "step": 142,
+  },
+  {
+    "step": 143,
+  },
+  {
+    "step": 144,
+  },
+  {
+    "step": 145,
+  },
+  {
+    "step": 146,
+  },
+  {
+    "step": 147,
+  },
+  {
+    "step": 148,
+  },
+  {
+    "step": 149,
+  },
+  {
+    "players.0.Health": 1525,
+    "players.0.board.4.DamageAmount": 70,
+    "step": 150,
+  },
+  {
+    "step": 151,
+  },
+  {
+    "step": 152,
+  },
+  {
+    "step": 153,
+  },
+  {
+    "step": 154,
+  },
+  {
+    "step": 155,
+  },
+  {
+    "step": 156,
+  },
+  {
+    "step": 157,
+  },
+  {
+    "step": 158,
+  },
+  {
+    "step": 159,
+  },
+  {
+    "players.1.Shield": 10,
+    "step": 160,
+  },
+  {
+    "step": 161,
+  },
+  {
+    "step": 162,
+  },
+  {
+    "step": 163,
+  },
+  {
+    "step": 164,
+  },
+  {
+    "step": 165,
+  },
+  {
+    "step": 166,
+  },
+  {
+    "step": 167,
+  },
+  {
+    "step": 168,
+  },
+  {
+    "step": 169,
+  },
+  {
+    "players.0.board.0.DamageAmount": 180,
+    "players.0.board.1.DamageAmount": 100,
+    "players.0.board.4.DamageAmount": 90,
+    "players.0.board.6.Custom_0": 9,
+    "players.1.Health": 1240,
+    "players.1.Shield": 0,
+    "step": 170,
+  },
+  {
+    "step": 171,
+  },
+  {
+    "step": 172,
+  },
+  {
+    "step": 173,
+  },
+  {
+    "step": 174,
+  },
+  {
+    "step": 175,
+  },
+  {
+    "step": 176,
+  },
+  {
+    "step": 177,
+  },
+  {
+    "step": 178,
+  },
+  {
+    "step": 179,
+  },
+  {
+    "players.0.Health": 1520,
+    "players.0.board.4.DamageAmount": 60,
+    "step": 180,
+  },
+  {
+    "step": 181,
+  },
+  {
+    "step": 182,
+  },
+  {
+    "step": 183,
+  },
+  {
+    "step": 184,
+  },
+  {
+    "step": 185,
+  },
+  {
+    "step": 186,
+  },
+  {
+    "step": 187,
+  },
+  {
+    "step": 188,
+  },
+  {
+    "step": 189,
+  },
+  {
+    "players.0.board.0.DamageAmount": 200,
+    "players.0.board.2.DamageAmount": 100,
+    "players.0.board.4.DamageAmount": 80,
+    "players.0.board.6.Custom_0": 10,
+    "players.1.Health": 1140,
+    "step": 190,
+  },
+  {
+    "step": 191,
+  },
+  {
+    "step": 192,
+  },
+  {
+    "step": 193,
+  },
+  {
+    "step": 194,
+  },
+  {
+    "step": 195,
+  },
+  {
+    "step": 196,
+  },
+  {
+    "step": 197,
+  },
+  {
+    "step": 198,
+  },
+  {
+    "step": 199,
+  },
+  {
+    "step": 200,
+  },
+  {
+    "step": 201,
+  },
+  {
+    "step": 202,
+  },
+  {
+    "step": 203,
+  },
+  {
+    "step": 204,
+  },
+  {
+    "step": 205,
+  },
+  {
+    "step": 206,
+  },
+  {
+    "step": 207,
+  },
+  {
+    "step": 208,
+  },
+  {
+    "step": 209,
+  },
+  {
+    "players.0.Health": 1515,
+    "players.0.board.4.DamageAmount": 50,
+    "players.0.board.6.Custom_0": 11,
+    "players.1.Health": 860,
+    "step": 210,
+  },
+  {
+    "step": 211,
+  },
+  {
+    "step": 212,
+  },
+  {
+    "step": 213,
+  },
+  {
+    "step": 214,
+  },
+  {
+    "step": 215,
+  },
+  {
+    "step": 216,
+  },
+  {
+    "step": 217,
+  },
+  {
+    "step": 218,
+  },
+  {
+    "step": 219,
+  },
+  {
+    "players.0.board.0.DamageAmount": 220,
+    "players.0.board.1.DamageAmount": 120,
+    "players.0.board.4.DamageAmount": 70,
+    "players.0.board.6.Custom_0": 12,
+    "players.1.Health": 760,
+    "step": 220,
+  },
+  {
+    "step": 221,
+  },
+  {
+    "step": 222,
+  },
+  {
+    "step": 223,
+  },
+  {
+    "step": 224,
+  },
+  {
+    "step": 225,
+  },
+  {
+    "step": 226,
+  },
+  {
+    "step": 227,
+  },
+  {
+    "step": 228,
+  },
+  {
+    "step": 229,
+  },
+  {
+    "step": 230,
+  },
+  {
+    "step": 231,
+  },
+  {
+    "step": 232,
+  },
+  {
+    "step": 233,
+  },
+  {
+    "step": 234,
+  },
+  {
+    "step": 235,
+  },
+  {
+    "step": 236,
+  },
+  {
+    "step": 237,
+  },
+  {
+    "step": 238,
+  },
+  {
+    "step": 239,
+  },
+  {
+    "players.0.Health": 1510,
+    "players.0.board.0.DamageAmount": 240,
+    "players.0.board.2.DamageAmount": 120,
+    "players.0.board.4.DamageAmount": 60,
+    "players.0.board.6.Custom_0": 13,
+    "players.1.Health": 640,
+    "players.1.Shield": 10,
+    "step": 240,
+  },
+  {
+    "step": 241,
+  },
+  {
+    "step": 242,
+  },
+  {
+    "step": 243,
+  },
+  {
+    "step": 244,
+  },
+  {
+    "step": 245,
+  },
+  {
+    "step": 246,
+  },
+  {
+    "step": 247,
+  },
+  {
+    "step": 248,
+  },
+  {
+    "step": 249,
+  },
+  {
+    "step": 250,
+  },
+  {
+    "step": 251,
+  },
+  {
+    "step": 252,
+  },
+  {
+    "step": 253,
+  },
+  {
+    "step": 254,
+  },
+  {
+    "step": 255,
+  },
+  {
+    "step": 256,
+  },
+  {
+    "step": 257,
+  },
+  {
+    "step": 258,
+  },
+  {
+    "step": 259,
+  },
+  {
+    "step": 260,
+  },
+  {
+    "step": 261,
+  },
+  {
+    "step": 262,
+  },
+  {
+    "step": 263,
+  },
+  {
+    "step": 264,
+  },
+  {
+    "step": 265,
+  },
+  {
+    "step": 266,
+  },
+  {
+    "step": 267,
+  },
+  {
+    "step": 268,
+  },
+  {
+    "step": 269,
+  },
+  {
+    "players.0.Health": 1505,
+    "players.0.board.0.DamageAmount": 260,
+    "players.0.board.1.DamageAmount": 140,
+    "players.0.board.4.DamageAmount": 50,
+    "players.0.board.6.Custom_0": 14,
+    "players.1.Health": 530,
+    "players.1.Shield": 0,
+    "step": 270,
+  },
+  {
+    "step": 271,
+  },
+  {
+    "step": 272,
+  },
+  {
+    "step": 273,
+  },
+  {
+    "step": 274,
+  },
+  {
+    "step": 275,
+  },
+  {
+    "step": 276,
+  },
+  {
+    "step": 277,
+  },
+  {
+    "step": 278,
+  },
+  {
+    "step": 279,
+  },
+  {
+    "players.0.board.6.Custom_0": 15,
+    "players.1.Health": 220,
+    "step": 280,
+  },
+  {
+    "step": 281,
+  },
+  {
+    "step": 282,
+  },
+  {
+    "step": 283,
+  },
+  {
+    "step": 284,
+  },
+  {
+    "step": 285,
+  },
+  {
+    "step": 286,
+  },
+  {
+    "step": 287,
+  },
+  {
+    "step": 288,
+  },
+  {
+    "step": 289,
+  },
+  {
+    "players.0.board.0.DamageAmount": 280,
+    "players.0.board.2.DamageAmount": 140,
+    "players.0.board.4.DamageAmount": 70,
+    "players.0.board.6.Custom_0": 16,
+    "players.1.Health": 80,
+    "step": 290,
+  },
+  {
+    "step": 291,
+  },
+  {
+    "step": 292,
+  },
+  {
+    "step": 293,
+  },
+  {
+    "step": 294,
+  },
+  {
+    "step": 295,
+  },
+  {
+    "step": 296,
+  },
+  {
+    "step": 297,
+  },
+  {
+    "step": 298,
+  },
+  {
+    "step": 299,
+  },
+  {
+    "players.0.Health": 1499,
+    "players.0.board.4.DamageAmount": 34,
+    "players.1.Health": 79,
+    "step": 300,
+  },
+  {
+    "players.0.Health": 1498,
+    "players.0.board.4.DamageAmount": 28,
+    "players.1.Health": 78,
+    "step": 301,
+  },
+  {
+    "players.0.Health": 1497,
+    "players.0.board.4.DamageAmount": 22,
+    "players.1.Health": 77,
+    "step": 302,
+  },
+  {
+    "players.0.Health": 1496,
+    "players.0.board.4.DamageAmount": 16,
+    "players.1.Health": 76,
+    "step": 303,
+  },
+  {
+    "players.0.Health": 1495,
+    "players.0.board.4.DamageAmount": 10,
+    "players.1.Health": 75,
+    "step": 304,
+  },
+  {
+    "players.0.Health": 1494,
+    "players.0.board.4.DamageAmount": 4,
+    "players.1.Health": 74,
+    "step": 305,
+  },
+  {
+    "players.0.Health": 1493,
+    "players.0.board.4.DamageAmount": -2,
+    "players.1.Health": 73,
+    "step": 306,
+  },
+  {
+    "players.0.Health": 1492,
+    "players.0.board.4.DamageAmount": -8,
+    "players.1.Health": 72,
+    "step": 307,
+  },
+  {
+    "players.0.Health": 1491,
+    "players.0.board.4.DamageAmount": -14,
+    "players.1.Health": 71,
+    "step": 308,
+  },
+  {
+    "players.0.Health": 1490,
+    "players.0.board.4.DamageAmount": -20,
+    "players.1.Health": 70,
+    "step": 309,
+  },
+  {
+    "players.0.Health": 1487,
+    "players.0.board.4.DamageAmount": -38,
+    "players.1.Health": 67,
+    "step": 310,
+  },
+  {
+    "players.0.Health": 1482,
+    "players.0.board.4.DamageAmount": -68,
+    "players.1.Health": 62,
+    "step": 311,
+  },
+  {
+    "players.0.Health": 1475,
+    "players.0.board.4.DamageAmount": -110,
+    "players.1.Health": 55,
+    "step": 312,
+  },
+  {
+    "players.0.Health": 1466,
+    "players.0.board.4.DamageAmount": -164,
+    "players.1.Health": 46,
+    "step": 313,
+  },
+  {
+    "players.0.Health": 1455,
+    "players.0.board.4.DamageAmount": -230,
+    "players.1.Health": 35,
+    "step": 314,
+  },
+  {
+    "players.0.Health": 1442,
+    "players.0.board.4.DamageAmount": -308,
+    "players.1.Health": 22,
+    "step": 315,
+  },
+  {
+    "players.0.Health": 1427,
+    "players.0.board.4.DamageAmount": -398,
+    "players.1.Health": 7,
+    "step": 316,
+  },
+  {
+    "isPlaying": false,
+    "players.0.Health": 1410,
+    "players.0.board.4.DamageAmount": -500,
+    "players.1.Health": -10,
+    "step": 317,
+    "winner": "Enemy",
   },
 ]
 `;
@@ -83221,8 +84349,949 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 10 - Awake
 exports[`Encounter snapshots should match > Matches snapshot for "Day 10 - Boss Harrow" 1`] = `
 [
   {
-    "error": "sourceCardID is required for TTargetCardTriggerSource",
     "step": 1,
+  },
+  {
+    "step": 2,
+  },
+  {
+    "step": 3,
+  },
+  {
+    "step": 4,
+  },
+  {
+    "step": 5,
+  },
+  {
+    "step": 6,
+  },
+  {
+    "step": 7,
+  },
+  {
+    "step": 8,
+  },
+  {
+    "step": 9,
+  },
+  {
+    "step": 10,
+  },
+  {
+    "step": 11,
+  },
+  {
+    "step": 12,
+  },
+  {
+    "step": 13,
+  },
+  {
+    "step": 14,
+  },
+  {
+    "step": 15,
+  },
+  {
+    "step": 16,
+  },
+  {
+    "step": 17,
+  },
+  {
+    "step": 18,
+  },
+  {
+    "step": 19,
+  },
+  {
+    "players.1.Health": 1935,
+    "step": 20,
+  },
+  {
+    "step": 21,
+  },
+  {
+    "step": 22,
+  },
+  {
+    "step": 23,
+  },
+  {
+    "step": 24,
+  },
+  {
+    "step": 25,
+  },
+  {
+    "step": 26,
+  },
+  {
+    "step": 27,
+  },
+  {
+    "step": 28,
+  },
+  {
+    "step": 29,
+  },
+  {
+    "players.0.Health": 2320,
+    "step": 30,
+  },
+  {
+    "step": 31,
+  },
+  {
+    "step": 32,
+  },
+  {
+    "step": 33,
+  },
+  {
+    "step": 34,
+  },
+  {
+    "step": 35,
+  },
+  {
+    "step": 36,
+  },
+  {
+    "step": 37,
+  },
+  {
+    "step": 38,
+  },
+  {
+    "step": 39,
+  },
+  {
+    "players.1.Health": 1870,
+    "step": 40,
+  },
+  {
+    "step": 41,
+  },
+  {
+    "step": 42,
+  },
+  {
+    "step": 43,
+  },
+  {
+    "step": 44,
+  },
+  {
+    "step": 45,
+  },
+  {
+    "step": 46,
+  },
+  {
+    "step": 47,
+  },
+  {
+    "step": 48,
+  },
+  {
+    "step": 49,
+  },
+  {
+    "step": 50,
+  },
+  {
+    "step": 51,
+  },
+  {
+    "step": 52,
+  },
+  {
+    "step": 53,
+  },
+  {
+    "step": 54,
+  },
+  {
+    "step": 55,
+  },
+  {
+    "step": 56,
+  },
+  {
+    "step": 57,
+  },
+  {
+    "step": 58,
+  },
+  {
+    "step": 59,
+  },
+  {
+    "players.0.Health": 2315,
+    "players.0.board.0.Slow": 2000,
+    "players.0.board.1.DamageAmount": 50,
+    "players.0.board.2.DamageAmount": 30,
+    "players.0.board.3.DamageAmount": 33,
+    "players.0.board.4.DamageAmount": 35,
+    "players.0.board.5.DamageAmount": 25,
+    "players.0.board.6.DamageAmount": 30,
+    "players.1.Health": 1720,
+    "players.1.board.1.Slow": 2000,
+    "step": 60,
+  },
+  {
+    "players.0.board.0.Slow": 1900,
+    "players.1.board.1.Slow": 1900,
+    "step": 61,
+  },
+  {
+    "players.0.board.0.Slow": 1800,
+    "players.1.board.1.Slow": 1800,
+    "step": 62,
+  },
+  {
+    "players.0.board.0.Slow": 1700,
+    "players.1.board.1.Slow": 1700,
+    "step": 63,
+  },
+  {
+    "players.0.board.0.Slow": 1600,
+    "players.1.board.1.Slow": 1600,
+    "step": 64,
+  },
+  {
+    "players.0.board.0.Slow": 1500,
+    "players.1.board.1.Slow": 1500,
+    "step": 65,
+  },
+  {
+    "players.0.board.0.Slow": 1400,
+    "players.1.board.1.Slow": 1400,
+    "step": 66,
+  },
+  {
+    "players.0.board.0.Slow": 1300,
+    "players.1.board.1.Slow": 1300,
+    "step": 67,
+  },
+  {
+    "players.0.board.0.Slow": 1200,
+    "players.1.board.1.Slow": 1200,
+    "step": 68,
+  },
+  {
+    "players.0.board.0.Slow": 1100,
+    "players.1.board.1.Slow": 1100,
+    "step": 69,
+  },
+  {
+    "multicast.0": {
+      "boardCardID": 1,
+      "playerID": 0,
+      "tick": 7300,
+    },
+    "players.0.Health": 2325,
+    "players.0.board.0.Slow": 1000,
+    "players.1.Health": 1547,
+    "players.1.board.1.Slow": 4000,
+    "step": 70,
+  },
+  {
+    "players.0.board.0.Slow": 900,
+    "players.1.board.1.Slow": 3900,
+    "step": 71,
+  },
+  {
+    "players.0.board.0.Slow": 800,
+    "players.1.board.1.Slow": 3800,
+    "step": 72,
+  },
+  {
+    "multicast.0": undefined,
+    "players.0.board.0.Slow": 700,
+    "players.1.Health": 1427,
+    "players.1.board.1.Slow": 3700,
+    "step": 73,
+  },
+  {
+    "players.0.board.0.Slow": 600,
+    "players.1.board.1.Slow": 3600,
+    "step": 74,
+  },
+  {
+    "players.0.board.0.Slow": 500,
+    "players.1.board.1.Slow": 3500,
+    "step": 75,
+  },
+  {
+    "players.0.board.0.Slow": 400,
+    "players.1.board.1.Slow": 3400,
+    "step": 76,
+  },
+  {
+    "players.0.board.0.Slow": 300,
+    "players.1.board.1.Slow": 3300,
+    "step": 77,
+  },
+  {
+    "players.0.board.0.Slow": 200,
+    "players.1.board.1.Slow": 3200,
+    "step": 78,
+  },
+  {
+    "players.0.board.0.Slow": 100,
+    "players.1.board.1.Slow": 3100,
+    "step": 79,
+  },
+  {
+    "players.0.board.0.Slow": 0,
+    "players.1.Health": 1332,
+    "players.1.Shield": 10,
+    "players.1.board.0.Slow": 2000,
+    "players.1.board.1.Slow": 3000,
+    "step": 80,
+  },
+  {
+    "players.1.board.0.Slow": 1900,
+    "players.1.board.1.Slow": 2900,
+    "step": 81,
+  },
+  {
+    "players.1.board.0.Slow": 1800,
+    "players.1.board.1.Slow": 2800,
+    "step": 82,
+  },
+  {
+    "players.1.board.0.Slow": 1700,
+    "players.1.board.1.Slow": 2700,
+    "step": 83,
+  },
+  {
+    "players.1.board.0.Slow": 1600,
+    "players.1.board.1.Slow": 2600,
+    "step": 84,
+  },
+  {
+    "players.1.board.0.Slow": 1500,
+    "players.1.board.1.Slow": 2500,
+    "step": 85,
+  },
+  {
+    "players.1.board.0.Slow": 1400,
+    "players.1.board.1.Slow": 2400,
+    "step": 86,
+  },
+  {
+    "players.1.board.0.Slow": 1300,
+    "players.1.board.1.Slow": 2300,
+    "step": 87,
+  },
+  {
+    "players.1.board.0.Slow": 1200,
+    "players.1.board.1.Slow": 2200,
+    "step": 88,
+  },
+  {
+    "players.1.board.0.Slow": 1100,
+    "players.1.board.1.Slow": 2100,
+    "step": 89,
+  },
+  {
+    "players.1.board.0.Slow": 1000,
+    "players.1.board.1.Slow": 2000,
+    "step": 90,
+  },
+  {
+    "players.1.board.0.Slow": 900,
+    "players.1.board.1.Slow": 1900,
+    "step": 91,
+  },
+  {
+    "players.1.board.0.Slow": 800,
+    "players.1.board.1.Slow": 1800,
+    "step": 92,
+  },
+  {
+    "players.1.board.0.Slow": 700,
+    "players.1.board.1.Slow": 1700,
+    "step": 93,
+  },
+  {
+    "players.1.board.0.Slow": 600,
+    "players.1.board.1.Slow": 1600,
+    "step": 94,
+  },
+  {
+    "players.1.board.0.Slow": 500,
+    "players.1.board.1.Slow": 1500,
+    "step": 95,
+  },
+  {
+    "players.1.board.0.Slow": 400,
+    "players.1.board.1.Slow": 1400,
+    "step": 96,
+  },
+  {
+    "players.1.board.0.Slow": 300,
+    "players.1.board.1.Slow": 1300,
+    "step": 97,
+  },
+  {
+    "players.1.board.0.Slow": 200,
+    "players.1.board.1.Slow": 1200,
+    "step": 98,
+  },
+  {
+    "players.1.board.0.Slow": 100,
+    "players.1.board.1.Slow": 1100,
+    "step": 99,
+  },
+  {
+    "players.1.Health": 1247,
+    "players.1.Shield": 0,
+    "players.1.board.0.Slow": 0,
+    "players.1.board.1.Slow": 1000,
+    "step": 100,
+  },
+  {
+    "players.1.board.1.Slow": 900,
+    "step": 101,
+  },
+  {
+    "players.1.board.1.Slow": 800,
+    "step": 102,
+  },
+  {
+    "players.1.board.1.Slow": 700,
+    "step": 103,
+  },
+  {
+    "players.1.board.1.Slow": 600,
+    "step": 104,
+  },
+  {
+    "players.1.board.1.Slow": 500,
+    "step": 105,
+  },
+  {
+    "players.1.board.1.Slow": 400,
+    "step": 106,
+  },
+  {
+    "players.1.board.1.Slow": 300,
+    "step": 107,
+  },
+  {
+    "players.1.board.1.Slow": 200,
+    "step": 108,
+  },
+  {
+    "players.1.board.1.Slow": 100,
+    "step": 109,
+  },
+  {
+    "players.1.board.1.Slow": 0,
+    "step": 110,
+  },
+  {
+    "step": 111,
+  },
+  {
+    "step": 112,
+  },
+  {
+    "step": 113,
+  },
+  {
+    "step": 114,
+  },
+  {
+    "players.0.Health": 2320,
+    "step": 115,
+  },
+  {
+    "step": 116,
+  },
+  {
+    "step": 117,
+  },
+  {
+    "step": 118,
+  },
+  {
+    "step": 119,
+  },
+  {
+    "players.1.Health": 1097,
+    "players.1.board.0.Slow": 2000,
+    "step": 120,
+  },
+  {
+    "players.1.board.0.Slow": 1900,
+    "step": 121,
+  },
+  {
+    "players.1.board.0.Slow": 1800,
+    "step": 122,
+  },
+  {
+    "players.1.board.0.Slow": 1700,
+    "step": 123,
+  },
+  {
+    "players.1.board.0.Slow": 1600,
+    "step": 124,
+  },
+  {
+    "players.1.board.0.Slow": 1500,
+    "step": 125,
+  },
+  {
+    "players.1.board.0.Slow": 1400,
+    "step": 126,
+  },
+  {
+    "players.1.board.0.Slow": 1300,
+    "step": 127,
+  },
+  {
+    "players.1.board.0.Slow": 1200,
+    "step": 128,
+  },
+  {
+    "players.1.board.0.Slow": 1100,
+    "step": 129,
+  },
+  {
+    "players.0.board.0.Slow": 2000,
+    "players.0.board.1.DamageAmount": 65,
+    "players.0.board.2.DamageAmount": 45,
+    "players.0.board.3.DamageAmount": 48,
+    "players.0.board.4.DamageAmount": 50,
+    "players.0.board.5.DamageAmount": 40,
+    "players.0.board.6.DamageAmount": 45,
+    "players.1.board.0.Slow": 1000,
+    "step": 130,
+  },
+  {
+    "players.0.board.0.Slow": 1900,
+    "players.1.board.0.Slow": 900,
+    "step": 131,
+  },
+  {
+    "players.0.board.0.Slow": 1800,
+    "players.1.board.0.Slow": 800,
+    "step": 132,
+  },
+  {
+    "players.0.board.0.Slow": 1700,
+    "players.1.board.0.Slow": 700,
+    "step": 133,
+  },
+  {
+    "players.0.board.0.Slow": 1600,
+    "players.1.board.0.Slow": 600,
+    "step": 134,
+  },
+  {
+    "players.0.board.0.Slow": 1500,
+    "players.1.board.0.Slow": 500,
+    "step": 135,
+  },
+  {
+    "players.0.board.0.Slow": 1400,
+    "players.1.board.0.Slow": 400,
+    "step": 136,
+  },
+  {
+    "players.0.board.0.Slow": 1300,
+    "players.1.board.0.Slow": 300,
+    "step": 137,
+  },
+  {
+    "players.0.board.0.Slow": 1200,
+    "players.1.board.0.Slow": 200,
+    "step": 138,
+  },
+  {
+    "players.0.board.0.Slow": 1100,
+    "players.1.board.0.Slow": 100,
+    "step": 139,
+  },
+  {
+    "players.0.board.0.Slow": 1000,
+    "players.1.Health": 904,
+    "players.1.board.0.Slow": 3000,
+    "step": 140,
+  },
+  {
+    "players.0.board.0.Slow": 900,
+    "players.1.board.0.Slow": 2900,
+    "step": 141,
+  },
+  {
+    "players.0.board.0.Slow": 800,
+    "players.1.board.0.Slow": 2800,
+    "step": 142,
+  },
+  {
+    "multicast.0": {
+      "boardCardID": 1,
+      "playerID": 0,
+      "tick": 14600,
+    },
+    "players.0.Health": 2325,
+    "players.0.board.0.Slow": 700,
+    "players.1.Health": 754,
+    "players.1.board.0.Slow": 2700,
+    "step": 143,
+  },
+  {
+    "players.0.board.0.Slow": 600,
+    "players.1.board.0.Slow": 2600,
+    "step": 144,
+  },
+  {
+    "players.0.Health": 2320,
+    "players.0.board.0.Slow": 500,
+    "players.1.board.0.Slow": 2500,
+    "step": 145,
+  },
+  {
+    "multicast.0": undefined,
+    "players.0.Health": 2325,
+    "players.0.board.0.Slow": 400,
+    "players.1.Health": 604,
+    "players.1.board.0.Slow": 2400,
+    "step": 146,
+  },
+  {
+    "players.0.board.0.Slow": 300,
+    "players.1.board.0.Slow": 2300,
+    "step": 147,
+  },
+  {
+    "players.0.board.0.Slow": 200,
+    "players.1.board.0.Slow": 2200,
+    "step": 148,
+  },
+  {
+    "players.0.board.0.Slow": 100,
+    "players.1.board.0.Slow": 2100,
+    "step": 149,
+  },
+  {
+    "players.0.board.0.Slow": 0,
+    "players.1.board.0.Slow": 2000,
+    "step": 150,
+  },
+  {
+    "players.1.board.0.Slow": 1900,
+    "step": 151,
+  },
+  {
+    "players.1.board.0.Slow": 1800,
+    "step": 152,
+  },
+  {
+    "players.1.board.0.Slow": 1700,
+    "step": 153,
+  },
+  {
+    "players.1.board.0.Slow": 1600,
+    "step": 154,
+  },
+  {
+    "players.1.board.0.Slow": 1500,
+    "step": 155,
+  },
+  {
+    "players.1.board.0.Slow": 1400,
+    "step": 156,
+  },
+  {
+    "players.1.board.0.Slow": 1300,
+    "step": 157,
+  },
+  {
+    "players.1.board.0.Slow": 1200,
+    "step": 158,
+  },
+  {
+    "players.1.board.0.Slow": 1100,
+    "step": 159,
+  },
+  {
+    "players.1.Health": 479,
+    "players.1.board.0.Slow": 1000,
+    "step": 160,
+  },
+  {
+    "players.1.board.0.Slow": 900,
+    "step": 161,
+  },
+  {
+    "players.1.board.0.Slow": 800,
+    "step": 162,
+  },
+  {
+    "players.1.board.0.Slow": 700,
+    "step": 163,
+  },
+  {
+    "players.1.board.0.Slow": 600,
+    "step": 164,
+  },
+  {
+    "players.1.board.0.Slow": 500,
+    "step": 165,
+  },
+  {
+    "players.1.board.0.Slow": 400,
+    "step": 166,
+  },
+  {
+    "players.1.board.0.Slow": 300,
+    "step": 167,
+  },
+  {
+    "players.1.board.0.Slow": 200,
+    "step": 168,
+  },
+  {
+    "players.1.board.0.Slow": 100,
+    "step": 169,
+  },
+  {
+    "players.1.board.0.Slow": 0,
+    "step": 170,
+  },
+  {
+    "step": 171,
+  },
+  {
+    "step": 172,
+  },
+  {
+    "step": 173,
+  },
+  {
+    "step": 174,
+  },
+  {
+    "players.0.Health": 2320,
+    "step": 175,
+  },
+  {
+    "step": 176,
+  },
+  {
+    "step": 177,
+  },
+  {
+    "step": 178,
+  },
+  {
+    "step": 179,
+  },
+  {
+    "players.1.Health": 284,
+    "players.1.board.1.Slow": 2000,
+    "step": 180,
+  },
+  {
+    "players.1.board.1.Slow": 1900,
+    "step": 181,
+  },
+  {
+    "players.1.board.1.Slow": 1800,
+    "step": 182,
+  },
+  {
+    "players.1.board.1.Slow": 1700,
+    "step": 183,
+  },
+  {
+    "players.1.board.1.Slow": 1600,
+    "step": 184,
+  },
+  {
+    "players.1.board.1.Slow": 1500,
+    "step": 185,
+  },
+  {
+    "players.1.board.1.Slow": 1400,
+    "step": 186,
+  },
+  {
+    "players.1.board.1.Slow": 1300,
+    "step": 187,
+  },
+  {
+    "players.1.board.1.Slow": 1200,
+    "step": 188,
+  },
+  {
+    "players.1.board.1.Slow": 1100,
+    "step": 189,
+  },
+  {
+    "players.1.board.1.Slow": 1000,
+    "step": 190,
+  },
+  {
+    "players.1.board.1.Slow": 900,
+    "step": 191,
+  },
+  {
+    "players.1.board.1.Slow": 800,
+    "step": 192,
+  },
+  {
+    "players.1.board.1.Slow": 700,
+    "step": 193,
+  },
+  {
+    "players.1.board.1.Slow": 600,
+    "step": 194,
+  },
+  {
+    "players.1.Shield": 10,
+    "players.1.board.0.Slow": 2000,
+    "players.1.board.1.Slow": 500,
+    "step": 195,
+  },
+  {
+    "players.1.board.0.Slow": 1900,
+    "players.1.board.1.Slow": 400,
+    "step": 196,
+  },
+  {
+    "players.1.board.0.Slow": 1800,
+    "players.1.board.1.Slow": 300,
+    "step": 197,
+  },
+  {
+    "players.1.board.0.Slow": 1700,
+    "players.1.board.1.Slow": 200,
+    "step": 198,
+  },
+  {
+    "players.1.board.0.Slow": 1600,
+    "players.1.board.1.Slow": 100,
+    "step": 199,
+  },
+  {
+    "players.0.board.0.Slow": 2000,
+    "players.0.board.1.DamageAmount": 80,
+    "players.0.board.2.DamageAmount": 60,
+    "players.0.board.3.DamageAmount": 63,
+    "players.0.board.4.DamageAmount": 65,
+    "players.0.board.5.DamageAmount": 55,
+    "players.0.board.6.DamageAmount": 60,
+    "players.1.Health": 139,
+    "players.1.Shield": 0,
+    "players.1.board.0.Slow": 1500,
+    "players.1.board.1.Slow": 0,
+    "step": 200,
+  },
+  {
+    "players.0.board.0.Slow": 1900,
+    "players.1.board.0.Slow": 1400,
+    "step": 201,
+  },
+  {
+    "players.0.board.0.Slow": 1800,
+    "players.1.board.0.Slow": 1300,
+    "step": 202,
+  },
+  {
+    "players.0.board.0.Slow": 1700,
+    "players.1.board.0.Slow": 1200,
+    "step": 203,
+  },
+  {
+    "players.0.board.0.Slow": 1600,
+    "players.1.board.0.Slow": 1100,
+    "step": 204,
+  },
+  {
+    "players.0.board.0.Slow": 1500,
+    "players.1.board.0.Slow": 1000,
+    "step": 205,
+  },
+  {
+    "players.0.board.0.Slow": 1400,
+    "players.1.board.0.Slow": 900,
+    "step": 206,
+  },
+  {
+    "players.0.board.0.Slow": 1300,
+    "players.1.board.0.Slow": 800,
+    "step": 207,
+  },
+  {
+    "players.0.board.0.Slow": 1200,
+    "players.1.board.0.Slow": 700,
+    "step": 208,
+  },
+  {
+    "players.0.board.0.Slow": 1100,
+    "players.1.board.0.Slow": 600,
+    "step": 209,
+  },
+  {
+    "players.0.board.0.Slow": 1000,
+    "players.1.Health": 56,
+    "players.1.board.0.Slow": 500,
+    "players.1.board.1.Slow": 3000,
+    "step": 210,
+  },
+  {
+    "players.0.board.0.Slow": 900,
+    "players.1.board.0.Slow": 400,
+    "players.1.board.1.Slow": 2900,
+    "step": 211,
+  },
+  {
+    "players.0.board.0.Slow": 800,
+    "players.1.board.0.Slow": 300,
+    "players.1.board.1.Slow": 2800,
+    "step": 212,
+  },
+  {
+    "players.0.board.0.Slow": 700,
+    "players.1.board.0.Slow": 200,
+    "players.1.board.1.Slow": 2700,
+    "step": 213,
+  },
+  {
+    "players.0.board.0.Slow": 600,
+    "players.1.board.0.Slow": 100,
+    "players.1.board.1.Slow": 2600,
+    "step": 214,
+  },
+  {
+    "players.0.board.0.Slow": 500,
+    "players.1.board.0.Slow": 0,
+    "players.1.board.1.Slow": 2500,
+    "step": 215,
+  },
+  {
+    "isPlaying": false,
+    "multicast.0": {
+      "boardCardID": 1,
+      "playerID": 0,
+      "tick": 21900,
+    },
+    "players.0.Health": 2325,
+    "players.0.board.0.Slow": 400,
+    "players.1.Health": -124,
+    "players.1.board.1.Slow": 2400,
+    "step": 216,
+    "winner": "Enemy",
   },
 ]
 `;
