@@ -727,6 +727,7 @@ function createTriggerCheck(
             gs,
             ability.Trigger.Subject,
             boardCardID,
+            e,
           );
           // Return true if any of the subjects are the source card
           return subjects.some((subject) =>
@@ -783,6 +784,7 @@ function createTriggerCheck(
             gs,
             ability.Trigger.Subject,
             boardCardID,
+            e,
           );
           return subjects.some((subject) =>
             boardCardIdIsEqual(subject, e.sourceCardID),
@@ -803,6 +805,7 @@ function createTriggerCheck(
             gs,
             ability.Trigger.Subject,
             boardCardID,
+            e,
           );
           return subjects.some(
             (subject) => subject.cardIdx === boardCardID.cardIdx,
@@ -824,6 +827,7 @@ function createTriggerCheck(
             gs,
             ability.Trigger.Subject,
             boardCardID,
+            e,
           );
           return subjects.some((subject) =>
             boardCardIdIsEqual(subject, e.sourceCardID),
@@ -844,6 +848,7 @@ function createTriggerCheck(
             gs,
             ability.Trigger.Subject,
             boardCardID,
+            e,
           );
           return subjects.some((subject) =>
             boardCardIdIsEqual(subject, e.sourceCardID),
@@ -902,6 +907,7 @@ function createTriggerCheck(
             gs,
             ability.Trigger.Subject,
             boardCardID,
+            e,
           );
           return subjects.some((subject) => subject === e.sourceCardID);
         }
