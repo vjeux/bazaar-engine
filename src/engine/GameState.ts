@@ -33,6 +33,9 @@ function _createBoardCardFromCard(
 
   // All cards have a CritChance base of 0
   baseAttributes.CritChance = 0;
+  baseAttributes.Haste = 0;
+  baseAttributes.Slow = 0;
+  baseAttributes.Freeze = 0;
 
   // Combine with other required properties
   let attributes = {

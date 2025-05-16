@@ -994,7 +994,7 @@ function processCardCooldowns(gameState: GameState): void {
 
       // Calculate tick rate based on slow/haste
       let tickRate = 100; // TICK_RATE
-      const slow = card[AttributeType.Slow] as number | undefined;
+      const slow = card[AttributeType.Slow];
       if (slow && slow > 0) {
         tickRate /= 2;
 
@@ -1007,7 +1007,7 @@ function processCardCooldowns(gameState: GameState): void {
         ).execute(gameState);
       }
 
-      const haste = card[AttributeType.Haste] as number | undefined;
+      const haste = card[AttributeType.Haste];
       if (haste && haste > 0) {
         tickRate *= 2;
 
