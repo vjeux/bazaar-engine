@@ -12,7 +12,6 @@ export function getActionValue(
   gameState: GameState,
   value: Value,
   sourceCardID: BoardCardID,
-  targetCardID?: BoardCardID,
   event?: GameEvents[keyof GameEvents],
   metadata?: { changeValue?: number },
 ): number {
@@ -63,6 +62,7 @@ export function getActionValue(
         gameState,
         value.Target,
         sourceCardID,
+        event,
       );
       targetPlayers.forEach((valueTargetPlayerID) => {
         if (!value.AttributeType) {
@@ -137,7 +137,6 @@ export function getActionValue(
       gameState,
       value.Modifier.Value,
       sourceCardID,
-      targetCardID,
     );
     if (value.Modifier.ModifyMode === "Multiply") {
       amount *= modifierValue;

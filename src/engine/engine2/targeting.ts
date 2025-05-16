@@ -331,7 +331,7 @@ export function getTargetPlayers(
   targetConfig: TargetConfig,
   sourceCard: BoardCardID,
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  event: GameEvents[keyof GameEvents],
+  event?: GameEvents[keyof GameEvents],
 ): number[] {
   let results: number[] = [];
 
@@ -416,7 +416,7 @@ export function testCardConditions(
       }
 
       const targetBoardCardAtrributeValue =
-        targetBoardCard[conditions.Attribute];
+        targetBoardCard[conditions.Attribute]; // TODO: use the getcardattribute func to account for auras
 
       if (!conditions.ComparisonValue) {
         throw new Error(
@@ -601,6 +601,7 @@ export function testPlayerConditions(
   conditions: Conditions | null,
   sourceCard: BoardCardID,
   targetPlayerID: number,
+  event?: GameEvents[keyof GameEvents],
 ): boolean {
   if (conditions == null) {
     return true;
@@ -614,9 +615,8 @@ export function testPlayerConditions(
         );
       }
 
-      // Access player attribute safely using string indexing
       const player = gameState.players[targetPlayerID];
-      const value = player[conditions.Attribute as keyof typeof player];
+      const value = player[conditions.Attribute as keyof typeof player]; // TODO: should type this properly
 
       if (!conditions.ComparisonValue) {
         throw new Error(
@@ -624,9 +624,12 @@ export function testPlayerConditions(
         );
       }
 
-      // Note: getActionValue would need to be implemented
-      // const comparisonValue = getActionValue(...);
-      const comparisonValue = 0; // Placeholder
+      const comparisonValue = getActionValue(
+        gameState,
+        conditions.ComparisonValue,
+        sourceCard,
+        event,
+      );
 
       switch (conditions.ComparisonOperator) {
         case "Equal":
