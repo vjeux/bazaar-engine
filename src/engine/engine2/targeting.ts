@@ -1,7 +1,12 @@
 import { GameState, BoardCardID } from "./engine2";
 import { Source, Target, Subject, Conditions } from "../../types/cardTypes";
 import prand from "pure-rand";
-import { GameEvent, CardFiredEvent, CardItemUsedEvent } from "./eventHandlers";
+import {
+  GameEvent,
+  CardFiredEvent,
+  CardItemUsedEvent,
+  CardAttributeChangedEvent,
+} from "./eventHandlers";
 import { getActionValue } from "./getActionValue";
 import { HiddenTag, Tag } from "../../types/shared";
 import { PLAYER_PLAYER_IDX } from "@/lib/constants";
@@ -31,6 +36,8 @@ export function getTargetCards(
         event instanceof CardItemUsedEvent
       ) {
         results.push(event.sourceCardID);
+      } else if (event instanceof CardAttributeChangedEvent) {
+        results.push(event.modifiedBoardCardID);
       } else {
         throw new Error(
           "sourceCardID is required for TTargetCardTriggerSource",

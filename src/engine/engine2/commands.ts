@@ -1082,7 +1082,7 @@ export class ApplyShieldCommand implements Command {
   constructor(
     private targetPlayerID: number,
     private amount: number,
-    private sourceCardID: BoardCardID | null,
+    private sourceCardID: BoardCardID,
   ) {}
 
   execute(gameState: GameState): void {
@@ -1119,7 +1119,7 @@ export class ApplyPoisonCommand implements Command {
   constructor(
     private targetPlayerID: number,
     private amount: number,
-    private sourceCardID: BoardCardID | null,
+    private sourceCardID: BoardCardID,
   ) {}
 
   execute(gameState: GameState): void {
@@ -1158,7 +1158,7 @@ export class ApplyBurnCommand implements Command {
   constructor(
     private targetPlayerID: number,
     private amount: number,
-    private sourceCardID: BoardCardID | null,
+    private sourceCardID: BoardCardID,
   ) {}
 
   execute(gameState: GameState): void {

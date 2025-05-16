@@ -735,6 +735,7 @@ function createTriggerCheck(
         }
         return false;
       }
+      // TODO implement  "PreviousValue": null, "CurrentValue": null, "Source": null, see Ramrod's ability 1
       case TriggerType.TTriggerOnCardAttributeChanged: {
         if (e instanceof CardAttributeChangedEvent) {
           if (!ability.Trigger.Subject) {
@@ -748,6 +749,7 @@ function createTriggerCheck(
             gs,
             ability.Trigger.Subject,
             boardCardID,
+            e,
           );
           return subjects.some((subject) => {
             if (boardCardIdIsEqual(subject, e.modifiedBoardCardID)) {

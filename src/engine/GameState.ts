@@ -76,6 +76,9 @@ function _createBoardCardFromCard(
     }
   }
 
+  // Set ammo to ammo max
+  attributes.Ammo = attributes.AmmoMax;
+
   // Override the attributes
   for (const [attribute, modifier] of Object.entries(attributeOverrides)) {
     attributes[attribute as AttributeType] = modifier;

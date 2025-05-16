@@ -92591,8 +92591,1593 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 10 - Void 
 exports[`Encounter snapshots should match > Matches snapshot for "Day 10 - Volkas Enforcer" 1`] = `
 [
   {
-    "error": "sourceCardID is required for TTargetCardTriggerSource",
+    "players.1.board.1.Freeze": 5900,
     "step": 1,
+  },
+  {
+    "players.1.board.1.Freeze": 5800,
+    "step": 2,
+  },
+  {
+    "players.1.board.1.Freeze": 5700,
+    "step": 3,
+  },
+  {
+    "players.1.board.1.Freeze": 5600,
+    "step": 4,
+  },
+  {
+    "players.1.board.1.Freeze": 5500,
+    "step": 5,
+  },
+  {
+    "players.1.board.1.Freeze": 5400,
+    "step": 6,
+  },
+  {
+    "players.1.board.1.Freeze": 5300,
+    "step": 7,
+  },
+  {
+    "players.1.board.1.Freeze": 5200,
+    "step": 8,
+  },
+  {
+    "players.1.board.1.Freeze": 5100,
+    "step": 9,
+  },
+  {
+    "players.1.board.1.Freeze": 5000,
+    "step": 10,
+  },
+  {
+    "players.1.board.1.Freeze": 4900,
+    "step": 11,
+  },
+  {
+    "players.1.board.1.Freeze": 4800,
+    "step": 12,
+  },
+  {
+    "players.1.board.1.Freeze": 4700,
+    "step": 13,
+  },
+  {
+    "players.1.board.1.Freeze": 4600,
+    "step": 14,
+  },
+  {
+    "players.1.board.1.Freeze": 4500,
+    "step": 15,
+  },
+  {
+    "players.1.board.1.Freeze": 4400,
+    "step": 16,
+  },
+  {
+    "players.1.board.1.Freeze": 4300,
+    "step": 17,
+  },
+  {
+    "players.1.board.1.Freeze": 4200,
+    "step": 18,
+  },
+  {
+    "players.1.board.1.Freeze": 4100,
+    "step": 19,
+  },
+  {
+    "players.1.board.1.Freeze": 4000,
+    "step": 20,
+  },
+  {
+    "players.1.board.1.Freeze": 3900,
+    "step": 21,
+  },
+  {
+    "players.1.board.1.Freeze": 3800,
+    "step": 22,
+  },
+  {
+    "players.1.board.1.Freeze": 3700,
+    "step": 23,
+  },
+  {
+    "players.1.board.1.Freeze": 3600,
+    "step": 24,
+  },
+  {
+    "players.1.board.1.Freeze": 3500,
+    "step": 25,
+  },
+  {
+    "players.1.board.1.Freeze": 3400,
+    "step": 26,
+  },
+  {
+    "players.1.board.1.Freeze": 3300,
+    "step": 27,
+  },
+  {
+    "players.1.board.1.Freeze": 3200,
+    "step": 28,
+  },
+  {
+    "players.1.board.1.Freeze": 3100,
+    "step": 29,
+  },
+  {
+    "players.1.board.1.Freeze": 3000,
+    "step": 30,
+  },
+  {
+    "players.1.board.1.Freeze": 2900,
+    "step": 31,
+  },
+  {
+    "players.1.board.1.Freeze": 2800,
+    "step": 32,
+  },
+  {
+    "players.1.board.1.Freeze": 2700,
+    "step": 33,
+  },
+  {
+    "players.1.board.1.Freeze": 2600,
+    "step": 34,
+  },
+  {
+    "players.1.board.1.Freeze": 2500,
+    "step": 35,
+  },
+  {
+    "players.1.board.1.Freeze": 2400,
+    "step": 36,
+  },
+  {
+    "players.1.board.1.Freeze": 2300,
+    "step": 37,
+  },
+  {
+    "players.1.board.1.Freeze": 2200,
+    "step": 38,
+  },
+  {
+    "players.1.board.1.Freeze": 2100,
+    "step": 39,
+  },
+  {
+    "players.0.Shield": 50,
+    "players.0.board.0.Freeze": 500,
+    "players.0.board.1.Freeze": 500,
+    "players.0.board.2.Freeze": 500,
+    "players.0.board.7.Custom_0": 1,
+    "players.1.board.1.Freeze": 4000,
+    "step": 40,
+  },
+  {
+    "players.0.board.0.Freeze": 400,
+    "players.0.board.1.Freeze": 400,
+    "players.0.board.2.Freeze": 400,
+    "players.1.board.1.Freeze": 3900,
+    "step": 41,
+  },
+  {
+    "players.0.board.0.Freeze": 300,
+    "players.0.board.1.Freeze": 300,
+    "players.0.board.2.Freeze": 300,
+    "players.1.board.1.Freeze": 3800,
+    "step": 42,
+  },
+  {
+    "players.0.board.0.Freeze": 200,
+    "players.0.board.1.Freeze": 200,
+    "players.0.board.2.Freeze": 200,
+    "players.1.board.1.Freeze": 3700,
+    "step": 43,
+  },
+  {
+    "players.0.board.0.Freeze": 100,
+    "players.0.board.1.Freeze": 100,
+    "players.0.board.2.Freeze": 100,
+    "players.1.board.1.Freeze": 3600,
+    "step": 44,
+  },
+  {
+    "players.0.board.0.Freeze": 0,
+    "players.0.board.1.Freeze": 0,
+    "players.0.board.2.Freeze": 0,
+    "players.1.board.1.Freeze": 3500,
+    "step": 45,
+  },
+  {
+    "players.1.board.1.Freeze": 3400,
+    "step": 46,
+  },
+  {
+    "players.1.board.1.Freeze": 3300,
+    "step": 47,
+  },
+  {
+    "players.1.board.1.Freeze": 3200,
+    "step": 48,
+  },
+  {
+    "players.1.board.1.Freeze": 3100,
+    "step": 49,
+  },
+  {
+    "players.0.board.0.Freeze": -1000000,
+    "players.0.board.1.Freeze": -1000000,
+    "players.0.board.2.Freeze": -1000000,
+    "players.0.board.3.Freeze": -1000000,
+    "players.0.board.4.Freeze": -1000000,
+    "players.0.board.5.Freeze": -1000000,
+    "players.0.board.6.Freeze": -1000000,
+    "players.1.Health": 1900,
+    "players.1.board.1.Freeze": 3000,
+    "step": 50,
+  },
+  {
+    "players.1.board.1.Freeze": 2900,
+    "step": 51,
+  },
+  {
+    "players.1.board.1.Freeze": 2800,
+    "step": 52,
+  },
+  {
+    "players.1.board.1.Freeze": 2700,
+    "step": 53,
+  },
+  {
+    "players.1.board.1.Freeze": 2600,
+    "step": 54,
+  },
+  {
+    "players.1.board.1.Freeze": 2500,
+    "step": 55,
+  },
+  {
+    "players.1.board.1.Freeze": 2400,
+    "step": 56,
+  },
+  {
+    "players.1.board.1.Freeze": 2300,
+    "step": 57,
+  },
+  {
+    "players.1.board.1.Freeze": 2200,
+    "step": 58,
+  },
+  {
+    "players.1.board.1.Freeze": 2100,
+    "step": 59,
+  },
+  {
+    "players.0.Shield": 200,
+    "players.0.board.5.Ammo": 0,
+    "players.0.board.7.Custom_0": 4,
+    "players.1.Health": 1852,
+    "players.1.board.0.Freeze": 1000,
+    "players.1.board.1.Freeze": 2000,
+    "players.1.board.2.Freeze": 3000,
+    "step": 60,
+  },
+  {
+    "players.1.board.0.Freeze": 900,
+    "players.1.board.1.Freeze": 1900,
+    "step": 61,
+  },
+  {
+    "players.1.board.0.Freeze": 800,
+    "players.1.board.1.Freeze": 1800,
+    "step": 62,
+  },
+  {
+    "players.1.board.0.Freeze": 700,
+    "players.1.board.1.Freeze": 1700,
+    "step": 63,
+  },
+  {
+    "players.1.board.0.Freeze": 600,
+    "players.1.board.1.Freeze": 1600,
+    "step": 64,
+  },
+  {
+    "players.1.board.0.Freeze": 500,
+    "players.1.board.1.Freeze": 1500,
+    "step": 65,
+  },
+  {
+    "players.1.board.0.Freeze": 400,
+    "players.1.board.1.Freeze": 1400,
+    "step": 66,
+  },
+  {
+    "players.1.board.0.Freeze": 300,
+    "players.1.board.1.Freeze": 1300,
+    "step": 67,
+  },
+  {
+    "players.1.board.0.Freeze": 200,
+    "players.1.board.1.Freeze": 1200,
+    "step": 68,
+  },
+  {
+    "players.1.board.0.Freeze": 100,
+    "players.1.board.1.Freeze": 1100,
+    "step": 69,
+  },
+  {
+    "players.1.board.0.Freeze": 0,
+    "players.1.board.1.Freeze": 1000,
+    "step": 70,
+  },
+  {
+    "players.1.board.1.Freeze": 900,
+    "step": 71,
+  },
+  {
+    "players.1.board.1.Freeze": 800,
+    "step": 72,
+  },
+  {
+    "players.1.board.1.Freeze": 700,
+    "step": 73,
+  },
+  {
+    "players.1.board.1.Freeze": 600,
+    "step": 74,
+  },
+  {
+    "players.1.board.1.Freeze": 500,
+    "step": 75,
+  },
+  {
+    "players.1.board.1.Freeze": 400,
+    "step": 76,
+  },
+  {
+    "players.1.board.1.Freeze": 300,
+    "step": 77,
+  },
+  {
+    "players.1.board.1.Freeze": 200,
+    "step": 78,
+  },
+  {
+    "players.1.board.1.Freeze": 100,
+    "step": 79,
+  },
+  {
+    "players.1.board.1.Freeze": 0,
+    "step": 80,
+  },
+  {
+    "step": 81,
+  },
+  {
+    "step": 82,
+  },
+  {
+    "step": 83,
+  },
+  {
+    "step": 84,
+  },
+  {
+    "players.0.Shield": 55000,
+    "players.0.board.0.Freeze": 0,
+    "players.0.board.1.Freeze": 0,
+    "players.0.board.2.Freeze": 0,
+    "players.0.board.7.Custom_0": 1100,
+    "step": 85,
+  },
+  {
+    "step": 86,
+  },
+  {
+    "step": 87,
+  },
+  {
+    "step": 88,
+  },
+  {
+    "step": 89,
+  },
+  {
+    "players.0.board.0.Freeze": -1000000,
+    "players.0.board.1.Freeze": -1000000,
+    "players.0.board.2.Freeze": -1000000,
+    "players.0.board.3.Freeze": -2000000,
+    "players.0.board.4.Freeze": -2000000,
+    "players.0.board.5.Freeze": -2000000,
+    "players.0.board.6.Freeze": -2000000,
+    "players.1.Health": 1752,
+    "players.1.Shield": 10,
+    "step": 90,
+  },
+  {
+    "step": 91,
+  },
+  {
+    "step": 92,
+  },
+  {
+    "step": 93,
+  },
+  {
+    "step": 94,
+  },
+  {
+    "step": 95,
+  },
+  {
+    "step": 96,
+  },
+  {
+    "step": 97,
+  },
+  {
+    "step": 98,
+  },
+  {
+    "step": 99,
+  },
+  {
+    "step": 100,
+  },
+  {
+    "step": 101,
+  },
+  {
+    "step": 102,
+  },
+  {
+    "step": 103,
+  },
+  {
+    "step": 104,
+  },
+  {
+    "players.0.Shield": 109900,
+    "players.0.board.0.Freeze": 0,
+    "players.0.board.1.Freeze": 0,
+    "players.0.board.2.Freeze": 0,
+    "players.0.board.3.Freeze": -1097000000,
+    "players.0.board.4.Freeze": 0,
+    "players.0.board.5.Freeze": 0,
+    "players.0.board.6.Freeze": 0,
+    "players.0.board.7.Custom_0": 2198,
+    "players.1.board.0.Freeze": 2000,
+    "players.1.board.1.Freeze": 2000,
+    "players.1.board.2.Freeze": 5000,
+    "step": 105,
+  },
+  {
+    "players.0.board.0.Freeze": -1000000,
+    "players.0.board.1.Freeze": -1000000,
+    "players.0.board.2.Freeze": -1000000,
+    "players.0.board.3.Freeze": -1098000000,
+    "players.0.board.4.Freeze": -1000000,
+    "players.0.board.5.Freeze": -1000000,
+    "players.0.board.6.Freeze": -1000000,
+    "players.1.Health": 1662,
+    "players.1.Shield": 0,
+    "players.1.board.0.Freeze": 1900,
+    "players.1.board.1.Freeze": 1900,
+    "step": 106,
+  },
+  {
+    "players.1.board.0.Freeze": 1800,
+    "players.1.board.1.Freeze": 1800,
+    "step": 107,
+  },
+  {
+    "players.1.board.0.Freeze": 1700,
+    "players.1.board.1.Freeze": 1700,
+    "step": 108,
+  },
+  {
+    "players.1.board.0.Freeze": 1600,
+    "players.1.board.1.Freeze": 1600,
+    "step": 109,
+  },
+  {
+    "players.1.board.0.Freeze": 1500,
+    "players.1.board.1.Freeze": 1500,
+    "step": 110,
+  },
+  {
+    "players.1.board.0.Freeze": 1400,
+    "players.1.board.1.Freeze": 1400,
+    "step": 111,
+  },
+  {
+    "players.1.board.0.Freeze": 1300,
+    "players.1.board.1.Freeze": 1300,
+    "step": 112,
+  },
+  {
+    "players.1.board.0.Freeze": 1200,
+    "players.1.board.1.Freeze": 1200,
+    "step": 113,
+  },
+  {
+    "players.1.board.0.Freeze": 1100,
+    "players.1.board.1.Freeze": 1100,
+    "step": 114,
+  },
+  {
+    "players.0.Shield": 164800,
+    "players.0.board.0.Freeze": 0,
+    "players.0.board.1.Freeze": 0,
+    "players.0.board.2.Freeze": 0,
+    "players.0.board.3.Freeze": -1106000000,
+    "players.0.board.4.Freeze": 0,
+    "players.0.board.5.Freeze": 0,
+    "players.0.board.6.Freeze": 0,
+    "players.0.board.7.Custom_0": 3296,
+    "players.1.board.0.Freeze": 2000,
+    "players.1.board.1.Freeze": 2000,
+    "players.1.board.2.Freeze": 6000,
+    "step": 115,
+  },
+  {
+    "players.0.board.0.Freeze": -1000000,
+    "players.0.board.1.Freeze": -1000000,
+    "players.0.board.2.Freeze": -1000000,
+    "players.0.board.3.Freeze": -1107000000,
+    "players.0.board.4.Freeze": -1000000,
+    "players.0.board.5.Freeze": -1000000,
+    "players.0.board.6.Freeze": -1000000,
+    "players.1.Health": 1562,
+    "players.1.board.0.Freeze": 1900,
+    "players.1.board.1.Freeze": 1900,
+    "step": 116,
+  },
+  {
+    "players.1.board.0.Freeze": 1800,
+    "players.1.board.1.Freeze": 1800,
+    "step": 117,
+  },
+  {
+    "players.1.board.0.Freeze": 1700,
+    "players.1.board.1.Freeze": 1700,
+    "step": 118,
+  },
+  {
+    "players.1.board.0.Freeze": 1600,
+    "players.1.board.1.Freeze": 1600,
+    "step": 119,
+  },
+  {
+    "players.1.Health": 1514,
+    "players.1.board.0.Freeze": 1500,
+    "players.1.board.1.Freeze": 2500,
+    "step": 120,
+  },
+  {
+    "players.1.board.0.Freeze": 1400,
+    "players.1.board.1.Freeze": 2400,
+    "step": 121,
+  },
+  {
+    "players.1.board.0.Freeze": 1300,
+    "players.1.board.1.Freeze": 2300,
+    "step": 122,
+  },
+  {
+    "players.1.board.0.Freeze": 1200,
+    "players.1.board.1.Freeze": 2200,
+    "step": 123,
+  },
+  {
+    "players.1.board.0.Freeze": 1100,
+    "players.1.board.1.Freeze": 2100,
+    "step": 124,
+  },
+  {
+    "players.0.Shield": 219600,
+    "players.0.board.0.Freeze": 0,
+    "players.0.board.1.Freeze": 0,
+    "players.0.board.2.Freeze": 0,
+    "players.0.board.7.Custom_0": 4392,
+    "players.1.board.0.Freeze": 1000,
+    "players.1.board.1.Freeze": 2000,
+    "step": 125,
+  },
+  {
+    "players.1.board.0.Freeze": 900,
+    "players.1.board.1.Freeze": 1900,
+    "step": 126,
+  },
+  {
+    "players.1.board.0.Freeze": 800,
+    "players.1.board.1.Freeze": 1800,
+    "step": 127,
+  },
+  {
+    "players.1.board.0.Freeze": 700,
+    "players.1.board.1.Freeze": 1700,
+    "step": 128,
+  },
+  {
+    "players.1.board.0.Freeze": 600,
+    "players.1.board.1.Freeze": 1600,
+    "step": 129,
+  },
+  {
+    "players.1.board.0.Freeze": 500,
+    "players.1.board.1.Freeze": 1500,
+    "step": 130,
+  },
+  {
+    "players.1.board.0.Freeze": 400,
+    "players.1.board.1.Freeze": 1400,
+    "step": 131,
+  },
+  {
+    "players.1.board.0.Freeze": 300,
+    "players.1.board.1.Freeze": 1300,
+    "step": 132,
+  },
+  {
+    "players.1.board.0.Freeze": 200,
+    "players.1.board.1.Freeze": 1200,
+    "step": 133,
+  },
+  {
+    "players.1.board.0.Freeze": 100,
+    "players.1.board.1.Freeze": 1100,
+    "step": 134,
+  },
+  {
+    "players.1.board.0.Freeze": 0,
+    "players.1.board.1.Freeze": 1000,
+    "step": 135,
+  },
+  {
+    "players.1.board.1.Freeze": 900,
+    "step": 136,
+  },
+  {
+    "players.1.board.1.Freeze": 800,
+    "step": 137,
+  },
+  {
+    "players.1.board.1.Freeze": 700,
+    "step": 138,
+  },
+  {
+    "players.1.board.1.Freeze": 600,
+    "step": 139,
+  },
+  {
+    "players.1.board.1.Freeze": 500,
+    "step": 140,
+  },
+  {
+    "players.1.board.1.Freeze": 400,
+    "step": 141,
+  },
+  {
+    "players.1.board.1.Freeze": 300,
+    "step": 142,
+  },
+  {
+    "players.1.board.1.Freeze": 200,
+    "step": 143,
+  },
+  {
+    "players.1.board.1.Freeze": 100,
+    "step": 144,
+  },
+  {
+    "players.1.board.1.Freeze": 0,
+    "step": 145,
+  },
+  {
+    "step": 146,
+  },
+  {
+    "step": 147,
+  },
+  {
+    "step": 148,
+  },
+  {
+    "step": 149,
+  },
+  {
+    "players.0.Shield": 219595,
+    "step": 150,
+  },
+  {
+    "step": 151,
+  },
+  {
+    "step": 152,
+  },
+  {
+    "step": 153,
+  },
+  {
+    "step": 154,
+  },
+  {
+    "step": 155,
+  },
+  {
+    "step": 156,
+  },
+  {
+    "step": 157,
+  },
+  {
+    "step": 158,
+  },
+  {
+    "step": 159,
+  },
+  {
+    "step": 160,
+  },
+  {
+    "step": 161,
+  },
+  {
+    "step": 162,
+  },
+  {
+    "step": 163,
+  },
+  {
+    "step": 164,
+  },
+  {
+    "players.0.Shield": 219645,
+    "players.0.board.0.Freeze": 500,
+    "players.0.board.1.Freeze": 500,
+    "players.0.board.2.Freeze": 500,
+    "players.0.board.7.Custom_0": 4393,
+    "step": 165,
+  },
+  {
+    "players.0.board.0.Freeze": 400,
+    "players.0.board.1.Freeze": 400,
+    "players.0.board.2.Freeze": 400,
+    "step": 166,
+  },
+  {
+    "players.0.board.0.Freeze": 300,
+    "players.0.board.1.Freeze": 300,
+    "players.0.board.2.Freeze": 300,
+    "step": 167,
+  },
+  {
+    "players.0.board.0.Freeze": 200,
+    "players.0.board.1.Freeze": 200,
+    "players.0.board.2.Freeze": 200,
+    "step": 168,
+  },
+  {
+    "players.0.board.0.Freeze": 100,
+    "players.0.board.1.Freeze": 100,
+    "players.0.board.2.Freeze": 100,
+    "step": 169,
+  },
+  {
+    "players.0.board.0.Freeze": 0,
+    "players.0.board.1.Freeze": 0,
+    "players.0.board.2.Freeze": 0,
+    "step": 170,
+  },
+  {
+    "step": 171,
+  },
+  {
+    "step": 172,
+  },
+  {
+    "step": 173,
+  },
+  {
+    "step": 174,
+  },
+  {
+    "step": 175,
+  },
+  {
+    "players.0.board.0.Freeze": -1000000,
+    "players.0.board.1.Freeze": -1000000,
+    "players.0.board.2.Freeze": -1000000,
+    "players.0.board.3.Freeze": -1108000000,
+    "players.0.board.4.Freeze": -2000000,
+    "players.0.board.5.Freeze": -2000000,
+    "players.0.board.6.Freeze": -2000000,
+    "players.1.Health": 1414,
+    "step": 176,
+  },
+  {
+    "step": 177,
+  },
+  {
+    "step": 178,
+  },
+  {
+    "step": 179,
+  },
+  {
+    "players.0.Shield": 219640,
+    "players.1.Health": 1366,
+    "players.1.board.1.Freeze": 1000,
+    "step": 180,
+  },
+  {
+    "players.1.board.1.Freeze": 900,
+    "step": 181,
+  },
+  {
+    "players.1.board.1.Freeze": 800,
+    "step": 182,
+  },
+  {
+    "players.1.board.1.Freeze": 700,
+    "step": 183,
+  },
+  {
+    "players.1.board.1.Freeze": 600,
+    "step": 184,
+  },
+  {
+    "players.1.board.1.Freeze": 500,
+    "step": 185,
+  },
+  {
+    "players.1.board.1.Freeze": 400,
+    "step": 186,
+  },
+  {
+    "players.1.board.1.Freeze": 300,
+    "step": 187,
+  },
+  {
+    "players.1.board.1.Freeze": 200,
+    "step": 188,
+  },
+  {
+    "players.1.board.1.Freeze": 100,
+    "step": 189,
+  },
+  {
+    "players.1.board.1.Freeze": 0,
+    "step": 190,
+  },
+  {
+    "step": 191,
+  },
+  {
+    "step": 192,
+  },
+  {
+    "step": 193,
+  },
+  {
+    "step": 194,
+  },
+  {
+    "step": 195,
+  },
+  {
+    "step": 196,
+  },
+  {
+    "step": 197,
+  },
+  {
+    "step": 198,
+  },
+  {
+    "step": 199,
+  },
+  {
+    "players.1.Shield": 10,
+    "step": 200,
+  },
+  {
+    "step": 201,
+  },
+  {
+    "step": 202,
+  },
+  {
+    "step": 203,
+  },
+  {
+    "step": 204,
+  },
+  {
+    "step": 205,
+  },
+  {
+    "step": 206,
+  },
+  {
+    "step": 207,
+  },
+  {
+    "step": 208,
+  },
+  {
+    "step": 209,
+  },
+  {
+    "players.0.Shield": 274590,
+    "players.0.board.0.Freeze": 500,
+    "players.0.board.1.Freeze": 500,
+    "players.0.board.2.Freeze": 500,
+    "players.0.board.3.Freeze": -1106000000,
+    "players.0.board.4.Freeze": 0,
+    "players.0.board.5.Freeze": 0,
+    "players.0.board.6.Freeze": 0,
+    "players.0.board.7.Custom_0": 5492,
+    "players.1.board.0.Freeze": 2000,
+    "players.1.board.1.Freeze": 2000,
+    "players.1.board.2.Freeze": 8000,
+    "step": 210,
+  },
+  {
+    "players.0.board.0.Freeze": -999600,
+    "players.0.board.1.Freeze": -999600,
+    "players.0.board.2.Freeze": -999600,
+    "players.0.board.3.Freeze": -1107000000,
+    "players.0.board.4.Freeze": -1000000,
+    "players.0.board.5.Freeze": -1000000,
+    "players.0.board.6.Freeze": -1000000,
+    "players.1.Health": 1276,
+    "players.1.Shield": 0,
+    "players.1.board.0.Freeze": 1900,
+    "players.1.board.1.Freeze": 1900,
+    "step": 211,
+  },
+  {
+    "players.1.board.0.Freeze": 1800,
+    "players.1.board.1.Freeze": 1800,
+    "step": 212,
+  },
+  {
+    "players.1.board.0.Freeze": 1700,
+    "players.1.board.1.Freeze": 1700,
+    "step": 213,
+  },
+  {
+    "players.1.board.0.Freeze": 1600,
+    "players.1.board.1.Freeze": 1600,
+    "step": 214,
+  },
+  {
+    "players.1.board.0.Freeze": 1500,
+    "players.1.board.1.Freeze": 1500,
+    "step": 215,
+  },
+  {
+    "players.1.board.0.Freeze": 1400,
+    "players.1.board.1.Freeze": 1400,
+    "step": 216,
+  },
+  {
+    "players.1.board.0.Freeze": 1300,
+    "players.1.board.1.Freeze": 1300,
+    "step": 217,
+  },
+  {
+    "players.1.board.0.Freeze": 1200,
+    "players.1.board.1.Freeze": 1200,
+    "step": 218,
+  },
+  {
+    "players.1.board.0.Freeze": 1100,
+    "players.1.board.1.Freeze": 1100,
+    "step": 219,
+  },
+  {
+    "players.1.board.0.Freeze": 1000,
+    "players.1.board.1.Freeze": 1000,
+    "step": 220,
+  },
+  {
+    "players.1.board.0.Freeze": 900,
+    "players.1.board.1.Freeze": 900,
+    "step": 221,
+  },
+  {
+    "players.1.board.0.Freeze": 800,
+    "players.1.board.1.Freeze": 800,
+    "step": 222,
+  },
+  {
+    "players.1.board.0.Freeze": 700,
+    "players.1.board.1.Freeze": 700,
+    "step": 223,
+  },
+  {
+    "players.1.board.0.Freeze": 600,
+    "players.1.board.1.Freeze": 600,
+    "step": 224,
+  },
+  {
+    "players.1.board.0.Freeze": 500,
+    "players.1.board.1.Freeze": 500,
+    "step": 225,
+  },
+  {
+    "players.1.board.0.Freeze": 400,
+    "players.1.board.1.Freeze": 400,
+    "step": 226,
+  },
+  {
+    "players.1.board.0.Freeze": 300,
+    "players.1.board.1.Freeze": 300,
+    "step": 227,
+  },
+  {
+    "players.1.board.0.Freeze": 200,
+    "players.1.board.1.Freeze": 200,
+    "step": 228,
+  },
+  {
+    "players.1.board.0.Freeze": 100,
+    "players.1.board.1.Freeze": 100,
+    "step": 229,
+  },
+  {
+    "players.1.board.0.Freeze": 0,
+    "players.1.board.1.Freeze": 0,
+    "step": 230,
+  },
+  {
+    "players.0.Shield": 329490,
+    "players.0.board.0.Freeze": 0,
+    "players.0.board.1.Freeze": 0,
+    "players.0.board.2.Freeze": 0,
+    "players.0.board.3.Freeze": -1106000000,
+    "players.0.board.4.Freeze": 0,
+    "players.0.board.5.Freeze": 0,
+    "players.0.board.6.Freeze": 0,
+    "players.0.board.7.Custom_0": 6590,
+    "players.1.board.0.Freeze": 1000,
+    "players.1.board.1.Freeze": 1000,
+    "players.1.board.2.Freeze": 9000,
+    "step": 231,
+  },
+  {
+    "players.0.board.0.Freeze": -1000000,
+    "players.0.board.1.Freeze": -1000000,
+    "players.0.board.2.Freeze": -1000000,
+    "players.0.board.3.Freeze": -1107000000,
+    "players.0.board.4.Freeze": -1000000,
+    "players.0.board.5.Freeze": -1000000,
+    "players.0.board.6.Freeze": -1000000,
+    "players.1.Health": 1176,
+    "players.1.board.0.Freeze": 900,
+    "players.1.board.1.Freeze": 900,
+    "step": 232,
+  },
+  {
+    "players.1.board.0.Freeze": 800,
+    "players.1.board.1.Freeze": 800,
+    "step": 233,
+  },
+  {
+    "players.1.board.0.Freeze": 700,
+    "players.1.board.1.Freeze": 700,
+    "step": 234,
+  },
+  {
+    "players.1.board.0.Freeze": 600,
+    "players.1.board.1.Freeze": 600,
+    "step": 235,
+  },
+  {
+    "players.1.board.0.Freeze": 500,
+    "players.1.board.1.Freeze": 500,
+    "step": 236,
+  },
+  {
+    "players.1.board.0.Freeze": 400,
+    "players.1.board.1.Freeze": 400,
+    "step": 237,
+  },
+  {
+    "players.1.board.0.Freeze": 300,
+    "players.1.board.1.Freeze": 300,
+    "step": 238,
+  },
+  {
+    "players.1.board.0.Freeze": 200,
+    "players.1.board.1.Freeze": 200,
+    "step": 239,
+  },
+  {
+    "players.0.Shield": 329540,
+    "players.0.board.7.Custom_0": 6591,
+    "players.1.Health": 1128,
+    "players.1.board.0.Freeze": 100,
+    "players.1.board.1.Freeze": 100,
+    "players.1.board.2.Freeze": 10000,
+    "step": 240,
+  },
+  {
+    "players.1.board.0.Freeze": 0,
+    "players.1.board.1.Freeze": 0,
+    "step": 241,
+  },
+  {
+    "step": 242,
+  },
+  {
+    "step": 243,
+  },
+  {
+    "step": 244,
+  },
+  {
+    "step": 245,
+  },
+  {
+    "step": 246,
+  },
+  {
+    "step": 247,
+  },
+  {
+    "step": 248,
+  },
+  {
+    "step": 249,
+  },
+  {
+    "players.0.Shield": 329535,
+    "step": 250,
+  },
+  {
+    "players.0.Shield": 384335,
+    "players.0.board.0.Freeze": 0,
+    "players.0.board.1.Freeze": 0,
+    "players.0.board.2.Freeze": 0,
+    "players.0.board.7.Custom_0": 7687,
+    "step": 251,
+  },
+  {
+    "step": 252,
+  },
+  {
+    "step": 253,
+  },
+  {
+    "step": 254,
+  },
+  {
+    "step": 255,
+  },
+  {
+    "step": 256,
+  },
+  {
+    "step": 257,
+  },
+  {
+    "step": 258,
+  },
+  {
+    "step": 259,
+  },
+  {
+    "step": 260,
+  },
+  {
+    "step": 261,
+  },
+  {
+    "step": 262,
+  },
+  {
+    "step": 263,
+  },
+  {
+    "step": 264,
+  },
+  {
+    "step": 265,
+  },
+  {
+    "step": 266,
+  },
+  {
+    "step": 267,
+  },
+  {
+    "step": 268,
+  },
+  {
+    "step": 269,
+  },
+  {
+    "step": 270,
+  },
+  {
+    "step": 271,
+  },
+  {
+    "step": 272,
+  },
+  {
+    "step": 273,
+  },
+  {
+    "step": 274,
+  },
+  {
+    "step": 275,
+  },
+  {
+    "step": 276,
+  },
+  {
+    "step": 277,
+  },
+  {
+    "step": 278,
+  },
+  {
+    "step": 279,
+  },
+  {
+    "players.0.Shield": 384330,
+    "step": 280,
+  },
+  {
+    "step": 281,
+  },
+  {
+    "step": 282,
+  },
+  {
+    "step": 283,
+  },
+  {
+    "step": 284,
+  },
+  {
+    "step": 285,
+  },
+  {
+    "step": 286,
+  },
+  {
+    "step": 287,
+  },
+  {
+    "step": 288,
+  },
+  {
+    "step": 289,
+  },
+  {
+    "step": 290,
+  },
+  {
+    "players.0.Shield": 384380,
+    "players.0.board.0.Freeze": 500,
+    "players.0.board.1.Freeze": 500,
+    "players.0.board.2.Freeze": 500,
+    "players.0.board.7.Custom_0": 7688,
+    "step": 291,
+  },
+  {
+    "players.0.board.0.Freeze": -999600,
+    "players.0.board.1.Freeze": -999600,
+    "players.0.board.2.Freeze": -999600,
+    "players.0.board.3.Freeze": -1108000000,
+    "players.0.board.4.Freeze": -2000000,
+    "players.0.board.5.Freeze": -2000000,
+    "players.0.board.6.Freeze": -2000000,
+    "players.1.Health": 1028,
+    "step": 292,
+  },
+  {
+    "step": 293,
+  },
+  {
+    "step": 294,
+  },
+  {
+    "step": 295,
+  },
+  {
+    "step": 296,
+  },
+  {
+    "step": 297,
+  },
+  {
+    "step": 298,
+  },
+  {
+    "step": 299,
+  },
+  {
+    "players.0.Shield": 384429,
+    "players.0.board.7.Custom_0": 7689,
+    "players.1.Health": 979,
+    "players.1.board.0.Freeze": 1000,
+    "step": 300,
+  },
+  {
+    "players.0.Shield": 384428,
+    "players.1.Health": 978,
+    "players.1.board.0.Freeze": 900,
+    "step": 301,
+  },
+  {
+    "players.0.Shield": 384427,
+    "players.1.Health": 977,
+    "players.1.board.0.Freeze": 800,
+    "step": 302,
+  },
+  {
+    "players.0.Shield": 384426,
+    "players.1.Health": 976,
+    "players.1.board.0.Freeze": 700,
+    "step": 303,
+  },
+  {
+    "players.0.Shield": 384425,
+    "players.1.Health": 975,
+    "players.1.board.0.Freeze": 600,
+    "step": 304,
+  },
+  {
+    "players.0.Shield": 384424,
+    "players.1.Health": 974,
+    "players.1.board.0.Freeze": 500,
+    "step": 305,
+  },
+  {
+    "players.0.Shield": 384423,
+    "players.1.Health": 973,
+    "players.1.board.0.Freeze": 400,
+    "step": 306,
+  },
+  {
+    "players.0.Shield": 384422,
+    "players.1.Health": 972,
+    "players.1.board.0.Freeze": 300,
+    "step": 307,
+  },
+  {
+    "players.0.Shield": 384421,
+    "players.1.Health": 971,
+    "players.1.board.0.Freeze": 200,
+    "step": 308,
+  },
+  {
+    "players.0.Shield": 384420,
+    "players.1.Health": 970,
+    "players.1.board.0.Freeze": 100,
+    "step": 309,
+  },
+  {
+    "players.0.Shield": 384412,
+    "players.1.Health": 967,
+    "players.1.board.0.Freeze": 0,
+    "step": 310,
+  },
+  {
+    "players.0.Shield": 384407,
+    "players.1.Health": 962,
+    "step": 311,
+  },
+  {
+    "players.0.Shield": 439300,
+    "players.0.board.0.Freeze": 0,
+    "players.0.board.1.Freeze": 0,
+    "players.0.board.2.Freeze": 0,
+    "players.0.board.3.Freeze": -1106000000,
+    "players.0.board.4.Freeze": 0,
+    "players.0.board.5.Freeze": 0,
+    "players.0.board.6.Freeze": 0,
+    "players.0.board.7.Custom_0": 8787,
+    "players.1.Health": 955,
+    "players.1.board.0.Freeze": 2000,
+    "players.1.board.1.Freeze": 2000,
+    "players.1.board.2.Freeze": 12000,
+    "step": 312,
+  },
+  {
+    "players.0.Shield": 439291,
+    "players.0.board.0.Freeze": -1000000,
+    "players.0.board.1.Freeze": -1000000,
+    "players.0.board.2.Freeze": -1000000,
+    "players.0.board.3.Freeze": -1107000000,
+    "players.0.board.4.Freeze": -1000000,
+    "players.0.board.5.Freeze": -1000000,
+    "players.0.board.6.Freeze": -1000000,
+    "players.1.Health": 846,
+    "players.1.board.0.Freeze": 1900,
+    "players.1.board.1.Freeze": 1900,
+    "step": 313,
+  },
+  {
+    "players.0.Shield": 439280,
+    "players.1.Health": 835,
+    "players.1.board.0.Freeze": 1800,
+    "players.1.board.1.Freeze": 1800,
+    "step": 314,
+  },
+  {
+    "players.0.Shield": 439267,
+    "players.1.Health": 822,
+    "players.1.board.0.Freeze": 1700,
+    "players.1.board.1.Freeze": 1700,
+    "step": 315,
+  },
+  {
+    "players.0.Shield": 439252,
+    "players.1.Health": 807,
+    "players.1.board.0.Freeze": 1600,
+    "players.1.board.1.Freeze": 1600,
+    "step": 316,
+  },
+  {
+    "players.0.Shield": 439235,
+    "players.1.Health": 790,
+    "players.1.board.0.Freeze": 1500,
+    "players.1.board.1.Freeze": 1500,
+    "step": 317,
+  },
+  {
+    "players.0.Shield": 439216,
+    "players.1.Health": 771,
+    "players.1.board.0.Freeze": 1400,
+    "players.1.board.1.Freeze": 1400,
+    "step": 318,
+  },
+  {
+    "players.0.Shield": 439195,
+    "players.1.Health": 750,
+    "players.1.board.0.Freeze": 1300,
+    "players.1.board.1.Freeze": 1300,
+    "step": 319,
+  },
+  {
+    "players.0.Shield": 439172,
+    "players.1.Health": 727,
+    "players.1.board.0.Freeze": 1200,
+    "players.1.board.1.Freeze": 1200,
+    "step": 320,
+  },
+  {
+    "players.0.Shield": 439147,
+    "players.1.Health": 702,
+    "players.1.board.0.Freeze": 1100,
+    "players.1.board.1.Freeze": 1100,
+    "step": 321,
+  },
+  {
+    "players.0.Shield": 439120,
+    "players.1.Health": 675,
+    "players.1.board.0.Freeze": 1000,
+    "players.1.board.1.Freeze": 1000,
+    "step": 322,
+  },
+  {
+    "players.0.Shield": 439091,
+    "players.1.Health": 646,
+    "players.1.board.0.Freeze": 900,
+    "players.1.board.1.Freeze": 900,
+    "step": 323,
+  },
+  {
+    "players.0.Shield": 439060,
+    "players.1.Health": 615,
+    "players.1.board.0.Freeze": 800,
+    "players.1.board.1.Freeze": 800,
+    "step": 324,
+  },
+  {
+    "players.0.Shield": 439027,
+    "players.1.Health": 582,
+    "players.1.board.0.Freeze": 700,
+    "players.1.board.1.Freeze": 700,
+    "step": 325,
+  },
+  {
+    "players.0.Shield": 438992,
+    "players.1.Health": 547,
+    "players.1.board.0.Freeze": 600,
+    "players.1.board.1.Freeze": 600,
+    "step": 326,
+  },
+  {
+    "players.0.Shield": 438955,
+    "players.1.Health": 510,
+    "players.1.board.0.Freeze": 500,
+    "players.1.board.1.Freeze": 500,
+    "step": 327,
+  },
+  {
+    "players.0.Shield": 438916,
+    "players.1.Health": 471,
+    "players.1.board.0.Freeze": 400,
+    "players.1.board.1.Freeze": 400,
+    "step": 328,
+  },
+  {
+    "players.0.Shield": 438875,
+    "players.1.Health": 430,
+    "players.1.board.0.Freeze": 300,
+    "players.1.board.1.Freeze": 300,
+    "step": 329,
+  },
+  {
+    "players.0.Shield": 438832,
+    "players.1.Health": 387,
+    "players.1.board.0.Freeze": 200,
+    "players.1.board.1.Freeze": 200,
+    "step": 330,
+  },
+  {
+    "players.0.Shield": 438787,
+    "players.1.Health": 342,
+    "players.1.board.0.Freeze": 100,
+    "players.1.board.1.Freeze": 100,
+    "step": 331,
+  },
+  {
+    "players.0.Shield": 493540,
+    "players.0.board.0.Freeze": 0,
+    "players.0.board.1.Freeze": 0,
+    "players.0.board.2.Freeze": 0,
+    "players.0.board.7.Custom_0": 9883,
+    "players.1.Health": 295,
+    "players.1.board.0.Freeze": 0,
+    "players.1.board.1.Freeze": 0,
+    "step": 332,
+  },
+  {
+    "players.0.Shield": 493491,
+    "players.1.Health": 246,
+    "step": 333,
+  },
+  {
+    "players.0.Shield": 493440,
+    "players.1.Health": 195,
+    "step": 334,
+  },
+  {
+    "players.0.Shield": 493387,
+    "players.1.Health": 142,
+    "step": 335,
+  },
+  {
+    "players.0.Shield": 493332,
+    "players.1.Health": 87,
+    "step": 336,
+  },
+  {
+    "players.0.Shield": 493275,
+    "players.1.Health": 30,
+    "step": 337,
+  },
+  {
+    "isPlaying": false,
+    "players.0.Shield": 493216,
+    "players.1.Health": -29,
+    "step": 338,
+    "winner": "Enemy",
   },
 ]
 `;
