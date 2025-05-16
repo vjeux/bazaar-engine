@@ -72,7 +72,9 @@ function _createBoardCardFromCard(
         (tierValues?.AbilityIds || []).filter(
           (id) => card.Abilities[id] != null && card.Abilities[id] != undefined,
         ) || attributes.AbilityIds,
-      AuraIds: tierValues?.AuraIds || attributes.AuraIds,
+      AuraIds: (tierValues?.AuraIds || []).filter(
+        (id) => card.Auras[id] != null && card.Auras[id] != undefined,
+      ) || attributes.AuraIds,
       TooltipIds: tierValues?.TooltipIds || attributes.TooltipIds,
     };
 
