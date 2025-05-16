@@ -1,6 +1,11 @@
 import { GameState, BoardCardID, LogEntry } from "./engine2";
 import * as Commands from "./commands";
-import { Ability, AttributeType, Priority } from "../../types/cardTypes";
+import {
+  Ability,
+  AttributeType,
+  Priority,
+  TriggerType,
+} from "../../types/cardTypes";
 import { createPrerequisitesCheck } from "./prereq";
 import { playerName } from "./commands";
 
@@ -34,6 +39,17 @@ export class GameTickEvent extends GameEvent {
 
   getDescription(): string {
     return `Tick: ${this.tick}`;
+  }
+}
+
+export class NotImplementedEvent extends GameEvent {
+  readonly type = "game:notImplemented";
+  constructor(public readonly message: string) {
+    super();
+  }
+
+  getDescription(): string {
+    return `Not implemented: ${this.message}`;
   }
 }
 
@@ -71,6 +87,17 @@ export class CardFiredEvent extends GameEvent {
 
   getDescription(): string {
     return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} was fired`;
+  }
+}
+
+export class CardCrittedEvent extends GameEvent {
+  readonly type = "card:critted";
+  constructor(public readonly sourceCardID: BoardCardID) {
+    super();
+  }
+
+  getDescription(): string {
+    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} critted`;
   }
 }
 
@@ -295,6 +322,62 @@ export class PlayerBurnAppliedEvent extends GameEvent {
       return `${playerName(this.playerIdx)} was burned for ${this.amount}`;
     }
     return `${playerName(this.playerIdx)} was burned for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+  }
+}
+
+export class CardPerformedDestructionEvent extends GameEvent {
+  readonly type = "card:performedDestruction";
+  constructor(
+    public readonly sourceCardID: BoardCardID,
+    public readonly destroyedCardID: BoardCardID,
+  ) {
+    super();
+  }
+
+  getDescription(): string {
+    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} destroyed ${playerName(this.destroyedCardID.playerIdx)}'s card ${this.destroyedCardID.cardIdx}`;
+  }
+}
+
+export class CardPerformedFreezeEvent extends GameEvent {
+  readonly type = "card:performedFreeze";
+  constructor(
+    public readonly sourceCardID: BoardCardID,
+    public readonly frozenCardID: BoardCardID,
+  ) {
+    super();
+  }
+
+  getDescription(): string {
+    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} froze ${playerName(this.frozenCardID.playerIdx)}'s card ${this.frozenCardID.cardIdx}`;
+  }
+}
+
+export class CardPerformedHasteEvent extends GameEvent {
+  readonly type = "card:performedHaste";
+  constructor(
+    public readonly sourceCardID: BoardCardID,
+    public readonly hastenedCardID: BoardCardID,
+  ) {
+    super();
+  }
+
+  getDescription(): string {
+    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} hastened ${playerName(this.hastenedCardID.playerIdx)}'s card ${this.hastenedCardID.cardIdx}`;
+  }
+}
+
+export class CardPerformedSlowEvent extends GameEvent {
+  readonly type = "card:performedSlow";
+  constructor(
+    public readonly sourceCardID: BoardCardID,
+    public readonly slowedCardID: BoardCardID,
+  ) {
+    super();
+  }
+
+  getDescription(): string {
+    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} slowed ${playerName(this.slowedCardID.playerIdx)}'s card ${this.slowedCardID.cardIdx}`;
   }
 }
 
@@ -538,22 +621,67 @@ function createBoardCardID(playerID: number, cardID: number): BoardCardID {
 /**
  * Map of trigger types to event constructors
  */
-const triggerToEventMap: Record<string, GameEventConstructor<GameEvent>> = {
-  TTriggerOnCardFired: CardFiredEvent as GameEventConstructor<GameEvent>,
-  TTriggerOnTick: GameTickEvent as GameEventConstructor<GameEvent>,
-  TTriggerOnFightStart:
-    GameFightStartedEvent as GameEventConstructor<GameEvent>,
-  // Add more mappings as needed
+const triggerToEventMap: Record<
+  TriggerType,
+  GameEventConstructor<GameEvent>
+> = {
+  // Card events
+  TTriggerOnCardFired: CardFiredEvent,
+  TTriggerOnCardAttributeChanged: CardAttributeChangedEvent,
+  TTriggerOnItemUsed: CardItemUsedEvent,
+
+  // Card actions
+  TTriggerOnCardPerformedBurn: PlayerBurnAppliedEvent,
+  TTriggerOnCardPerformedPoison: PlayerPoisonAppliedEvent,
+  TTriggerOnCardPerformedHeal: PlayerHealedEvent,
+  TTriggerOnCardPerformedOverHeal: PlayerOverhealedEvent,
+  TTriggerOnCardPerformedShield: PlayerShieldAppliedEvent,
+
+  // Player events
+  TTriggerOnPlayerDied: PlayerDiedEvent,
+  TTriggerOnPlayerAttributeChanged: PlayerAttributeChangedEvent,
+  TTriggerOnPlayerAttributePercentChange: PlayerAttributeChangedEvent,
+
+  // Game events
+  TTriggerOnFightStarted: GameFightStartedEvent,
+  TTriggerOnFightEnded: GameEndedEvent,
+
+  // Game shop events - using NotImplementedEvent as placeholder
+  TTriggerOnCardPurchased: NotImplementedEvent,
+  TTriggerOnCardSelected: NotImplementedEvent,
+  TTriggerOnCardSold: NotImplementedEvent,
+  TTriggerOnCardUpgraded: NotImplementedEvent,
+
+  // Game progression events - using NotImplementedEvent as placeholder
+  TTriggerOnDayStarted: NotImplementedEvent,
+  TTriggerOnHourStarted: NotImplementedEvent,
+  TTriggerOnEncounterSelected: NotImplementedEvent,
+
+  // Card effect events - using NotImplementedEvent as placeholder
+  TTriggerOnCardCritted: CardCrittedEvent,
+  TTriggerOnCardPerformedDestruction: CardPerformedDestructionEvent,
+  TTriggerOnCardPerformedFreeze: CardPerformedFreezeEvent,
+  TTriggerOnCardPerformedHaste: CardPerformedHasteEvent,
+  TTriggerOnCardPerformedSlow: CardPerformedSlowEvent,
 };
 
 /**
  * Convert ability trigger to event class constructor
  */
 function triggerToEvent(trigger: {
-  $type?: string;
+  $type: TriggerType;
 }): GameEventConstructor<GameEvent> {
   const triggerType = trigger?.$type || "";
-  return triggerToEventMap[triggerType];
+  const eventClass = triggerToEventMap[triggerType];
+
+  if (!eventClass) {
+    console.warn(
+      `Unhandled trigger type: ${triggerType}, using default GameTickEvent`,
+    );
+    return GameTickEvent as GameEventConstructor<GameEvent>;
+  }
+
+  return eventClass;
 }
 
 /**
@@ -566,6 +694,7 @@ type TriggerCheckFn = (
 ) => boolean;
 
 const triggerCheckers: Record<string, TriggerCheckFn> = {
+  // Card events
   TTriggerOnCardFired: (boardCardID, _gs, e) => {
     if (e instanceof CardFiredEvent) {
       return (
@@ -574,9 +703,6 @@ const triggerCheckers: Record<string, TriggerCheckFn> = {
       );
     }
     return false;
-  },
-  TTriggerOnTick: (_boardCardID, _gs, e) => {
-    return e instanceof GameTickEvent;
   },
   TTriggerOnFightStart: (_boardCardID, _gs, e) => {
     return e instanceof GameFightStartedEvent;
