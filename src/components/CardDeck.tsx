@@ -1,7 +1,7 @@
 "use client";
 import { BoardCard } from "@/engine/Engine.ts";
 import { BoardCardElement } from "@/components/BoardCardElement";
-import { GameState } from "@/engine/Engine.ts";
+import { GameState } from "@/engine/Engine";
 import { useMemo } from "react";
 import { useSimulatorStore } from "@/lib/simulatorStore";
 import {
@@ -17,9 +17,10 @@ import {
   SortableContext,
 } from "@dnd-kit/sortable";
 import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
+import type { GameState as Engine2GameState } from "@/engine/engine2/engine2";
 
 interface CardDeckProps {
-  gameState: GameState;
+  gameState: GameState | Engine2GameState;
   playerId: number;
 }
 

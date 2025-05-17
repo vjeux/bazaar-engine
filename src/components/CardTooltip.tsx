@@ -1,9 +1,16 @@
 import { GameState, getCardAttribute, getTooltips } from "@/engine/Engine";
+import type { GameState as Engine2GameState } from "@/engine/engine2/engine2";
 import { getInitialGameState } from "@/engine/GameState";
 import { CARDS_VERSION } from "@/lib/constants";
 import { AttributeType, Card } from "@/types/cardTypes";
 import { EncounterDays } from "@/types/encounterTypes";
 import { Tier } from "@/types/shared";
+
+interface CardTooltipProps {
+  gameState: GameState | Engine2GameState;
+  playerIdx: number;
+  cardIdx: number;
+}
 
 export default function CardTooltip({
   card,
@@ -12,7 +19,7 @@ export default function CardTooltip({
   boardCardID = 0,
 }: {
   card: Card | null;
-  gameState?: GameState;
+  gameState?: GameState | Engine2GameState;
   playerID?: number;
   boardCardID?: number;
 }) {

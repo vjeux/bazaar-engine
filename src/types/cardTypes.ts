@@ -233,8 +233,9 @@ enum ConditionType {
   TRunConditionalCurrentDay = "TRunConditionalCurrentDay",
 }
 
-enum Comparison {
+export enum Comparison {
   Equal = "Equal",
+  NotEqual = "NotEqual",
   GreaterThan = "GreaterThan",
   GreaterThanOrEqual = "GreaterThanOrEqual",
   LessThan = "LessThan",
@@ -342,7 +343,7 @@ export interface Conditions {
   IsSameAsPlayerHero?: boolean;
   Operator?: Operator;
   Sizes?: Size[];
-  Tags?: Tag[];
+  Tags?: Tag[] | HiddenTag[];
   Tiers?: Tier[];
 }
 
@@ -401,12 +402,16 @@ export interface AbilityPrerequisite {
   Comparison?: Comparison;
   Amount?: number;
   Conditions?: Conditions;
+  Attribute?: AttributeType;
+  AttributeOther?: AttributeType;
+  SubjectOther?: Subject;
 }
 
 enum PrerequisiteType {
   TPrerequisiteCardCount = "TPrerequisiteCardCount",
   TPrerequisitePlayer = "TPrerequisitePlayer",
   TPrerequisiteRun = "TPrerequisiteRun",
+  TPrerequisiteCardAttributeComparator = "TPrerequisiteCardAttributeComparator",
 }
 
 export enum Priority {
@@ -456,6 +461,9 @@ export enum TriggerType {
   TTriggerOnPlayerAttributeChanged = "TTriggerOnPlayerAttributeChanged",
   TTriggerOnPlayerAttributePercentChange = "TTriggerOnPlayerAttributePercentChange",
   TTriggerOnPlayerDied = "TTriggerOnPlayerDied",
+  TTriggerOnCardPerformedRegen = "TTriggerOnCardPerformedRegen",
+  TTriggerOnCardReloaded = "TTriggerOnCardReloaded",
+  TTriggerOnCardPerformedReload = "TTriggerOnCardPerformedReload",
 }
 
 enum ChangeType {

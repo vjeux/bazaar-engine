@@ -1,11 +1,11 @@
-import { getInitialGameState } from "../engine/GameState";
 import validItemIds from "../../public/json/ValidItemIds.json";
 import validSkillIds from "../../public/json/ValidSkillIds.json";
-import { getTooltips } from "../engine/Engine";
+import { getInitialGameState2 } from "../engine/engine2/engine2Adapter";
 import { describe, expect, it } from "vitest";
 import { genCardsAndEncounters } from "../lib/Data";
 import { Tier } from "../types/shared";
 import { CARDS_VERSION } from "../lib/constants";
+import { getTooltips } from "@/engine/Engine";
 const { Cards, Encounters } = await genCardsAndEncounters();
 
 function getTiers(startingTier: Tier): Tier[] {
@@ -40,15 +40,13 @@ describe("Tooltips should not throw", () => {
         const extension = validItemIds.includes(cardId)
           ? { cards: [{ cardId, tier }] }
           : { skills: [{ cardId, tier }] };
-        const gameState = getInitialGameState(Cards, Encounters, [
+        const gameState = getInitialGameState2(Cards, Encounters, [
           { type: "player", health: 1000, ...extension },
           { type: "player", health: 1000 },
         ]);
 
         // This should not throw
-        expect(() => {
-          getTooltips(gameState, 0, 0);
-        }).not.toThrow();
+        getTooltips(gameState, 0, 0);
       });
     });
   });
@@ -67,7 +65,7 @@ describe("Tooltip snapshots", () => {
           const extension = validItemIds.includes(cardId)
             ? { cards: [{ cardId: cardId, tier }] }
             : { skills: [{ cardId: cardId, tier }] };
-          const gameState = getInitialGameState(Cards, Encounters, [
+          const gameState = getInitialGameState2(Cards, Encounters, [
             { type: "player", health: 1000, ...extension },
             { type: "player", health: 1000 },
           ]);

@@ -1,5 +1,6 @@
 "use client";
 import type { BoardCard, GameState } from "@/engine/Engine";
+import type { GameState as Engine2GameState } from "@/engine/engine2/engine2";
 import React from "react";
 import FramedCardOrSkill from "./FramedCardOrSkill";
 import CardTooltip from "./CardTooltip";
@@ -10,6 +11,13 @@ import { Button } from "./ui/button";
 import { X } from "lucide-react";
 import { CardType } from "@/types/cardTypes";
 
+interface BoardSkillElementProps {
+  skill: BoardCard;
+  gameState: GameState | Engine2GameState;
+  playerIdx: number;
+  cardIdx: number;
+}
+
 export function BoardSkillElement({
   boardSkill,
   gameState,
@@ -17,7 +25,7 @@ export function BoardSkillElement({
   boardCardID,
 }: {
   boardSkill: BoardCard;
-  gameState: GameState;
+  gameState: GameState | Engine2GameState;
   playerID: number;
   boardCardID: number;
 }) {
