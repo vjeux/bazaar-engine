@@ -1,10 +1,12 @@
 import { Player } from "../Engine";
 import {
+  Ability,
   AbilityAction,
   ActionType,
   AttributeType,
+  Priority,
 } from "../../types/cardTypes";
-import { GameState, CardLocationID, BoardCard } from "./engine2";
+import { GameState, CardLocationID } from "./engine2";
 import { getCardAttribute } from "./getAttribute";
 import { createBoardCardFromId, PlayerCardConfig } from "../GameState";
 import {
@@ -32,8 +34,13 @@ import {
 } from "./targeting";
 import { getActionValue } from "./getActionValue";
 import { PLAYER_PLAYER_IDX } from "@/lib/constants";
-import prand from "pure-rand";
 import { genCardsAndEncounters } from "@/lib/Data";
+import prand from "pure-rand";
+import { EnchantmentType } from "@/types/shared";
+import { createTriggerCheck, triggerToEvent } from "./eventBus";
+import { createPrerequisitesCheck } from "./prereq";
+
+const { Cards } = await genCardsAndEncounters();
 
 /**
  * Helper function to convert player index to readable name
@@ -867,8 +874,100 @@ export class CommandFactory {
       case ActionType.TActionGameSpawnCards: {
         // Do nothng as the json does not provide enough information abouth which cards to spawn
         console.warn(
-          "TActionGameSpawnCards action type is not implemented - JSON configuration does not provide sufficient information about which cards to spawn",
+          "TActionGameSpawnCards action type is not implemented - JSON configuration does not provide sufficient information about which cards to spawn. The exact card(s) are decided by the game server",
         );
+        return commands;
+      }
+
+      case ActionType.TActionCardEnchantRandom: {
+        // Remove card, then add back one with the same stats but add the enchantment.
+        // Store the current values as attributeoverrides, so we keep the tick information etc
+        if (!action.Target) {
+          throw new Error("Target is required for enchant random action");
+        }
+
+        // Get a target card
+        const targetCards = getTargetCards(
+          gameState,
+          action.Target,
+          sourceCardID,
+          event,
+        );
+
+        // limit to EnchantTargets amount
+        const targetCount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.EnchantTargets,
+        );
+
+        for (const targetCard of targetCards.slice(0, targetCount)) {
+          const {
+            registeredTriggers: _registeredTriggers,
+            Abilities: _abilities,
+            AbilityIds: _abilityIds,
+            Auras: _auras,
+            AuraIds: _auraIds,
+            Enchantment: _enchantment,
+            uuid: _uuid,
+            ...overrides
+          } = getBoardCardByID(gameState, targetCard);
+
+          // Get a random enchantment according to the weights
+          if (!action.Enchantments || action.Enchantments.length === 0) {
+            throw new Error(
+              "Enchantments array is required for enchant random action",
+            );
+          }
+
+          // Calculate total weight
+          const totalWeight = action.Enchantments.reduce(
+            (sum, enchantment) => sum + enchantment.Weight,
+            0,
+          );
+
+          // Generate a random number between 0 and totalWeight
+          const randomValue = prand.unsafeUniformIntDistribution(
+            0,
+            totalWeight,
+            gameState.randomGen,
+          );
+
+          // Find the selected enchantment based on weights
+          let cumulativeWeight = 0;
+          let selectedEnchantment: EnchantmentType | null = null;
+
+          for (const enchantmentOption of action.Enchantments) {
+            cumulativeWeight += enchantmentOption.Weight;
+            if (randomValue <= cumulativeWeight) {
+              selectedEnchantment = enchantmentOption.Enchantment;
+              break;
+            }
+          }
+
+          if (!selectedEnchantment) {
+            throw new Error(
+              "No enchantment selected for enchant random action",
+            );
+          }
+
+          const removedCard = getBoardCardByID(gameState, targetCard);
+
+          commands.addCommand(new RemoveCardCommand(targetCard));
+          commands.addCommand(
+            new AddCardCommand(
+              targetCard.playerIdx,
+              {
+                cardId: removedCard.card.Id,
+                tier: removedCard.tier,
+                enchantment: selectedEnchantment,
+                attributeOverrides: overrides,
+              },
+              targetCard.cardIdx,
+              targetCard.location,
+            ),
+          );
+        }
         return commands;
       }
 
@@ -880,10 +979,54 @@ export class CommandFactory {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function createCardFromConfig(cardConfig: PlayerCardConfig): BoardCard {
-  throw new Error("Not implemented");
-  return {} as BoardCard;
+export class RegisterCardEventsCommand implements Command {
+  constructor(private locationID: CardLocationID) {}
+
+  execute(gameState: GameState): void {
+    const card = getBoardCardByID(gameState, this.locationID);
+    Object.values(card.Abilities).forEach((ability: Ability) => {
+      const eventClass = triggerToEvent(ability.Trigger);
+      const triggerCheck = createTriggerCheck(ability, this.locationID);
+      const prerequisiteCheck = createPrerequisitesCheck(
+        ability,
+        this.locationID,
+      );
+
+      // Create a combined test function that checks both prerequisites and trigger conditions
+      const shouldReceiveEvent = (gs: GameState, event: GameEvent): boolean => {
+        return prerequisiteCheck(gs, event) && triggerCheck(gs, event);
+      };
+
+      const eventHandler = (gs: GameState, event: GameEvent): void => {
+        const command = CommandFactory.createFromAction(
+          ability.Action,
+          this.locationID,
+          gs,
+          event,
+        );
+        if (command) {
+          // Log the command before execution
+          gs.eventBus.addCommandToLog(command);
+
+          // Execute the command
+          command.execute(gs);
+        }
+      };
+
+      // Register the event handler with the ability's priority and test function
+      gameState.eventBus.on(
+        eventClass,
+        eventHandler,
+        ability.Priority || Priority.Medium,
+        shouldReceiveEvent,
+      );
+      // Store the eventclass and handler on the card so they can be unregistered later
+      if (!card.registeredTriggers.has(eventClass)) {
+        card.registeredTriggers.set(eventClass, []);
+      }
+      card.registeredTriggers.get(eventClass)!.push(eventHandler);
+    });
+  }
 }
 
 /**
@@ -897,13 +1040,9 @@ export class AddCardCommand implements Command {
     private location: "board" | "stash" = "board",
   ) {}
 
-  async execute(gameState: GameState): Promise<void> {
+  execute(gameState: GameState) {
     const player = gameState.players[this.playerID];
 
-    const { Cards } = await genCardsAndEncounters();
-
-    // In a real implementation, this would call createBoardCardFromId from GameState.ts
-    // For now, we're converting the config directly to a BoardCard with type casting
     const boardCard = createBoardCardFromId(
       Cards,
       this.cardConfig.cardId,
@@ -916,21 +1055,10 @@ export class AddCardCommand implements Command {
     const insertPosition =
       this.position >= 0 ? this.position : player.board.length;
 
-    // Check if we're replacing an existing card
-    if (insertPosition < player.board.length) {
-      // Create and execute a RemoveCardCommand to properly remove the existing card
-      const removeCommand = new RemoveCardCommand({
-        playerIdx: this.playerID,
-        cardIdx: this.position,
-        location: this.location,
-      });
-      removeCommand.execute(gameState);
-
-      // Now insert the new card at the position
-      player.board.splice(insertPosition, 0, boardCard);
-    } else {
-      // Add to the end
+    if (insertPosition >= player.board.length) {
       player.board.push(boardCard);
+    } else {
+      player.board.splice(insertPosition, 0, boardCard);
     }
 
     const locationID: CardLocationID = {
@@ -938,6 +1066,9 @@ export class AddCardCommand implements Command {
       cardIdx: insertPosition,
       location: this.location,
     };
+
+    // Register all events assosciated with the card
+    new RegisterCardEventsCommand(locationID).execute(gameState);
 
     // Emit event that card was added
     gameState.eventBus.emit(new CardAddedEvent(locationID, boardCard));
@@ -959,15 +1090,16 @@ export class RemoveCardCommand implements Command {
     const player = gameState.players[playerIdx];
 
     if (cardIdx >= 0 && cardIdx < player[location].length) {
+      // Unregister all events assosciated with the card
+      const card = getBoardCardByID(gameState, this.locationID);
+      card.registeredTriggers.forEach((handlers, eventClass) => {
+        handlers.forEach((handler) => {
+          gameState.eventBus.off(eventClass, handler);
+        });
+      });
+
       // Remove the card
       player[location].splice(cardIdx, 1);
-
-      // Unregister all events assosciated with the card
-      getBoardCardByID(gameState, this.locationID).registeredTriggers.forEach(
-        (handler, eventClass) => {
-          gameState.eventBus.off(eventClass, handler);
-        },
-      );
 
       // Emit event that card was removed
       gameState.eventBus.emit(new CardRemovedEvent(this.locationID));
@@ -1271,7 +1403,7 @@ export class FireCardCommand implements Command {
   constructor(private locationID: CardLocationID) {}
 
   execute(gameState: GameState): void {
-    // Emit card trigger event
+    // Emit card fired event
     gameState.eventBus.emit(new CardFiredEvent(this.locationID));
 
     // Emit card:itemused event
@@ -1539,7 +1671,6 @@ export class BeginSandstormCommand implements Command {
 export class SystemCommand implements Command {
   constructor(private description: string) {}
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   execute(_: GameState): void {
     // This is just a marker command for logging purposes
   }

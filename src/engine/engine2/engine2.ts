@@ -100,7 +100,7 @@ export type BoardCard = {
   };
   internalCommandQueue: Command[];
   internalCommandQueuetick: number;
-  registeredTriggers: Map<GameEventConstructor, EventHandler>;
+  registeredTriggers: Map<GameEventConstructor, EventHandler[]>;
 };
 
 export interface Player {
@@ -203,20 +203,25 @@ export class Engine2 {
       this.gameState.eventBus?.emit(new GameFightStartedEvent());
     }
 
-    for (let i = 0; i < maxTicks; i++) {
-      this.gameState.step++;
-      // Process a tick
-      this.processTick();
+    try {
+      for (let i = 0; i < maxTicks; i++) {
+        this.gameState.step++;
+        // Process a tick
+        this.processTick();
 
-      // Create a step copy with the current step index
-      const stepCopy = this.createGameStateCopy();
+        // Create a step copy with the current step index
+        const stepCopy = this.createGameStateCopy();
 
-      steps.push(stepCopy);
+        steps.push(stepCopy);
 
-      // Check if game is still active
-      if (steps.at(-1)?.isPlaying === false) {
-        break;
+        // Check if game is still active
+        if (steps.at(-1)?.isPlaying === false) {
+          break;
+        }
       }
+    } catch (error) {
+      console.error("Game state on error:", this.gameState);
+      throw error;
     }
 
     return steps;

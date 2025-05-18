@@ -8,11 +8,7 @@ import {
   type Enchantments,
 } from "../types/cardTypes.ts";
 import type { Tier } from "../types/shared.ts";
-import type {
-  EncounterDays,
-  FlattenedEncounter,
-  Group,
-} from "../types/encounterTypes.ts";
+import type { EncounterDays, Group } from "../types/encounterTypes.ts";
 import { z } from "zod";
 import { v7 as uuidv7 } from "uuid";
 import { CARDS_VERSION, defaultSandstormInitialTick } from "@/lib/constants.ts";
@@ -104,8 +100,8 @@ function _createBoardCardFromCard(
   attributes.Ammo = attributes.AmmoMax;
 
   // Override the attributes
-  for (const [attribute, modifier] of Object.entries(attributeOverrides)) {
-    attributes[attribute as AttributeType] = modifier;
+  for (const [attribute, override] of Object.entries(attributeOverrides)) {
+    attributes[attribute as AttributeType] = override;
   }
 
   if (enchantment) {
@@ -364,22 +360,4 @@ export function getInitialGameState(
     multicast: [],
     randomGen: prand.xoroshiro128plus(randomSeed),
   };
-}
-
-export function getFlattenedEncounters(
-  Encounters: EncounterDays,
-): Array<FlattenedEncounter> {
-  return Encounters.data
-    .map((data) => {
-      return data.groups
-        .map((day) => {
-          return day.map((group) => ({
-            name: group.cardName,
-            card: { cardName: group.cardName, cardId: group.cardId },
-            day: data.day,
-          }));
-        })
-        .flat();
-    })
-    .flat();
 }

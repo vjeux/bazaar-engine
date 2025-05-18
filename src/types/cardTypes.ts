@@ -73,8 +73,14 @@ export interface AbilityAction {
   SpawnContext?: SpawnContext;
   TargetCount?: TargetCount | null;
   Enchantment?: string;
+  Enchantments?: WeightedEnchantment[];
   Source?: Source;
   Tags?: Tag[];
+}
+
+export interface WeightedEnchantment {
+  Enchantment: EnchantmentType;
+  Weight: number;
 }
 
 export enum ActionType {
@@ -110,6 +116,7 @@ export enum ActionType {
   TActionPlayerShieldRemove = "TActionPlayerShieldRemove",
   TAuraActionCardModifyAttribute = "TAuraActionCardModifyAttribute",
   TAuraActionPlayerModifyAttribute = "TAuraActionPlayerModifyAttribute",
+  TActionCardEnchantRandom = "TActionCardEnchantRandom",
 }
 
 export enum AttributeType {
@@ -133,6 +140,7 @@ export enum AttributeType {
   DamageCrit = "DamageCrit",
   DisableTargets = "DisableTargets",
   Experience = "Experience",
+  EnchantTargets = "EnchantTargets",
   Freeze = "Freeze",
   FreezeAmount = "FreezeAmount",
   FreezeTargets = "FreezeTargets",

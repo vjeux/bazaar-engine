@@ -11,7 +11,6 @@ import {
   Priority,
   TriggerType,
 } from "../../types/cardTypes";
-import { createPrerequisitesCheck } from "./prereq";
 import { getTargetCards, getTargetPlayers } from "./targeting";
 import {
   CardAttributeChangedEvent,
@@ -331,7 +330,7 @@ const triggerToEventMap: Record<
 /**
  * Convert ability trigger to event class constructor
  */
-function triggerToEvent(trigger: {
+export function triggerToEvent(trigger: {
   $type: TriggerType;
 }): GameEventConstructor<GameEvent> {
   const triggerType = trigger?.$type || "";
@@ -349,7 +348,7 @@ function triggerToEvent(trigger: {
 /**
  * Create a trigger check function for an ability
  */
-function createTriggerCheck(
+export function createTriggerCheck(
   ability: Ability,
   locationID: CardLocationID,
 ): (gs: GameState, e: GameEvent) => boolean {
@@ -658,52 +657,11 @@ export function setupEventHandlers(gameState: GameState): void {
   // For each card, register the cards abilities to the event bus
   gameState.players.forEach((player, playerID) => {
     player.board.forEach((card, cardID) => {
-      Object.values(card.Abilities).forEach((ability: Ability) => {
-        const locationID: CardLocationID = {
-          playerIdx: playerID,
-          cardIdx: cardID,
-          location: "board",
-        };
-
-        const eventClass = triggerToEvent(ability.Trigger);
-        const triggerCheck = createTriggerCheck(ability, locationID);
-        const prerequisiteCheck = createPrerequisitesCheck(ability, locationID);
-
-        // Create a combined test function that checks both prerequisites and trigger conditions
-        const shouldReceiveEvent = (
-          gs: GameState,
-          event: GameEvent,
-        ): boolean => {
-          return prerequisiteCheck(gs, event) && triggerCheck(gs, event);
-        };
-
-        const eventHandler = (gs: GameState, event: GameEvent): void => {
-          const command = Commands.CommandFactory.createFromAction(
-            ability.Action,
-            locationID,
-            gs,
-            event,
-          );
-          if (command) {
-            // Log the command before execution
-            gs.eventBus.addCommandToLog(command);
-
-            // Execute the command
-            command.execute(gs);
-          }
-        };
-
-        // Register the event handler with the ability's priority and test function
-        eventBus.on(
-          eventClass,
-          eventHandler,
-          ability.Priority || Priority.Medium,
-          shouldReceiveEvent,
-        );
-
-        // Store the eventclass and handler on the card so they can be unregistered later
-        card.registeredTriggers.set(eventClass, eventHandler);
-      });
+      new Commands.RegisterCardEventsCommand({
+        playerIdx: playerID,
+        cardIdx: cardID,
+        location: "board",
+      }).execute(gameState);
     });
   });
 
@@ -850,11 +808,21 @@ function processBurn(gameState: GameState): void {
  * Process card cooldowns and triggers
  */
 function processCardCooldowns(gameState: GameState): void {
-  const cardTriggers: CardLocationID[] = [];
+  // Set to track processed card UUIDs
+  const processedCardUUIDs = new Set<string>();
 
+  // Process all cards currently on the board
   gameState.players.forEach((player, playerID) => {
-    player.board.forEach((card, cardID) => {
-      if (card.isDisabled || card.card.$type === "TCardSkill") {
+    // Create a copy of the board to iterate over as it might change during processing
+    const boardCards = [...player.board];
+
+    boardCards.forEach((card, cardID) => {
+      // Skip if already processed, disabled, or a skill card
+      if (
+        processedCardUUIDs.has(card.uuid) ||
+        card.isDisabled ||
+        card.card.$type === "TCardSkill"
+      ) {
         return;
       }
 
@@ -863,11 +831,19 @@ function processCardCooldowns(gameState: GameState): void {
         return;
       }
 
+      // Add to processed set
+      processedCardUUIDs.add(card.uuid);
+
       const locationID: CardLocationID = {
         playerIdx: playerID,
         cardIdx: cardID,
         location: "board",
       };
+
+      // Check if card still exists (might have been removed)
+      if (cardID >= gameState.players[playerID].board.length) {
+        return;
+      }
 
       // Check if card is frozen
       const freeze = card[AttributeType.Freeze] as number | undefined;
@@ -927,8 +903,6 @@ function processCardCooldowns(gameState: GameState): void {
         const ammoMax = card[AttributeType.AmmoMax] as number | undefined;
 
         if (!ammoMax || (ammoMax && ammo === undefined) || (ammo && ammo > 0)) {
-          cardTriggers.push(locationID);
-
           // Handle multicast
           if ("Multicast" in card && card.Multicast) {
             const MULTICAST_DELAY = 300;
@@ -940,44 +914,91 @@ function processCardCooldowns(gameState: GameState): void {
               });
             }
           }
+
+          // Reduce ammo if needed
+          if (ammoMax) {
+            const ammo = card[AttributeType.Ammo];
+            new Commands.ModifyCardAttributeCommand(
+              locationID,
+              AttributeType.Ammo,
+              ammo === undefined ? ammoMax - 1 : ammo - 1,
+              "set",
+            ).execute(gameState);
+          }
+
+          // Immediately fire the card
+          new Commands.FireCardCommand(locationID).execute(gameState);
         }
       }
     });
   });
 
-  // Process delayed multicasts
-  gameState.multicast = gameState.multicast.filter((multicast) => {
-    if (multicast.tick <= gameState.tick) {
-      cardTriggers.push({
-        playerIdx: multicast.playerID,
-        cardIdx: multicast.boardCardID,
-        location: "board",
+  // Process any newly added cards that weren't processed in the first pass
+  let newCardsProcessed = true;
+
+  // Continue until no new cards are processed
+  while (newCardsProcessed) {
+    newCardsProcessed = false;
+
+    gameState.players.forEach((player, playerID) => {
+      player.board.forEach((card, cardID) => {
+        // Skip if already processed, disabled, or a skill card
+        if (
+          processedCardUUIDs.has(card.uuid) ||
+          card.isDisabled ||
+          card.card.$type === "TCardSkill"
+        ) {
+          return;
+        }
+
+        // We found a new card that wasn't processed before
+        newCardsProcessed = true;
+        processedCardUUIDs.add(card.uuid);
+
+        // Skip cards without cooldown
+        if (card.CooldownMax === undefined) {
+          return;
+        }
+
+        const locationID: CardLocationID = {
+          playerIdx: playerID,
+          cardIdx: cardID,
+          location: "board",
+        };
+
+        // Process the new card (same logic as above but simplified for brevity)
+        // We don't need to check for frozen/slow/haste as newly added cards
+        // will be processed in the next tick
+
+        // Check if card should trigger on the first tick
+        const cooldownMax = card[AttributeType.CooldownMax] as number;
+        if (card.tick >= cooldownMax) {
+          const ammo = card[AttributeType.Ammo] as number | undefined;
+          const ammoMax = card[AttributeType.AmmoMax] as number | undefined;
+
+          if (
+            !ammoMax ||
+            (ammoMax && ammo === undefined) ||
+            (ammo && ammo > 0)
+          ) {
+            // Reduce ammo if needed
+            if (ammoMax) {
+              const ammo = card[AttributeType.Ammo];
+              new Commands.ModifyCardAttributeCommand(
+                locationID,
+                AttributeType.Ammo,
+                ammo === undefined ? ammoMax - 1 : ammo - 1,
+                "set",
+              ).execute(gameState);
+            }
+
+            // Immediately fire the card
+            new Commands.FireCardCommand(locationID).execute(gameState);
+          }
+        }
       });
-      return false;
-    }
-    return true;
-  });
-
-  // Trigger cards
-  cardTriggers.forEach((locationID) => {
-    const { playerIdx: playerID, cardIdx: cardID } = locationID;
-    // Reduce ammo if needed
-    const card = gameState.players[playerID].board[cardID];
-    const ammoMax = card[AttributeType.AmmoMax] as number | undefined;
-
-    if (ammoMax) {
-      const ammo = card[AttributeType.Ammo] as number | undefined;
-      new Commands.ModifyCardAttributeCommand(
-        locationID,
-        AttributeType.Ammo,
-        ammo === undefined ? ammoMax - 1 : ammo - 1,
-        "set",
-      ).execute(gameState);
-    }
-
-    // Trigger the card
-    new Commands.FireCardCommand(locationID).execute(gameState);
-  });
+    });
+  }
 }
 
 /**

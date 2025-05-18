@@ -5,7 +5,6 @@ import type {
 } from "../types/encounterTypes.ts";
 import { CARDS_VERSION } from "./constants.ts";
 import { useEffect, useState } from "react";
-import { getFlattenedEncounters } from "../engine/GameState.ts";
 import { useQuery } from "@tanstack/react-query";
 import ValidSkillIds from "../../public/json/ValidSkillIds.json";
 import ValidItemIds from "../../public/json/ValidItemIds.json";
@@ -243,4 +242,21 @@ export function useGameData() {
     isLoading,
     error,
   };
+}
+export function getFlattenedEncounters(
+  Encounters: EncounterDays,
+): Array<FlattenedEncounter> {
+  return Encounters.data
+    .map((data) => {
+      return data.groups
+        .map((day) => {
+          return day.map((group) => ({
+            name: group.cardName,
+            card: { cardName: group.cardName, cardId: group.cardId },
+            day: data.day,
+          }));
+        })
+        .flat();
+    })
+    .flat();
 }
