@@ -547,7 +547,18 @@ export function createTriggerCheck(
             ability.Trigger.Subject,
             locationID,
           );
-          return subjects.some((subject) => subject === e.playerIdx);
+          // TODO: implement Trigger.Source
+          // Check if attribute that changed was the one specified in the trigger and change type is the same as the trigger
+          if (
+            e.attribute === ability.Trigger.AttributeChanged &&
+            ((ability.Trigger.ChangeType === "Gain" &&
+              e.newValue > e.oldValue) ||
+              (ability.Trigger.ChangeType === "Loss" &&
+                e.newValue < e.oldValue))
+          ) {
+            return subjects.some((subject) => subject === e.playerIdx);
+          }
+          return false;
         }
       }
 
