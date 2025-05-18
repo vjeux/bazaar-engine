@@ -138,6 +138,7 @@ export enum AttributeType {
   Custom_5 = "Custom_5",
   DamageAmount = "DamageAmount",
   DamageCrit = "DamageCrit",
+  DestroyTargets = "DestroyTargets",
   DisableTargets = "DisableTargets",
   Experience = "Experience",
   EnchantTargets = "EnchantTargets",

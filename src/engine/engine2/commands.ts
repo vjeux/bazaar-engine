@@ -971,6 +971,34 @@ export class CommandFactory {
         return commands;
       }
 
+      case ActionType.TActionCardDestroy: {
+        if (!action.Target) {
+          throw new Error("Target is required for destroy action");
+        }
+
+        const targetCards = getTargetCards(
+          gameState,
+          action.Target,
+          sourceCardID,
+          event,
+        );
+
+        const destroyAmount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.DestroyTargets,
+        );
+
+        for (const targetCard of targetCards.slice(0, destroyAmount)) {
+          commands.addCommand(new RemoveCardCommand(targetCard)); // TODO: use implement and use destroy event, and destroy command
+          console.warn(
+            "calling remove card command for destroy action, TODO: implement emit destroy event, and destroy command",
+          );
+        }
+
+        return commands;
+      }
+
       default:
         console.error(`Unhandled action type: ${action.$type}`);
         throw new Error(`Unhandled action type: ${action.$type}`);
