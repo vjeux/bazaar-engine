@@ -1,6 +1,7 @@
 import { Value, AttributeType } from "@/types/cardTypes";
 import { Player } from "../Engine";
-import { GameState, CardLocationID, getCardAttribute } from "./engine2";
+import { GameState, CardLocationID } from "./engine2";
+import { getCardAttribute } from "./getAttribute";
 import { PlayerAttributeChangedEvent } from "./events";
 import { GameEvent } from "./events";
 import { getTargetCards, getTargetPlayers } from "./targeting";

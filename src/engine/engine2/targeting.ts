@@ -24,7 +24,7 @@ import { GameEvent } from "./events";
 import { getActionValue } from "./getActionValue";
 import { Hero, HiddenTag, Tag } from "../../types/shared";
 import { PLAYER_PLAYER_IDX } from "@/lib/constants";
-import { getCardAttribute } from "./engine2";
+import { getCardAttribute } from "./getAttribute";
 
 export type TargetConfig = Source | Target | Subject;
 

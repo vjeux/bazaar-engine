@@ -3,7 +3,8 @@ import {
   AbilityPrerequisite,
   Comparison,
 } from "../../types/cardTypes";
-import { CardLocationID, GameState, getCardAttribute } from "./engine2";
+import { CardLocationID, GameState } from "./engine2";
+import { getCardAttribute } from "./getAttribute";
 import { GameEvent } from "./events";
 import { getTargetCards, getTargetPlayers } from "./targeting";
 

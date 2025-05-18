@@ -4,12 +4,8 @@ import {
   ActionType,
   AttributeType,
 } from "../../types/cardTypes";
-import {
-  GameState,
-  CardLocationID,
-  getCardAttribute,
-  BoardCard,
-} from "./engine2";
+import { GameState, CardLocationID, BoardCard } from "./engine2";
+import { getCardAttribute } from "./getAttribute";
 import { createBoardCardFromId, PlayerCardConfig } from "../GameState";
 import {
   CardFiredEvent,
@@ -174,7 +170,7 @@ export class CommandFactory {
 
         // Emit crit event if it happened
         if (hasCritted) {
-          commands.addCommand(new EmitCritEvent(sourceCardID));
+          commands.addCommand(new EmitCritEventCommand(sourceCardID));
         }
 
         return commands;
@@ -214,7 +210,7 @@ export class CommandFactory {
 
         // Emit crit event if it happened
         if (hasCritted) {
-          commands.addCommand(new EmitCritEvent(sourceCardID));
+          commands.addCommand(new EmitCritEventCommand(sourceCardID));
         }
 
         return commands;
@@ -254,7 +250,7 @@ export class CommandFactory {
 
         // Emit crit event if it happened
         if (hasCritted) {
-          commands.addCommand(new EmitCritEvent(sourceCardID));
+          commands.addCommand(new EmitCritEventCommand(sourceCardID));
         }
 
         return commands;
@@ -294,7 +290,7 @@ export class CommandFactory {
 
         // Emit crit event if it happened
         if (hasCritted) {
-          commands.addCommand(new EmitCritEvent(sourceCardID));
+          commands.addCommand(new EmitCritEventCommand(sourceCardID));
         }
 
         return commands;
@@ -334,7 +330,7 @@ export class CommandFactory {
 
         // Emit crit event if it happened
         if (hasCritted) {
-          commands.addCommand(new EmitCritEvent(sourceCardID));
+          commands.addCommand(new EmitCritEventCommand(sourceCardID));
         }
 
         return commands;
@@ -379,7 +375,7 @@ export class CommandFactory {
 
         // Emit crit event if it happened
         if (hasCritted) {
-          commands.addCommand(new EmitCritEvent(sourceCardID));
+          commands.addCommand(new EmitCritEventCommand(sourceCardID));
         }
 
         return commands;
@@ -1530,7 +1526,7 @@ export class SystemCommand implements Command {
 /**
  * Command to emit a critical hit event
  */
-export class EmitCritEvent implements Command {
+export class EmitCritEventCommand implements Command {
   constructor(private sourceCardID: CardLocationID) {}
 
   execute(gameState: GameState): void {
