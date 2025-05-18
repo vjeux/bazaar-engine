@@ -150,3 +150,41 @@ engine.processTick();
 // Get the current game state (returns a deep copy)
 const currentState = engine.getGameState();
 ```
+
+
+## Attribute Snapshot System
+
+The engine implements an attribute snapshot system where changes to attributes are not applied immediately but are instead staged as "drafts" and applied at the beginning of the next tick. This system provides several benefits:
+
+- **Atomicity**: All attribute changes within a tick are applied together at the beginning of the next tick, ensuring atomic updates
+- **Consistency**: When reading attributes within a tick, you get consistent values throughout the tick
+- **Predictability**: Effects and ability calculations can depend on the state at the beginning of the tick
+
+### How it works
+
+1. At the beginning of each tick, the system:
+   - Applies all draft changes from the previous tick
+   - Takes a snapshot of the current state of all attributes
+
+2. During the tick:
+   - All attribute changes are made to draft values, not directly to actual attributes
+   - Commands and events use the draft values for calculations via `getCardAttribute` and `getPlayerAttribute`
+
+3. At the beginning of the next tick, the process repeats, applying all drafted changes
+
+### Implementation
+
+The system uses:
+- `attributeSnapshots` in GameState to store the beginning-of-tick snapshot
+- `attributeDraft` in Player and BoardCard to store pending changes
+- Helper functions to get the effective value of an attribute (draft → snapshot → current)
+
+### Usage
+
+When modifying attributes, always use the provided commands:
+- `ModifyCardAttributeCommand` - Updates a card attribute draft
+- `ModifyPlayerAttributeCommand` - Updates a player attribute draft
+
+When reading attributes, always use:
+- `getCardAttribute` - Gets the current effective value of a card attribute
+- `getPlayerAttribute` - Gets the current effective value of a player attribute

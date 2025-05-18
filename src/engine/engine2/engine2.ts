@@ -76,6 +76,15 @@ export interface CardConfig {
   attributeOverrides?: Partial<Record<AttributeType, number>>;
 }
 
+/**
+ * Type for card attribute snapshots and drafts
+ */
+export type CardAttributeSnapshot = {
+  [key in AttributeType | "tick"]?: number;
+} & {
+  tags?: string[];
+};
+
 export type BoardCard = {
   [key in AttributeType]: number | undefined;
 } & {
@@ -101,6 +110,22 @@ export type BoardCard = {
   internalCommandQueue: Command[];
   internalCommandQueuetick: number;
   registeredTriggers: Map<GameEventConstructor, EventHandler[]>;
+  // New field for attribute draft
+  attributeDraft?: CardAttributeSnapshot;
+};
+
+/**
+ * Type for player attribute snapshots and drafts
+ */
+export type PlayerAttributeSnapshot = {
+  HealthMax?: number;
+  Health?: number;
+  HealthRegen?: number;
+  Shield?: number;
+  Burn?: number;
+  Poison?: number;
+  Gold?: number;
+  Income?: number;
 };
 
 export interface Player {
@@ -115,6 +140,8 @@ export interface Player {
   Hero: Hero | (string & {});
   board: BoardCard[];
   stash: BoardCard[];
+  // New field for attribute draft
+  attributeDraft?: PlayerAttributeSnapshot;
 }
 
 /**
@@ -130,6 +157,13 @@ export interface GameState {
   winner?: "Player" | "Enemy" | "Draw";
   sandstormStartTick: number;
   eventBus: EventBus;
+  // Attribute snapshots for the current tick
+  attributeSnapshots?: {
+    players: PlayerAttributeSnapshot[];
+    cards: Map<string, CardAttributeSnapshot>; // Keyed by card UUID
+  };
+  // Flag to indicate if this tick has been snapshotted
+  isTickSnapshotted: boolean;
 }
 
 /**
@@ -148,6 +182,7 @@ export class Engine2 {
       ...initialGameState,
       eventBus,
       step: 0,
+      isTickSnapshotted: false,
     };
 
     // Update the EventBus reference to the real gameState
@@ -221,6 +256,7 @@ export class Engine2 {
       }
     } catch (error) {
       console.error("Game state on error:", this.gameState);
+      console.error("Error:", error);
       throw error;
     }
 

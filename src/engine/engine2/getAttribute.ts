@@ -1,5 +1,11 @@
 import { AttributeType } from "@/types/cardTypes";
-import { GameState, CardLocationID, Player } from "./engine2";
+import {
+  GameState,
+  CardLocationID,
+  Player,
+  BoardCard,
+  PlayerAttributeSnapshot,
+} from "./engine2";
 import { getActionValue } from "./getActionValue";
 import { getTargetCards, getTargetPlayers } from "./targeting";
 
@@ -10,6 +16,51 @@ const attributeRecursionGuard = new Map<string, Set<string>>();
 
 function getRecursionKey(cardID: CardLocationID): string {
   return `${cardID.playerIdx}-${cardID.cardIdx}-${cardID.location}`;
+}
+
+/**
+ * Helper to get a card's effective attribute value respecting the draft/snapshot system
+ */
+function getCardEffectiveValue(
+  gameState: GameState,
+  card: BoardCard,
+  attribute: AttributeType | "tags",
+): number | string[] | undefined {
+  // For tags, handle separately
+  if (attribute === "tags") {
+    // Check draft first
+    if (card.attributeDraft?.tags) {
+      return [...card.attributeDraft.tags];
+    }
+
+    // Check snapshot next
+    if (gameState.attributeSnapshots?.cards.has(card.uuid)) {
+      const snapshot = gameState.attributeSnapshots.cards.get(card.uuid);
+      if (snapshot?.tags) {
+        return [...snapshot.tags];
+      }
+    }
+
+    // Fallback to current value
+    return [...(card.tags || [])];
+  }
+
+  // For other attributes
+  // Check draft first
+  if (card.attributeDraft && attribute in card.attributeDraft) {
+    return card.attributeDraft[attribute];
+  }
+
+  // Check snapshot next
+  if (gameState.attributeSnapshots?.cards.has(card.uuid)) {
+    const snapshot = gameState.attributeSnapshots.cards.get(card.uuid);
+    if (snapshot && attribute in snapshot) {
+      return snapshot[attribute];
+    }
+  }
+
+  // Fallback to current value
+  return card[attribute];
 }
 
 /**
@@ -42,7 +93,7 @@ export function getCardAttribute(
   // If we're in a recursive call for this same attribute, return the base value without aura modifications
   if (attributeRecursionGuard.get(guardKey)?.has("computing")) {
     const card = gameState.players[cardID.playerIdx].board[cardID.cardIdx];
-    return attribute === "tags" ? [...(card.tags || [])] : card[attribute];
+    return getCardEffectiveValue(gameState, card, attribute);
   }
 
   // Mark that we're computing this attribute
@@ -53,7 +104,12 @@ export function getCardAttribute(
 
     // Special handling for tags
     if (attribute === "tags") {
-      const tags: Set<string> = new Set(card.tags || []);
+      const baseTags = getCardEffectiveValue(
+        gameState,
+        card,
+        attribute,
+      ) as string[];
+      const tags: Set<string> = new Set(baseTags);
 
       // Apply auras that add tags
       gameState.players.forEach((player, playerIdx) => {
@@ -102,10 +158,11 @@ export function getCardAttribute(
 
               // Add tags from each source card
               sourceCards.forEach((sourceCard) => {
-                const sourceTags =
-                  gameState.players[sourceCard.playerIdx].board[
-                    sourceCard.cardIdx
-                  ].tags || [];
+                const sourceTags = getCardAttribute(
+                  gameState,
+                  sourceCard,
+                  "tags",
+                );
                 sourceTags.forEach((tag) => tags.add(tag));
               });
             }
@@ -117,7 +174,9 @@ export function getCardAttribute(
     }
 
     // Handle numeric attributes with aura modifications
-    let value = card[attribute];
+    let value = getCardEffectiveValue(gameState, card, attribute) as
+      | number
+      | undefined;
 
     // Apply aura effects
     gameState.players.forEach((player, playerIdx) => {
@@ -204,6 +263,42 @@ export function getCardAttribute(
 }
 
 /**
+ * Helper to get a player's effective attribute value respecting the draft/snapshot system
+ */
+function getPlayerEffectiveValue<K extends keyof Player>(
+  gameState: GameState,
+  player: Player,
+  playerIdx: number,
+  attribute: K,
+): Player[K] {
+  // Check draft first
+  if (player.attributeDraft && attribute in player.attributeDraft) {
+    // Safe to cast since we've checked that the key exists
+    const draftValue =
+      player.attributeDraft[attribute as keyof PlayerAttributeSnapshot];
+    if (draftValue !== undefined) {
+      return draftValue as Player[K];
+    }
+  }
+
+  // Check snapshot next
+  if (gameState.attributeSnapshots?.players?.[playerIdx]) {
+    const snapshot = gameState.attributeSnapshots.players[playerIdx];
+    if (snapshot && attribute in snapshot) {
+      // Safe to cast since we've checked that the key exists
+      const snapshotValue =
+        snapshot[attribute as keyof PlayerAttributeSnapshot];
+      if (snapshotValue !== undefined) {
+        return snapshotValue as Player[K];
+      }
+    }
+  }
+
+  // Fallback to current value
+  return player[attribute];
+}
+
+/**
  * Get player attribute value with all aura modifications applied
  */
 
@@ -221,14 +316,24 @@ export function getPlayerAttribute<K extends keyof Player>(
 
   // If we're in a recursive call for this same attribute, return the base value without aura modifications
   if (attributeRecursionGuard.get(guardKey)?.has("computing")) {
-    return gameState.players[playerID][attribute];
+    return getPlayerEffectiveValue(
+      gameState,
+      gameState.players[playerID],
+      playerID,
+      attribute,
+    );
   }
 
   // Mark that we're computing this attribute
   attributeRecursionGuard.get(guardKey)?.add("computing");
 
   try {
-    const value = gameState.players[playerID][attribute];
+    const value = getPlayerEffectiveValue(
+      gameState,
+      gameState.players[playerID],
+      playerID,
+      attribute,
+    );
 
     if (typeof value === "number") {
       let numericValue = value as number;

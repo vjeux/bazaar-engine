@@ -6,8 +6,8 @@ import {
   AttributeType,
   Priority,
 } from "../../types/cardTypes";
-import { GameState, CardLocationID } from "./engine2";
-import { getCardAttribute } from "./getAttribute";
+import { GameState, CardLocationID, CardAttributeSnapshot } from "./engine2";
+import { getCardAttribute, getPlayerAttribute } from "./getAttribute";
 import { createBoardCardFromId, PlayerCardConfig } from "../GameState";
 import {
   CardFiredEvent,
@@ -493,9 +493,22 @@ export class CommandFactory {
           sourceCardID,
           event,
         );
+        const healAmount = getCardAttribute(
+          gameState,
+          sourceCardID,
+          AttributeType.HealAmount,
+        );
+        if (healAmount === undefined) {
+          throw new Error("Heal amount is undefined");
+        }
         for (const targetPlayer of targetPlayers) {
           commands.addCommand(
-            new ModifyPlayerAttributeCommand(targetPlayer, "Health", "set", 0),
+            new ModifyPlayerAttributeCommand(
+              targetPlayer,
+              "Health",
+              "add", // TODO: figure out if this should be set or add
+              healAmount,
+            ),
           );
         }
         return commands;
@@ -854,12 +867,28 @@ export class CommandFactory {
           event,
         );
 
+        // Map the operation string to the expected format
+        let operation: "set" | "add" | "subtract" | "multiply" = "set";
+        if (action.Operation) {
+          switch (action.Operation) {
+            case "Add":
+              operation = "add";
+              break;
+            case "Subtract":
+              operation = "subtract";
+              break;
+            case "Multiply":
+              operation = "multiply";
+              break;
+          }
+        }
+
         for (const targetPlayer of targetPlayers) {
           commands.addCommand(
             new ModifyPlayerAttributeCommand(
               targetPlayer,
               action.AttributeType as PlayerAttributeNumber,
-              "set",
+              operation,
               actionValue,
             ),
           );
@@ -1156,32 +1185,79 @@ export class ModifyCardAttributeCommand implements Command {
   execute(gameState: GameState): void {
     const { playerIdx: playerID, cardIdx: cardID } = this.locationID;
     const card = gameState.players[playerID].board[cardID];
-    const oldValue = card[this.attribute] as number;
-    let newValue: number;
 
+    // Initialize attribute draft if needed
+    if (!card.attributeDraft) {
+      card.attributeDraft = {};
+    }
+
+    // Get the current effective value (from draft if exists, otherwise from snapshot)
+    let currentValue: number | undefined;
+
+    if (this.attribute in card.attributeDraft) {
+      // Value already exists in draft
+      currentValue = card.attributeDraft[this.attribute];
+    } else if (gameState.attributeSnapshots?.cards.has(card.uuid)) {
+      // Get from snapshot
+      const snapshot = gameState.attributeSnapshots.cards.get(card.uuid);
+      currentValue = snapshot?.[this.attribute];
+    } else {
+      // Fallback to current value
+      currentValue = card[this.attribute] as number;
+    }
+
+    // Calculate new value
+    let newValue: number;
     switch (this.operation) {
       case "set":
         newValue = this.value;
         break;
       case "add":
-        newValue = (oldValue || 0) + this.value;
+        newValue = (currentValue || 0) + this.value;
+        // Cap at AmmoMax
+        if (
+          this.attribute === "Ammo" &&
+          card.AmmoMax &&
+          newValue > card.AmmoMax
+        ) {
+          newValue = card.AmmoMax;
+        }
         break;
       case "subtract":
-        newValue = (oldValue || 0) - this.value;
+        newValue = (currentValue || 0) - this.value;
+        // Cap at 0 for attributes that should not be negative
+        if (
+          newValue < 0 &&
+          (this.attribute === AttributeType.Ammo ||
+            this.attribute === AttributeType.AmmoMax ||
+            this.attribute === AttributeType.CooldownMax ||
+            this.attribute === AttributeType.Freeze ||
+            this.attribute === AttributeType.Slow ||
+            this.attribute === AttributeType.Haste ||
+            this.attribute === AttributeType.ChargeAmount ||
+            this.attribute === AttributeType.ReloadAmount ||
+            this.attribute === AttributeType.CritChance ||
+            this.attribute === AttributeType.DamageAmount ||
+            this.attribute === AttributeType.HealAmount ||
+            this.attribute === "tick")
+        ) {
+          newValue = 0;
+        }
         break;
       case "multiply":
-        newValue = (oldValue || 0) * this.value;
+        newValue = (currentValue || 0) * this.value;
         break;
     }
 
-    card[this.attribute] = newValue;
+    // Update the draft
+    card.attributeDraft[this.attribute] = newValue;
 
     // Emit event for attribute change
     gameState.eventBus.emit(
       new CardAttributeChangedEvent(
         this.locationID,
         this.attribute,
-        oldValue,
+        currentValue || 0,
         newValue,
       ),
     );
@@ -1218,33 +1294,76 @@ export class ModifyPlayerAttributeCommand implements Command {
 
   execute(gameState: GameState): void {
     const player = gameState.players[this.playerIdx];
-    const oldValue = player[this.attribute];
-    let newValue: number;
 
+    // Initialize attribute draft if needed
+    if (!player.attributeDraft) {
+      player.attributeDraft = {};
+    }
+
+    // Get the current effective value (from draft if exists, otherwise from snapshot or current)
+    let currentValue: number;
+
+    if (this.attribute in player.attributeDraft) {
+      // Value already exists in draft
+      currentValue = player.attributeDraft[this.attribute] as number;
+    } else if (gameState.attributeSnapshots?.players[this.playerIdx]) {
+      // Get from snapshot
+      const snapshot = gameState.attributeSnapshots.players[this.playerIdx];
+      currentValue =
+        snapshot[this.attribute] !== undefined
+          ? (snapshot[this.attribute] as number)
+          : player[this.attribute];
+    } else {
+      // Fallback to current value
+      currentValue = player[this.attribute];
+    }
+
+    // Calculate new value
+    let newValue: number;
     switch (this.operation) {
       case "set":
         newValue = this.value;
         break;
       case "add":
-        newValue = oldValue + this.value;
+        newValue = currentValue + this.value;
+        // Cap at max health
+        if (this.attribute === "Health" && newValue > player.HealthMax) {
+          newValue = player.HealthMax;
+        }
         break;
       case "subtract":
-        newValue = oldValue - this.value;
+        newValue = currentValue - this.value;
+        // Cap at 0 for attributes that should not be negative
+        if (
+          newValue < 0 &&
+          (this.attribute === "Health" ||
+            this.attribute === "HealthMax" ||
+            this.attribute === "HealthRegen" ||
+            this.attribute === "Shield" ||
+            this.attribute === "Burn" ||
+            this.attribute === "Poison" ||
+            this.attribute === "Gold" ||
+            this.attribute === "Income")
+        ) {
+          newValue = 0;
+        }
         break;
       case "multiply":
-        newValue = oldValue * this.value;
+        newValue = currentValue * this.value;
         break;
     }
 
-    player[this.attribute] = newValue;
+    // Update the draft
+    player.attributeDraft[this.attribute] = newValue;
 
-    if (!(oldValue === newValue)) {
+    // Only emit event if the value actually changed
+    if (currentValue !== newValue) {
       // Emit event for attribute change
       gameState.eventBus.emit(
         new PlayerAttributeChangedEvent(
           this.playerIdx,
           this.attribute,
-          oldValue,
+          currentValue,
           newValue,
         ),
       );
@@ -1293,14 +1412,14 @@ export class DamagePlayerCommand implements Command {
       new ModifyPlayerAttributeCommand(
         this.targetPlayerIdx,
         "Shield",
-        "set",
-        0,
+        "subtract",
+        targetPlayerShield,
       ).execute(gameState);
       new ModifyPlayerAttributeCommand(
         this.targetPlayerIdx,
         "Health",
-        "set",
-        targetPlayer.Health - remainingDamage,
+        "subtract",
+        remainingDamage,
       ).execute(gameState);
     }
 
@@ -1322,23 +1441,35 @@ export class DamagePlayerCommand implements Command {
           this.sourceCardID,
           AttributeType.Lifesteal,
         ) ?? 0;
-      const sourcePlayer = gameState.players[this.sourceCardID.playerIdx];
-      const sourcePlayerHealth = sourcePlayer.Health;
-      const sourcePlayerHealthMax = sourcePlayer.HealthMax;
-      const newSourcePlayerHealth = Math.min(
-        sourcePlayerHealth + this.amount * (lifestealPercent / 100),
-        sourcePlayerHealthMax,
+      let lifestealAmount = this.amount * (lifestealPercent / 100);
+
+      // Make sure we dont add more than to the max health
+      const maxHealth = getPlayerAttribute(
+        gameState,
+        this.sourceCardID.playerIdx,
+        "HealthMax",
       );
+      const currentHealth = getPlayerAttribute(
+        gameState,
+        this.sourceCardID.playerIdx,
+        "Health",
+      );
+      if (lifestealAmount > maxHealth - currentHealth) {
+        lifestealAmount = maxHealth - currentHealth;
+      }
+
+      // Use add operation instead of calculating and setting
       new ModifyPlayerAttributeCommand(
         this.sourceCardID.playerIdx,
         "Health",
-        "set",
-        newSourcePlayerHealth,
+        "add",
+        lifestealAmount,
       ).execute(gameState);
+
       delayedEvents.push(
         new PlayerLifestealHealEvent(
           this.sourceCardID.playerIdx,
-          this.amount * (lifestealPercent / 100),
+          lifestealAmount,
           this.sourceCardID,
         ),
       );
@@ -1382,14 +1513,17 @@ export class HealPlayerCommand implements Command {
 
   execute(gameState: GameState): void {
     const player = gameState.players[this.targetPlayerID];
-    const newHealth = Math.min(player.Health + this.amount, player.HealthMax);
+    const currentHealth = player.Health;
+    const maxHealth = player.HealthMax;
 
-    if (newHealth > player.Health) {
+    // Check if player is at max health
+    if (currentHealth < maxHealth) {
+      // Use add operation instead of calculating and setting
       new ModifyPlayerAttributeCommand(
         this.targetPlayerID,
         "Health",
-        "set",
-        newHealth,
+        "add",
+        this.amount,
       ).execute(gameState);
 
       // Emit heal event
@@ -1488,13 +1622,12 @@ export class ApplyPoisonCommand implements Command {
   ) {}
 
   execute(gameState: GameState): void {
-    const player = gameState.players[this.targetPlayerID];
-
+    // Use add operation instead of calculating and setting
     new ModifyPlayerAttributeCommand(
       this.targetPlayerID,
       "Poison",
-      "set",
-      player.Poison + this.amount,
+      "add",
+      this.amount,
     ).execute(gameState);
 
     // Emit poison applied event
@@ -1554,10 +1687,138 @@ export class ApplyBurnCommand implements Command {
 }
 
 /**
+ * Command to take snapshots of the current attributes
+ */
+export class SnapshotAttributesCommand implements Command {
+  execute(gameState: GameState): void {
+    // Skip if already snapshotted this tick
+    if (gameState.isTickSnapshotted) {
+      return;
+    }
+
+    // Initialize snapshot storage
+    gameState.attributeSnapshots = {
+      players: [],
+      cards: new Map(),
+    };
+
+    // Snapshot player attributes
+    gameState.players.forEach((player, playerIdx) => {
+      // Store player attribute snapshot
+      gameState.attributeSnapshots!.players[playerIdx] = {
+        HealthMax: player.HealthMax,
+        Health: player.Health,
+        HealthRegen: player.HealthRegen,
+        Shield: player.Shield,
+        Burn: player.Burn,
+        Poison: player.Poison,
+        Gold: player.Gold,
+        Income: player.Income,
+      };
+
+      // Reset player attribute drafts
+      player.attributeDraft = {};
+
+      // Snapshot card attributes
+      player.board.forEach((card) => {
+        // Store card attribute snapshot
+        const cardSnapshot: CardAttributeSnapshot = {};
+
+        // Snapshot all numeric attributes
+        Object.values(AttributeType).forEach((attr) => {
+          if (card[attr] !== undefined) {
+            cardSnapshot[attr] = card[attr] as number;
+          }
+        });
+
+        // Snapshot tick and tags
+        cardSnapshot.tick = card.tick;
+        cardSnapshot.tags = [...card.tags];
+
+        // Store in the snapshots map
+        gameState.attributeSnapshots!.cards.set(card.uuid, cardSnapshot);
+
+        // Reset card attribute draft
+        card.attributeDraft = {};
+      });
+    });
+
+    // Mark tick as snapshotted
+    gameState.isTickSnapshotted = true;
+  }
+
+  toLogString(): string {
+    return "Snapshot attributes for the current tick";
+  }
+}
+
+/**
+ * Command to apply all attribute drafts
+ */
+export class ApplyAttributeDraftsCommand implements Command {
+  execute(gameState: GameState): void {
+    // Apply player attribute drafts
+    gameState.players.forEach((player) => {
+      if (player.attributeDraft) {
+        Object.entries(player.attributeDraft).forEach(([attribute, value]) => {
+          if (value !== undefined) {
+            // Type-safe assignment with two-step casting
+            (player as unknown as Record<string, unknown>)[attribute] = value;
+          }
+        });
+      }
+    });
+
+    // Apply card attribute drafts
+    gameState.players.forEach((player) => {
+      player.board.forEach((card) => {
+        if (card.attributeDraft) {
+          // Apply numeric attributes
+          Object.entries(card.attributeDraft).forEach(([attribute, value]) => {
+            if (attribute !== "tags" && value !== undefined) {
+              // Type-safe assignment with two-step casting
+              (card as unknown as Record<string, unknown>)[attribute] = value;
+            }
+          });
+
+          // Apply tags if they exist
+          if (card.attributeDraft.tags) {
+            card.tags = [...card.attributeDraft.tags];
+          }
+        }
+      });
+    });
+
+    // Reset tick snapshot flag
+    gameState.isTickSnapshotted = false;
+  }
+
+  toLogString(): string {
+    return "Apply attribute drafts for the next tick";
+  }
+}
+
+/**
  * Command to process a game tick
+ *
+ * The attribute snapshot system works as follows:
+ *
+ * 1. At the beginning of each tick, ApplyAttributeDraftsCommand applies any drafted changes from the previous tick
+ * 2. SnapshotAttributesCommand takes a snapshot of the current state of all attributes
+ * 3. During the tick, all attribute changes are made to draft values, not the actual attributes
+ * 4. Commands and events use the draft values (via getCardAttribute/getPlayerAttribute) for calculations
+ * 5. At the beginning of the next tick, the process repeats, applying all drafted changes
+ *
+ * This ensures all attribute changes within a tick are atomic and consistent.
  */
 export class ProcessTickCommand implements Command {
   execute(gameState: GameState): void {
+    // Apply drafted attribute changes from the previous tick
+    new ApplyAttributeDraftsCommand().execute(gameState);
+
+    // Take a snapshot of the current attributes
+    new SnapshotAttributesCommand().execute(gameState);
+
     // Increment the tick
     gameState.tick += 100;
 
@@ -1612,13 +1873,14 @@ export class ReloadCardCommand implements Command {
       return;
     }
 
-    const newValue = Math.min(ammoMax, currentAmmo + this.reloadAmount);
-    if (currentAmmo !== newValue) {
+    // Only reload if we're not at max ammo already
+    if (currentAmmo < ammoMax) {
+      // Use add operation instead of calculating and setting
       new ModifyCardAttributeCommand(
         this.locationID,
         AttributeType.Ammo,
-        newValue,
-        "set",
+        this.reloadAmount,
+        "add",
       ).execute(gameState);
     }
   }

@@ -38,6 +38,7 @@ import {
   PlayerOverhealedEvent,
 } from "./events";
 import { getCardAttribute, getPlayerAttribute } from "./getAttribute";
+import { ModifyCardAttributeCommand, FireCardCommand } from "./commands";
 
 // Priority order mapping for sorting
 const priorityOrder = {
@@ -813,8 +814,8 @@ function processBurn(gameState: GameState): void {
       new Commands.ModifyPlayerAttributeCommand(
         playerID,
         "Burn",
-        "set",
-        burn - 1,
+        "subtract",
+        1,
       ).execute(gameState);
     }
   });
@@ -900,40 +901,39 @@ function processCard(
   let tickRate = 100; // TICK_RATE
 
   // Check if card is frozen
-  const freeze = card[AttributeType.Freeze] as number | undefined;
+  const freeze = getCardAttribute(gameState, locationID, AttributeType.Freeze);
   if (freeze && freeze > 0) {
-    // Reduce freeze counter
-    new Commands.ModifyCardAttributeCommand(
+    new ModifyCardAttributeCommand(
       locationID,
       AttributeType.Freeze,
-      Math.max(0, freeze - 100),
-      "set",
+      Math.min(freeze, 100), // Don't subtract more than we have
+      "subtract",
     ).execute(gameState);
     return true; // Card was processed, but skip tick increment if frozen
   }
 
   // Process slow effect
-  const slow = card[AttributeType.Slow];
+  const slow = getCardAttribute(gameState, locationID, AttributeType.Slow);
   if (slow && slow > 0) {
-    // Reduce slow counter
-    new Commands.ModifyCardAttributeCommand(
+    // Reduce slow counter - use subtract instead of set
+    new ModifyCardAttributeCommand(
       locationID,
       AttributeType.Slow,
-      Math.max(0, slow - 100),
-      "set",
+      Math.min(slow, 100), // Don't subtract more than we have
+      "subtract",
     ).execute(gameState);
     tickRate /= 2;
   }
 
   // Process haste effect
-  const haste = card[AttributeType.Haste];
+  const haste = getCardAttribute(gameState, locationID, AttributeType.Haste);
   if (haste && haste > 0) {
-    // Reduce haste counter
-    new Commands.ModifyCardAttributeCommand(
+    // Reduce haste counter - use subtract instead of set
+    new ModifyCardAttributeCommand(
       locationID,
       AttributeType.Haste,
-      Math.max(0, haste - 100),
-      "set",
+      Math.min(haste, 100), // Don't subtract more than we have
+      "subtract",
     ).execute(gameState);
     tickRate *= 2;
   }
@@ -951,23 +951,37 @@ function processCard(
     );
   }
 
-  let newTick = card.tick + tickRate;
+  // For non-AttributeType values, access directly or from draft/snapshot
+  let currentTick = 0;
+  if (card.attributeDraft?.tick !== undefined) {
+    currentTick = card.attributeDraft.tick;
+  } else if (gameState.attributeSnapshots?.cards.has(card.uuid)) {
+    const snapshot = gameState.attributeSnapshots.cards.get(card.uuid);
+    currentTick = snapshot?.tick ?? 0;
+  } else {
+    currentTick = card.tick;
+  }
+
+  let tickToAdd = tickRate;
 
   // Stop gaining tick if card has no ammo
   const ammo = getCardAttribute(gameState, locationID, AttributeType.Ammo);
   if (ammo !== undefined && ammo <= 0) {
-    newTick = Math.min(newTick, cooldownMax);
+    // Cap at cooldownMax if no ammo
+    const tickToReachMax = Math.max(0, cooldownMax - currentTick);
+    tickToAdd = Math.min(tickRate, tickToReachMax);
   }
 
-  new Commands.ModifyCardAttributeCommand(
-    locationID,
-    "tick",
-    newTick,
-    "set",
-  ).execute(gameState);
+  // Use add operation for incrementing tick
+  new ModifyCardAttributeCommand(locationID, "tick", tickToAdd, "add").execute(
+    gameState,
+  );
+
+  // Recompute the new tick value for checking cooldown trigger
+  const updatedTick = currentTick + tickToAdd;
 
   // Check if card should trigger
-  if (newTick >= cooldownMax) {
+  if (updatedTick >= cooldownMax) {
     const ammo = getCardAttribute(gameState, locationID, AttributeType.Ammo);
     const ammoMax = getCardAttribute(
       gameState,
@@ -976,10 +990,11 @@ function processCard(
     );
 
     if (!ammoMax || (ammoMax && ammo === undefined) || (ammo && ammo > 0)) {
-      // Handle multicast
-      if ("Multicast" in card && card.Multicast) {
+      // Handle multicast - access directly instead of via getCardAttribute
+      const multicast = card.Multicast || 0;
+      if (multicast) {
         const MULTICAST_DELAY = 300;
-        for (let i = 0; i < card.Multicast - 1; i++) {
+        for (let i = 0; i < multicast - 1; i++) {
           gameState.multicast.push({
             tick: gameState.tick + (i + 1) * MULTICAST_DELAY,
             playerID,
@@ -990,17 +1005,17 @@ function processCard(
 
       // Reduce ammo if needed
       if (ammoMax) {
-        const ammo = card[AttributeType.Ammo];
-        new Commands.ModifyCardAttributeCommand(
+        // Use subtract instead of set
+        new ModifyCardAttributeCommand(
           locationID,
           AttributeType.Ammo,
-          ammo === undefined ? ammoMax - 1 : ammo - 1,
-          "set",
+          1, // Reduce by 1
+          "subtract",
         ).execute(gameState);
       }
 
       // Immediately fire the card
-      new Commands.FireCardCommand(locationID).execute(gameState);
+      new FireCardCommand(locationID).execute(gameState);
 
       // Reset the card's tick if it has a cooldown
       // To allow for overcharging an item, we remove the cooldown max instead of setting the tick to 0

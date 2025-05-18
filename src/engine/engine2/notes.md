@@ -26,3 +26,9 @@ Kyver drone v katana, when stinger slows katana, damage is not applied to kyver 
 - We assume skills are defined as being on the board for their location
 - Assume monsters have no cards in stash (we get none from the api)
 - SelfBoard includes skills, while SelfHand is only CardItems
+
+
+make sure attribute setter for
+
+heal caps at maxhealth
+lifesteal caps at maxhealth
