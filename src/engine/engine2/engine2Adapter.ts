@@ -2,8 +2,9 @@ import { Engine2 } from "./engine2";
 import { GameState as Engine2GameState } from "./engine2";
 import { getInitialGameState } from "../GameState";
 import { MonsterConfig, PlayerConfig } from "../GameState";
-import { Cards } from "@/types/cardTypes";
+import { AttributeType, Cards } from "@/types/cardTypes";
 import { EncounterDays } from "@/types/encounterTypes";
+import { getCardAttribute } from "./getAttribute";
 
 /**
  * Create a game state compatible with Engine2 from the parameters used by original getInitialGameState
@@ -36,6 +37,21 @@ export function getInitialGameState2(
   // Create a temporary Engine2 instance to properly initialize
   // the eventBus and connect it to the gameState
   const engine = new Engine2(originalState as unknown as Engine2GameState);
+
+  // Set all ammo values to their getCardAttribute AmmoMax values
+  engine.getGameState().players.forEach((player, playerIdx) => {
+    player.board.forEach((card, cardIdx) => {
+      card.Ammo = getCardAttribute(
+        engine.getGameState(),
+        {
+          playerIdx,
+          cardIdx,
+          location: "board",
+        },
+        AttributeType.AmmoMax,
+      );
+    });
+  });
 
   // Return the properly initialized gameState with eventBus
   return engine.getGameState();

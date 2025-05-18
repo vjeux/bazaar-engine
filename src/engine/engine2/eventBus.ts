@@ -36,6 +36,7 @@ import {
   PlayerDiedEvent,
   PlayerOverhealedEvent,
 } from "./events";
+import { getCardAttribute, getPlayerAttribute } from "./getAttribute";
 
 // Priority order mapping for sorting
 const priorityOrder = {
@@ -735,17 +736,35 @@ function handleGameTick(gameState: GameState, tick: number): void {
  */
 function processPoisonAndRegen(gameState: GameState): void {
   gameState.players.forEach((player, playerID) => {
+    // Process poison damage
+    const poison = getPlayerAttribute(gameState, playerID, "Poison");
+    if (poison > 0) {
+      // Log specific player poison damage
+      gameState.eventBus.addCommandToLog(
+        new Commands.SystemCommand(
+          `Player ${playerID} takes ${poison} poison damage`,
+        ),
+      );
+
+      new Commands.DamagePlayerCommand(
+        playerID,
+        poison,
+        null, // System-caused damage
+      ).execute(gameState);
+    }
+
     // Process health regen
-    if (player.HealthRegen > 0) {
-      const health = player.Health;
-      const healthMax = player.HealthMax;
-      const nextHealth = Math.min(healthMax, health + player.HealthRegen);
+    const healthRegen = getPlayerAttribute(gameState, playerID, "HealthRegen");
+    if (healthRegen > 0) {
+      const health = getPlayerAttribute(gameState, playerID, "Health");
+      const healthMax = getPlayerAttribute(gameState, playerID, "HealthMax");
+      const nextHealth = Math.min(healthMax, health + healthRegen);
 
       if (health !== nextHealth) {
         // Log specific player regen
         gameState.eventBus.addCommandToLog(
           new Commands.SystemCommand(
-            `Player ${playerID} regenerates ${player.HealthRegen} health`,
+            `Player ${playerID} regenerates ${healthRegen} health`,
           ),
         );
 
@@ -757,22 +776,6 @@ function processPoisonAndRegen(gameState: GameState): void {
         ).execute(gameState);
       }
     }
-
-    // Process poison damage
-    if (player.Poison > 0) {
-      // Log specific player poison damage
-      gameState.eventBus.addCommandToLog(
-        new Commands.SystemCommand(
-          `Player ${playerID} takes ${player.Poison} poison damage`,
-        ),
-      );
-
-      new Commands.DamagePlayerCommand(
-        playerID,
-        player.Poison,
-        null, // System-caused damage
-      ).execute(gameState);
-    }
   });
 }
 
@@ -781,8 +784,9 @@ function processPoisonAndRegen(gameState: GameState): void {
  */
 function processBurn(gameState: GameState): void {
   gameState.players.forEach((player, playerID) => {
-    if (player.Burn > 0) {
-      const burnDamage = player.Burn / 2;
+    const burn = getPlayerAttribute(gameState, playerID, "Burn");
+    if (burn > 0) {
+      const burnDamage = burn / 2;
 
       // Log specific player burn damage
       gameState.eventBus.addCommandToLog(
@@ -801,7 +805,7 @@ function processBurn(gameState: GameState): void {
       // Reduce burn counter
       gameState.eventBus.addCommandToLog(
         new Commands.SystemCommand(
-          `Player ${playerID} burn reduced from ${player.Burn} to ${player.Burn - 1}`,
+          `Player ${playerID} burn reduced from ${burn} to ${burn - 1}`,
         ),
       );
 
@@ -809,7 +813,7 @@ function processBurn(gameState: GameState): void {
         playerID,
         "Burn",
         "set",
-        player.Burn - 1,
+        burn - 1,
       ).execute(gameState);
     }
   });
@@ -828,119 +832,7 @@ function processCardCooldowns(gameState: GameState): void {
     const boardCards = [...player.board];
 
     boardCards.forEach((card, cardID) => {
-      // Skip if already processed, disabled, or a skill card
-      if (
-        processedCardUUIDs.has(card.uuid) ||
-        card.isDisabled ||
-        card.card.$type === "TCardSkill"
-      ) {
-        return;
-      }
-
-      // Skip cards without cooldown
-      if (card.CooldownMax === undefined) {
-        return;
-      }
-
-      // Add to processed set
-      processedCardUUIDs.add(card.uuid);
-
-      const locationID: CardLocationID = {
-        playerIdx: playerID,
-        cardIdx: cardID,
-        location: "board",
-      };
-
-      // Check if card still exists (might have been removed)
-      if (cardID >= gameState.players[playerID].board.length) {
-        return;
-      }
-
-      // Check if card is frozen
-      const freeze = card[AttributeType.Freeze] as number | undefined;
-      if (freeze && freeze > 0) {
-        // Reduce freeze counter
-        new Commands.ModifyCardAttributeCommand(
-          locationID,
-          AttributeType.Freeze,
-          Math.max(0, freeze - 100),
-          "set",
-        ).execute(gameState);
-        return; // Skip tick increment if frozen
-      }
-
-      // Calculate tick rate based on slow/haste
-      let tickRate = 100; // TICK_RATE
-      const slow = card[AttributeType.Slow];
-      if (slow && slow > 0) {
-        tickRate /= 2;
-
-        // Reduce slow counter
-        new Commands.ModifyCardAttributeCommand(
-          locationID,
-          AttributeType.Slow,
-          Math.max(0, slow - 100),
-          "set",
-        ).execute(gameState);
-      }
-
-      const haste = card[AttributeType.Haste];
-      if (haste && haste > 0) {
-        tickRate *= 2;
-
-        // Reduce haste counter
-        new Commands.ModifyCardAttributeCommand(
-          locationID,
-          AttributeType.Haste,
-          Math.max(0, haste - 100),
-          "set",
-        ).execute(gameState);
-      }
-
-      // Increment card tick
-      const cooldownMax = card[AttributeType.CooldownMax] as number;
-      const newTick = Math.min(card.tick + tickRate, cooldownMax);
-
-      new Commands.ModifyCardAttributeCommand(
-        locationID,
-        "tick",
-        newTick,
-        "set",
-      ).execute(gameState);
-
-      // Check if card should trigger
-      if (newTick >= cooldownMax) {
-        const ammo = card[AttributeType.Ammo] as number | undefined;
-        const ammoMax = card[AttributeType.AmmoMax] as number | undefined;
-
-        if (!ammoMax || (ammoMax && ammo === undefined) || (ammo && ammo > 0)) {
-          // Handle multicast
-          if ("Multicast" in card && card.Multicast) {
-            const MULTICAST_DELAY = 300;
-            for (let i = 0; i < card.Multicast - 1; i++) {
-              gameState.multicast.push({
-                tick: gameState.tick + (i + 1) * MULTICAST_DELAY,
-                playerID,
-                boardCardID: cardID,
-              });
-            }
-          }
-
-          // Reduce ammo if needed
-          if (ammoMax) {
-            const ammo = card[AttributeType.Ammo];
-            new Commands.ModifyCardAttributeCommand(
-              locationID,
-              AttributeType.Ammo,
-              ammo === undefined ? ammoMax - 1 : ammo - 1,
-              "set",
-            ).execute(gameState);
-          }
-
-          // Immediately fire the card
-          new Commands.FireCardCommand(locationID).execute(gameState);
-        }
-      }
+      processCard(gameState, playerID, cardID, card, processedCardUUIDs);
     });
   });
 
@@ -953,63 +845,159 @@ function processCardCooldowns(gameState: GameState): void {
 
     gameState.players.forEach((player, playerID) => {
       player.board.forEach((card, cardID) => {
-        // Skip if already processed, disabled, or a skill card
+        // If we process a new card, flag to keep the loop going
         if (
-          processedCardUUIDs.has(card.uuid) ||
-          card.isDisabled ||
-          card.card.$type === "TCardSkill"
+          processCard(gameState, playerID, cardID, card, processedCardUUIDs)
         ) {
-          return;
-        }
-
-        // We found a new card that wasn't processed before
-        newCardsProcessed = true;
-        processedCardUUIDs.add(card.uuid);
-
-        // Skip cards without cooldown
-        if (card.CooldownMax === undefined) {
-          return;
-        }
-
-        const locationID: CardLocationID = {
-          playerIdx: playerID,
-          cardIdx: cardID,
-          location: "board",
-        };
-
-        // Process the new card (same logic as above but simplified for brevity)
-        // We don't need to check for frozen/slow/haste as newly added cards
-        // will be processed in the next tick
-
-        // Check if card should trigger on the first tick
-        const cooldownMax = card[AttributeType.CooldownMax] as number;
-        if (card.tick >= cooldownMax) {
-          const ammo = card[AttributeType.Ammo] as number | undefined;
-          const ammoMax = card[AttributeType.AmmoMax] as number | undefined;
-
-          if (
-            !ammoMax ||
-            (ammoMax && ammo === undefined) ||
-            (ammo && ammo > 0)
-          ) {
-            // Reduce ammo if needed
-            if (ammoMax) {
-              const ammo = card[AttributeType.Ammo];
-              new Commands.ModifyCardAttributeCommand(
-                locationID,
-                AttributeType.Ammo,
-                ammo === undefined ? ammoMax - 1 : ammo - 1,
-                "set",
-              ).execute(gameState);
-            }
-
-            // Immediately fire the card
-            new Commands.FireCardCommand(locationID).execute(gameState);
-          }
+          newCardsProcessed = true;
         }
       });
     });
   }
+}
+
+/**
+ * Helper function to process a single card
+ * @returns true if a new card was processed, false otherwise
+ */
+function processCard(
+  gameState: GameState,
+  playerID: number,
+  cardID: number,
+  card: GameState["players"][0]["board"][0],
+  processedCardUUIDs: Set<string>,
+): boolean {
+  // Skip if already processed, disabled, or a skill card
+  if (
+    processedCardUUIDs.has(card.uuid) ||
+    card.isDisabled ||
+    card.card.$type === "TCardSkill"
+  ) {
+    return false;
+  }
+
+  // Skip cards without cooldown
+  if (card.CooldownMax === undefined) {
+    return false;
+  }
+
+  // Add to processed set
+  processedCardUUIDs.add(card.uuid);
+
+  const locationID: CardLocationID = {
+    playerIdx: playerID,
+    cardIdx: cardID,
+    location: "board",
+  };
+
+  // Check if card still exists (might have been removed)
+  if (cardID >= gameState.players[playerID].board.length) {
+    return false;
+  }
+
+  // Process status effects (freeze, slow, haste)
+  let tickRate = 100; // TICK_RATE
+
+  // Check if card is frozen
+  const freeze = card[AttributeType.Freeze] as number | undefined;
+  if (freeze && freeze > 0) {
+    // Reduce freeze counter
+    new Commands.ModifyCardAttributeCommand(
+      locationID,
+      AttributeType.Freeze,
+      Math.max(0, freeze - 100),
+      "set",
+    ).execute(gameState);
+    return true; // Card was processed, but skip tick increment if frozen
+  }
+
+  // Process slow effect
+  const slow = card[AttributeType.Slow];
+  if (slow && slow > 0) {
+    // Reduce slow counter
+    new Commands.ModifyCardAttributeCommand(
+      locationID,
+      AttributeType.Slow,
+      Math.max(0, slow - 100),
+      "set",
+    ).execute(gameState);
+    tickRate /= 2;
+  }
+
+  // Process haste effect
+  const haste = card[AttributeType.Haste];
+  if (haste && haste > 0) {
+    // Reduce haste counter
+    new Commands.ModifyCardAttributeCommand(
+      locationID,
+      AttributeType.Haste,
+      Math.max(0, haste - 100),
+      "set",
+    ).execute(gameState);
+    tickRate *= 2;
+  }
+
+  // Increment card tick
+  const cooldownMax = getCardAttribute(
+    gameState,
+    locationID,
+    AttributeType.CooldownMax,
+  );
+
+  if (!cooldownMax) {
+    throw new Error(
+      "getCardAttribtue CooldownMax returned undefined when base card CooldownMax was defined",
+    );
+  }
+
+  const newTick = Math.min(card.tick + tickRate, cooldownMax);
+
+  new Commands.ModifyCardAttributeCommand(
+    locationID,
+    "tick",
+    newTick,
+    "set",
+  ).execute(gameState);
+
+  // Check if card should trigger
+  if (newTick >= cooldownMax) {
+    const ammo = getCardAttribute(gameState, locationID, AttributeType.Ammo);
+    const ammoMax = getCardAttribute(
+      gameState,
+      locationID,
+      AttributeType.AmmoMax,
+    );
+
+    if (!ammoMax || (ammoMax && ammo === undefined) || (ammo && ammo > 0)) {
+      // Handle multicast
+      if ("Multicast" in card && card.Multicast) {
+        const MULTICAST_DELAY = 300;
+        for (let i = 0; i < card.Multicast - 1; i++) {
+          gameState.multicast.push({
+            tick: gameState.tick + (i + 1) * MULTICAST_DELAY,
+            playerID,
+            boardCardID: cardID,
+          });
+        }
+      }
+
+      // Reduce ammo if needed
+      if (ammoMax) {
+        const ammo = card[AttributeType.Ammo];
+        new Commands.ModifyCardAttributeCommand(
+          locationID,
+          AttributeType.Ammo,
+          ammo === undefined ? ammoMax - 1 : ammo - 1,
+          "set",
+        ).execute(gameState);
+      }
+
+      // Immediately fire the card
+      new Commands.FireCardCommand(locationID).execute(gameState);
+    }
+  }
+
+  return true; // Card was processed
 }
 
 /**
@@ -1064,7 +1052,7 @@ function checkPlayerDeaths(gameState: GameState): void {
   const eventBus = gameState.eventBus;
 
   gameState.players.forEach((player, playerID) => {
-    if (player.Health <= 0) {
+    if (getPlayerAttribute(gameState, playerID, "Health") <= 0) {
       isPlaying = false;
 
       // Log player death
@@ -1079,7 +1067,10 @@ function checkPlayerDeaths(gameState: GameState): void {
   gameState.isPlaying = isPlaying;
 
   // Determine winner
-  if (gameState.players[0].Health <= 0 && gameState.players[1].Health <= 0) {
+  if (
+    getPlayerAttribute(gameState, 0, "Health") <= 0 &&
+    getPlayerAttribute(gameState, 1, "Health") <= 0
+  ) {
     gameState.winner = "Draw";
 
     // Log game end

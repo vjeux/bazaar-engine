@@ -96,9 +96,6 @@ function _createBoardCardFromCard(
     attributes.Auras[auraId] = card.Auras[auraId];
   }
 
-  // Set ammo to ammo max
-  attributes.Ammo = attributes.AmmoMax;
-
   // Override the attributes
   for (const [attribute, override] of Object.entries(attributeOverrides)) {
     attributes[attribute as AttributeType] = override;
