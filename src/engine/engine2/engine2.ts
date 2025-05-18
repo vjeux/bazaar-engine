@@ -7,11 +7,8 @@ import {
   AttributeType,
   Enchantments,
 } from "../../types/cardTypes";
-import {
-  EventBus,
-  GameFightStartedEvent,
-  setupEventHandlers,
-} from "./eventHandlers";
+import { EventBus, setupEventHandlers } from "./eventBus";
+import { GameFightStartedEvent } from "./events";
 import { Command, ProcessTickCommand } from "./commands";
 import { RandomGenerator } from "pure-rand/types/RandomGenerator";
 import { Hero, Tier } from "@/types/shared";
@@ -19,15 +16,31 @@ import { getTargetCards, getTargetPlayers } from "./targeting";
 import { getActionValue } from "./getActionValue";
 
 /**
- * Represents a unique identifier for a board card
+ * Represents a unique identifier for a card in any location (board or stash)
+ */
+export type CardLocationID = {
+  playerIdx: number;
+  location: "board" | "stash";
+  cardIdx: number;
+};
+
+/**
+ * Represents a unique identifier for a card on the board
  */
 export type BoardCardID = {
   playerIdx: number;
   cardIdx: number;
 };
 
-export function boardCardIdIsEqual(a: BoardCardID, b: BoardCardID): boolean {
-  return a.playerIdx === b.playerIdx && a.cardIdx === b.cardIdx;
+export function cardLocationIdIsEqual(
+  a: CardLocationID,
+  b: CardLocationID,
+): boolean {
+  return (
+    a.playerIdx === b.playerIdx &&
+    a.location === b.location &&
+    a.cardIdx === b.cardIdx
+  );
 }
 
 /**
@@ -95,8 +108,9 @@ export interface Player {
   Poison: number;
   Gold: number;
   Income: number;
-  Hero: Hero;
+  Hero: Hero | (string & {});
   board: BoardCard[];
+  stash: BoardCard[];
 }
 
 /**
@@ -154,7 +168,7 @@ export class Engine2 {
       const command = this.commandQueue.shift();
       if (command) {
         // Log the command to the unified log
-        this.gameState.eventBus.addCommandToLog(command);
+        this.gameState.eventBus?.addCommandToLog(command);
 
         // Execute the command
         command.execute(this.gameState);
@@ -182,7 +196,7 @@ export class Engine2 {
 
     // Emit fight started event on first tick
     if (this.gameState.tick === 0) {
-      this.gameState.eventBus.emit(new GameFightStartedEvent());
+      this.gameState.eventBus?.emit(new GameFightStartedEvent());
     }
 
     for (let i = 0; i < maxTicks; i++) {
@@ -236,17 +250,17 @@ export class Engine2 {
  */
 export function getCardAttribute(
   gameState: GameState,
-  cardID: BoardCardID,
+  cardID: CardLocationID,
   attribute: "tags",
 ): string[];
 export function getCardAttribute(
   gameState: GameState,
-  cardID: BoardCardID,
+  cardID: CardLocationID,
   attribute: AttributeType,
 ): number | undefined;
 export function getCardAttribute(
   gameState: GameState,
-  cardID: BoardCardID,
+  cardID: CardLocationID,
   attribute: AttributeType | "tags",
 ): number | string[] | undefined {
   const card = gameState.players[cardID.playerIdx].board[cardID.cardIdx];
@@ -270,7 +284,11 @@ export function getCardAttribute(
             return;
           }
 
-          const auraSourceCardID: BoardCardID = { playerIdx, cardIdx };
+          const auraSourceCardID: CardLocationID = {
+            playerIdx,
+            cardIdx,
+            location: "board",
+          };
 
           // Check if the aura targets our card
           const targetCards = getTargetCards(
@@ -282,7 +300,7 @@ export function getCardAttribute(
 
           // Check if our card is among the targets
           const isTargeted = targetCards.some(
-            (target: BoardCardID) =>
+            (target: CardLocationID) =>
               target.playerIdx === cardID.playerIdx &&
               target.cardIdx === cardID.cardIdx,
           );
@@ -334,7 +352,11 @@ export function getCardAttribute(
         }
 
         // Check if the aura targets our card
-        const auraSourceCardID: BoardCardID = { playerIdx, cardIdx };
+        const auraSourceCardID: CardLocationID = {
+          playerIdx,
+          cardIdx,
+          location: "board",
+        };
         const targetCards = getTargetCards(
           gameState,
           aura.Action.Target,
@@ -344,7 +366,7 @@ export function getCardAttribute(
 
         // Check if our card is among the targets
         const isTargeted = targetCards.some(
-          (target: BoardCardID) =>
+          (target: CardLocationID) =>
             target.playerIdx === cardID.playerIdx &&
             target.cardIdx === cardID.cardIdx,
         );
@@ -417,7 +439,11 @@ export function getPlayerAttribute<K extends keyof Player>(
             return;
           }
 
-          const auraSourceCardID: BoardCardID = { playerIdx, cardIdx };
+          const auraSourceCardID: CardLocationID = {
+            playerIdx,
+            cardIdx,
+            location: "board",
+          };
 
           // Get target players for this aura
           const targetPlayers = getTargetPlayers(

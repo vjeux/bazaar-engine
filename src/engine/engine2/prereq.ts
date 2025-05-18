@@ -3,8 +3,8 @@ import {
   AbilityPrerequisite,
   Comparison,
 } from "../../types/cardTypes";
-import { BoardCardID, GameState, getCardAttribute } from "./engine2";
-import { GameEvent } from "./eventHandlers";
+import { CardLocationID, GameState, getCardAttribute } from "./engine2";
+import { GameEvent } from "./events";
 import { getTargetCards, getTargetPlayers } from "./targeting";
 
 export function compareUsingComparator(
@@ -32,7 +32,7 @@ export function compareUsingComparator(
 
 export function createPrerequisitesCheck(
   ability: Ability,
-  boardCardID: BoardCardID,
+  locationID: CardLocationID,
 ): (gs: GameState, event: GameEvent) => boolean {
   return (gs: GameState, event: GameEvent) => {
     if (!ability.Prerequisites) {
@@ -42,14 +42,14 @@ export function createPrerequisitesCheck(
       return true;
     }
     return ability.Prerequisites.every((prereq) => {
-      return checkPrerequisite(prereq, boardCardID, gs, event);
+      return checkPrerequisite(prereq, locationID, gs, event);
     });
   };
 }
 
 function checkPrerequisite(
   prereq: AbilityPrerequisite,
-  boardCardID: BoardCardID,
+  locationID: CardLocationID,
   gs: GameState,
   event: GameEvent,
 ): boolean {
@@ -61,7 +61,7 @@ function checkPrerequisite(
       const cardCount = getTargetCards(
         gs,
         prereq.Subject,
-        boardCardID,
+        locationID,
         event,
       ).length;
       const comparisonValue = prereq.Amount;
@@ -82,7 +82,7 @@ function checkPrerequisite(
       if (!prereq.Subject) {
         throw new Error("Subject must exist for player prerequisite");
       }
-      const players = getTargetPlayers(gs, prereq.Subject, boardCardID, event);
+      const players = getTargetPlayers(gs, prereq.Subject, locationID, event);
       return players.length > 0;
     }
     case "TPrerequisiteCardAttributeComparator": {
@@ -100,18 +100,18 @@ function checkPrerequisite(
       const subjectCard = getTargetCards(
         gs,
         prereq.Subject,
-        boardCardID,
+        locationID,
         event,
       )[0];
 
-      let subjectOtherCard: BoardCardID;
+      let subjectOtherCard: CardLocationID;
 
       // If no other subject is defined, compare against self
       if (prereq.SubjectOther) {
         subjectOtherCard = getTargetCards(
           gs,
           prereq.SubjectOther,
-          boardCardID,
+          locationID,
           event,
         )[0];
       } else {

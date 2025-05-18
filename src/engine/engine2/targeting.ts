@@ -1,21 +1,64 @@
-import { GameState, BoardCardID } from "./engine2";
-import { Source, Target, Subject, Conditions } from "../../types/cardTypes";
+import {
+  GameState,
+  CardLocationID,
+  BoardCard,
+  cardLocationIdIsEqual,
+} from "./engine2";
+import {
+  Source,
+  Target,
+  Subject,
+  Conditions,
+  CardType,
+} from "../../types/cardTypes";
 import prand from "pure-rand";
 import {
-  GameEvent,
   CardFiredEvent,
   CardItemUsedEvent,
   CardAttributeChangedEvent,
   CardPerformedPoisonEvent,
   CardPerformedBurnEvent,
   CardPerformedFreezeEvent,
-} from "./eventHandlers";
+} from "./events";
+import { GameEvent } from "./events";
 import { getActionValue } from "./getActionValue";
-import { HiddenTag, Tag } from "../../types/shared";
+import { Hero, HiddenTag, Tag } from "../../types/shared";
 import { PLAYER_PLAYER_IDX } from "@/lib/constants";
 import { getCardAttribute } from "./engine2";
 
 export type TargetConfig = Source | Target | Subject;
+
+export function getBoardCardByID(
+  gameState: GameState,
+  locationID: CardLocationID,
+): BoardCard {
+  return gameState.players[locationID.playerIdx][
+    locationID.location === "board" ? "board" : "stash"
+  ][locationID.cardIdx];
+}
+
+/**
+ * Get the amount of card items on the board or in the stash for a player
+ */
+function getCardItemsLength(
+  gameState: GameState,
+  playerIdx: number,
+  location: "board" | "stash",
+): number {
+  if (location === "board") {
+    return (
+      gameState.players[playerIdx]["board"].findLastIndex(
+        (boardCard) => boardCard.card.$type === CardType.TCardItem,
+      ) + 1
+    );
+  } else {
+    return (
+      gameState.players[playerIdx]["stash"].findLastIndex(
+        (boardCard) => boardCard.card.$type === CardType.TCardItem,
+      ) + 1
+    );
+  }
+}
 
 /**
  * Get target cards based on targeting configuration
@@ -23,10 +66,10 @@ export type TargetConfig = Source | Target | Subject;
 export function getTargetCards(
   gameState: GameState,
   targetConfig: TargetConfig,
-  sourceCard: BoardCardID,
+  sourceCard: CardLocationID,
   event?: GameEvent,
-): BoardCardID[] {
-  const results: BoardCardID[] = [];
+): CardLocationID[] {
+  let results: CardLocationID[] = [];
 
   switch (targetConfig.$type) {
     case "TTargetCardSelf": {
@@ -45,7 +88,7 @@ export function getTargetCards(
       ) {
         results.push(event.sourceCardID);
       } else if (event instanceof CardAttributeChangedEvent) {
-        results.push(event.modifiedBoardCardID);
+        results.push(event.modifiedLocationID);
       } else {
         throw new Error(
           "sourceCardID is required for TTargetCardTriggerSource",
@@ -57,17 +100,22 @@ export function getTargetCards(
     case "TTargetCardPositional": {
       switch (targetConfig.TargetMode) {
         case "AllRightCards": {
-          const lengthCardItems =
-            gameState.players[sourceCard.playerIdx].board.findLastIndex(
-              (boardCard) => boardCard.card.$type === "TCardItem",
-            ) + 1;
+          const lengthCardItems = getCardItemsLength(
+            gameState,
+            sourceCard.playerIdx,
+            sourceCard.location,
+          );
 
           for (
             let i = sourceCard.cardIdx + (targetConfig.IncludeOrigin ? 0 : 1);
             i < lengthCardItems;
             ++i
           ) {
-            results.push({ playerIdx: sourceCard.playerIdx, cardIdx: i });
+            results.push({
+              playerIdx: sourceCard.playerIdx,
+              location: sourceCard.location,
+              cardIdx: i,
+            });
           }
           break;
         }
@@ -78,7 +126,11 @@ export function getTargetCards(
             i < sourceCard.cardIdx - (targetConfig.IncludeOrigin ? 0 : 1);
             ++i
           ) {
-            results.push({ playerIdx: sourceCard.playerIdx, cardIdx: i });
+            results.push({
+              playerIdx: sourceCard.playerIdx,
+              location: sourceCard.location,
+              cardIdx: i,
+            });
           }
           break;
         }
@@ -91,19 +143,22 @@ export function getTargetCards(
           if (sourceCard.cardIdx !== 0) {
             results.push({
               playerIdx: sourceCard.playerIdx,
+              location: sourceCard.location,
               cardIdx: sourceCard.cardIdx - 1,
             });
           }
 
-          const lengthCardItems =
-            gameState.players[sourceCard.playerIdx].board.findLastIndex(
-              (boardCard) => boardCard.card.$type === "TCardItem",
-            ) + 1;
+          const lengthCardItems = getCardItemsLength(
+            gameState,
+            sourceCard.playerIdx,
+            sourceCard.location,
+          );
 
           // If not the last card, add the right neighbor
           if (sourceCard.cardIdx < lengthCardItems - 1) {
             results.push({
               playerIdx: sourceCard.playerIdx,
+              location: sourceCard.location,
               cardIdx: sourceCard.cardIdx + 1,
             });
           }
@@ -115,15 +170,17 @@ export function getTargetCards(
             results.push(sourceCard);
           }
 
-          const lengthCardItems =
-            gameState.players[sourceCard.playerIdx].board.findLastIndex(
-              (boardCard) => boardCard.card.$type === "TCardItem",
-            ) + 1;
+          const lengthCardItems = getCardItemsLength(
+            gameState,
+            sourceCard.playerIdx,
+            sourceCard.location,
+          );
 
           // If not the last card, add the right neighbor
           if (sourceCard.cardIdx < lengthCardItems - 1) {
             results.push({
               playerIdx: sourceCard.playerIdx,
+              location: sourceCard.location,
               cardIdx: sourceCard.cardIdx + 1,
             });
           }
@@ -139,6 +196,7 @@ export function getTargetCards(
           if (sourceCard.cardIdx !== 0) {
             results.push({
               playerIdx: sourceCard.playerIdx,
+              location: sourceCard.location,
               cardIdx: sourceCard.cardIdx - 1,
             });
           }
@@ -156,57 +214,122 @@ export function getTargetCards(
     case "TTargetCardSection":
     case "TTargetCardRandom": {
       switch (targetConfig.TargetSection) {
-        case "SelfHandAndStash":
-        case "SelfHand":
+        // Cards in hand and stash
+        case "SelfHandAndStash": {
+          const lengthCardItemsHand = getCardItemsLength(
+            gameState,
+            sourceCard.playerIdx,
+            sourceCard.location,
+          );
+
+          for (let i = 0; i < lengthCardItemsHand; ++i) {
+            results.push({
+              playerIdx: sourceCard.playerIdx,
+              location: sourceCard.location,
+              cardIdx: i,
+            });
+          }
+
+          const lengthCardItemsStash = getCardItemsLength(
+            gameState,
+            sourceCard.playerIdx,
+            "stash",
+          );
+
+          for (let i = 0; i < lengthCardItemsStash; ++i) {
+            results.push({
+              playerIdx: sourceCard.playerIdx,
+              location: "stash",
+              cardIdx: i,
+            });
+          }
+          break;
+        }
+        // Cards in hand
+        case "SelfHand": {
+          const lengthCardItemsHand = getCardItemsLength(
+            gameState,
+            sourceCard.playerIdx,
+            "board",
+          );
+
+          for (let i = 0; i < lengthCardItemsHand; ++i) {
+            results.push({
+              playerIdx: sourceCard.playerIdx,
+              location: sourceCard.location,
+              cardIdx: i,
+            });
+          }
+          break;
+        }
+        // Cards on board + skills
         case "SelfBoard": {
-          const lengthCardItems =
-            gameState.players[sourceCard.playerIdx].board.findLastIndex(
-              (boardCard) => boardCard.card.$type === "TCardItem",
-            ) + 1;
+          const lengthCardItems = getCardItemsLength(
+            gameState,
+            sourceCard.playerIdx,
+            "board",
+          );
 
           for (let i = 0; i < lengthCardItems; ++i) {
-            if (
-              i !== sourceCard.cardIdx ||
-              (i === sourceCard.cardIdx && !targetConfig.ExcludeSelf)
-            ) {
-              results.push({ playerIdx: sourceCard.playerIdx, cardIdx: i });
-            }
+            results.push({
+              playerIdx: sourceCard.playerIdx,
+              location: "board",
+              cardIdx: i,
+            });
+          }
+          break;
+        }
+        // Opponent CardItems
+        case "OpponentHand": {
+          const opponentPlayerID = sourceCard.playerIdx === 0 ? 1 : 0;
+          const lengthCardItems = getCardItemsLength(
+            gameState,
+            opponentPlayerID,
+            "board",
+          );
+          for (let i = 0; i < lengthCardItems; ++i) {
+            results.push({
+              playerIdx: opponentPlayerID,
+              location: "board",
+              cardIdx: i,
+            });
           }
           break;
         }
 
-        case "OpponentHand":
+        // Opponent CardItems or skills
         case "OpponentBoard": {
           const opponentPlayerID = sourceCard.playerIdx === 0 ? 1 : 0;
-          const lengthCardItems =
-            gameState.players[opponentPlayerID].board.findLastIndex(
-              (boardCard) => boardCard.card.$type === "TCardItem",
-            ) + 1;
+          const lengthCardItems = getCardItemsLength(
+            gameState,
+            opponentPlayerID,
+            "board",
+          );
 
           for (let i = 0; i < lengthCardItems; ++i) {
-            results.push({ playerIdx: opponentPlayerID, cardIdx: i });
+            results.push({
+              playerIdx: opponentPlayerID,
+              location: "board",
+              cardIdx: i,
+            });
           }
           break;
         }
-
+        // All CardItems in game
         case "AllHands": {
-          if (!targetConfig.ExcludeSelf) {
-            results.push(sourceCard);
-          }
-
           gameState.players.forEach((player, playerID) => {
-            const lengthCardItems =
-              player.board.findLastIndex(
-                (boardCard) => boardCard.card.$type === "TCardItem",
-              ) + 1;
+            const lengthCardItems = getCardItemsLength(
+              gameState,
+              playerID,
+              "board",
+            );
 
             for (let i = 0; i < lengthCardItems; ++i) {
-              if (
-                i !== sourceCard.cardIdx &&
-                playerID !== sourceCard.playerIdx
-              ) {
-                results.push({ playerIdx: playerID, cardIdx: i });
-              }
+              results.push({
+                playerIdx: playerID,
+                location: "board",
+                cardIdx: i,
+              });
             }
           });
           break;
@@ -216,18 +339,21 @@ export function getTargetCards(
           if (sourceCard.cardIdx !== 0) {
             results.push({
               playerIdx: sourceCard.playerIdx,
+              location: sourceCard.location,
               cardIdx: sourceCard.cardIdx - 1,
             });
           }
 
-          const lengthCardItems =
-            gameState.players[sourceCard.playerIdx].board.findLastIndex(
-              (boardCard) => boardCard.card.$type === "TCardItem",
-            ) + 1;
+          const lengthCardItems = getCardItemsLength(
+            gameState,
+            sourceCard.playerIdx,
+            sourceCard.location,
+          );
 
           if (sourceCard.cardIdx < lengthCardItems - 1) {
             results.push({
               playerIdx: sourceCard.playerIdx,
+              location: sourceCard.location,
               cardIdx: sourceCard.cardIdx + 1,
             });
           }
@@ -237,10 +363,38 @@ export function getTargetCards(
         // All players items in both hand and stash
         case "AbsolutePlayerHandAndStash": {
           gameState.players[PLAYER_PLAYER_IDX].board.forEach((card, index) => {
-            if (card.card.$type === "TCardItem") {
-              results.push({ playerIdx: PLAYER_PLAYER_IDX, cardIdx: index });
+            if (card.card.$type === CardType.TCardItem) {
+              results.push({
+                playerIdx: PLAYER_PLAYER_IDX,
+                location: "board",
+                cardIdx: index,
+              });
             }
           });
+          gameState.players[PLAYER_PLAYER_IDX].stash.forEach((card, index) => {
+            if (card.card.$type === CardType.TCardItem) {
+              results.push({
+                playerIdx: PLAYER_PLAYER_IDX,
+                location: "stash",
+                cardIdx: index,
+              });
+            }
+          });
+          break;
+        }
+
+        case "SelfStash": {
+          gameState.players[sourceCard.playerIdx].stash.forEach(
+            (card, index) => {
+              if (card.card.$type === CardType.TCardItem) {
+                results.push({
+                  playerIdx: sourceCard.playerIdx,
+                  cardIdx: index,
+                  location: "stash",
+                });
+              }
+            },
+          );
           break;
         }
 
@@ -273,24 +427,31 @@ export function getTargetCards(
 
     case "TTargetCardXMost": {
       // Just add everything, filter on condition later
-      const lengthCardItems =
-        gameState.players[sourceCard.playerIdx].board.findLastIndex(
-          (boardCard) => boardCard.card.$type === "TCardItem",
-        ) + 1;
-      if (!targetConfig.ExcludeSelf) {
-        results.push(sourceCard);
-      }
+      const lengthCardItems = getCardItemsLength(
+        gameState,
+        sourceCard.playerIdx,
+        sourceCard.location,
+      );
 
       for (let i = 0; i < lengthCardItems; ++i) {
-        if (i !== sourceCard.cardIdx) {
-          results.push({ playerIdx: sourceCard.playerIdx, cardIdx: i });
-        }
+        results.push({
+          playerIdx: sourceCard.playerIdx,
+          location: sourceCard.location,
+          cardIdx: i,
+        });
       }
       break;
     }
 
     default:
       throw new Error(`Not implemented Target.$type: ${targetConfig.$type}`);
+  }
+
+  // Filter out self if ExcludeSelf is true
+  if (targetConfig.ExcludeSelf) {
+    results = results.filter(
+      (cardID) => !cardLocationIdIsEqual(cardID, sourceCard),
+    );
   }
 
   // Filter out disabled cards and test conditions
@@ -323,7 +484,7 @@ export function getTargetCards(
     const isHighest =
       targetConfig.Conditions.$type === "TCardConditionalAttributeHighest";
     let extremeValue = isHighest ? -Infinity : Infinity;
-    let extremeCard: BoardCardID | null = null;
+    let extremeCard: CardLocationID | null = null;
 
     filteredResults.forEach((cardID) => {
       const { playerIdx, cardIdx } = cardID;
@@ -370,7 +531,7 @@ export function getTargetCards(
 export function getTargetPlayers(
   gameState: GameState,
   targetConfig: TargetConfig,
-  sourceCard: BoardCardID,
+  sourceCard: CardLocationID,
   event?: GameEvent,
 ): number[] {
   let results: number[] = [];
@@ -458,8 +619,8 @@ export function getTargetPlayers(
 export function testCardConditions(
   gameState: GameState,
   conditions: Conditions | null,
-  sourceCard: BoardCardID,
-  targetCard: BoardCardID,
+  sourceCard: CardLocationID,
+  targetCard: CardLocationID,
   event?: GameEvent,
 ): boolean {
   if (conditions == null) {
@@ -550,7 +711,9 @@ export function testCardConditions(
 
     case "TCardConditionalPlayerHero": {
       const targetHeroes = targetBoardCard.card.Heroes;
-      const is = targetHeroes.includes(gameState.players[targetPlayerIdx].Hero);
+      const is = targetHeroes.includes(
+        gameState.players[targetPlayerIdx].Hero as Hero,
+      );
       return conditions.IsSameAsPlayerHero ? is : !is;
     }
 
@@ -664,7 +827,7 @@ export function testCardConditions(
 export function testPlayerConditions(
   gameState: GameState,
   conditions: Conditions | null,
-  sourceCard: BoardCardID,
+  sourceCard: CardLocationID,
   targetPlayerID: number,
   event?: GameEvent,
 ): boolean {

@@ -4,10 +4,14 @@ import {
   ActionType,
   AttributeType,
 } from "../../types/cardTypes";
-import { GameState, BoardCardID, getCardAttribute, BoardCard } from "./engine2";
-import { PlayerCardConfig } from "../GameState";
 import {
-  GameEvent,
+  GameState,
+  CardLocationID,
+  getCardAttribute,
+  BoardCard,
+} from "./engine2";
+import { createBoardCardFromId, PlayerCardConfig } from "../GameState";
+import {
   CardFiredEvent,
   CardItemUsedEvent,
   CardAttributeChangedEvent,
@@ -21,13 +25,15 @@ import {
   CardPerformedShieldEvent,
   CardPerformedPoisonEvent,
   CardPerformedBurnEvent,
-  GameTickEvent,
   CardCrittedEvent,
-} from "./eventHandlers";
+} from "./events";
+import { GameTickEvent } from "./events";
+import { GameEvent } from "./events";
 import { getTargetCards, getTargetPlayers } from "./targeting";
 import { getActionValue } from "./getActionValue";
 import { PLAYER_PLAYER_IDX } from "@/lib/constants";
 import prand from "pure-rand";
+import { genCardsAndEncounters } from "@/lib/Data";
 
 /**
  * Helper function to convert player index to readable name
@@ -87,7 +93,7 @@ export class CommandFactory {
    */
   static calculateCritical(
     gameState: GameState,
-    sourceCardID: BoardCardID,
+    sourceCardID: CardLocationID,
     baseAmount: number,
   ): { amount: number; hasCritted: boolean } {
     let amount = baseAmount;
@@ -126,7 +132,7 @@ export class CommandFactory {
 
   static createFromAction(
     action: AbilityAction,
-    sourceCardID: BoardCardID,
+    sourceCardID: CardLocationID,
     gameState: GameState,
     event: GameEvent,
   ): Command | null {
@@ -879,14 +885,23 @@ export class AddCardCommand implements Command {
     private playerID: number,
     private cardConfig: PlayerCardConfig,
     private position: number = -1, // -1 means add to the end
+    private location: "board" | "stash" = "board",
   ) {}
 
-  execute(gameState: GameState): void {
+  async execute(gameState: GameState): Promise<void> {
     const player = gameState.players[this.playerID];
+
+    const { Cards } = await genCardsAndEncounters();
 
     // In a real implementation, this would call createBoardCardFromId from GameState.ts
     // For now, we're converting the config directly to a BoardCard with type casting
-    const boardCard = createCardFromConfig(this.cardConfig);
+    const boardCard = createBoardCardFromId(
+      Cards,
+      this.cardConfig.cardId,
+      this.cardConfig.tier,
+      this.cardConfig.enchantment,
+      this.cardConfig.attributeOverrides,
+    );
 
     // Add to the specified position or to the end
     const insertPosition =
@@ -898,6 +913,7 @@ export class AddCardCommand implements Command {
       const removeCommand = new RemoveCardCommand({
         playerIdx: this.playerID,
         cardIdx: this.position,
+        location: this.location,
       });
       removeCommand.execute(gameState);
 
@@ -908,13 +924,14 @@ export class AddCardCommand implements Command {
       player.board.push(boardCard);
     }
 
-    const boardCardID: BoardCardID = {
+    const locationID: CardLocationID = {
       playerIdx: this.playerID,
       cardIdx: insertPosition,
+      location: this.location,
     };
 
     // Emit event that card was added
-    gameState.eventBus.emit(new CardAddedEvent(boardCardID, boardCard));
+    gameState.eventBus.emit(new CardAddedEvent(locationID, boardCard));
   }
 
   toLogString(): string {
@@ -926,10 +943,10 @@ export class AddCardCommand implements Command {
  * Command to remove a card from the board and unregister its event listeners
  */
 export class RemoveCardCommand implements Command {
-  constructor(private boardCardID: BoardCardID) {}
+  constructor(private locationID: CardLocationID) {}
 
   execute(gameState: GameState): void {
-    const { playerIdx, cardIdx } = this.boardCardID;
+    const { playerIdx, cardIdx } = this.locationID;
     const player = gameState.players[playerIdx];
 
     if (cardIdx >= 0 && cardIdx < player.board.length) {
@@ -937,12 +954,12 @@ export class RemoveCardCommand implements Command {
       player.board.splice(cardIdx, 1);
 
       // Emit event that card was removed
-      gameState.eventBus.emit(new CardRemovedEvent(this.boardCardID));
+      gameState.eventBus.emit(new CardRemovedEvent(this.locationID));
     }
   }
 
   toLogString(): string {
-    return `Remove card from ${playerName(this.boardCardID.playerIdx)}'s board at position ${this.boardCardID.cardIdx}`;
+    return `Remove card from ${playerName(this.locationID.playerIdx)}'s board at position ${this.locationID.cardIdx}`;
   }
 }
 
@@ -951,14 +968,14 @@ export class RemoveCardCommand implements Command {
  */
 export class ModifyCardAttributeCommand implements Command {
   constructor(
-    private boardCardID: BoardCardID,
+    private locationID: CardLocationID,
     private attribute: AttributeType | "tick",
     private value: number,
     private operation: "set" | "add" | "subtract" | "multiply" = "set",
   ) {}
 
   execute(gameState: GameState): void {
-    const { playerIdx: playerID, cardIdx: cardID } = this.boardCardID;
+    const { playerIdx: playerID, cardIdx: cardID } = this.locationID;
     const card = gameState.players[playerID].board[cardID];
     const oldValue = card[this.attribute] as number;
     let newValue: number;
@@ -983,7 +1000,7 @@ export class ModifyCardAttributeCommand implements Command {
     // Emit event for attribute change
     gameState.eventBus.emit(
       new CardAttributeChangedEvent(
-        this.boardCardID,
+        this.locationID,
         this.attribute,
         oldValue,
         newValue,
@@ -1001,7 +1018,7 @@ export class ModifyCardAttributeCommand implements Command {
             ? "decreased"
             : "multiplied";
 
-    return `${operation.charAt(0).toUpperCase() + operation.slice(1)} ${playerName(this.boardCardID.playerIdx)}'s card ${this.boardCardID.cardIdx} ${this.attribute} to ${this.value}`;
+    return `${operation.charAt(0).toUpperCase() + operation.slice(1)} ${playerName(this.locationID.playerIdx)}'s card ${this.locationID.cardIdx} ${this.attribute} to ${this.value}`;
   }
 }
 
@@ -1078,7 +1095,7 @@ export class DamagePlayerCommand implements Command {
   constructor(
     private targetPlayerIdx: number,
     private amount: number,
-    private sourceCardID: BoardCardID | null,
+    private sourceCardID: CardLocationID | null,
   ) {}
 
   execute(gameState: GameState): void {
@@ -1181,7 +1198,7 @@ export class HealPlayerCommand implements Command {
   constructor(
     private targetPlayerID: number,
     private amount: number,
-    private sourceCardID: BoardCardID,
+    private sourceCardID: CardLocationID,
   ) {}
 
   execute(gameState: GameState): void {
@@ -1229,27 +1246,27 @@ export class HealPlayerCommand implements Command {
  * Command to trigger a card's ability
  */
 export class FireCardCommand implements Command {
-  constructor(private boardCardID: BoardCardID) {}
+  constructor(private locationID: CardLocationID) {}
 
   execute(gameState: GameState): void {
     // Emit card trigger event
-    gameState.eventBus.emit(new CardFiredEvent(this.boardCardID));
+    gameState.eventBus.emit(new CardFiredEvent(this.locationID));
 
     // Emit card:itemused event
-    gameState.eventBus.emit(new CardItemUsedEvent(this.boardCardID));
+    gameState.eventBus.emit(new CardItemUsedEvent(this.locationID));
 
     // Reset the card's tick if it has a cooldown
-    const { playerIdx: playerID, cardIdx: cardID } = this.boardCardID;
+    const { playerIdx: playerID, cardIdx: cardID } = this.locationID;
     const card = gameState.players[playerID].board[cardID];
     if ("CooldownMax" in card) {
-      new ModifyCardAttributeCommand(this.boardCardID, "tick", 0).execute(
+      new ModifyCardAttributeCommand(this.locationID, "tick", 0).execute(
         gameState,
       );
     }
   }
 
   toLogString(): string {
-    return `Fired ${playerName(this.boardCardID.playerIdx)}'s card ${this.boardCardID.cardIdx}`;
+    return `Fired ${playerName(this.locationID.playerIdx)}'s card ${this.locationID.cardIdx}`;
   }
 }
 
@@ -1260,7 +1277,7 @@ export class ApplyShieldCommand implements Command {
   constructor(
     private targetPlayerID: number,
     private amount: number,
-    private sourceCardID: BoardCardID,
+    private sourceCardID: CardLocationID,
   ) {}
 
   execute(gameState: GameState): void {
@@ -1297,7 +1314,7 @@ export class ApplyPoisonCommand implements Command {
   constructor(
     private targetPlayerID: number,
     private amount: number,
-    private sourceCardID: BoardCardID,
+    private sourceCardID: CardLocationID,
   ) {}
 
   execute(gameState: GameState): void {
@@ -1336,7 +1353,7 @@ export class ApplyBurnCommand implements Command {
   constructor(
     private targetPlayerID: number,
     private amount: number,
-    private sourceCardID: BoardCardID,
+    private sourceCardID: CardLocationID,
   ) {}
 
   execute(gameState: GameState): void {
@@ -1387,15 +1404,15 @@ export class ProcessTickCommand implements Command {
  * Command to disable a card
  */
 export class DisableCardCommand implements Command {
-  constructor(private boardCardID: BoardCardID) {}
+  constructor(private locationID: CardLocationID) {}
 
   execute(gameState: GameState): void {
-    const { playerIdx, cardIdx } = this.boardCardID;
+    const { playerIdx, cardIdx } = this.locationID;
     gameState.players[playerIdx].board[cardIdx].isDisabled = true;
   }
 
   toLogString(): string {
-    return `Disabled ${playerName(this.boardCardID.playerIdx)}'s card ${this.boardCardID.cardIdx}`;
+    return `Disabled ${playerName(this.locationID.playerIdx)}'s card ${this.locationID.cardIdx}`;
   }
 }
 
@@ -1404,19 +1421,19 @@ export class DisableCardCommand implements Command {
  */
 export class ReloadCardCommand implements Command {
   constructor(
-    private boardCardID: BoardCardID,
+    private locationID: CardLocationID,
     private reloadAmount: number,
   ) {}
 
   execute(gameState: GameState): void {
     const currentAmmo = getCardAttribute(
       gameState,
-      this.boardCardID,
+      this.locationID,
       AttributeType.Ammo,
     );
     const ammoMax = getCardAttribute(
       gameState,
-      this.boardCardID,
+      this.locationID,
       AttributeType.AmmoMax,
     );
 
@@ -1428,7 +1445,7 @@ export class ReloadCardCommand implements Command {
     const newValue = Math.min(ammoMax, currentAmmo + this.reloadAmount);
     if (currentAmmo !== newValue) {
       new ModifyCardAttributeCommand(
-        this.boardCardID,
+        this.locationID,
         AttributeType.Ammo,
         newValue,
         "set",
@@ -1437,7 +1454,7 @@ export class ReloadCardCommand implements Command {
   }
 
   toLogString(): string {
-    return `Reloaded ${playerName(this.boardCardID.playerIdx)}'s card ${this.boardCardID.cardIdx} with ${this.reloadAmount} ammo`;
+    return `Reloaded ${playerName(this.locationID.playerIdx)}'s card ${this.locationID.cardIdx} with ${this.reloadAmount} ammo`;
   }
 }
 
@@ -1446,15 +1463,15 @@ export class ReloadCardCommand implements Command {
  */
 export class ChargeCardCommand implements Command {
   constructor(
-    private boardCardID: BoardCardID,
+    private locationID: CardLocationID,
     private chargeAmount: number,
   ) {}
 
   execute(gameState: GameState): void {
-    const { playerIdx, cardIdx } = this.boardCardID;
+    const { playerIdx, cardIdx } = this.locationID;
     const cooldownMax = getCardAttribute(
       gameState,
-      this.boardCardID,
+      this.locationID,
       AttributeType.CooldownMax,
     );
 
@@ -1468,7 +1485,7 @@ export class ChargeCardCommand implements Command {
 
     if (currentTick !== newValue) {
       new ModifyCardAttributeCommand(
-        this.boardCardID,
+        this.locationID,
         "tick",
         newValue,
         "set",
@@ -1477,7 +1494,7 @@ export class ChargeCardCommand implements Command {
   }
 
   toLogString(): string {
-    return `Charged ${playerName(this.boardCardID.playerIdx)}'s card ${this.boardCardID.cardIdx} by ${this.chargeAmount}`;
+    return `Charged ${playerName(this.locationID.playerIdx)}'s card ${this.locationID.cardIdx} by ${this.chargeAmount}`;
   }
 }
 
@@ -1514,7 +1531,7 @@ export class SystemCommand implements Command {
  * Command to emit a critical hit event
  */
 export class EmitCritEvent implements Command {
-  constructor(private sourceCardID: BoardCardID) {}
+  constructor(private sourceCardID: CardLocationID) {}
 
   execute(gameState: GameState): void {
     // Emit crit event

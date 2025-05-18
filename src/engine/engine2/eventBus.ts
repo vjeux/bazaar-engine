@@ -1,8 +1,8 @@
 import {
   GameState,
-  BoardCardID,
+  CardLocationID,
   LogEntry,
-  boardCardIdIsEqual,
+  cardLocationIdIsEqual,
 } from "./engine2";
 import * as Commands from "./commands";
 import {
@@ -12,17 +12,31 @@ import {
   TriggerType,
 } from "../../types/cardTypes";
 import { createPrerequisitesCheck } from "./prereq";
-import { playerName } from "./commands";
 import { getTargetCards, getTargetPlayers } from "./targeting";
-
-/**
- * Base Game Event class
- */
-export abstract class GameEvent {
-  abstract readonly type: string;
-  readonly tick?: number;
-  abstract getDescription(): string;
-}
+import {
+  CardAttributeChangedEvent,
+  CardCrittedEvent,
+  CardFiredEvent,
+  CardItemUsedEvent,
+  CardPerformedBurnEvent,
+  CardPerformedDestructionEvent,
+  CardPerformedFreezeEvent,
+  CardPerformedHasteEvent,
+  CardPerformedHealEvent,
+  CardPerformedPoisonEvent,
+  CardPerformedRegenEvent,
+  CardPerformedShieldEvent,
+  CardPerformedSlowEvent,
+  CardReloadedEvent,
+  GameEndedEvent,
+  GameEvent,
+  GameFightStartedEvent,
+  GameTickEvent,
+  NotImplementedEvent,
+  PlayerAttributeChangedEvent,
+  PlayerDiedEvent,
+  PlayerOverhealedEvent,
+} from "./events";
 
 // Priority order mapping for sorting
 const priorityOrder = {
@@ -33,388 +47,6 @@ const priorityOrder = {
   [Priority.Low]: 4,
   [Priority.Lowest]: 5,
 };
-
-/**
- * Game Events
- */
-export class GameTickEvent extends GameEvent {
-  readonly type = "game:tick";
-  constructor(public readonly tick: number) {
-    super();
-  }
-
-  getDescription(): string {
-    return `Tick: ${this.tick}`;
-  }
-}
-
-/**
- * Should never be emitted, only used as a placeholder
- */
-export class NotImplementedEvent extends GameEvent {
-  readonly type = "game:notImplemented";
-  constructor(public readonly message: string) {
-    super();
-  }
-
-  getDescription(): string {
-    return `Not implemented: ${this.message}`;
-  }
-}
-
-export class GameFightStartedEvent extends GameEvent {
-  readonly type = "game:fightStarted";
-
-  constructor() {
-    super();
-  }
-
-  getDescription(): string {
-    return "Fight started";
-  }
-}
-
-export class GameEndedEvent extends GameEvent {
-  readonly type = "game:ended";
-  constructor(public readonly winner: string) {
-    super();
-  }
-
-  getDescription(): string {
-    return `Game ended - Winner: ${this.winner}`;
-  }
-}
-
-/**
- * Card Events
- */
-export class CardFiredEvent extends GameEvent {
-  readonly type = "card:fired";
-  constructor(public readonly sourceCardID: BoardCardID) {
-    super();
-  }
-
-  getDescription(): string {
-    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} was fired`;
-  }
-}
-
-export class CardCrittedEvent extends GameEvent {
-  readonly type = "card:critted";
-  constructor(public readonly sourceCardID: BoardCardID) {
-    super();
-  }
-
-  getDescription(): string {
-    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} critted`;
-  }
-}
-
-export class CardItemUsedEvent extends GameEvent {
-  readonly type = "card:itemused";
-  constructor(public readonly sourceCardID: BoardCardID) {
-    super();
-  }
-
-  getDescription(): string {
-    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} was used`;
-  }
-}
-
-export class CardAttributeChangedEvent extends GameEvent {
-  readonly type = "card:attributeChanged";
-  constructor(
-    public readonly modifiedBoardCardID: BoardCardID,
-    public readonly attribute: AttributeType | "tick",
-    public readonly oldValue: number,
-    public readonly newValue: number,
-  ) {
-    super();
-  }
-
-  getDescription(): string {
-    return `${playerName(this.modifiedBoardCardID.playerIdx)}'s card ${this.modifiedBoardCardID.cardIdx} ${this.attribute} changed from ${this.oldValue} to ${this.newValue}`;
-  }
-}
-
-export class CardAddedEvent extends GameEvent {
-  readonly type = "card:added";
-  constructor(
-    public readonly boardCardID: BoardCardID,
-    public readonly card: unknown,
-  ) {
-    super();
-  }
-
-  getDescription(): string {
-    return `Card added to ${playerName(this.boardCardID.playerIdx)}'s board at position ${this.boardCardID.cardIdx}`;
-  }
-}
-
-export class CardRemovedEvent extends GameEvent {
-  readonly type = "card:removed";
-  constructor(public readonly boardCardID: BoardCardID) {
-    super();
-  }
-
-  getDescription(): string {
-    return `Card removed from ${playerName(this.boardCardID.playerIdx)}'s board at position ${this.boardCardID.cardIdx}`;
-  }
-}
-
-/**
- * Player Events
- */
-export class PlayerDamagedEvent extends GameEvent {
-  readonly type = "player:damaged";
-  constructor(
-    public readonly playerIdx: number,
-    public readonly amount: number,
-    public readonly sourceCardID: BoardCardID | null,
-  ) {
-    super();
-  }
-
-  getDescription(): string {
-    if (!this.sourceCardID) {
-      return `${playerName(this.playerIdx)} took ${this.amount} damage`;
-    }
-    return `${playerName(this.playerIdx)} took ${this.amount} damage from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
-  }
-}
-
-export class CardPerformedHealEvent extends GameEvent {
-  readonly type = "player:healed";
-  constructor(
-    public readonly targetPlayerIdx: number,
-    public readonly amount: number,
-    public readonly sourceCardID: BoardCardID,
-  ) {
-    super();
-  }
-
-  getDescription(): string {
-    if (!this.sourceCardID) {
-      return `${playerName(this.targetPlayerIdx)} was healed for ${this.amount}`;
-    }
-    return `${playerName(this.targetPlayerIdx)} was healed for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
-  }
-}
-
-export class PlayerOverhealedEvent extends GameEvent {
-  readonly type = "player:overhealed";
-  constructor(
-    public readonly playerIdx: number,
-    public readonly amount: number,
-    public readonly sourceCardID: BoardCardID,
-  ) {
-    super();
-  }
-
-  getDescription(): string {
-    if (!this.sourceCardID) {
-      return `${playerName(this.playerIdx)} was overhealed for ${this.amount}`;
-    }
-    return `${playerName(this.playerIdx)} was overhealed for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
-  }
-}
-
-export class PlayerLifestealHealEvent extends GameEvent {
-  readonly type = "player:lifestealheal";
-  constructor(
-    public readonly playerIdx: number,
-    public readonly amount: number,
-    public readonly sourceCardID: BoardCardID | null,
-  ) {
-    super();
-  }
-
-  getDescription(): string {
-    if (!this.sourceCardID) {
-      return `${playerName(this.playerIdx)} healed ${this.amount} from lifesteal`;
-    }
-    return `${playerName(this.playerIdx)} healed ${this.amount} from lifesteal via ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
-  }
-}
-
-export class PlayerAttributeChangedEvent extends GameEvent {
-  readonly type = "player:attributeChanged";
-  constructor(
-    public readonly playerIdx: number,
-    public readonly attribute: string,
-    public readonly oldValue: number,
-    public readonly newValue: number,
-  ) {
-    super();
-  }
-
-  getDescription(): string {
-    return `${playerName(this.playerIdx)}'s ${this.attribute} changed from ${this.oldValue} to ${this.newValue}`;
-  }
-}
-
-export class PlayerAttributeChangeHandledEvent extends GameEvent {
-  readonly type = "player:attributeChangeHandled";
-  constructor(
-    public readonly playerIdx: number,
-    public readonly attribute: string,
-    public readonly oldValue: number,
-    public readonly newValue: number,
-  ) {
-    super();
-  }
-
-  getDescription(): string {
-    return `${playerName(this.playerIdx)}'s ${this.attribute} change was handled`;
-  }
-}
-
-export class PlayerDiedEvent extends GameEvent {
-  readonly type = "player:died";
-  constructor(public readonly playerIdx: number) {
-    super();
-  }
-
-  getDescription(): string {
-    return `${playerName(this.playerIdx)} died`;
-  }
-}
-
-export class CardPerformedShieldEvent extends GameEvent {
-  readonly type = "player:shieldApplied";
-  constructor(
-    public readonly targetPlayerIdx: number,
-    public readonly amount: number,
-    public readonly sourceCardID: BoardCardID,
-  ) {
-    super();
-  }
-
-  getDescription(): string {
-    if (!this.sourceCardID) {
-      return `${playerName(this.targetPlayerIdx)} gained ${this.amount} shield`;
-    }
-    return `${playerName(this.targetPlayerIdx)} gained ${this.amount} shield from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
-  }
-}
-
-export class CardPerformedPoisonEvent extends GameEvent {
-  readonly type = "card:performedPoison";
-  constructor(
-    public readonly targetPlayerIdx: number,
-    public readonly amount: number,
-    public readonly sourceCardID: BoardCardID,
-  ) {
-    super();
-  }
-
-  getDescription(): string {
-    if (!this.sourceCardID) {
-      return `${playerName(this.targetPlayerIdx)} was poisoned for ${this.amount}`;
-    }
-    return `${playerName(this.targetPlayerIdx)} was poisoned for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
-  }
-}
-
-export class CardPerformedBurnEvent extends GameEvent {
-  readonly type = "card:performedBurn";
-  constructor(
-    public readonly targetPlayerIdx: number,
-    public readonly amount: number,
-    public readonly sourceCardID: BoardCardID,
-  ) {
-    super();
-  }
-
-  getDescription(): string {
-    if (!this.sourceCardID) {
-      return `${playerName(this.targetPlayerIdx)} was burned for ${this.amount}`;
-    }
-    return `${playerName(this.targetPlayerIdx)} was burned for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
-  }
-}
-
-export class CardPerformedDestructionEvent extends GameEvent {
-  readonly type = "card:performedDestruction";
-  constructor(
-    public readonly sourceCardID: BoardCardID,
-    public readonly destroyedCardID: BoardCardID,
-  ) {
-    super();
-  }
-
-  getDescription(): string {
-    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} destroyed ${playerName(this.destroyedCardID.playerIdx)}'s card ${this.destroyedCardID.cardIdx}`;
-  }
-}
-
-export class CardPerformedFreezeEvent extends GameEvent {
-  readonly type = "card:performedFreeze";
-  constructor(
-    public readonly sourceCardID: BoardCardID,
-    public readonly frozenCardID: BoardCardID,
-  ) {
-    super();
-  }
-
-  getDescription(): string {
-    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} froze ${playerName(this.frozenCardID.playerIdx)}'s card ${this.frozenCardID.cardIdx}`;
-  }
-}
-
-export class CardPerformedHasteEvent extends GameEvent {
-  readonly type = "card:performedHaste";
-  constructor(
-    public readonly sourceCardID: BoardCardID,
-    public readonly hastenedCardID: BoardCardID,
-  ) {
-    super();
-  }
-
-  getDescription(): string {
-    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} hastened ${playerName(this.hastenedCardID.playerIdx)}'s card ${this.hastenedCardID.cardIdx}`;
-  }
-}
-
-export class CardPerformedSlowEvent extends GameEvent {
-  readonly type = "card:performedSlow";
-  constructor(
-    public readonly sourceCardID: BoardCardID,
-    public readonly slowedCardID: BoardCardID,
-  ) {
-    super();
-  }
-
-  getDescription(): string {
-    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} slowed ${playerName(this.slowedCardID.playerIdx)}'s card ${this.slowedCardID.cardIdx}`;
-  }
-}
-
-export class CardPerformedRegenEvent extends GameEvent {
-  readonly type = "card:performedRegen";
-  constructor(
-    public readonly sourceCardID: BoardCardID,
-    public readonly targetPlayerIdx: number,
-    public readonly amount: number,
-  ) {
-    super();
-  }
-
-  getDescription(): string {
-    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} gave ${playerName(this.targetPlayerIdx)} ${this.amount} health regeneration`;
-  }
-}
-
-export class CardReloadedEvent extends GameEvent {
-  readonly type = "card:reloaded";
-  constructor(public readonly sourceCardID: BoardCardID) {
-    super();
-  }
-
-  getDescription(): string {
-    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} reloaded`;
-  }
-}
 
 /**
  * Type-safe EventBus for game events
@@ -647,13 +279,6 @@ export class EventBus {
 }
 
 /**
- * Create a BoardCardID
- */
-function createBoardCardID(playerID: number, cardID: number): BoardCardID {
-  return { playerIdx: playerID, cardIdx: cardID };
-}
-
-/**
  * Map of trigger types to event constructors
  */
 const triggerToEventMap: Record<
@@ -726,7 +351,7 @@ function triggerToEvent(trigger: {
  */
 function createTriggerCheck(
   ability: Ability,
-  boardCardID: BoardCardID,
+  locationID: CardLocationID,
 ): (gs: GameState, e: GameEvent) => boolean {
   const triggerType = ability.Trigger.$type || "";
 
@@ -735,8 +360,8 @@ function createTriggerCheck(
       case TriggerType.TTriggerOnCardFired: {
         if (e instanceof CardFiredEvent) {
           return (
-            e.sourceCardID.playerIdx === boardCardID.playerIdx &&
-            e.sourceCardID.cardIdx === boardCardID.cardIdx
+            e.sourceCardID.playerIdx === locationID.playerIdx &&
+            e.sourceCardID.cardIdx === locationID.cardIdx
           );
         }
         return false;
@@ -756,12 +381,12 @@ function createTriggerCheck(
           const subjects = getTargetCards(
             gs,
             ability.Trigger.Subject,
-            boardCardID,
+            locationID,
             e,
           );
           // Return true if any of the subjects are the source card
           return subjects.some((subject) =>
-            boardCardIdIsEqual(subject, e.sourceCardID),
+            cardLocationIdIsEqual(subject, e.sourceCardID),
           );
         }
         return false;
@@ -778,12 +403,12 @@ function createTriggerCheck(
           const subjects = getTargetCards(
             gs,
             ability.Trigger.Subject,
-            boardCardID,
+            locationID,
             e,
           );
           // Return true if any of the subjects are the source card
           return subjects.some((subject) =>
-            boardCardIdIsEqual(subject, e.sourceCardID),
+            cardLocationIdIsEqual(subject, e.sourceCardID),
           );
         }
         return false;
@@ -801,11 +426,11 @@ function createTriggerCheck(
           const subjects = getTargetCards(
             gs,
             ability.Trigger.Subject,
-            boardCardID,
+            locationID,
             e,
           );
           return subjects.some((subject) => {
-            if (boardCardIdIsEqual(subject, e.modifiedBoardCardID)) {
+            if (cardLocationIdIsEqual(subject, e.modifiedLocationID)) {
               if (
                 e.attribute === ability.Trigger.AttributeChanged &&
                 ((ability.Trigger.ChangeType === "Gain" &&
@@ -835,11 +460,11 @@ function createTriggerCheck(
           const subjects = getTargetCards(
             gs,
             ability.Trigger.Subject,
-            boardCardID,
+            locationID,
             e,
           );
           return subjects.some((subject) =>
-            boardCardIdIsEqual(subject, e.sourceCardID),
+            cardLocationIdIsEqual(subject, e.sourceCardID),
           );
         }
         return false;
@@ -856,11 +481,11 @@ function createTriggerCheck(
           const subjects = getTargetCards(
             gs,
             ability.Trigger.Subject,
-            boardCardID,
+            locationID,
             e,
           );
           return subjects.some(
-            (subject) => subject.cardIdx === boardCardID.cardIdx,
+            (subject) => subject.cardIdx === locationID.cardIdx,
           );
         }
         return false;
@@ -878,11 +503,11 @@ function createTriggerCheck(
           const subjects = getTargetCards(
             gs,
             ability.Trigger.Subject,
-            boardCardID,
+            locationID,
             e,
           );
           return subjects.some((subject) =>
-            boardCardIdIsEqual(subject, e.sourceCardID),
+            cardLocationIdIsEqual(subject, e.sourceCardID),
           );
         }
         return false;
@@ -899,11 +524,11 @@ function createTriggerCheck(
           const subjects = getTargetCards(
             gs,
             ability.Trigger.Subject,
-            boardCardID,
+            locationID,
             e,
           );
           return subjects.some((subject) =>
-            boardCardIdIsEqual(subject, e.sourceCardID),
+            cardLocationIdIsEqual(subject, e.sourceCardID),
           );
         }
         return false;
@@ -921,7 +546,7 @@ function createTriggerCheck(
           const subjects = getTargetPlayers(
             gs,
             ability.Trigger.Subject,
-            boardCardID,
+            locationID,
           );
           return subjects.some((subject) => subject === e.playerIdx);
         }
@@ -939,7 +564,7 @@ function createTriggerCheck(
           const subjects = getTargetPlayers(
             gs,
             ability.Trigger.Subject,
-            boardCardID,
+            locationID,
           );
           return subjects.some((subject) => subject === e.playerIdx);
         }
@@ -958,11 +583,11 @@ function createTriggerCheck(
           const subjects = getTargetCards(
             gs,
             ability.Trigger.Subject,
-            boardCardID,
+            locationID,
             e,
           );
           return subjects.some((subject) =>
-            boardCardIdIsEqual(subject, e.sourceCardID),
+            cardLocationIdIsEqual(subject, e.sourceCardID),
           );
         }
       }
@@ -978,11 +603,11 @@ function createTriggerCheck(
           const subjects = getTargetCards(
             gs,
             ability.Trigger.Subject,
-            boardCardID,
+            locationID,
             e,
           );
           return subjects.some((subject) =>
-            boardCardIdIsEqual(subject, e.sourceCardID),
+            cardLocationIdIsEqual(subject, e.sourceCardID),
           );
         }
       }
@@ -999,11 +624,11 @@ function createTriggerCheck(
           const subjects = getTargetCards(
             gs,
             ability.Trigger.Subject,
-            boardCardID,
+            locationID,
             e,
           );
           return subjects.some((subject) =>
-            boardCardIdIsEqual(subject, e.sourceCardID),
+            cardLocationIdIsEqual(subject, e.sourceCardID),
           );
         }
         return false;
@@ -1034,14 +659,15 @@ export function setupEventHandlers(gameState: GameState): void {
   gameState.players.forEach((player, playerID) => {
     player.board.forEach((card, cardID) => {
       Object.values(card.Abilities).forEach((ability: Ability) => {
-        const boardCardID = { playerIdx: playerID, cardIdx: cardID };
+        const locationID: CardLocationID = {
+          playerIdx: playerID,
+          cardIdx: cardID,
+          location: "board",
+        };
 
         const eventClass = triggerToEvent(ability.Trigger);
-        const triggerCheck = createTriggerCheck(ability, boardCardID);
-        const prerequisiteCheck = createPrerequisitesCheck(
-          ability,
-          boardCardID,
-        );
+        const triggerCheck = createTriggerCheck(ability, locationID);
+        const prerequisiteCheck = createPrerequisitesCheck(ability, locationID);
 
         // Create a combined test function that checks both prerequisites and trigger conditions
         const shouldReceiveEvent = (
@@ -1054,7 +680,7 @@ export function setupEventHandlers(gameState: GameState): void {
         const eventHandler = (gs: GameState, event: GameEvent): void => {
           const command = Commands.CommandFactory.createFromAction(
             ability.Action,
-            boardCardID,
+            locationID,
             gs,
             event,
           );
@@ -1221,7 +847,7 @@ function processBurn(gameState: GameState): void {
  * Process card cooldowns and triggers
  */
 function processCardCooldowns(gameState: GameState): void {
-  const cardTriggers: BoardCardID[] = [];
+  const cardTriggers: CardLocationID[] = [];
 
   gameState.players.forEach((player, playerID) => {
     player.board.forEach((card, cardID) => {
@@ -1234,14 +860,18 @@ function processCardCooldowns(gameState: GameState): void {
         return;
       }
 
-      const boardCardID = createBoardCardID(playerID, cardID);
+      const locationID: CardLocationID = {
+        playerIdx: playerID,
+        cardIdx: cardID,
+        location: "board",
+      };
 
       // Check if card is frozen
       const freeze = card[AttributeType.Freeze] as number | undefined;
       if (freeze && freeze > 0) {
         // Reduce freeze counter
         new Commands.ModifyCardAttributeCommand(
-          boardCardID,
+          locationID,
           AttributeType.Freeze,
           Math.max(0, freeze - 100),
           "set",
@@ -1257,7 +887,7 @@ function processCardCooldowns(gameState: GameState): void {
 
         // Reduce slow counter
         new Commands.ModifyCardAttributeCommand(
-          boardCardID,
+          locationID,
           AttributeType.Slow,
           Math.max(0, slow - 100),
           "set",
@@ -1270,7 +900,7 @@ function processCardCooldowns(gameState: GameState): void {
 
         // Reduce haste counter
         new Commands.ModifyCardAttributeCommand(
-          boardCardID,
+          locationID,
           AttributeType.Haste,
           Math.max(0, haste - 100),
           "set",
@@ -1282,7 +912,7 @@ function processCardCooldowns(gameState: GameState): void {
       const newTick = Math.min(card.tick + tickRate, cooldownMax);
 
       new Commands.ModifyCardAttributeCommand(
-        boardCardID,
+        locationID,
         "tick",
         newTick,
         "set",
@@ -1294,7 +924,7 @@ function processCardCooldowns(gameState: GameState): void {
         const ammoMax = card[AttributeType.AmmoMax] as number | undefined;
 
         if (!ammoMax || (ammoMax && ammo === undefined) || (ammo && ammo > 0)) {
-          cardTriggers.push(boardCardID);
+          cardTriggers.push(locationID);
 
           // Handle multicast
           if ("Multicast" in card && card.Multicast) {
@@ -1315,17 +945,19 @@ function processCardCooldowns(gameState: GameState): void {
   // Process delayed multicasts
   gameState.multicast = gameState.multicast.filter((multicast) => {
     if (multicast.tick <= gameState.tick) {
-      cardTriggers.push(
-        createBoardCardID(multicast.playerID, multicast.boardCardID),
-      );
+      cardTriggers.push({
+        playerIdx: multicast.playerID,
+        cardIdx: multicast.boardCardID,
+        location: "board",
+      });
       return false;
     }
     return true;
   });
 
   // Trigger cards
-  cardTriggers.forEach((boardCardID) => {
-    const { playerIdx: playerID, cardIdx: cardID } = boardCardID;
+  cardTriggers.forEach((locationID) => {
+    const { playerIdx: playerID, cardIdx: cardID } = locationID;
     // Reduce ammo if needed
     const card = gameState.players[playerID].board[cardID];
     const ammoMax = card[AttributeType.AmmoMax] as number | undefined;
@@ -1333,7 +965,7 @@ function processCardCooldowns(gameState: GameState): void {
     if (ammoMax) {
       const ammo = card[AttributeType.Ammo] as number | undefined;
       new Commands.ModifyCardAttributeCommand(
-        boardCardID,
+        locationID,
         AttributeType.Ammo,
         ammo === undefined ? ammoMax - 1 : ammo - 1,
         "set",
@@ -1341,7 +973,7 @@ function processCardCooldowns(gameState: GameState): void {
     }
 
     // Trigger the card
-    new Commands.FireCardCommand(boardCardID).execute(gameState);
+    new Commands.FireCardCommand(locationID).execute(gameState);
   });
 }
 

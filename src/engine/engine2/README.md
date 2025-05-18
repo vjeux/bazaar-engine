@@ -22,13 +22,14 @@ The EventBus acts as a central messaging system that enables loose coupling betw
 - Testing functions to conditionally handle events 
 - Priority-based event handling (Immediate, Highest, High, Medium, Low, Lowest)
 
-### BoardCardID (`engine2.ts`)
+### CardLocationID (`engine2.ts`)
 
-Rather than passing separate player and card indices, we now use a `BoardCardID` type:
+Rather than passing separate player and card indices, we now use a `CardLocationID` type:
 
 ```typescript
-type BoardCardID = {
+type CardLocationID = {
   playerIdx: number;
+  location: "board" | "stash";
   cardIdx: number;
 };
 ```

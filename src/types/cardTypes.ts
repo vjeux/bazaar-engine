@@ -308,6 +308,7 @@ export enum TargetSection {
   SelfHand = "SelfHand",
   SelfHandAndStash = "SelfHandAndStash",
   SelfNeighbors = "SelfNeighbors",
+  SelfStash = "SelfStash",
 }
 
 interface SpawnContext {

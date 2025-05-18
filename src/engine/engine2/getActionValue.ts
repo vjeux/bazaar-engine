@@ -1,7 +1,8 @@
 import { Value, AttributeType } from "@/types/cardTypes";
 import { Player } from "../Engine";
-import { GameState, BoardCardID, getCardAttribute } from "./engine2";
-import { GameEvent, PlayerAttributeChangedEvent } from "./eventHandlers";
+import { GameState, CardLocationID, getCardAttribute } from "./engine2";
+import { PlayerAttributeChangedEvent } from "./events";
+import { GameEvent } from "./events";
 import { getTargetCards, getTargetPlayers } from "./targeting";
 
 /**
@@ -11,7 +12,7 @@ import { getTargetCards, getTargetPlayers } from "./targeting";
 export function getActionValue(
   gameState: GameState,
   value: Value,
-  sourceCardID: BoardCardID,
+  sourceCardID: CardLocationID,
   event?: GameEvent,
 ): number {
   let amount: number | undefined = undefined;
