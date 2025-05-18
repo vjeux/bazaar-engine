@@ -35,6 +35,12 @@ function _createBoardCardFromCard(
 
   // All cards have a CritChance base of 0
   baseAttributes.CritChance = 0;
+  // All cards have base DamageCrit of 100 for double crit damage
+  baseAttributes.DamageCrit = 100;
+
+  // Set lifesteal to 0 for all cards, should be fine
+  baseAttributes.Lifesteal = 0;
+
   baseAttributes.Haste = 0;
   baseAttributes.Slow = 0;
   baseAttributes.Freeze = 0;

@@ -105,9 +105,6 @@ export class CommandFactory {
         prand.unsafeUniformIntDistribution(0, 100, gameState.randomGen) <
         critChance
       ) {
-        // Base critical is 2x
-        amount *= 2;
-
         // Apply additional critical damage modifier if available
         const damageCrit = getCardAttribute(
           gameState,
@@ -117,6 +114,10 @@ export class CommandFactory {
 
         if (damageCrit !== undefined) {
           amount *= 1 + damageCrit / 100;
+        } else {
+          throw new Error(
+            "Damage crit was undefined. Assumed base to be 100 for double crit damage",
+          );
         }
 
         hasCritted = true;
