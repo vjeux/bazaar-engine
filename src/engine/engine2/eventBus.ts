@@ -700,6 +700,9 @@ export function setupEventHandlers(gameState: GameState): void {
           ability.Priority || Priority.Medium,
           shouldReceiveEvent,
         );
+
+        // Store the eventclass and handler on the card so they can be unregistered later
+        card.registeredTriggers.set(eventClass, eventHandler);
       });
     });
   });

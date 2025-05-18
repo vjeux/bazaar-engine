@@ -7,7 +7,12 @@ import {
   AttributeType,
   Enchantments,
 } from "../../types/cardTypes";
-import { EventBus, setupEventHandlers } from "./eventBus";
+import {
+  EventBus,
+  EventHandler,
+  GameEventConstructor,
+  setupEventHandlers,
+} from "./eventBus";
 import { GameFightStartedEvent } from "./events";
 import { Command, ProcessTickCommand } from "./commands";
 import { RandomGenerator } from "pure-rand/types/RandomGenerator";
@@ -95,6 +100,7 @@ export type BoardCard = {
   };
   internalCommandQueue: Command[];
   internalCommandQueuetick: number;
+  registeredTriggers: Map<GameEventConstructor, EventHandler>;
 };
 
 export interface Player {

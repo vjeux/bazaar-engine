@@ -25,7 +25,11 @@ import {
 } from "./events";
 import { GameTickEvent } from "./events";
 import { GameEvent } from "./events";
-import { getTargetCards, getTargetPlayers } from "./targeting";
+import {
+  getBoardCardByID,
+  getTargetCards,
+  getTargetPlayers,
+} from "./targeting";
 import { getActionValue } from "./getActionValue";
 import { PLAYER_PLAYER_IDX } from "@/lib/constants";
 import prand from "pure-rand";
@@ -860,6 +864,14 @@ export class CommandFactory {
         return commands;
       }
 
+      case ActionType.TActionGameSpawnCards: {
+        // Do nothng as the json does not provide enough information abouth which cards to spawn
+        console.warn(
+          "TActionGameSpawnCards action type is not implemented - JSON configuration does not provide sufficient information about which cards to spawn",
+        );
+        return commands;
+      }
+
       default:
         console.error(`Unhandled action type: ${action.$type}`);
         throw new Error(`Unhandled action type: ${action.$type}`);
@@ -943,15 +955,28 @@ export class RemoveCardCommand implements Command {
   constructor(private locationID: CardLocationID) {}
 
   execute(gameState: GameState): void {
-    const { playerIdx, cardIdx } = this.locationID;
+    const { playerIdx, cardIdx, location } = this.locationID;
     const player = gameState.players[playerIdx];
 
-    if (cardIdx >= 0 && cardIdx < player.board.length) {
+    if (cardIdx >= 0 && cardIdx < player[location].length) {
       // Remove the card
-      player.board.splice(cardIdx, 1);
+      player[location].splice(cardIdx, 1);
+
+      // Unregister all events assosciated with the card
+      getBoardCardByID(gameState, this.locationID).registeredTriggers.forEach(
+        (handler, eventClass) => {
+          gameState.eventBus.off(eventClass, handler);
+        },
+      );
 
       // Emit event that card was removed
       gameState.eventBus.emit(new CardRemovedEvent(this.locationID));
+    } else {
+      throw new Error(
+        `Could not remove card. ${playerName(
+          this.locationID.playerIdx,
+        )} has ${player[location].length} cards in ${location} and card at index ${this.locationID.cardIdx} not found`,
+      );
     }
   }
 

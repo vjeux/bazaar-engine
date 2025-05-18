@@ -176,6 +176,7 @@ function _createBoardCardFromCard(
     isDisabled: false,
     internalCommandQueue: [],
     internalCommandQueuetick: 0,
+    registeredTriggers: new Map(),
   };
 
   return result;
