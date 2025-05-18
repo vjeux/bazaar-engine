@@ -6358,7 +6358,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Boarri
     "step": 49,
   },
   {
-    "players.1.Health": 1990,
+    "players.1.Health": 1981,
     "step": 50,
   },
   {
@@ -6390,7 +6390,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Boarri
   },
   {
     "players.0.Health": 390,
-    "players.1.Health": 1978,
+    "players.1.Health": 1960,
     "step": 60,
   },
   {
@@ -6426,12 +6426,12 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Boarri
       "playerID": 0,
       "tick": 7300,
     },
-    "players.0.board.1.DamageAmount": 15,
-    "players.0.board.2.DamageAmount": 15,
-    "players.0.board.3.DamageAmount": 17,
-    "players.0.board.4.DamageAmount": 45,
-    "players.0.board.5.DamageAmount": 15,
-    "players.1.Health": 1923,
+    "players.0.board.1.DamageAmount": 20,
+    "players.0.board.2.DamageAmount": 20,
+    "players.0.board.3.DamageAmount": 22,
+    "players.0.board.4.DamageAmount": 25,
+    "players.0.board.5.DamageAmount": 20,
+    "players.1.Health": 1931,
     "step": 70,
   },
   {
@@ -6462,6 +6462,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Boarri
     "step": 79,
   },
   {
+    "players.1.Health": 1897,
     "players.1.Shield": 10,
     "step": 80,
   },
@@ -6529,8 +6530,8 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Boarri
       "playerID": 0,
       "tick": 10300,
     },
-    "players.0.Shield": 40,
-    "players.1.Health": 1903,
+    "players.0.Shield": 30,
+    "players.1.Health": 1849,
     "players.1.Shield": 0,
     "step": 100,
   },
@@ -6592,8 +6593,8 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Boarri
     "step": 119,
   },
   {
-    "players.0.Shield": 35,
-    "players.1.Health": 1886,
+    "players.0.Shield": 25,
+    "players.1.Health": 1818,
     "step": 120,
   },
   {
@@ -6659,12 +6660,12 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Boarri
       "playerID": 0,
       "tick": 14300,
     },
-    "players.0.board.1.DamageAmount": 20,
-    "players.0.board.2.DamageAmount": 20,
-    "players.0.board.3.DamageAmount": 22,
-    "players.0.board.4.DamageAmount": 50,
-    "players.0.board.5.DamageAmount": 20,
-    "players.1.Health": 1776,
+    "players.0.board.1.DamageAmount": 30,
+    "players.0.board.2.DamageAmount": 30,
+    "players.0.board.3.DamageAmount": 32,
+    "players.0.board.4.DamageAmount": 35,
+    "players.0.board.5.DamageAmount": 30,
+    "players.1.Health": 1779,
     "step": 140,
   },
   {
@@ -6695,8 +6696,8 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Boarri
     "step": 149,
   },
   {
-    "players.0.Shield": 30,
-    "players.1.Health": 1756,
+    "players.0.Shield": 20,
+    "players.1.Health": 1740,
     "step": 150,
   },
   {
@@ -6727,6 +6728,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Boarri
     "step": 159,
   },
   {
+    "players.1.Health": 1696,
     "players.1.Shield": 10,
     "step": 160,
   },
@@ -6788,8 +6790,8 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Boarri
     "step": 179,
   },
   {
-    "players.0.Shield": 25,
-    "players.1.Health": 1744,
+    "players.0.Shield": 15,
+    "players.1.Health": 1665,
     "players.1.Shield": 0,
     "step": 180,
   },
@@ -6856,8 +6858,8 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Boarri
       "playerID": 0,
       "tick": 20300,
     },
-    "players.0.Shield": 65,
-    "players.1.Health": 1704,
+    "players.0.Shield": 45,
+    "players.1.Health": 1587,
     "step": 200,
   },
   {
@@ -6893,13 +6895,13 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Boarri
       "playerID": 0,
       "tick": 21300,
     },
-    "players.0.Shield": 60,
-    "players.0.board.1.DamageAmount": 25,
-    "players.0.board.2.DamageAmount": 25,
-    "players.0.board.3.DamageAmount": 27,
-    "players.0.board.4.DamageAmount": 55,
-    "players.0.board.5.DamageAmount": 25,
-    "players.1.Health": 1629,
+    "players.0.Shield": 40,
+    "players.0.board.1.DamageAmount": 40,
+    "players.0.board.2.DamageAmount": 40,
+    "players.0.board.3.DamageAmount": 42,
+    "players.0.board.4.DamageAmount": 45,
+    "players.0.board.5.DamageAmount": 40,
+    "players.1.Health": 1538,
     "step": 210,
   },
   {
@@ -6990,8 +6992,8 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Boarri
     "step": 239,
   },
   {
-    "players.0.Shield": 55,
-    "players.1.Health": 1602,
+    "players.0.Shield": 35,
+    "players.1.Health": 1433,
     "players.1.Shield": 10,
     "step": 240,
   },
@@ -7023,7 +7025,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Boarri
     "step": 249,
   },
   {
-    "players.1.Health": 1587,
+    "players.1.Health": 1394,
     "players.1.Shield": 0,
     "step": 250,
   },
@@ -7085,7 +7087,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Boarri
     "step": 269,
   },
   {
-    "players.0.Shield": 50,
+    "players.0.Shield": 30,
     "step": 270,
   },
   {
@@ -7121,12 +7123,12 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Boarri
       "playerID": 0,
       "tick": 28300,
     },
-    "players.0.board.1.DamageAmount": 30,
-    "players.0.board.2.DamageAmount": 30,
-    "players.0.board.3.DamageAmount": 32,
-    "players.0.board.4.DamageAmount": 60,
-    "players.0.board.5.DamageAmount": 30,
-    "players.1.Health": 1447,
+    "players.0.board.1.DamageAmount": 50,
+    "players.0.board.2.DamageAmount": 50,
+    "players.0.board.3.DamageAmount": 52,
+    "players.0.board.4.DamageAmount": 55,
+    "players.0.board.5.DamageAmount": 50,
+    "players.1.Health": 1335,
     "step": 280,
   },
   {
@@ -7192,161 +7194,156 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 2 - Boarri
       "playerID": 0,
       "tick": 30300,
     },
-    "players.0.Shield": 84,
-    "players.1.Health": 1354,
+    "players.0.Shield": 54,
+    "players.1.Health": 1155,
     "step": 300,
   },
   {
-    "players.0.Shield": 83,
-    "players.1.Health": 1353,
+    "players.0.Shield": 53,
+    "players.1.Health": 1154,
     "step": 301,
   },
   {
-    "players.0.Shield": 82,
-    "players.1.Health": 1352,
+    "players.0.Shield": 52,
+    "players.1.Health": 1153,
     "step": 302,
   },
   {
-    "players.0.Shield": 81,
-    "players.1.Health": 1351,
+    "players.0.Shield": 51,
+    "players.1.Health": 1152,
     "step": 303,
   },
   {
-    "players.0.Shield": 80,
-    "players.1.Health": 1350,
+    "players.0.Shield": 50,
+    "players.1.Health": 1151,
     "step": 304,
   },
   {
-    "players.0.Shield": 79,
-    "players.1.Health": 1349,
+    "players.0.Shield": 49,
+    "players.1.Health": 1150,
     "step": 305,
   },
   {
-    "players.0.Shield": 78,
-    "players.1.Health": 1348,
+    "players.0.Shield": 48,
+    "players.1.Health": 1149,
     "step": 306,
   },
   {
-    "players.0.Shield": 77,
-    "players.1.Health": 1347,
+    "players.0.Shield": 47,
+    "players.1.Health": 1148,
     "step": 307,
   },
   {
-    "players.0.Shield": 76,
-    "players.1.Health": 1346,
+    "players.0.Shield": 46,
+    "players.1.Health": 1147,
     "step": 308,
   },
   {
-    "players.0.Shield": 75,
-    "players.1.Health": 1345,
+    "players.0.Shield": 45,
+    "players.1.Health": 1146,
     "step": 309,
   },
   {
-    "players.0.Shield": 72,
-    "players.1.Health": 1342,
+    "players.0.Shield": 42,
+    "players.1.Health": 1143,
     "step": 310,
   },
   {
-    "players.0.Shield": 67,
-    "players.1.Health": 1337,
+    "players.0.Shield": 37,
+    "players.1.Health": 1138,
     "step": 311,
   },
   {
-    "players.0.Shield": 60,
-    "players.1.Health": 1330,
+    "players.0.Shield": 30,
+    "players.1.Health": 1131,
     "step": 312,
   },
   {
-    "players.0.Shield": 51,
-    "players.1.Health": 1321,
+    "players.0.Shield": 21,
+    "players.1.Health": 1122,
     "step": 313,
   },
   {
-    "players.0.Shield": 40,
-    "players.1.Health": 1310,
+    "players.0.Shield": 10,
+    "players.1.Health": 1111,
     "step": 314,
   },
   {
-    "players.0.Shield": 27,
-    "players.1.Health": 1297,
+    "players.0.Health": 382,
+    "players.0.Shield": 0,
+    "players.1.Health": 1098,
     "step": 315,
   },
   {
-    "players.0.Shield": 12,
-    "players.1.Health": 1282,
+    "players.0.Health": 367,
+    "players.1.Health": 1083,
     "step": 316,
   },
   {
-    "players.0.Health": 380,
-    "players.0.Shield": 0,
-    "players.1.Health": 1265,
+    "players.0.Health": 350,
+    "players.1.Health": 1066,
     "step": 317,
   },
   {
-    "players.0.Health": 361,
-    "players.1.Health": 1246,
+    "players.0.Health": 331,
+    "players.1.Health": 1047,
     "step": 318,
   },
   {
-    "players.0.Health": 340,
-    "players.1.Health": 1225,
+    "players.0.Health": 310,
+    "players.1.Health": 1026,
     "step": 319,
   },
   {
-    "players.0.Health": 317,
-    "players.1.Health": 1212,
+    "players.0.Health": 287,
+    "players.1.Health": 949,
     "step": 320,
   },
   {
-    "players.0.Health": 292,
-    "players.1.Health": 1187,
+    "players.0.Health": 262,
+    "players.1.Health": 924,
     "step": 321,
   },
   {
-    "players.0.Health": 265,
-    "players.1.Health": 1160,
+    "players.0.Health": 235,
+    "players.1.Health": 897,
     "step": 322,
   },
   {
-    "players.0.Health": 236,
-    "players.1.Health": 1131,
+    "players.0.Health": 206,
+    "players.1.Health": 868,
     "step": 323,
   },
   {
-    "players.0.Health": 205,
-    "players.1.Health": 1100,
+    "players.0.Health": 175,
+    "players.1.Health": 837,
     "step": 324,
   },
   {
-    "players.0.Health": 172,
-    "players.1.Health": 1067,
+    "players.0.Health": 142,
+    "players.1.Health": 804,
     "step": 325,
   },
   {
-    "players.0.Health": 137,
-    "players.1.Health": 1032,
+    "players.0.Health": 107,
+    "players.1.Health": 769,
     "step": 326,
   },
   {
-    "players.0.Health": 100,
-    "players.1.Health": 995,
+    "players.0.Health": 70,
+    "players.1.Health": 732,
     "step": 327,
   },
   {
-    "players.0.Health": 61,
-    "players.1.Health": 956,
+    "players.0.Health": 31,
+    "players.1.Health": 693,
     "step": 328,
   },
   {
-    "players.0.Health": 20,
-    "players.1.Health": 915,
-    "step": 329,
-  },
-  {
     "isPlaying": false,
-    "players.0.Health": -28,
-    "players.1.Health": 872,
-    "step": 330,
+    "players.0.Health": -10,
+    "players.1.Health": 652,
+    "step": 329,
     "winner": "Player",
   },
 ]
@@ -84835,12 +84832,12 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 10 - Prope
     "step": 69,
   },
   {
-    "players.0.Shield": 400,
+    "players.0.Shield": 200,
     "players.0.board.0.SellPrice": 122,
     "players.0.board.1.SellPrice": 26,
     "players.0.board.2.SellPrice": 50,
     "players.0.board.3.SellPrice": 34,
-    "players.1.Health": 632,
+    "players.1.Health": 1316,
     "step": 70,
   },
   {
@@ -84902,7 +84899,7 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 10 - Prope
     "step": 89,
   },
   {
-    "players.0.Shield": 395,
+    "players.0.Shield": 195,
     "step": 90,
   },
   {
@@ -84998,15 +84995,235 @@ exports[`Encounter snapshots should match > Matches snapshot for "Day 10 - Prope
     "step": 119,
   },
   {
-    "isPlaying": false,
-    "players.0.Shield": 590,
+    "players.0.Shield": 390,
     "players.0.board.0.SellPrice": 124,
     "players.0.board.1.SellPrice": 28,
     "players.0.board.2.SellPrice": 52,
     "players.0.board.3.SellPrice": 36,
-    "players.1.Health": -774,
+    "players.1.Health": 618,
     "players.1.Shield": 0,
     "step": 120,
+  },
+  {
+    "step": 121,
+  },
+  {
+    "step": 122,
+  },
+  {
+    "step": 123,
+  },
+  {
+    "step": 124,
+  },
+  {
+    "step": 125,
+  },
+  {
+    "step": 126,
+  },
+  {
+    "step": 127,
+  },
+  {
+    "step": 128,
+  },
+  {
+    "step": 129,
+  },
+  {
+    "step": 130,
+  },
+  {
+    "step": 131,
+  },
+  {
+    "step": 132,
+  },
+  {
+    "step": 133,
+  },
+  {
+    "step": 134,
+  },
+  {
+    "step": 135,
+  },
+  {
+    "step": 136,
+  },
+  {
+    "step": 137,
+  },
+  {
+    "step": 138,
+  },
+  {
+    "step": 139,
+  },
+  {
+    "step": 140,
+  },
+  {
+    "step": 141,
+  },
+  {
+    "step": 142,
+  },
+  {
+    "step": 143,
+  },
+  {
+    "step": 144,
+  },
+  {
+    "step": 145,
+  },
+  {
+    "step": 146,
+  },
+  {
+    "step": 147,
+  },
+  {
+    "step": 148,
+  },
+  {
+    "step": 149,
+  },
+  {
+    "players.0.Shield": 385,
+    "step": 150,
+  },
+  {
+    "step": 151,
+  },
+  {
+    "step": 152,
+  },
+  {
+    "step": 153,
+  },
+  {
+    "step": 154,
+  },
+  {
+    "step": 155,
+  },
+  {
+    "step": 156,
+  },
+  {
+    "step": 157,
+  },
+  {
+    "step": 158,
+  },
+  {
+    "step": 159,
+  },
+  {
+    "players.1.Shield": 10,
+    "step": 160,
+  },
+  {
+    "step": 161,
+  },
+  {
+    "step": 162,
+  },
+  {
+    "step": 163,
+  },
+  {
+    "step": 164,
+  },
+  {
+    "step": 165,
+  },
+  {
+    "step": 166,
+  },
+  {
+    "step": 167,
+  },
+  {
+    "step": 168,
+  },
+  {
+    "step": 169,
+  },
+  {
+    "step": 170,
+  },
+  {
+    "step": 171,
+  },
+  {
+    "step": 172,
+  },
+  {
+    "step": 173,
+  },
+  {
+    "step": 174,
+  },
+  {
+    "step": 175,
+  },
+  {
+    "step": 176,
+  },
+  {
+    "step": 177,
+  },
+  {
+    "step": 178,
+  },
+  {
+    "step": 179,
+  },
+  {
+    "players.0.Shield": 380,
+    "step": 180,
+  },
+  {
+    "step": 181,
+  },
+  {
+    "step": 182,
+  },
+  {
+    "step": 183,
+  },
+  {
+    "step": 184,
+  },
+  {
+    "step": 185,
+  },
+  {
+    "step": 186,
+  },
+  {
+    "step": 187,
+  },
+  {
+    "step": 188,
+  },
+  {
+    "step": 189,
+  },
+  {
+    "isPlaying": false,
+    "players.0.Shield": 580,
+    "players.0.board.0.SellPrice": 125,
+    "players.0.board.1.SellPrice": 29,
+    "players.0.board.2.SellPrice": 53,
+    "players.0.board.3.SellPrice": 37,
+    "players.1.Health": -92,
+    "players.1.Shield": 0,
+    "step": 190,
     "winner": "Enemy",
   },
 ]
