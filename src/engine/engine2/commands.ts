@@ -73,9 +73,6 @@ class CommandList implements Command {
 
   execute(gameState: GameState): void {
     this.commands.forEach((command) => {
-      // Log the command before execution
-      //gameState.eventBus.addCommandToLog(command);
-
       // Execute the command
       command.execute(gameState);
     });
@@ -1436,15 +1433,6 @@ export class FireCardCommand implements Command {
 
     // Emit card:itemused event
     gameState.eventBus.emit(new CardItemUsedEvent(this.locationID));
-
-    // Reset the card's tick if it has a cooldown
-    const { playerIdx: playerID, cardIdx: cardID } = this.locationID;
-    const card = gameState.players[playerID].board[cardID];
-    if ("CooldownMax" in card) {
-      new ModifyCardAttributeCommand(this.locationID, "tick", 0).execute(
-        gameState,
-      );
-    }
   }
 
   toLogString(): string {
@@ -1650,7 +1638,6 @@ export class ChargeCardCommand implements Command {
   ) {}
 
   execute(gameState: GameState): void {
-    const { playerIdx, cardIdx } = this.locationID;
     const cooldownMax = getCardAttribute(
       gameState,
       this.locationID,
@@ -1662,15 +1649,12 @@ export class ChargeCardCommand implements Command {
       return;
     }
 
-    const currentTick = gameState.players[playerIdx].board[cardIdx].tick || 0;
-    const newValue = Math.min(cooldownMax, currentTick + this.chargeAmount);
-
-    if (currentTick !== newValue) {
+    if (this.chargeAmount !== 0) {
       new ModifyCardAttributeCommand(
         this.locationID,
         "tick",
-        newValue,
-        "set",
+        this.chargeAmount,
+        "add",
       ).execute(gameState);
     }
   }

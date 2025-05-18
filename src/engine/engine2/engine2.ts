@@ -246,10 +246,8 @@ export class Engine2 {
 
   /**
    * Get the current game state.
-   *
-   * Will return a copy of the current game state.
    */
   getGameState(): GameState {
-    return this.createGameStateCopy();
+    return this.gameState;
   }
 }

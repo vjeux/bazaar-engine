@@ -333,7 +333,6 @@ export const useSimulatorStore = create<State & Actions>()(
           set((state) => {
             state.isCalculatingWinrate = false;
             state.winrate = null;
-            state.targetSimulations = 0;
             state.completedSimulations = 0;
             // Reset the calculation ID when canceling calculations
             state.calculationId = "";

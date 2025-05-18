@@ -3,6 +3,7 @@ import {
   CardLocationID,
   LogEntry,
   cardLocationIdIsEqual,
+  BoardCard,
 } from "./engine2";
 import * as Commands from "./commands";
 import {
@@ -864,7 +865,7 @@ function processCard(
   gameState: GameState,
   playerID: number,
   cardID: number,
-  card: GameState["players"][0]["board"][0],
+  card: BoardCard,
   processedCardUUIDs: Set<string>,
 ): boolean {
   // Skip if already processed, disabled, or a skill card
@@ -950,7 +951,13 @@ function processCard(
     );
   }
 
-  const newTick = Math.min(card.tick + tickRate, cooldownMax);
+  let newTick = card.tick + tickRate;
+
+  // Stop gaining tick if card has no ammo
+  const ammo = getCardAttribute(gameState, locationID, AttributeType.Ammo);
+  if (ammo !== undefined && ammo <= 0) {
+    newTick = Math.min(newTick, cooldownMax);
+  }
 
   new Commands.ModifyCardAttributeCommand(
     locationID,
@@ -994,6 +1001,17 @@ function processCard(
 
       // Immediately fire the card
       new Commands.FireCardCommand(locationID).execute(gameState);
+
+      // Reset the card's tick if it has a cooldown
+      // To allow for overcharging an item, we remove the cooldown max instead of setting the tick to 0
+      if ("CooldownMax" in card) {
+        new Commands.ModifyCardAttributeCommand(
+          locationID,
+          "tick",
+          cooldownMax,
+          "subtract",
+        ).execute(gameState);
+      }
     }
   }
 

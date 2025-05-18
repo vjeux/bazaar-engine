@@ -1,4 +1,4 @@
-export const CARD_INTERNAL_COOLDOWN_FIRES_PER_SECOND = 5;
+export const CARD_INTERNAL_USES_PER_SECOND = 5;
 /**
  * Tick rate in milliseconds
  */
