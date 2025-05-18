@@ -4281,42 +4281,42 @@
               },
               {
                 "card": {
-                  "id": "8391a75d-56e7-4206-a16e-62dbd986925f",
-                  "name": "Shoe Blade",
+                  "id": "b02a2b57-da9c-4ad6-88ac-219b3bfec103",
+                  "name": "Handaxe",
                   "startingTier": "Bronze",
                   "tiers": {
                     "Bronze": {
                       "tooltips": [
-                        "Cooldown 7 seconds",
-                        "Crit Chance 15%",
-                        "Deal 20 damage."
+                        "Cooldown 8 seconds",
+                        "Deal 10 damage.",
+                        "Your weapons have +6 damage."
                       ]
                     },
                     "Silver": {
                       "tooltips": [
-                        "Cooldown 7 seconds",
-                        "Crit Chance 30%",
-                        "Deal 40 damage."
+                        "Cooldown 8 seconds",
+                        "Deal 15 damage.",
+                        "Your weapons have +9 damage."
                       ]
                     },
                     "Gold": {
                       "tooltips": [
-                        "Cooldown 7 seconds",
-                        "Crit Chance 50%",
-                        "Deal 60 damage."
+                        "Cooldown 8 seconds",
+                        "Deal 20 damage.",
+                        "Your weapons have +12 damage."
                       ]
                     },
                     "Diamond": {
                       "tooltips": [
-                        "Cooldown 7 seconds",
-                        "Crit Chance 100%",
-                        "Deal 80 damage."
+                        "Cooldown 8 seconds",
+                        "Deal 25 damage.",
+                        "Your weapons have +15 damage."
                       ]
                     },
                     "Legendary": { "tooltips": [] }
                   },
-                  "tags": ["Weapon", "Apparel"],
-                  "hiddenTags": ["Damage"],
+                  "tags": ["Weapon"],
+                  "hiddenTags": ["Damage", "DamageReference"],
                   "customTags": [],
                   "size": "Small",
                   "heroes": ["Vanessa"],
@@ -4335,25 +4335,34 @@
                     },
                     {
                       "type": "Shielded",
-                      "tooltips": ["Shield equal to this item's Damage."]
+                      "tooltips": [
+                        "Shield equal to this item's damage.",
+                        "Your other Shield items have +10 Shield."
+                      ]
                     },
                     {
                       "type": "Restorative",
-                      "tooltips": ["Heal equal to this item's Damage."]
+                      "tooltips": [
+                        "Heal equal to this item's damage.",
+                        "Your other Heal items have +10 Heal."
+                      ]
                     },
                     {
                       "type": "Toxic",
-                      "tooltips": ["Poison equal to 10% of this item's damage."]
+                      "tooltips": [
+                        "Poison equal to 10% of this item's damage.",
+                        "Your other Poison items have +1 Poison."
+                      ]
                     },
                     {
                       "type": "Fiery",
-                      "tooltips": ["Burn equal to 10% of this item's damage."]
+                      "tooltips": [
+                        "Burn to 10% of this item's damage.",
+                        "Your other Burn items have +2 Burn."
+                      ]
                     },
                     { "type": "Shiny", "tooltips": ["This has +1 Multicast."] },
-                    {
-                      "type": "Deadly",
-                      "tooltips": ["This has double Crit damage."]
-                    },
+                    { "type": "Deadly", "tooltips": ["+50% Crit Chance"] },
                     {
                       "type": "Radiant",
                       "tooltips": [
@@ -4366,9 +4375,9 @@
                     }
                   ],
                   "unifiedTooltips": [
-                    "Cooldown 7 seconds",
-                    "Crit Chance (15%/30%/50%/100%)",
-                    "Deal (20/40/60/80) damage."
+                    "Cooldown 8 seconds",
+                    "Deal (10/15/20/25) damage.",
+                    "Your weapons have (+6/+9/+12/+15) damage."
                   ],
                   "packId": "Vanessa_Core",
                   "combatEncounters": []
@@ -4473,7 +4482,7 @@
                   "packId": "Pygmalien_Core",
                   "combatEncounters": []
                 },
-                "tierType": "Bronze"
+                "tierType": "Silver"
               },
               {
                 "card": {
@@ -4610,7 +4619,7 @@
                   "packId": "Pygmalien_Core",
                   "combatEncounters": []
                 },
-                "tierType": "Silver"
+                "tierType": "Bronze"
               }
             ],
             "day": 2
@@ -51973,43 +51982,6 @@
                   "combatEncounters": []
                 },
                 "tierType": "Diamond"
-              },
-              {
-                "card": {
-                  "id": "62154f7f-ea50-4703-aa2e-d2d4ae55e9b0",
-                  "name": "Big Numbers",
-                  "startingTier": "Gold",
-                  "tiers": {
-                    "Bronze": { "tooltips": [] },
-                    "Silver": { "tooltips": [] },
-                    "Gold": {
-                      "tooltips": ["Your large items have +25% crit chance"]
-                    },
-                    "Diamond": {
-                      "tooltips": ["Your large items have +50% crit chance"]
-                    },
-                    "Legendary": { "tooltips": [] }
-                  },
-                  "tags": [],
-                  "hiddenTags": ["Crit"],
-                  "customTags": [],
-                  "size": "Medium",
-                  "heroes": [
-                    "Pygmalien",
-                    "Vanessa",
-                    "Dooley",
-                    "Jules",
-                    "Stelle",
-                    "Mak"
-                  ],
-                  "artKey": "Icon_Skill_BigNumbers.png",
-                  "unifiedTooltips": [
-                    "Your large items have (+25%/+50%) crit chance"
-                  ],
-                  "packId": "Pygmalien_Core",
-                  "combatEncounters": []
-                },
-                "tierType": "Diamond"
               }
             ],
             "day": 10
@@ -54482,5 +54454,5 @@
       ]
     }
   ],
-  "version": "9c759494"
+  "version": "9e2774d9"
 }

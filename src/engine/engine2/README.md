@@ -19,7 +19,7 @@ The EventBus acts as a central messaging system that enables loose coupling betw
 - Publishing events with data (`emit` method)
 - Subscribing to events with handler functions (`on` method with priority)
 - Unsubscribing from events (`off` method)
-- Testing functions to conditionally handle events 
+- Testing functions to conditionally handle events
 - Priority-based event handling (Immediate, Highest, High, Medium, Low, Lowest)
 
 ### CardLocationID (`engine2.ts`)
@@ -45,6 +45,7 @@ Commands are self-contained operations that perform specific state changes. Each
 - May trigger additional events upon execution
 
 Key examples:
+
 - `ModifyCardAttributeCommand`: Changes a card attribute value
 - `ModifyPlayerAttributeCommand`: Changes a player attribute value
 - `DamagePlayerCommand`: Applies damage to a player and handles shields
@@ -83,6 +84,7 @@ The prerequisites system determines whether abilities should trigger:
 1. The game starts with the engine's `run` method or individual `processTick` calls.
 2. On first tick, a `game:fightStarted` event is emitted.
 3. Each tick emits a `game:tick` event, which triggers the following cascade:
+
    - Process poison damage and health regeneration (every 1000ms)
    - Process burn damage (every 500ms)
    - Process card cooldowns and emit the fire card events
@@ -90,6 +92,7 @@ The prerequisites system determines whether abilities should trigger:
    - Check for player deaths
 
 4. When a card is ready to fire:
+
    - A `card:fired` event is emitted
    - Registered event handlers for that card respond by executing appropriate commands. Other card's abilities can also responds to events like `card:itemused`
    - Commands may emit additional events (e.g., `player:damaged`, `player:attributeChanged`)
@@ -108,11 +111,13 @@ Cards register their abilities to the EventBus when the game starts:
    - Priority level
 
 When a card's cooldown reaches its maximum:
+
 1. The card fires and may perform multicasts if configured
 2. Ammo is decremented if applicable
 3. The card's internal cooldown is reset
 
 ## Internal Cooldown System
+
 > ⚠️ **Warning**: The internal cooldown system is not fully implemented yet.
 
 Cards have internal cooldown mechanics to limit firing frequency:
@@ -144,4 +149,4 @@ engine.processTick();
 
 // Get the current game state (returns a deep copy)
 const currentState = engine.getGameState();
-``` 
+```

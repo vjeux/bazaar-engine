@@ -17424,6 +17424,10 @@
         {
           "cardId": "55046a2f-f81e-4720-aefa-e74b14a06dad",
           "cardName": "Frost Street Challenger"
+        },
+        {
+          "cardId": "b93f5b44-ba9f-4196-a94e-c5de17ab5c5d",
+          "cardName": "Boarrior"
         }
       ]
     },
@@ -35320,10 +35324,6 @@
           "cardName": "Outlands Dervish"
         },
         {
-          "cardId": "b93f5b44-ba9f-4196-a94e-c5de17ab5c5d",
-          "cardName": "Boarrior"
-        },
-        {
           "cardId": "fc59e9b3-88be-450c-b2dc-65d58a33d1d0",
           "cardName": "Lord of the Wastes"
         }
@@ -44640,5 +44640,5 @@
       "combatEncounters": []
     }
   ],
-  "version": "9d7cebc9"
+  "version": "f79e7e30"
 }
