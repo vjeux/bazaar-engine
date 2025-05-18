@@ -8,7 +8,6 @@ import { CardLocationID } from "./engine2";
 
 export abstract class GameEvent {
   abstract readonly type: string;
-  readonly tick?: number;
   abstract getDescription(): string;
 }
 /**
