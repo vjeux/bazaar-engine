@@ -638,10 +638,8 @@ function processCard(
   if (card.internalCommandQueueCooldown > 0) {
     card.internalCommandQueueCooldown -= 100;
   }
-  console.log("internal cooldown", card.internalCommandQueueCooldown);
   if (card.internalCommandQueueCooldown <= 0) {
     const command = card.internalCommandQueue.shift();
-    console.log("shifted command", command);
     if (command) {
       command.execute(gameState);
       card.internalCommandQueueCooldown = CARD_INTERNAL_TICK_RATE;

@@ -13,9 +13,13 @@ function getOptimizedDiff(
   ignoreKeys = new Set([
     "card",
     "tick",
+    "step",
     "attributeSnapshots",
     "isTickSnapshotted",
     "attributeDraft",
+    "internalCommandQueueCooldown",
+    "internalCommandQueue",
+    "registeredTriggers",
   ]),
   path: string[] = [],
 ): Record<string, unknown> {
