@@ -1,4 +1,5 @@
-import { GameState, getCardAttribute, getTooltips } from "@/engine/Engine";
+import { GameState, getCardAttribute } from "@/engine/Engine";
+import { getTooltips } from "@/engine/getTooltips";
 import type { GameState as Engine2GameState } from "@/engine/engine2/engine2";
 import { getInitialGameState } from "@/engine/GameState";
 import { CARDS_VERSION } from "@/lib/constants";

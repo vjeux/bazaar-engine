@@ -321,6 +321,7 @@ export function getInitialGameState(
     isPlaying: true,
     eventBus: new EventBus({} as GameState), // will be overridden by the engine
     sandstormStartTick: defaultSandstormInitialTick,
+    isTickSnapshotted: false,
     players: config.map((player) => {
       if (player.type === "monster") {
         if (!player.name) throw new Error("Monster name is required");
