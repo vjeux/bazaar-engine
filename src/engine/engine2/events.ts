@@ -329,8 +329,7 @@ export class CardPerformedFreezeEvent extends GameEvent {
   constructor(
     public readonly sourceCardID: CardLocationID,
     public readonly frozenCardID: CardLocationID,
-    public readonly previousAmount: number,
-    public readonly newAmount: number,
+    public readonly amount: number,
   ) {
     super();
   }
@@ -375,8 +374,7 @@ export class CardPerformedSlowEvent extends GameEvent {
   constructor(
     public readonly sourceCardID: CardLocationID,
     public readonly slowedCardID: CardLocationID,
-    public readonly previousAmount: number,
-    public readonly newAmount: number,
+    public readonly amount: number,
   ) {
     super();
   }

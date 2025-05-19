@@ -28,6 +28,8 @@ import {
   CardPerformedHasteEvent,
   CardPerformedSlowEvent,
   CardPerformedChargeEvent,
+  CardPerformedRegenEvent,
+  CardPerformedFreezeEvent,
 } from "./events";
 import { GameTickEvent } from "./events";
 import { GameEvent } from "./events";
@@ -377,12 +379,7 @@ export class CommandFactory {
         );
         for (const targetPlayer of targetPlayers) {
           commands.addCommand(
-            new ModifyPlayerAttributeCommand(
-              targetPlayer,
-              "HealthRegen",
-              "add",
-              regenAmount,
-            ),
+            new ApplyRegenCommand(targetPlayer, regenAmount, sourceCardID),
           );
         }
 
@@ -564,24 +561,14 @@ export class CommandFactory {
           // Apply to all target cards
           for (const targetCard of targetCards) {
             commands.addCommand(
-              new ModifyCardAttributeCommand(
-                targetCard,
-                AttributeType.Slow,
-                slowAmount,
-                "add",
-              ),
+              new ApplySlowCommand(sourceCardID, targetCard, slowAmount),
             );
           }
         } else {
           // Apply to the first targetCount cards
           for (const targetCard of targetCards.slice(0, targetCount)) {
             commands.addCommand(
-              new ModifyCardAttributeCommand(
-                targetCard,
-                AttributeType.Slow,
-                slowAmount,
-                "add",
-              ),
+              new ApplySlowCommand(sourceCardID, targetCard, slowAmount),
             );
           }
         }
@@ -640,12 +627,7 @@ export class CommandFactory {
 
         for (const targetCard of targetCards.slice(0, targetCount)) {
           commands.addCommand(
-            new ModifyCardAttributeCommand(
-              targetCard,
-              AttributeType.Freeze,
-              freezeAmount,
-              "add",
-            ),
+            new ApplyFreezeCommand(sourceCardID, targetCard, freezeAmount),
           );
         }
         return commands;
@@ -683,12 +665,7 @@ export class CommandFactory {
           // Apply to all target cards
           for (const targetCard of targetCards) {
             commands.addCommand(
-              new ModifyCardAttributeCommand(
-                targetCard,
-                AttributeType.Haste,
-                hasteAmount,
-                "add",
-              ),
+              new ApplyHasteCommand(sourceCardID, targetCard, hasteAmount),
             );
           }
         } else {
@@ -1560,9 +1537,36 @@ export class HealPlayerCommand implements Command {
   }
 }
 
-/**
- * Command to trigger a card's ability
- */
+export class ApplyRegenCommand implements Command {
+  constructor(
+    private targetPlayerID: number,
+    private amount: number,
+    private sourceCardID: CardLocationID,
+  ) {}
+
+  execute(gameState: GameState): void {
+    new ModifyPlayerAttributeCommand(
+      this.targetPlayerID,
+      "HealthRegen",
+      "add",
+      this.amount,
+    ).execute(gameState);
+
+    // Emit event
+    gameState.eventBus.emit(
+      new CardPerformedRegenEvent(
+        this.sourceCardID,
+        this.targetPlayerID,
+        this.amount,
+      ),
+    );
+  }
+
+  toLogString(): string {
+    return `Applied ${this.amount} regen to ${playerName(this.targetPlayerID)} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+  }
+}
+
 export class FireCardCommand implements Command {
   constructor(private locationID: CardLocationID) {}
 
@@ -1696,8 +1700,8 @@ export class ApplyBurnCommand implements Command {
  */
 export class ApplyHasteCommand implements Command {
   constructor(
-    private targetCardID: CardLocationID,
     private sourceCardID: CardLocationID,
+    private targetCardID: CardLocationID,
     private amount: number,
   ) {}
 
@@ -1720,6 +1724,64 @@ export class ApplyHasteCommand implements Command {
 
   toLogString(): string {
     return `Applied ${this.amount} haste to ${playerName(this.targetCardID.playerIdx)}'s card ${this.targetCardID.cardIdx} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+  }
+}
+
+export class ApplySlowCommand implements Command {
+  constructor(
+    private sourceCardID: CardLocationID,
+    private targetCardID: CardLocationID,
+    private amount: number,
+  ) {}
+
+  execute(gameState: GameState): void {
+    new ModifyCardAttributeCommand(
+      this.targetCardID,
+      AttributeType.Slow,
+      this.amount,
+      "add",
+    ).execute(gameState);
+
+    gameState.eventBus.emit(
+      new CardPerformedSlowEvent(
+        this.sourceCardID,
+        this.targetCardID,
+        this.amount,
+      ),
+    );
+  }
+
+  toLogString(): string {
+    return `Applied ${this.amount} slow to ${playerName(this.targetCardID.playerIdx)}'s card ${this.targetCardID.cardIdx} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+  }
+}
+
+export class ApplyFreezeCommand implements Command {
+  constructor(
+    private sourceCardID: CardLocationID,
+    private targetCardID: CardLocationID,
+    private amount: number,
+  ) {}
+
+  execute(gameState: GameState): void {
+    new ModifyCardAttributeCommand(
+      this.targetCardID,
+      AttributeType.Freeze,
+      this.amount,
+      "add",
+    ).execute(gameState);
+
+    gameState.eventBus.emit(
+      new CardPerformedFreezeEvent(
+        this.sourceCardID,
+        this.targetCardID,
+        this.amount,
+      ),
+    );
+  }
+
+  toLogString(): string {
+    return `Applied ${this.amount} freeze to ${playerName(this.targetCardID.playerIdx)}'s card ${this.targetCardID.cardIdx} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
