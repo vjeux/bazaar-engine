@@ -11,10 +11,16 @@ import {
   EventBus,
   EventHandler,
   GameEventConstructor,
+  processBurn,
+  processPoisonAndRegen,
   setupEventHandlers,
 } from "./eventBus";
-import { GameFightStartedEvent } from "./events";
-import { Command, ProcessTickCommand } from "./commands";
+import { GameFightStartedEvent, GameTickEvent } from "./events";
+import {
+  ApplyAttributeDraftsCommand,
+  Command,
+  SnapshotAttributesCommand,
+} from "./commands";
 import { RandomGenerator } from "pure-rand/types/RandomGenerator";
 import { Hero, Tier } from "@/types/shared";
 
@@ -171,7 +177,6 @@ export interface GameState {
  */
 export class Engine2 {
   private gameState: GameState;
-  private commandQueue: Command[] = [];
 
   constructor(initialGameState: GameState) {
     // Create EventBus with reference to gameState
@@ -193,55 +198,38 @@ export class Engine2 {
   }
 
   /**
-   * Queue a command to be executed
-   */
-  queueCommand(command: Command): void {
-    this.commandQueue.push(command);
-  }
-
-  /**
-   * Execute all queued commands
-   */
-  executeCommands(): void {
-    while (this.commandQueue.length > 0) {
-      const command = this.commandQueue.shift();
-      if (command) {
-        // Log the command to the unified log
-        this.gameState.eventBus?.addCommandToLog(command);
-
-        // Execute the command
-        command.execute(this.gameState);
-      }
-    }
-  }
-
-  /**
    * Process a single game tick
    */
   processTick() {
-    // Queue tick processing command
-    this.queueCommand(new ProcessTickCommand());
-
-    // Execute all commands
-    this.executeCommands();
+    this.gameState.eventBus.emit(new GameTickEvent());
   }
 
   /**
-   * Run the game for a specified number of ticks
+   * Run the game for a specified number of steps
    */
-  run(maxTicks: number = Infinity): GameState[] {
-    const firstStep = this.createGameStateCopy();
-    const steps: GameState[] = [firstStep];
-
-    // Emit fight started event on first tick
+  run(maxSteps: number = 10000): GameState[] {
+    // Hacky fix for start of fight viper 0 tick poison damage
     if (this.gameState.tick === 0) {
-      this.gameState.eventBus?.emit(new GameFightStartedEvent());
+      //snapshot attributes
+      new SnapshotAttributesCommand().execute(this.gameState);
+      this.gameState.eventBus.emit(new GameFightStartedEvent());
+      // apply attribute drafts
+      new ApplyAttributeDraftsCommand().execute(this.gameState);
+
+      // process poison regen burn
+      processPoisonAndRegen(this.gameState);
+      processBurn(this.gameState);
+      // apply attribute drafts
+      new ApplyAttributeDraftsCommand().execute(this.gameState);
     }
 
+    const steps: GameState[] = [this.createGameStateCopy()];
+
     try {
-      for (let i = 0; i < maxTicks; i++) {
-        this.gameState.step++;
+      for (let i = 0; i < maxSteps; i++) {
         // Process a tick
+        this.gameState.step++;
+        this.gameState.tick += 100;
         this.processTick();
 
         // Create a step copy with the current step index
@@ -255,7 +243,7 @@ export class Engine2 {
         }
       }
     } catch (error) {
-      console.error("Game state on error:", this.gameState);
+      console.log("Game state on error:", this.gameState);
       console.error("Error:", error);
       throw error;
     }

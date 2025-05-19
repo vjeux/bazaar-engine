@@ -10,7 +10,13 @@ type DiffWithStep = DiffObject & { step: number };
 function getOptimizedDiff(
   prev: unknown,
   curr: unknown,
-  ignoreKeys = new Set(["card", "tick"]),
+  ignoreKeys = new Set([
+    "card",
+    "tick",
+    "attributeSnapshots",
+    "isTickSnapshotted",
+    "attributeDraft",
+  ]),
   path: string[] = [],
 ): Record<string, unknown> {
   // If both values are strictly equal, no diff
@@ -52,6 +58,10 @@ const { Cards, Encounters } = await genCardsAndEncounters();
 describe("Encounter snapshots should match", () => {
   getFlattenedEncounters(Encounters).forEach((encounter) => {
     test(`Matches snapshot for "Day ${encounter.day} - ${encounter.name}"`, () => {
+      // force throw on Mr.Moo since it loops forever
+      if (encounter.name === "Mr. Moo") {
+        throw new Error("Mr.Moo force throw error as it seems to loop forever");
+      }
       const gameState = getInitialGameState2(Cards, Encounters, [
         { type: "monster", name: encounter.name, day: Number(encounter.day) },
         {
@@ -83,15 +93,20 @@ describe("Encounter snapshots should match", () => {
       }
 
       expect(diffs).toMatchSnapshot();
-    });
+    }, 5000); // 5 second timeout
   });
 });
 
 describe("Encounters should not throw", () => {
   getFlattenedEncounters(Encounters).forEach((encounter) => {
     it(`Encounter "Day ${encounter.day} - ${encounter.name}" should not throw`, () => {
+      // force throw on Mr.Moo since it loops forever
+      if (encounter.name === "Mr. Moo") {
+        throw new Error("Mr.Moo force throw error as it seems to loop forever");
+      }
       const gameState = getInitialGameState2(Cards, Encounters, [
         { type: "monster", name: encounter.name, day: Number(encounter.day) },
+
         {
           type: "player",
           health: 2000,
@@ -105,6 +120,6 @@ describe("Encounters should not throw", () => {
 
       // This should not throw
       run(gameState);
-    });
+    }, 5000); // 5 second timeout
   });
 });

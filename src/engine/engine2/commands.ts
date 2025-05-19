@@ -24,6 +24,10 @@ import {
   CardPerformedPoisonEvent,
   CardPerformedBurnEvent,
   CardCrittedEvent,
+  GameFightStartedEvent,
+  CardPerformedHasteEvent,
+  CardPerformedSlowEvent,
+  CardPerformedChargeEvent,
 } from "./events";
 import { GameTickEvent } from "./events";
 import { GameEvent } from "./events";
@@ -506,7 +510,7 @@ export class CommandFactory {
             new ModifyPlayerAttributeCommand(
               targetPlayer,
               "Health",
-              "add", // TODO: figure out if this should be set or add
+              "set", // TODO: figure out if this should be set or add
               healAmount,
             ),
           );
@@ -691,12 +695,7 @@ export class CommandFactory {
           // Apply to the first targetCount cards
           for (const targetCard of targetCards.slice(0, targetCount)) {
             commands.addCommand(
-              new ModifyCardAttributeCommand(
-                targetCard,
-                AttributeType.Haste,
-                hasteAmount,
-                "add",
-              ),
+              new ApplyHasteCommand(sourceCardID, targetCard, hasteAmount),
             );
           }
         }
@@ -732,7 +731,9 @@ export class CommandFactory {
         }
 
         for (const targetCard of targetCards.slice(0, targetCount)) {
-          commands.addCommand(new ReloadCardCommand(targetCard, reloadAmount));
+          commands.addCommand(
+            new ReloadCardCommand(sourceCardID, targetCard, reloadAmount),
+          );
         }
         return commands;
       }
@@ -765,7 +766,9 @@ export class CommandFactory {
         }
 
         for (const targetCard of targetCards.slice(0, targetCount)) {
-          commands.addCommand(new ChargeCardCommand(targetCard, chargeAmount));
+          commands.addCommand(
+            new ChargeCardCommand(sourceCardID, targetCard, chargeAmount),
+          );
         }
         return commands;
       }
@@ -1176,14 +1179,14 @@ export class RemoveCardCommand implements Command {
  */
 export class ModifyCardAttributeCommand implements Command {
   constructor(
-    private locationID: CardLocationID,
+    private targetCardID: CardLocationID,
     private attribute: AttributeType | "tick",
     private value: number,
     private operation: "set" | "add" | "subtract" | "multiply" = "set",
   ) {}
 
   execute(gameState: GameState): void {
-    const { playerIdx: playerID, cardIdx: cardID } = this.locationID;
+    const { playerIdx: playerID, cardIdx: cardID } = this.targetCardID;
     const card = gameState.players[playerID].board[cardID];
 
     // Initialize attribute draft if needed
@@ -1255,7 +1258,7 @@ export class ModifyCardAttributeCommand implements Command {
     // Emit event for attribute change
     gameState.eventBus.emit(
       new CardAttributeChangedEvent(
-        this.locationID,
+        this.targetCardID,
         this.attribute,
         currentValue || 0,
         newValue,
@@ -1273,7 +1276,7 @@ export class ModifyCardAttributeCommand implements Command {
             ? "decreased"
             : "multiplied";
 
-    return `${operation.charAt(0).toUpperCase() + operation.slice(1)} ${playerName(this.locationID.playerIdx)}'s card ${this.locationID.cardIdx} ${this.attribute} to ${this.value}`;
+    return `${operation.charAt(0).toUpperCase() + operation.slice(1)} ${playerName(this.targetCardID.playerIdx)}'s card ${this.targetCardID.cardIdx} ${this.attribute} to ${this.value}`;
   }
 }
 
@@ -1295,9 +1298,8 @@ export class ModifyPlayerAttributeCommand implements Command {
   execute(gameState: GameState): void {
     const player = gameState.players[this.playerIdx];
 
-    // Initialize attribute draft if needed
     if (!player.attributeDraft) {
-      player.attributeDraft = {};
+      throw new Error("Player attribute draft not initialized");
     }
 
     // Get the current effective value (from draft if exists, otherwise from snapshot or current)
@@ -1397,8 +1399,11 @@ export class DamagePlayerCommand implements Command {
   ) {}
 
   execute(gameState: GameState): void {
-    const targetPlayer = gameState.players[this.targetPlayerIdx];
-    const targetPlayerShield = targetPlayer.Shield;
+    const targetPlayerShield = getPlayerAttribute(
+      gameState,
+      this.targetPlayerIdx,
+      "Shield",
+    );
 
     if (targetPlayerShield >= this.amount) {
       new ModifyPlayerAttributeCommand(
@@ -1596,8 +1601,8 @@ export class ApplyShieldCommand implements Command {
     gameState.eventBus.emit(
       new CardPerformedShieldEvent(
         this.targetPlayerID,
-        this.amount,
         this.sourceCardID,
+        this.amount,
       ),
     );
   }
@@ -1634,8 +1639,8 @@ export class ApplyPoisonCommand implements Command {
     gameState.eventBus.emit(
       new CardPerformedPoisonEvent(
         this.targetPlayerID,
-        this.amount,
         this.sourceCardID,
+        this.amount,
       ),
     );
   }
@@ -1671,8 +1676,8 @@ export class ApplyBurnCommand implements Command {
     gameState.eventBus.emit(
       new CardPerformedBurnEvent(
         this.targetPlayerID,
-        this.amount,
         this.sourceCardID,
+        this.amount,
       ),
     );
   }
@@ -1683,6 +1688,38 @@ export class ApplyBurnCommand implements Command {
     }
 
     return `Applied ${this.amount} burn to ${playerName(this.targetPlayerID)} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+  }
+}
+
+/**
+ * Command to apply haste to a card
+ */
+export class ApplyHasteCommand implements Command {
+  constructor(
+    private targetCardID: CardLocationID,
+    private sourceCardID: CardLocationID,
+    private amount: number,
+  ) {}
+
+  execute(gameState: GameState): void {
+    new ModifyCardAttributeCommand(
+      this.targetCardID,
+      AttributeType.Haste,
+      this.amount,
+      "add",
+    ).execute(gameState);
+
+    gameState.eventBus.emit(
+      new CardPerformedHasteEvent(
+        this.targetCardID,
+        this.sourceCardID,
+        this.amount,
+      ),
+    );
+  }
+
+  toLogString(): string {
+    return `Applied ${this.amount} haste to ${playerName(this.targetCardID.playerIdx)}'s card ${this.targetCardID.cardIdx} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
@@ -1716,8 +1753,17 @@ export class SnapshotAttributesCommand implements Command {
         Income: player.Income,
       };
 
-      // Reset player attribute drafts
-      player.attributeDraft = {};
+      // Set player attribute drafts to snapshot values
+      player.attributeDraft = {
+        HealthMax: player.HealthMax,
+        Health: player.Health,
+        HealthRegen: player.HealthRegen,
+        Shield: player.Shield,
+        Burn: player.Burn,
+        Poison: player.Poison,
+        Gold: player.Gold,
+        Income: player.Income,
+      };
 
       // Snapshot card attributes
       player.board.forEach((card) => {
@@ -1738,8 +1784,10 @@ export class SnapshotAttributesCommand implements Command {
         // Store in the snapshots map
         gameState.attributeSnapshots!.cards.set(card.uuid, cardSnapshot);
 
-        // Reset card attribute draft
-        card.attributeDraft = {};
+        // Set card attribute draft to snapshot values
+        card.attributeDraft = {
+          ...cardSnapshot,
+        };
       });
     });
 
@@ -1799,39 +1847,6 @@ export class ApplyAttributeDraftsCommand implements Command {
 }
 
 /**
- * Command to process a game tick
- *
- * The attribute snapshot system works as follows:
- *
- * 1. At the beginning of each tick, ApplyAttributeDraftsCommand applies any drafted changes from the previous tick
- * 2. SnapshotAttributesCommand takes a snapshot of the current state of all attributes
- * 3. During the tick, all attribute changes are made to draft values, not the actual attributes
- * 4. Commands and events use the draft values (via getCardAttribute/getPlayerAttribute) for calculations
- * 5. At the beginning of the next tick, the process repeats, applying all drafted changes
- *
- * This ensures all attribute changes within a tick are atomic and consistent.
- */
-export class ProcessTickCommand implements Command {
-  execute(gameState: GameState): void {
-    // Apply drafted attribute changes from the previous tick
-    new ApplyAttributeDraftsCommand().execute(gameState);
-
-    // Take a snapshot of the current attributes
-    new SnapshotAttributesCommand().execute(gameState);
-
-    // Increment the tick
-    gameState.tick += 100;
-
-    // Emit the tick event
-    gameState.eventBus.emit(new GameTickEvent(gameState.tick));
-  }
-
-  toLogString(): string {
-    return "Process game tick";
-  }
-}
-
-/**
  * Command to disable a card
  */
 export class DisableCardCommand implements Command {
@@ -1852,19 +1867,20 @@ export class DisableCardCommand implements Command {
  */
 export class ReloadCardCommand implements Command {
   constructor(
-    private locationID: CardLocationID,
+    private sourceCardID: CardLocationID,
+    private targetCardID: CardLocationID,
     private reloadAmount: number,
   ) {}
 
   execute(gameState: GameState): void {
     const currentAmmo = getCardAttribute(
       gameState,
-      this.locationID,
+      this.targetCardID,
       AttributeType.Ammo,
     );
     const ammoMax = getCardAttribute(
       gameState,
-      this.locationID,
+      this.targetCardID,
       AttributeType.AmmoMax,
     );
 
@@ -1877,7 +1893,7 @@ export class ReloadCardCommand implements Command {
     if (currentAmmo < ammoMax) {
       // Use add operation instead of calculating and setting
       new ModifyCardAttributeCommand(
-        this.locationID,
+        this.targetCardID,
         AttributeType.Ammo,
         this.reloadAmount,
         "add",
@@ -1886,7 +1902,7 @@ export class ReloadCardCommand implements Command {
   }
 
   toLogString(): string {
-    return `Reloaded ${playerName(this.locationID.playerIdx)}'s card ${this.locationID.cardIdx} with ${this.reloadAmount} ammo`;
+    return `Reloaded ${playerName(this.targetCardID.playerIdx)}'s card ${this.targetCardID.cardIdx} with ${this.reloadAmount} ammo`;
   }
 }
 
@@ -1895,14 +1911,15 @@ export class ReloadCardCommand implements Command {
  */
 export class ChargeCardCommand implements Command {
   constructor(
-    private locationID: CardLocationID,
+    private sourceCardID: CardLocationID,
+    private targetCardID: CardLocationID,
     private chargeAmount: number,
   ) {}
 
   execute(gameState: GameState): void {
     const cooldownMax = getCardAttribute(
       gameState,
-      this.locationID,
+      this.targetCardID,
       AttributeType.CooldownMax,
     );
 
@@ -1913,16 +1930,24 @@ export class ChargeCardCommand implements Command {
 
     if (this.chargeAmount !== 0) {
       new ModifyCardAttributeCommand(
-        this.locationID,
+        this.targetCardID,
         "tick",
         this.chargeAmount,
         "add",
       ).execute(gameState);
     }
+
+    gameState.eventBus.emit(
+      new CardPerformedChargeEvent(
+        this.targetCardID,
+        this.sourceCardID,
+        this.chargeAmount,
+      ),
+    );
   }
 
   toLogString(): string {
-    return `Charged ${playerName(this.locationID.playerIdx)}'s card ${this.locationID.cardIdx} by ${this.chargeAmount}`;
+    return `Charged ${playerName(this.targetCardID.playerIdx)}'s card ${this.targetCardID.cardIdx} by ${this.chargeAmount}`;
   }
 }
 

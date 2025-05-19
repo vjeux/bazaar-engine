@@ -48,7 +48,7 @@ describe("Tooltips should not throw", () => {
         // This should not throw
         getTooltips(gameState, 0, 0);
       });
-    });
+    }, 5000);
   });
 });
 
@@ -83,6 +83,6 @@ describe("Tooltip snapshots", () => {
           }).toMatchSnapshot();
         }
       });
-    });
+    }, 5000);
   });
 });

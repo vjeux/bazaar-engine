@@ -16,12 +16,12 @@ export abstract class GameEvent {
 
 export class GameTickEvent extends GameEvent {
   readonly type = "game:tick";
-  constructor(public readonly tick: number) {
+  constructor() {
     super();
   }
 
   getDescription(): string {
-    return `Tick: ${this.tick}`;
+    return `Tick`;
   }
 }
 /**
@@ -260,8 +260,8 @@ export class CardPerformedShieldEvent extends GameEvent {
   readonly type = "player:shieldApplied";
   constructor(
     public readonly targetPlayerIdx: number,
-    public readonly amount: number,
     public readonly sourceCardID: CardLocationID,
+    public readonly amount: number,
   ) {
     super();
   }
@@ -278,8 +278,8 @@ export class CardPerformedPoisonEvent extends GameEvent {
   readonly type = "card:performedPoison";
   constructor(
     public readonly targetPlayerIdx: number,
-    public readonly amount: number,
     public readonly sourceCardID: CardLocationID,
+    public readonly amount: number,
   ) {
     super();
   }
@@ -296,8 +296,8 @@ export class CardPerformedBurnEvent extends GameEvent {
   readonly type = "card:performedBurn";
   constructor(
     public readonly targetPlayerIdx: number,
-    public readonly amount: number,
     public readonly sourceCardID: CardLocationID,
+    public readonly amount: number,
   ) {
     super();
   }
@@ -329,6 +329,8 @@ export class CardPerformedFreezeEvent extends GameEvent {
   constructor(
     public readonly sourceCardID: CardLocationID,
     public readonly frozenCardID: CardLocationID,
+    public readonly previousAmount: number,
+    public readonly newAmount: number,
   ) {
     super();
   }
@@ -343,6 +345,7 @@ export class CardPerformedHasteEvent extends GameEvent {
   constructor(
     public readonly sourceCardID: CardLocationID,
     public readonly hastenedCardID: CardLocationID,
+    public readonly amount: number,
   ) {
     super();
   }
@@ -352,11 +355,28 @@ export class CardPerformedHasteEvent extends GameEvent {
   }
 }
 
+export class CardPerformedChargeEvent extends GameEvent {
+  readonly type = "card:performedCharge";
+  constructor(
+    public readonly sourceCardID: CardLocationID,
+    public readonly chargedCardID: CardLocationID,
+    public readonly amount: number,
+  ) {
+    super();
+  }
+
+  getDescription(): string {
+    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} charged ${playerName(this.chargedCardID.playerIdx)}'s card ${this.chargedCardID.cardIdx}`;
+  }
+}
+
 export class CardPerformedSlowEvent extends GameEvent {
   readonly type = "card:performedSlow";
   constructor(
     public readonly sourceCardID: CardLocationID,
     public readonly slowedCardID: CardLocationID,
+    public readonly previousAmount: number,
+    public readonly newAmount: number,
   ) {
     super();
   }

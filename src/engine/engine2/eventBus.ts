@@ -38,7 +38,12 @@ import {
   PlayerOverhealedEvent,
 } from "./events";
 import { getCardAttribute, getPlayerAttribute } from "./getAttribute";
-import { ModifyCardAttributeCommand, FireCardCommand } from "./commands";
+import {
+  ModifyCardAttributeCommand,
+  FireCardCommand,
+  SnapshotAttributesCommand,
+  ApplyAttributeDraftsCommand,
+} from "./commands";
 
 // Priority order mapping for sorting
 const priorityOrder = {
@@ -348,6 +353,63 @@ export function triggerToEvent(trigger: {
   return eventClass;
 }
 
+function checkSubjectAndTargetIfDefined(
+  gs: GameState,
+  ability: Ability,
+  checkIfTriggeringID: CardLocationID,
+  eventSourceID: CardLocationID,
+  e: GameEvent,
+  targetType: "player" | "card" | null,
+) {
+  if (!ability.Trigger.Subject) {
+    console.warn(
+      `Ability ${ability.InternalName} has no subject, skipping trigger check`,
+    );
+    return false;
+  }
+  // Check subjects include source card
+  const subjects = getTargetCards(
+    gs,
+    ability.Trigger.Subject,
+    checkIfTriggeringID,
+    e,
+  );
+  // if no subjects is source card return false
+  if (
+    !subjects.some((subject) => cardLocationIdIsEqual(subject, eventSourceID))
+  ) {
+    return false;
+  }
+
+  if (ability.Trigger.Target && targetType) {
+    if (targetType === "player") {
+      // Check if target player is same as ability target
+      const targetPlayers = getTargetPlayers(
+        gs,
+        ability.Trigger.Target,
+        checkIfTriggeringID,
+        e,
+      );
+
+      return targetPlayers.some(
+        (playerIdx) => playerIdx === checkIfTriggeringID.playerIdx,
+      );
+    } else if (targetType === "card") {
+      const targetCards = getTargetCards(
+        gs,
+        ability.Trigger.Target,
+        checkIfTriggeringID,
+        e,
+      );
+
+      return targetCards.some((card) =>
+        cardLocationIdIsEqual(card, eventSourceID),
+      );
+    }
+  }
+  return true;
+}
+
 /**
  * Create a trigger check function for an ability
  */
@@ -373,44 +435,26 @@ export function createTriggerCheck(
       }
       case TriggerType.TTriggerOnItemUsed: {
         if (e instanceof CardItemUsedEvent) {
-          if (!ability.Trigger.Subject) {
-            console.warn(
-              `Ability ${ability.InternalName} has no subject, skipping trigger check`,
-            );
-            return false;
-          }
-          // Check subject
-          const subjects = getTargetCards(
+          return checkSubjectAndTargetIfDefined(
             gs,
-            ability.Trigger.Subject,
+            ability,
             locationID,
+            e.sourceCardID,
             e,
-          );
-          // Return true if any of the subjects are the source card
-          return subjects.some((subject) =>
-            cardLocationIdIsEqual(subject, e.sourceCardID),
+            null,
           );
         }
         return false;
       }
       case TriggerType.TTriggerOnCardCritted: {
         if (e instanceof CardCrittedEvent) {
-          if (!ability.Trigger.Subject) {
-            console.warn(
-              `Ability ${ability.InternalName} has no subject, skipping trigger check`,
-            );
-            return false;
-          }
-          // Check subject
-          const subjects = getTargetCards(
+          return checkSubjectAndTargetIfDefined(
             gs,
-            ability.Trigger.Subject,
+            ability,
             locationID,
+            e.sourceCardID,
             e,
-          );
-          // Return true if any of the subjects are the source card
-          return subjects.some((subject) =>
-            cardLocationIdIsEqual(subject, e.sourceCardID),
+            null,
           );
         }
         return false;
@@ -452,42 +496,26 @@ export function createTriggerCheck(
       }
       case TriggerType.TTriggerOnCardPerformedHeal: {
         if (e instanceof CardPerformedHealEvent) {
-          if (!ability.Trigger.Subject) {
-            console.warn(
-              `Ability ${ability.InternalName} has no subject, skipping trigger check`,
-            );
-            return false;
-          }
-          // Check subjects include source card
-          const subjects = getTargetCards(
+          return checkSubjectAndTargetIfDefined(
             gs,
-            ability.Trigger.Subject,
+            ability,
             locationID,
+            e.sourceCardID,
             e,
-          );
-          return subjects.some((subject) =>
-            cardLocationIdIsEqual(subject, e.sourceCardID),
+            "player",
           );
         }
         return false;
       }
       case TriggerType.TTriggerOnCardPerformedBurn: {
         if (e instanceof CardPerformedBurnEvent) {
-          if (!ability.Trigger.Subject) {
-            console.warn(
-              `Ability ${ability.InternalName} has no subject, skipping trigger check`,
-            );
-            return false;
-          }
-          // Check subjects include source card
-          const subjects = getTargetCards(
+          return checkSubjectAndTargetIfDefined(
             gs,
-            ability.Trigger.Subject,
+            ability,
             locationID,
+            e.sourceCardID,
             e,
-          );
-          return subjects.some(
-            (subject) => subject.cardIdx === locationID.cardIdx,
+            "player",
           );
         }
         return false;
@@ -495,42 +523,26 @@ export function createTriggerCheck(
 
       case TriggerType.TTriggerOnCardPerformedShield: {
         if (e instanceof CardPerformedShieldEvent) {
-          if (!ability.Trigger.Subject) {
-            console.warn(
-              `Ability ${ability.InternalName} has no subject, skipping trigger check`,
-            );
-            return false;
-          }
-          // Check subjects include source card
-          const subjects = getTargetCards(
+          return checkSubjectAndTargetIfDefined(
             gs,
-            ability.Trigger.Subject,
+            ability,
             locationID,
+            e.sourceCardID,
             e,
-          );
-          return subjects.some((subject) =>
-            cardLocationIdIsEqual(subject, e.sourceCardID),
+            "player",
           );
         }
         return false;
       }
       case TriggerType.TTriggerOnCardPerformedPoison: {
         if (e instanceof CardPerformedPoisonEvent) {
-          if (!ability.Trigger.Subject) {
-            console.warn(
-              `Ability ${ability.InternalName} has no subject, skipping trigger check`,
-            );
-            return false;
-          }
-          // Check subjects include source card
-          const subjects = getTargetCards(
+          return checkSubjectAndTargetIfDefined(
             gs,
-            ability.Trigger.Subject,
+            ability,
             locationID,
+            e.sourceCardID,
             e,
-          );
-          return subjects.some((subject) =>
-            cardLocationIdIsEqual(subject, e.sourceCardID),
+            "player",
           );
         }
         return false;
@@ -586,62 +598,51 @@ export function createTriggerCheck(
 
       case TriggerType.TTriggerOnCardPerformedOverHeal: {
         if (e instanceof PlayerOverhealedEvent) {
-          if (!ability.Trigger.Subject) {
-            console.warn(
-              `Ability ${ability.InternalName} has no subject, skipping trigger check`,
-            );
-            return false;
-          }
-          // Check if subjects include source card
-          const subjects = getTargetCards(
+          return checkSubjectAndTargetIfDefined(
             gs,
-            ability.Trigger.Subject,
+            ability,
             locationID,
+            e.sourceCardID,
             e,
-          );
-          return subjects.some((subject) =>
-            cardLocationIdIsEqual(subject, e.sourceCardID),
+            "player",
           );
         }
       }
       case TriggerType.TTriggerOnCardPerformedRegen: {
         if (e instanceof CardPerformedRegenEvent) {
-          if (!ability.Trigger.Subject) {
-            console.warn(
-              `Ability ${ability.InternalName} has no subject, skipping trigger check`,
-            );
-            return false;
-          }
-          // Check if subjects include source card
-          const subjects = getTargetCards(
+          return checkSubjectAndTargetIfDefined(
             gs,
-            ability.Trigger.Subject,
+            ability,
             locationID,
+            e.sourceCardID,
             e,
-          );
-          return subjects.some((subject) =>
-            cardLocationIdIsEqual(subject, e.sourceCardID),
+            "player",
           );
         }
       }
 
       case TriggerType.TTriggerOnCardReloaded: {
         if (e instanceof CardReloadedEvent) {
-          if (!ability.Trigger.Subject) {
-            console.warn(
-              `Ability ${ability.InternalName} has no subject, skipping trigger check`,
-            );
-            return false;
-          }
-          // Check if subjects include source card
-          const subjects = getTargetCards(
+          return checkSubjectAndTargetIfDefined(
             gs,
-            ability.Trigger.Subject,
+            ability,
             locationID,
+            e.sourceCardID,
             e,
+            "card",
           );
-          return subjects.some((subject) =>
-            cardLocationIdIsEqual(subject, e.sourceCardID),
+        }
+        return false;
+      }
+      case TriggerType.TTriggerOnCardPerformedHaste: {
+        if (e instanceof CardPerformedHasteEvent) {
+          return checkSubjectAndTargetIfDefined(
+            gs,
+            ability,
+            locationID,
+            e.sourceCardID,
+            e,
+            "card",
           );
         }
         return false;
@@ -682,9 +683,8 @@ export function setupEventHandlers(gameState: GameState): void {
   // Handle game tick events with Highest priority
   eventBus.on(
     GameTickEvent,
-    (gameState, event) => {
-      // No need to check instanceof since we're using typed handlers
-      handleGameTick(gameState, event.tick);
+    (gameState, _event) => {
+      handleGameTick(gameState);
     },
     Priority.Highest,
   );
@@ -695,9 +695,12 @@ export function setupEventHandlers(gameState: GameState): void {
  *
  * This is effectively the main game loop
  */
-function handleGameTick(gameState: GameState, tick: number): void {
+function handleGameTick(gameState: GameState): void {
+  // Take a snapshot of the current attributes at the start of the tick
+  new SnapshotAttributesCommand().execute(gameState);
+
   // Process poison and regen on 1000 tick intervals
-  if (tick % 1000 === 0) {
+  if (gameState.tick % 1000 === 0) {
     // Log operation
     gameState.eventBus.addCommandToLog(
       new Commands.SystemCommand("Process poison and regeneration"),
@@ -706,7 +709,7 @@ function handleGameTick(gameState: GameState, tick: number): void {
   }
 
   // Process burn on 500 tick intervals
-  if (tick % 500 === 0) {
+  if (gameState.tick % 500 === 0) {
     // Log operation
     gameState.eventBus.addCommandToLog(
       new Commands.SystemCommand("Process burn damage"),
@@ -731,12 +734,15 @@ function handleGameTick(gameState: GameState, tick: number): void {
 
   // Check for player deaths
   checkPlayerDeaths(gameState);
+
+  // Apply drafted attribute changes at the end of the tick
+  new ApplyAttributeDraftsCommand().execute(gameState);
 }
 
 /**
  * Process poison and health regeneration
  */
-function processPoisonAndRegen(gameState: GameState): void {
+export function processPoisonAndRegen(gameState: GameState): void {
   gameState.players.forEach((player, playerID) => {
     // Process poison damage
     const poison = getPlayerAttribute(gameState, playerID, "Poison");
@@ -784,7 +790,7 @@ function processPoisonAndRegen(gameState: GameState): void {
 /**
  * Process burn effects
  */
-function processBurn(gameState: GameState): void {
+export function processBurn(gameState: GameState): void {
   gameState.players.forEach((player, playerID) => {
     const burn = getPlayerAttribute(gameState, playerID, "Burn");
     if (burn > 0) {
@@ -1112,7 +1118,7 @@ function checkPlayerDeaths(gameState: GameState): void {
     );
 
     eventBus.emit(new GameEndedEvent("Draw"));
-  } else if (gameState.players[0].Health <= 0) {
+  } else if (getPlayerAttribute(gameState, 0, "Health") <= 0) {
     gameState.winner = "Player";
 
     // Log game end
@@ -1121,7 +1127,7 @@ function checkPlayerDeaths(gameState: GameState): void {
     );
 
     eventBus.emit(new GameEndedEvent("Player"));
-  } else if (gameState.players[1].Health <= 0) {
+  } else if (getPlayerAttribute(gameState, 1, "Health") <= 0) {
     gameState.winner = "Enemy";
 
     // Log game end

@@ -8,6 +8,9 @@ Card fired vs used
 - Fired uses ammo, on cooldownmax
 - used is multicast
 
+
+Start of fight poison and burn process a tick and apply before the fight starts. see https://youtu.be/drSgR3E8hyA?si=7bCT_ZmLYXBlySGM&t=635.
+
 ### TODOS:
 
 - [ ] add better multicast
@@ -19,7 +22,9 @@ Card fired vs used
 
 ### BUGS:
 
-Kyver drone v katana, when stinger slows katana, damage is not applied to kyver drone from katana
+- Atlatl cooldown not working
+- Multicast is currently disabled until I implement internal card queue system
+- Rapid Injection System - Ahexa encounter infinite loop
 
 ### ASSUMPTIONS (that might lead to bugs):
 

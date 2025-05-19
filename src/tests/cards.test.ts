@@ -61,7 +61,7 @@ describe("Single card battle simulations (Items and Skills)", () => {
         ]);
 
         run(gameState);
-      });
+      }, 5000); // 5 second timeout
     } else if (validSkillIds.some((id) => id === cardId)) {
       it(`Battle with skill "${cardTitle}" (Tier: ${currentCard.StartingTier}) should not throw`, () => {
         if (!currentCard.Id) {
@@ -87,7 +87,7 @@ describe("Single card battle simulations (Items and Skills)", () => {
         ]);
 
         run(gameState);
-      });
+      }, 5000); // 5 second timeout
     }
   });
 });

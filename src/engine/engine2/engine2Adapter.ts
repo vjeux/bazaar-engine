@@ -77,7 +77,7 @@ export function getInitialGameState2(
  */
 export function run(
   initialState: Engine2GameState,
-  maxTicks: number = Infinity,
+  maxTicks?: number,
 ): Engine2GameState[] {
   // Create a new Engine2 instance with the initial state
   const engine = new Engine2(initialState);
@@ -110,7 +110,7 @@ export function runWithConfig(
   encounters: EncounterDays,
   configs: [MonsterConfig, PlayerConfig],
   randomSeed: number = 1,
-  maxTicks: number = Infinity,
+  maxTicks: number = 10000,
 ): Engine2GameState[] {
   // Create initial game state using our new adapter function
   const initialState = getInitialGameState2(
