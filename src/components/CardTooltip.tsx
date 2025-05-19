@@ -1,9 +1,11 @@
-import { GameState, getCardAttribute, getTooltips } from "@/engine/Engine";
+import { getTooltips } from "@/engine/engine2/getTooltips";
+import type { GameState as Engine2GameState } from "@/engine/engine2/engine2";
 import { getInitialGameState } from "@/engine/GameState";
 import { CARDS_VERSION } from "@/lib/constants";
 import { AttributeType, Card } from "@/types/cardTypes";
 import { EncounterDays } from "@/types/encounterTypes";
 import { Tier } from "@/types/shared";
+import { getCardAttribute } from "@/engine/engine2/getAttribute";
 
 export default function CardTooltip({
   card,
@@ -12,7 +14,7 @@ export default function CardTooltip({
   boardCardID = 0,
 }: {
   card: Card | null;
-  gameState?: GameState;
+  gameState?: Engine2GameState;
   playerID?: number;
   boardCardID?: number;
 }) {
@@ -49,14 +51,25 @@ export default function CardTooltip({
     gameState?.players[playerID].board[boardCardID].Enchantment;
 
   const CooldownMax = getCardAttribute(
-    gameState ?? effectiveGameState,
-    playerID,
-    boardCardID,
+    effectiveGameState,
+    {
+      playerIdx: playerID,
+      cardIdx: boardCardID,
+      location: "board",
+    },
     AttributeType.CooldownMax,
   );
 
   const visibleTags = gameState
-    ? getCardAttribute(effectiveGameState, playerID, boardCardID, "tags")
+    ? getCardAttribute(
+        effectiveGameState,
+        {
+          playerIdx: playerID,
+          cardIdx: boardCardID,
+          location: "board",
+        },
+        "tags",
+      )
     : card.Tags;
 
   return (
@@ -70,13 +83,15 @@ export default function CardTooltip({
             <p>Cooldown: {CooldownMax / 1000}s</p>
           </div>
         )}
-        {getTooltips(effectiveGameState, playerID, boardCardID).map(
-          (tooltip, index) => (
-            <div key={"tooltip" + index} className="">
-              {tooltip}
-            </div>
-          ),
-        )}
+        {getTooltips(effectiveGameState, {
+          playerIdx: playerID,
+          cardIdx: boardCardID,
+          location: "board",
+        }).map((tooltip, index) => (
+          <div key={"tooltip" + index} className="">
+            {tooltip}
+          </div>
+        ))}
         <div className="text-muted-foreground text-sm">
           <p>{visibleTags.join(", ")}</p>
           <p className="italic">{card.HiddenTags.join(", ")}</p>

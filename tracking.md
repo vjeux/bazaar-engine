@@ -18,10 +18,11 @@
 - [ ] Damage numbers above health
 - [ ] Change the code to support custom monsters/encounters
 
-
 ## Bugged Items
+
 - [ ] Z-Shield, no multicast
-- [ ] Adrenal converter gives double Regen, Triggers do nout account for if Subject and Target is same 
+- [ ] Adrenal converter gives double Regen, Triggers do nout account for if Subject and Target is same
+
 ```
  "2": {
           "Id": "2",

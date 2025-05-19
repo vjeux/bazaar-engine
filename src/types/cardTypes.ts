@@ -73,8 +73,14 @@ export interface AbilityAction {
   SpawnContext?: SpawnContext;
   TargetCount?: TargetCount | null;
   Enchantment?: string;
+  Enchantments?: WeightedEnchantment[];
   Source?: Source;
   Tags?: Tag[];
+}
+
+export interface WeightedEnchantment {
+  Enchantment: EnchantmentType;
+  Weight: number;
 }
 
 export enum ActionType {
@@ -110,6 +116,7 @@ export enum ActionType {
   TActionPlayerShieldRemove = "TActionPlayerShieldRemove",
   TAuraActionCardModifyAttribute = "TAuraActionCardModifyAttribute",
   TAuraActionPlayerModifyAttribute = "TAuraActionPlayerModifyAttribute",
+  TActionCardEnchantRandom = "TActionCardEnchantRandom",
 }
 
 export enum AttributeType {
@@ -131,8 +138,10 @@ export enum AttributeType {
   Custom_5 = "Custom_5",
   DamageAmount = "DamageAmount",
   DamageCrit = "DamageCrit",
+  DestroyTargets = "DestroyTargets",
   DisableTargets = "DisableTargets",
   Experience = "Experience",
+  EnchantTargets = "EnchantTargets",
   Freeze = "Freeze",
   FreezeAmount = "FreezeAmount",
   FreezeTargets = "FreezeTargets",
@@ -233,8 +242,9 @@ enum ConditionType {
   TRunConditionalCurrentDay = "TRunConditionalCurrentDay",
 }
 
-enum Comparison {
+export enum Comparison {
   Equal = "Equal",
+  NotEqual = "NotEqual",
   GreaterThan = "GreaterThan",
   GreaterThanOrEqual = "GreaterThanOrEqual",
   LessThan = "LessThan",
@@ -307,6 +317,7 @@ export enum TargetSection {
   SelfHand = "SelfHand",
   SelfHandAndStash = "SelfHandAndStash",
   SelfNeighbors = "SelfNeighbors",
+  SelfStash = "SelfStash",
 }
 
 interface SpawnContext {
@@ -342,7 +353,7 @@ export interface Conditions {
   IsSameAsPlayerHero?: boolean;
   Operator?: Operator;
   Sizes?: Size[];
-  Tags?: Tag[];
+  Tags?: Tag[] | HiddenTag[];
   Tiers?: Tier[];
 }
 
@@ -401,12 +412,16 @@ export interface AbilityPrerequisite {
   Comparison?: Comparison;
   Amount?: number;
   Conditions?: Conditions;
+  Attribute?: AttributeType;
+  AttributeOther?: AttributeType;
+  SubjectOther?: Subject;
 }
 
 enum PrerequisiteType {
   TPrerequisiteCardCount = "TPrerequisiteCardCount",
   TPrerequisitePlayer = "TPrerequisitePlayer",
   TPrerequisiteRun = "TPrerequisiteRun",
+  TPrerequisiteCardAttributeComparator = "TPrerequisiteCardAttributeComparator",
 }
 
 export enum Priority {
@@ -454,8 +469,10 @@ export enum TriggerType {
   TTriggerOnHourStarted = "TTriggerOnHourStarted",
   TTriggerOnItemUsed = "TTriggerOnItemUsed",
   TTriggerOnPlayerAttributeChanged = "TTriggerOnPlayerAttributeChanged",
-  TTriggerOnPlayerAttributePercentChange = "TTriggerOnPlayerAttributePercentChange",
   TTriggerOnPlayerDied = "TTriggerOnPlayerDied",
+  TTriggerOnCardPerformedRegen = "TTriggerOnCardPerformedRegen",
+  TTriggerOnCardReloaded = "TTriggerOnCardReloaded",
+  TTriggerOnCardPerformedReload = "TTriggerOnCardPerformedReload",
 }
 
 enum ChangeType {

@@ -800,12 +800,7 @@
       "artKey": "Icon_Skill_BigNumbers.png",
       "unifiedTooltips": ["Your large items have (+25%/+50%) crit chance"],
       "packId": "Pygmalien_Core",
-      "combatEncounters": [
-        {
-          "cardId": "265d1068-e90d-49c4-8013-ed2e856ead8f",
-          "cardName": "Property Baron"
-        }
-      ]
+      "combatEncounters": []
     },
     {
       "id": "f45baa82-ff32-4337-88b9-71f7a8f2336f",
@@ -9489,5 +9484,5 @@
       "combatEncounters": []
     }
   ],
-  "version": "acb2d55b"
+  "version": "a11b003d"
 }

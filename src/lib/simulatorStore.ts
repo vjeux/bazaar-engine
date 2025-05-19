@@ -1,6 +1,4 @@
-import { GameState, run } from "@/engine/Engine";
 import {
-  getInitialGameState,
   MonsterConfig,
   PlayerCardConfig,
   PlayerConfig,
@@ -15,6 +13,10 @@ import { AttributeType } from "@/types/cardTypes";
 import { Tier } from "@/types/shared";
 import { EnchantmentType } from "@/types/shared";
 import { v4 as uuidv4 } from "uuid";
+import { getInitialGameState2, run } from "@/engine/engine2/engine2Adapter";
+import { GameState } from "@/engine/engine2/engine2";
+import { Draft } from "immer";
+
 const { Cards: CardsData, Encounters: EncounterData } =
   await genCardsAndEncounters();
 
@@ -84,17 +86,18 @@ const runWrapper = (
   playerConfig: PlayerConfig,
   randomSeed: number = 1,
 ) => {
-  const steps = run(
-    getInitialGameState(
-      CardsData,
-      EncounterData,
-      [monsterConfig, playerConfig],
-      randomSeed,
-    ),
-    100000,
+  // Create the initial game state with Engine2 compatibility
+  const initialState = getInitialGameState2(
+    CardsData,
+    EncounterData,
+    [monsterConfig, playerConfig],
+    randomSeed,
   );
-  return steps;
+
+  // Run the simulation with Engine2
+  return run(initialState, 10000);
 };
+
 const initialSteps = runWrapper(initialMonster, initialPlayer);
 
 const initialState: State = {
@@ -137,7 +140,7 @@ const persistentStorage: StateStorage = {
 
 // Run simulation and recalculate winrate if enabled
 const runSimulationAndUpdateWinrate = (
-  state: State,
+  state: Draft<State>,
   actions: Actions["actions"],
 ) => {
   // Run the simulation and update steps
@@ -330,7 +333,6 @@ export const useSimulatorStore = create<State & Actions>()(
           set((state) => {
             state.isCalculatingWinrate = false;
             state.winrate = null;
-            state.targetSimulations = 0;
             state.completedSimulations = 0;
             // Reset the calculation ID when canceling calculations
             state.calculationId = "";

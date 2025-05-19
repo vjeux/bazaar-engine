@@ -465,7 +465,7 @@ export function BoardCardElement({
                   tier={boardCard.tier}
                 />
                 {/* Cooldown Indicator */}
-                {CooldownMax && CooldownMax > 0 ? (
+                {CooldownMax != null && CooldownMax > 0 ? (
                   <div
                     className="absolute box-border h-0.5 border-t-2 border-white text-right text-[8pt] text-white"
                     style={{
@@ -494,17 +494,17 @@ export function BoardCardElement({
                 ) : null}
                 {/* Status effects container */}
                 <div className="absolute top-1/2 left-1/2 flex -translate-x-1/2 -translate-y-1/2 flex-col whitespace-pre-wrap text-white">
-                  {Freeze && Freeze > 0 ? (
+                  {Freeze != null && Freeze > 0 ? (
                     <div className="bg-opacity-50 m-0.5 rounded-[5px] bg-gray-800 p-[2px_5px]">
                       ❄️ {(Freeze / 1000).toFixed(1)}
                     </div>
                   ) : null}
-                  {Slow && Slow > 0 ? (
+                  {Slow != null && Slow > 0 ? (
                     <div className="bg-opacity-50 m-0.5 rounded-[5px] bg-gray-800 p-[2px_5px]">
                       🐌 {(Slow / 1000).toFixed(1)}
                     </div>
                   ) : null}
-                  {Haste && Haste > 0 ? (
+                  {Haste != null && Haste > 0 ? (
                     <div className="bg-opacity-50 m-0.5 rounded-[5px] bg-gray-800 p-[2px_5px]">
                       ⏱️ {(Haste / 1000).toFixed(1)}
                     </div>
@@ -562,7 +562,7 @@ export function BoardCardElement({
                     </div>
                   )}
                 </div>
-                {CritChance && CritChance > 0 && (
+                {CritChance != null && CritChance > 0 && (
                   <div className="absolute top-6 left-0 rounded-[5px] bg-red-600 p-[1px_3px] text-[9pt] text-white">
                     🎯 {CritChance + "%"}
                   </div>

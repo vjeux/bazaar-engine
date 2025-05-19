@@ -13,6 +13,8 @@ import { Label } from "@/components/ui/label";
 import { useSimulatorStore } from "@/lib/simulatorStore";
 import { Settings } from "lucide-react";
 import { useState, useEffect } from "react";
+import type { GameState } from "@/engine/Engine";
+import type { GameState as Engine2GameState } from "@/engine/engine2/engine2";
 
 export function PlayerStatsDialog() {
   const playerConfig = useSimulatorStore((state) => state.playerConfig);

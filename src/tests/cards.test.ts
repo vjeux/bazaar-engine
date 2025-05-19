@@ -1,8 +1,5 @@
-import {
-  getInitialGameState,
-  getFlattenedEncounters,
-} from "../engine/GameState";
-import { run } from "../engine/Engine";
+import { getFlattenedEncounters } from "@/lib/Data";
+import { getInitialGameState2, run } from "../engine/engine2/engine2Adapter";
 import { genCardsAndEncounters } from "../lib/Data";
 import { CARDS_VERSION } from "../lib/constants";
 import validItemIds from "../../public/json/ValidItemIds.json";
@@ -58,15 +55,13 @@ describe("Single card battle simulations (Items and Skills)", () => {
           day: Number(firstEncounter.day),
         };
 
-        const gameState = getInitialGameState(Cards, Encounters, [
+        const gameState = getInitialGameState2(Cards, Encounters, [
           monsterEntityConfig,
           playerEntityConfig,
         ]);
 
-        expect(() => {
-          run(gameState);
-        }).not.toThrow();
-      });
+        run(gameState);
+      }, 5000); // 5 second timeout
     } else if (validSkillIds.some((id) => id === cardId)) {
       it(`Battle with skill "${cardTitle}" (Tier: ${currentCard.StartingTier}) should not throw`, () => {
         if (!currentCard.Id) {
@@ -86,15 +81,13 @@ describe("Single card battle simulations (Items and Skills)", () => {
           day: Number(firstEncounter.day),
         };
 
-        const gameState = getInitialGameState(Cards, Encounters, [
+        const gameState = getInitialGameState2(Cards, Encounters, [
           monsterEntityConfig,
           playerEntityConfig,
         ]);
 
-        expect(() => {
-          run(gameState);
-        }).not.toThrow();
-      });
+        run(gameState);
+      }, 5000); // 5 second timeout
     }
   });
 });

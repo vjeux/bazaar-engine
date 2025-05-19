@@ -82,7 +82,7 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
   );
 
   return (
-    <div className="bg-background border-border flex min-w-96 flex-col overflow-x-visible rounded border p-3">
+    <div className="bg-background border-border flex h-full min-w-96 flex-col overflow-x-visible rounded border p-3">
       <h2 className="text-card-foreground mb-2 text-lg font-semibold">
         Cards & Skills
       </h2>
@@ -93,13 +93,19 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-      {searchResults.length > 0 ? (
-        <Virtuoso totalCount={searchResults.length} itemContent={itemContent} />
-      ) : (
-        <div className="text-center text-sm text-gray-500">
-          No results found
-        </div>
-      )}
+      <div className="flex-1 overflow-auto">
+        {searchResults.length > 0 ? (
+          <Virtuoso
+            style={{ height: "100%" }}
+            totalCount={searchResults.length}
+            itemContent={itemContent}
+          />
+        ) : (
+          <div className="text-center text-sm text-gray-500">
+            No results found
+          </div>
+        )}
+      </div>
     </div>
   );
 }
