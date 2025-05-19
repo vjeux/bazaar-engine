@@ -275,3 +275,6 @@ export class Engine2 {
     return this.gameState;
   }
 }
+export type PlayerAttributeNumber = keyof {
+  [K in keyof Player as Player[K] extends number ? K : never]: Player[K];
+};
