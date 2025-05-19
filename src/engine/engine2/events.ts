@@ -1,7 +1,6 @@
-import { AttributeType, TriggerType } from "@/types/cardTypes";
+import { AttributeType } from "@/types/cardTypes";
 import { playerName } from "./commands";
 import { CardLocationID } from "./engine2";
-import { GameEventConstructor } from "./eventBus";
 
 /**
  * Base Game Event class
@@ -408,70 +407,4 @@ export class CardReloadedEvent extends GameEvent {
   getDescription(): string {
     return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} reloaded`;
   }
-}
-/**
- * Map of trigger types to event constructors
- */
-export const triggerToEventMap: Record<
-  TriggerType,
-  GameEventConstructor<GameEvent>
-> = {
-  // Card events
-  TTriggerOnCardFired: CardFiredEvent,
-  TTriggerOnCardAttributeChanged: CardAttributeChangedEvent,
-  TTriggerOnItemUsed: CardItemUsedEvent,
-
-  // Card actions
-  TTriggerOnCardPerformedBurn: CardPerformedBurnEvent,
-  TTriggerOnCardPerformedPoison: CardPerformedPoisonEvent,
-  TTriggerOnCardPerformedHeal: CardPerformedHealEvent,
-  TTriggerOnCardPerformedOverHeal: PlayerOverhealedEvent,
-  TTriggerOnCardPerformedShield: CardPerformedShieldEvent,
-  TTriggerOnCardReloaded: CardReloadedEvent,
-  TTriggerOnCardPerformedReload: CardReloadedEvent, // TODO: assume these two reload events are the same for now
-  TTriggerOnCardPerformedRegen: CardPerformedRegenEvent,
-
-  // Player events
-  TTriggerOnPlayerDied: PlayerDiedEvent,
-  TTriggerOnPlayerAttributeChanged: PlayerAttributeChangedEvent,
-  TTriggerOnPlayerAttributePercentChange: PlayerAttributeChangedEvent,
-
-  // Game events
-  TTriggerOnFightStarted: GameFightStartedEvent,
-  TTriggerOnFightEnded: GameEndedEvent,
-
-  // Game shop events - using NotImplementedEvent as placeholder
-  TTriggerOnCardPurchased: NotImplementedEvent,
-  TTriggerOnCardSelected: NotImplementedEvent,
-  TTriggerOnCardSold: NotImplementedEvent,
-  TTriggerOnCardUpgraded: NotImplementedEvent,
-
-  // Game progression events - using NotImplementedEvent as placeholder
-  TTriggerOnDayStarted: NotImplementedEvent,
-  TTriggerOnHourStarted: NotImplementedEvent,
-  TTriggerOnEncounterSelected: NotImplementedEvent,
-
-  // Card effect events - using NotImplementedEvent as placeholder
-  TTriggerOnCardCritted: CardCrittedEvent,
-  TTriggerOnCardPerformedDestruction: CardPerformedDestructionEvent,
-  TTriggerOnCardPerformedFreeze: CardPerformedFreezeEvent,
-  TTriggerOnCardPerformedHaste: CardPerformedHasteEvent,
-  TTriggerOnCardPerformedSlow: CardPerformedSlowEvent,
-}; /**
- * Convert ability trigger to event class constructor
- */
-
-export function triggerToEvent(trigger: {
-  $type: TriggerType;
-}): GameEventConstructor<GameEvent> {
-  const triggerType = trigger?.$type || "";
-  const eventClass = triggerToEventMap[triggerType];
-
-  if (!eventClass) {
-    console.warn(`Unhandled trigger type: ${triggerType}`);
-    throw new Error(`Unhandled trigger type: ${triggerType}`);
-    return NotImplementedEvent;
-  }
-
-  return eventClass;
 }

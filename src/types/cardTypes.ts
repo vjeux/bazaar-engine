@@ -469,7 +469,6 @@ export enum TriggerType {
   TTriggerOnHourStarted = "TTriggerOnHourStarted",
   TTriggerOnItemUsed = "TTriggerOnItemUsed",
   TTriggerOnPlayerAttributeChanged = "TTriggerOnPlayerAttributeChanged",
-  TTriggerOnPlayerAttributePercentChange = "TTriggerOnPlayerAttributePercentChange",
   TTriggerOnPlayerDied = "TTriggerOnPlayerDied",
   TTriggerOnCardPerformedRegen = "TTriggerOnCardPerformedRegen",
   TTriggerOnCardReloaded = "TTriggerOnCardReloaded",
