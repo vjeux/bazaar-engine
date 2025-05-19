@@ -15,8 +15,6 @@ const SKILL_SIZE = 70;
 export const SearchableCardSkillList = memo(SearchableCardSkillList_);
 function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
   const simulatorStoreActions = useSimulatorStore((state) => state.actions);
-  const addPlayerCard = simulatorStoreActions.addPlayerCard;
-  const addPlayerSkill = simulatorStoreActions.addPlayerSkill;
 
   const handleCardSelect = useCallback(
     (card: Card) => {
@@ -24,9 +22,9 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
         cardId: card.Id,
         tier: card.StartingTier,
       };
-      addPlayerCard(cardConfig);
+      simulatorStoreActions.addCard(cardConfig, false);
     },
-    [addPlayerCard],
+    [simulatorStoreActions],
   );
 
   const handleSkillSelect = useCallback(
@@ -35,9 +33,9 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
         cardId: card.Id,
         tier: card.StartingTier,
       };
-      addPlayerSkill(skillConfig);
+      simulatorStoreActions.addSkill(skillConfig, false);
     },
-    [addPlayerSkill],
+    [simulatorStoreActions],
   );
 
   const [search, setSearch] = useState("");

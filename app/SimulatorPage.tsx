@@ -19,7 +19,7 @@ import { GoldIncomeDisplay } from "@/components/GoldIncomeDisplay";
 import { useSimulatorStore } from "@/lib/simulatorStore";
 import { Button } from "@/components/ui/button";
 import CardDeck from "@/components/CardDeck";
-import { Pause, Play, RotateCcw } from "lucide-react";
+import { Pause, Play, RotateCcw, Trash2 } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -179,10 +179,29 @@ export default function SimulatorPage() {
             gameState={currentGameState}
             playerId={ENEMY_PLAYER_IDX}
           />
-          <GoldIncomeDisplay
-            gameState={currentGameState}
-            playerId={ENEMY_PLAYER_IDX}
-          />
+          <div className="flex items-center gap-2">
+            <GoldIncomeDisplay
+              gameState={currentGameState}
+              playerId={ENEMY_PLAYER_IDX}
+            />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() =>
+                    simulatorStoreActions.clearPlayerBoard(ENEMY_PLAYER_IDX)
+                  }
+                  className="h-8 w-8 hover:cursor-pointer"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Clear Enemy Board</p>
+              </TooltipContent>
+            </Tooltip>
+          </div>
         </div>
         {/* Enemy Health Bar*/}
         <HealthBar gameState={currentGameState} playerId={ENEMY_PLAYER_IDX} />
@@ -219,6 +238,23 @@ export default function SimulatorPage() {
               gameState={currentGameState}
               playerId={PLAYER_PLAYER_IDX}
             />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() =>
+                    simulatorStoreActions.clearPlayerBoard(PLAYER_PLAYER_IDX)
+                  }
+                  className="h-8 w-8 hover:cursor-pointer"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Clear Board</p>
+              </TooltipContent>
+            </Tooltip>
             <PlayerStatsDialog />
           </div>
         </div>
@@ -275,7 +311,7 @@ const EncounterSelector = memo(function EncounterSelector({
   encounters: FlattenedEncounter[];
 }) {
   const simulatorStoreActions = useSimulatorStore((state) => state.actions);
-  const selectedEncounter = useSimulatorStore((state) => state.monsterConfig);
+
   return (
     <ComboBox
       items={encounters.map((encounter) => ({
@@ -286,18 +322,14 @@ const EncounterSelector = memo(function EncounterSelector({
             : `Event ${encounter.name}`,
       }))}
       searchPlaceholder="Search encounters..."
-      selectPlaceholder={
-        selectedEncounter?.name && encounters.length > 0
-          ? `Day ${encounters.find((e) => e.name === selectedEncounter.name && e.day === selectedEncounter.day)?.day ?? ""} - ${selectedEncounter.name}`
-          : "Select encounter..."
-      }
+      selectPlaceholder={"Select encounter..."}
       onChange={(value) => {
         if (encounters.length === 0) return;
         const encounter = encounters.find(
           (encounter) => encounter.card.cardId === value.split(":")[1],
         );
         if (encounter) {
-          simulatorStoreActions.setMonsterConfig({
+          simulatorStoreActions.setEnemyFromMonster({
             type: "monster",
             name: encounter.name,
             day: Number(encounter.day),

@@ -1,9 +1,4 @@
 "use client";
-import {
-  type BoardCard,
-  type GameState,
-  getCardAttribute,
-} from "@/engine/Engine";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import FramedCardOrSkill from "./FramedCardOrSkill";
@@ -33,6 +28,8 @@ import { EnchantmentType, Tier } from "@/types/shared";
 import CardTooltip from "./CardTooltip";
 import { Button } from "./ui/button";
 import { Bug, Settings, X } from "lucide-react";
+import { BoardCard, GameState } from "@/engine/engine2/engine2";
+import { getCardAttribute } from "@/engine/engine2/getAttribute";
 
 // Enchantment color mappings
 const ENCHANTMENT_COLORS: Record<EnchantmentType, string> = {
@@ -129,92 +126,137 @@ export function BoardCardElement({
 
   const DamageAmount = getCardAttribute(
     gameState,
-    playerIdx,
-    boardCardIdx,
+    {
+      playerIdx,
+      cardIdx: boardCardIdx,
+      location: "board",
+    },
     AttributeType.DamageAmount,
   );
   const HealAmount = getCardAttribute(
     gameState,
-    playerIdx,
-    boardCardIdx,
+    {
+      playerIdx,
+      cardIdx: boardCardIdx,
+      location: "board",
+    },
     AttributeType.HealAmount,
   );
   const BurnApplyAmount = getCardAttribute(
     gameState,
-    playerIdx,
-    boardCardIdx,
+    {
+      playerIdx,
+      cardIdx: boardCardIdx,
+      location: "board",
+    },
     AttributeType.BurnApplyAmount,
   );
   const PoisonApplyAmount = getCardAttribute(
     gameState,
-    playerIdx,
-    boardCardIdx,
+    {
+      playerIdx,
+      cardIdx: boardCardIdx,
+      location: "board",
+    },
     AttributeType.PoisonApplyAmount,
   );
   const ShieldApplyAmount = getCardAttribute(
     gameState,
-    playerIdx,
-    boardCardIdx,
+    {
+      playerIdx,
+      cardIdx: boardCardIdx,
+      location: "board",
+    },
     AttributeType.ShieldApplyAmount,
   );
   const Freeze = getCardAttribute(
     gameState,
-    playerIdx,
-    boardCardIdx,
+    {
+      playerIdx,
+      cardIdx: boardCardIdx,
+      location: "board",
+    },
     AttributeType.Freeze,
   );
   const Slow = getCardAttribute(
     gameState,
-    playerIdx,
-    boardCardIdx,
+    {
+      playerIdx,
+      cardIdx: boardCardIdx,
+      location: "board",
+    },
     AttributeType.Slow,
   );
   const Haste = getCardAttribute(
     gameState,
-    playerIdx,
-    boardCardIdx,
+    {
+      playerIdx,
+      cardIdx: boardCardIdx,
+      location: "board",
+    },
     AttributeType.Haste,
   );
   const CritChance = getCardAttribute(
     gameState,
-    playerIdx,
-    boardCardIdx,
+    {
+      playerIdx,
+      cardIdx: boardCardIdx,
+      location: "board",
+    },
     AttributeType.CritChance,
   );
   const SellPrice = getCardAttribute(
     gameState,
-    playerIdx,
-    boardCardIdx,
+    {
+      playerIdx,
+      cardIdx: boardCardIdx,
+      location: "board",
+    },
     AttributeType.SellPrice,
   );
   const Multicast = getCardAttribute(
     gameState,
-    playerIdx,
-    boardCardIdx,
+    {
+      playerIdx,
+      cardIdx: boardCardIdx,
+      location: "board",
+    },
     AttributeType.Multicast,
   );
   const AmmoMax = getCardAttribute(
     gameState,
-    playerIdx,
-    boardCardIdx,
+    {
+      playerIdx,
+      cardIdx: boardCardIdx,
+      location: "board",
+    },
     AttributeType.AmmoMax,
   );
   const Ammo = getCardAttribute(
     gameState,
-    playerIdx,
-    boardCardIdx,
+    {
+      playerIdx,
+      cardIdx: boardCardIdx,
+      location: "board",
+    },
     AttributeType.Ammo,
   );
   const CooldownMax = getCardAttribute(
     gameState,
-    playerIdx,
-    boardCardIdx,
+    {
+      playerIdx,
+      cardIdx: boardCardIdx,
+      location: "board",
+    },
     AttributeType.CooldownMax,
   );
   const Lifesteal = getCardAttribute(
     gameState,
-    playerIdx,
-    boardCardIdx,
+    {
+      playerIdx,
+      cardIdx: boardCardIdx,
+      location: "board",
+    },
     AttributeType.Lifesteal,
   );
 
@@ -229,197 +271,211 @@ export function BoardCardElement({
             )}
           >
             {/* Settings button */}
-            {playerIdx == PLAYER_PLAYER_IDX && !isSorting && (
-              <Dialog
-                open={editingCardIndex === boardCardIdx}
-                onOpenChange={(value) => {
-                  if (!value) {
-                    // Save changes when closing the dialog
-                    const overrides = {} as Record<AttributeType, number>;
-                    for (const attr of Object.keys(
-                      cardConfig.attributeOverrides ?? {},
-                    )) {
-                      if (
-                        typeof cardConfig.attributeOverrides?.[
-                          attr as keyof typeof cardConfig.attributeOverrides
-                        ] === "number"
-                      ) {
-                        overrides[attr as AttributeType] = cardConfig
-                          .attributeOverrides?.[
-                          attr as keyof typeof cardConfig.attributeOverrides
-                        ] as number;
+            {(playerIdx === PLAYER_PLAYER_IDX ||
+              playerIdx === ENEMY_PLAYER_IDX) &&
+              !isSorting && (
+                <Dialog
+                  open={editingCardIndex === boardCardIdx}
+                  onOpenChange={(value) => {
+                    if (!value) {
+                      // Save changes when closing the dialog
+                      const overrides = {} as Record<AttributeType, number>;
+                      for (const attr of Object.keys(
+                        cardConfig.attributeOverrides ?? {},
+                      )) {
+                        if (
+                          typeof cardConfig.attributeOverrides?.[
+                            attr as keyof typeof cardConfig.attributeOverrides
+                          ] === "number"
+                        ) {
+                          overrides[attr as AttributeType] = cardConfig
+                            .attributeOverrides?.[
+                            attr as keyof typeof cardConfig.attributeOverrides
+                          ] as number;
+                        }
                       }
+                      simulatorStoreActions.setCardAttributeOverrides(
+                        boardCardIdx,
+                        overrides,
+                        playerIdx === ENEMY_PLAYER_IDX,
+                      );
                     }
-                    simulatorStoreActions.setCardAttributeOverrides(
-                      boardCardIdx,
-                      overrides,
+                    simulatorStoreActions.setEditingCardIndex(
+                      value ? boardCardIdx : null,
                     );
-                  }
-                  simulatorStoreActions.setEditingCardIndex(
-                    value ? boardCardIdx : null,
-                  );
-                }}
-                defaultOpen={editingCardIndex === boardCardIdx}
-              >
-                <DialogTrigger asChild>
-                  <div className="tooltip absolute top-0.5 right-0.5 z-10">
-                    <Button
-                      variant="secondary"
-                      size="icon"
-                      className="h-6 w-6 p-0 hover:cursor-pointer"
-                      onClick={() => {
-                        simulatorStoreActions.setAutoScroll(false);
-                      }}
-                    >
-                      <Settings className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </DialogTrigger>
-                <DialogContent className="max-h-[90vh] overflow-y-auto">
-                  <DialogHeader>
-                    <DialogTitle>Edit Card</DialogTitle>
-                  </DialogHeader>
-                  <DialogDescription>
-                    NOTE: <br />
-                    These are the BASE attributes, i.e. not taking into account
-                    the buffs from other cards.
-                  </DialogDescription>
-                  <div className="flex flex-col gap-2">
-                    {/* Enchantment */}
+                  }}
+                  defaultOpen={editingCardIndex === boardCardIdx}
+                >
+                  <DialogTrigger asChild>
+                    <div className="tooltip absolute top-0.5 right-0.5 z-10">
+                      <Button
+                        variant="secondary"
+                        size="icon"
+                        className="h-6 w-6 p-0 hover:cursor-pointer"
+                        onClick={() => {
+                          simulatorStoreActions.setAutoScroll(false);
+                        }}
+                      >
+                        <Settings className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </DialogTrigger>
+                  <DialogContent className="max-h-[90vh] overflow-y-auto">
+                    <DialogHeader>
+                      <DialogTitle>
+                        Edit{" "}
+                        {playerIdx === ENEMY_PLAYER_IDX ? "Enemy" : "Player"}{" "}
+                        Card
+                      </DialogTitle>
+                    </DialogHeader>
+                    <DialogDescription>
+                      NOTE: <br />
+                      These are the BASE attributes, i.e. not taking into
+                      account the buffs from other cards.
+                    </DialogDescription>
                     <div className="flex flex-col gap-2">
-                      <Label htmlFor="enchantment">Enchantment</Label>
-                      <div className="flex gap-2">
-                        <Select
-                          onValueChange={(value: EnchantmentType) => {
-                            simulatorStoreActions.setCardEnchantment(
-                              boardCardIdx,
-                              value,
-                            );
-                            simulatorStoreActions.setEditingCardIndex(
-                              boardCardIdx,
-                            );
-                          }}
-                        >
-                          <SelectTrigger>
-                            <SelectValue
-                              placeholder={
-                                boardCard.Enchantment ?? "Select Enchantment"
-                              }
-                            />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {Object.keys(card.Enchantments ?? [])
-                              .toSorted()
-                              .map((enchantment) => (
-                                <SelectItem
-                                  key={enchantment}
-                                  value={enchantment}
-                                >
-                                  {enchantment}
+                      {/* Enchantment */}
+                      <div className="flex flex-col gap-2">
+                        <Label htmlFor="enchantment">Enchantment</Label>
+                        <div className="flex gap-2">
+                          <Select
+                            onValueChange={(value: EnchantmentType) => {
+                              simulatorStoreActions.setCardEnchantment(
+                                boardCardIdx,
+                                value,
+                                playerIdx === ENEMY_PLAYER_IDX,
+                              );
+                              simulatorStoreActions.setEditingCardIndex(
+                                boardCardIdx,
+                              );
+                            }}
+                          >
+                            <SelectTrigger>
+                              <SelectValue
+                                placeholder={
+                                  boardCard.Enchantment ?? "Select Enchantment"
+                                }
+                              />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {Object.keys(card.Enchantments ?? [])
+                                .toSorted()
+                                .map((enchantment) => (
+                                  <SelectItem
+                                    key={enchantment}
+                                    value={enchantment}
+                                  >
+                                    {enchantment}
+                                  </SelectItem>
+                                ))}
+                            </SelectContent>
+                          </Select>
+                          <p className="flex items-center text-xs text-gray-500">
+                            The attributes will get reset when changing
+                            enchantment.
+                          </p>
+                        </div>
+                        {/* Tier Select */}
+                        <Label htmlFor="tier">Tier</Label>
+                        <div className="flex gap-2">
+                          <Select
+                            onValueChange={(value: Tier) => {
+                              simulatorStoreActions.setCardTier(
+                                boardCardIdx,
+                                value,
+                                playerIdx === ENEMY_PLAYER_IDX,
+                              );
+                              simulatorStoreActions.setEditingCardIndex(
+                                boardCardIdx,
+                              );
+                            }}
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder={boardCard.tier} />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {Object.keys(card.Tiers ?? {}).map((tier) => (
+                                <SelectItem key={tier} value={tier}>
+                                  {tier}
                                 </SelectItem>
                               ))}
-                          </SelectContent>
-                        </Select>
-                        <p className="flex items-center text-xs text-gray-500">
-                          The attributes will get reset when changing
-                          enchantment.
-                        </p>
+                            </SelectContent>
+                          </Select>
+                          <p className="flex items-center text-xs text-gray-500">
+                            The attributes will get reset when changing tier.
+                          </p>
+                        </div>
                       </div>
-                      {/* Tier Select */}
-                      <Label htmlFor="tier">Tier</Label>
-                      <div className="flex gap-2">
-                        <Select
-                          onValueChange={(value: Tier) => {
-                            simulatorStoreActions.setCardTier(
-                              boardCardIdx,
-                              value,
-                            );
-                            simulatorStoreActions.setEditingCardIndex(
-                              boardCardIdx,
-                            );
-                          }}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder={boardCard.tier} />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {Object.keys(card.Tiers ?? {}).map((tier) => (
-                              <SelectItem key={tier} value={tier}>
-                                {tier}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <p className="flex items-center text-xs text-gray-500">
-                          The attributes will get reset when changing tier.
-                        </p>
-                      </div>
+                      {Object.keys(cardConfig.attributeOverrides ?? [])
+                        .filter((attr) => attr != "Enchantment")
+                        .map((attr) => {
+                          return (
+                            <div key={attr} className="flex flex-col gap-2">
+                              <Label htmlFor={attr}>{attr}</Label>
+                              <Input
+                                key={attr}
+                                type={
+                                  typeof cardConfig.attributeOverrides?.[
+                                    attr as keyof typeof cardConfig.attributeOverrides
+                                  ] === "number"
+                                    ? "number"
+                                    : typeof cardConfig.attributeOverrides?.[
+                                          attr as keyof typeof cardConfig.attributeOverrides
+                                        ] === "boolean"
+                                      ? "checkbox"
+                                      : "text"
+                                }
+                                value={
+                                  cardConfig.attributeOverrides?.[
+                                    attr as keyof typeof cardConfig.attributeOverrides
+                                  ]
+                                }
+                                onChange={(e) => {
+                                  setCardConfig((prev) => ({
+                                    ...prev,
+                                    attributeOverrides: {
+                                      ...prev.attributeOverrides,
+                                      [attr]:
+                                        typeof prev.attributeOverrides?.[
+                                          attr as keyof typeof prev.attributeOverrides
+                                        ] === "number"
+                                          ? Number(e.target.value)
+                                          : typeof prev.attributeOverrides?.[
+                                                attr as keyof typeof prev.attributeOverrides
+                                              ] === "boolean"
+                                            ? e.target.checked
+                                            : e.target.value,
+                                    },
+                                  }));
+                                }}
+                              />
+                            </div>
+                          );
+                        })}
                     </div>
-                    {Object.keys(cardConfig.attributeOverrides ?? [])
-                      .filter((attr) => attr != "Enchantment")
-                      .map((attr) => {
-                        return (
-                          <div key={attr} className="flex flex-col gap-2">
-                            <Label htmlFor={attr}>{attr}</Label>
-                            <Input
-                              key={attr}
-                              type={
-                                typeof cardConfig.attributeOverrides?.[
-                                  attr as keyof typeof cardConfig.attributeOverrides
-                                ] === "number"
-                                  ? "number"
-                                  : typeof cardConfig.attributeOverrides?.[
-                                        attr as keyof typeof cardConfig.attributeOverrides
-                                      ] === "boolean"
-                                    ? "checkbox"
-                                    : "text"
-                              }
-                              value={
-                                cardConfig.attributeOverrides?.[
-                                  attr as keyof typeof cardConfig.attributeOverrides
-                                ]
-                              }
-                              onChange={(e) => {
-                                setCardConfig((prev) => ({
-                                  ...prev,
-                                  attributeOverrides: {
-                                    ...prev.attributeOverrides,
-                                    [attr]:
-                                      typeof prev.attributeOverrides?.[
-                                        attr as keyof typeof prev.attributeOverrides
-                                      ] === "number"
-                                        ? Number(e.target.value)
-                                        : typeof prev.attributeOverrides?.[
-                                              attr as keyof typeof prev.attributeOverrides
-                                            ] === "boolean"
-                                          ? e.target.checked
-                                          : e.target.value,
-                                  },
-                                }));
-                              }}
-                            />
-                          </div>
-                        );
-                      })}
-                  </div>
-                </DialogContent>
-              </Dialog>
-            )}
+                  </DialogContent>
+                </Dialog>
+              )}
             {/* Remove button */}
-            {playerIdx == PLAYER_PLAYER_IDX && !isSorting && (
-              <div className="tooltip absolute top-0.5 left-0.5 z-50">
-                <Button
-                  variant="secondary"
-                  size="icon"
-                  className="h-6 w-6 p-0 hover:cursor-pointer"
-                  onClick={() =>
-                    simulatorStoreActions.removePlayerCard(boardCardIdx)
-                  }
-                >
-                  <X className="h-4 w-4" />
-                </Button>
-              </div>
-            )}
+            {(playerIdx === PLAYER_PLAYER_IDX ||
+              playerIdx === ENEMY_PLAYER_IDX) &&
+              !isSorting && (
+                <div className="tooltip absolute top-0.5 left-0.5 z-50">
+                  <Button
+                    variant="secondary"
+                    size="icon"
+                    className="h-6 w-6 p-0 hover:cursor-pointer"
+                    onClick={() =>
+                      simulatorStoreActions.removeCard(
+                        boardCardIdx,
+                        playerIdx === ENEMY_PLAYER_IDX,
+                      )
+                    }
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
             {/* Debug button */}
             {playerIdx == PLAYER_PLAYER_IDX &&
               !isSorting &&
@@ -435,8 +491,11 @@ export function BoardCardElement({
                       for (const attr of Object.values(AttributeType)) {
                         attrObject[attr] = getCardAttribute(
                           gameState,
-                          playerIdx,
-                          boardCardIdx,
+                          {
+                            playerIdx,
+                            cardIdx: boardCardIdx,
+                            location: "board",
+                          },
                           attr,
                         );
                       }

@@ -1,22 +1,15 @@
 "use client";
-import type { BoardCard, GameState } from "@/engine/Engine";
+import type { BoardCard } from "@/engine/Engine";
 import type { GameState as Engine2GameState } from "@/engine/engine2/engine2";
 import React from "react";
 import FramedCardOrSkill from "./FramedCardOrSkill";
 import CardTooltip from "./CardTooltip";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
 import { useSimulatorStore } from "@/lib/simulatorStore";
-import { PLAYER_PLAYER_IDX } from "@/lib/constants";
+import { PLAYER_PLAYER_IDX, ENEMY_PLAYER_IDX } from "@/lib/constants";
 import { Button } from "./ui/button";
 import { X } from "lucide-react";
 import { CardType } from "@/types/cardTypes";
-
-interface BoardSkillElementProps {
-  skill: BoardCard;
-  gameState: GameState | Engine2GameState;
-  playerIdx: number;
-  cardIdx: number;
-}
 
 export function BoardSkillElement({
   boardSkill,
@@ -25,7 +18,7 @@ export function BoardSkillElement({
   boardCardID,
 }: {
   boardSkill: BoardCard;
-  gameState: GameState | Engine2GameState;
+  gameState: Engine2GameState;
   playerID: number;
   boardCardID: number;
 }) {
@@ -51,7 +44,8 @@ export function BoardSkillElement({
             tier={boardSkill.tier}
           />
           {/* Remove button */}
-          {playerID == PLAYER_PLAYER_IDX && (
+          {(playerID === PLAYER_PLAYER_IDX ||
+            playerID === ENEMY_PLAYER_IDX) && (
             <div className="tooltip absolute top-0.5 left-0.5 z-50">
               <Button
                 variant="secondary"
@@ -67,7 +61,11 @@ export function BoardSkillElement({
                     (x) => x.card.$type === CardType.TCardItem,
                   );
                   const skillIndex = actualIndex - lastCardIndex - 1;
-                  simulatorStoreActions.removePlayerSkill(skillIndex);
+
+                  simulatorStoreActions.removeSkill(
+                    skillIndex,
+                    playerID === ENEMY_PLAYER_IDX,
+                  );
                 }}
               >
                 <X className="h-4 w-4" />
