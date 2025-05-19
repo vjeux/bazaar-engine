@@ -457,4 +457,21 @@ export const triggerToEventMap: Record<
   TTriggerOnCardPerformedFreeze: CardPerformedFreezeEvent,
   TTriggerOnCardPerformedHaste: CardPerformedHasteEvent,
   TTriggerOnCardPerformedSlow: CardPerformedSlowEvent,
-};
+}; /**
+ * Convert ability trigger to event class constructor
+ */
+
+export function triggerToEvent(trigger: {
+  $type: TriggerType;
+}): GameEventConstructor<GameEvent> {
+  const triggerType = trigger?.$type || "";
+  const eventClass = triggerToEventMap[triggerType];
+
+  if (!eventClass) {
+    console.warn(`Unhandled trigger type: ${triggerType}`);
+    throw new Error(`Unhandled trigger type: ${triggerType}`);
+    return NotImplementedEvent;
+  }
+
+  return eventClass;
+}

@@ -32,7 +32,8 @@ import { GameEvent } from "./events";
 import { getBoardCardByID } from "./targeting";
 import { PLAYER_PLAYER_IDX } from "@/lib/constants";
 import { genCardsAndEncounters } from "@/lib/Data";
-import { createTriggerCheck, triggerToEvent } from "./eventBus";
+import { createTriggerCheck } from "./eventBus";
+import { triggerToEvent } from "./events";
 import { createPrerequisitesCheck } from "./prereq";
 import { CommandFactory } from "./CommandFactory";
 
