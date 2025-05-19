@@ -15,7 +15,7 @@ export default function RootLayout({
       <html lang="en" suppressHydrationWarning>
         <ReactScan />
         <head>
-          <meta title="Bazaar Engine" />
+          <title>Bazaar Engine</title>
         </head>
 
         <body className="min-h-screen">
