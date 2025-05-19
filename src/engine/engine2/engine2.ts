@@ -114,7 +114,7 @@ export type BoardCard = {
     Tooltips: Tooltip[];
   };
   internalCommandQueue: Command[];
-  internalCommandQueuetick: number;
+  internalCommandQueueCooldown: number;
   registeredTriggers: Map<GameEventConstructor, EventHandler[]>;
   // New field for attribute draft
   attributeDraft?: CardAttributeSnapshot;

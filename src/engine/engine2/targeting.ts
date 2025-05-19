@@ -31,7 +31,7 @@ export type TargetConfig = Source | Target | Subject;
 export function getBoardCardByID(
   gameState: GameState,
   locationID: CardLocationID,
-): BoardCard {
+) {
   return gameState.players[locationID.playerIdx][
     locationID.location === "board" ? "board" : "stash"
   ][locationID.cardIdx];

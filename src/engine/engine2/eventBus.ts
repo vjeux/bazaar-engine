@@ -14,6 +14,8 @@ import {
   SnapshotAttributesCommand,
   ApplyAttributeDraftsCommand,
 } from "./commands";
+import { getBoardCardByID } from "./targeting";
+import { CARD_INTERNAL_TICK_RATE } from "./constants";
 
 // Priority order mapping for sorting
 const priorityOrder = {
@@ -590,16 +592,19 @@ function processCard(
     );
 
     if (!ammoMax || (ammoMax && ammo === undefined) || (ammo && ammo > 0)) {
-      // Handle multicast - access directly instead of via getCardAttribute
-      const multicast = card.Multicast || 0;
+      const multicast = getCardAttribute(
+        gameState,
+        locationID,
+        AttributeType.Multicast,
+      );
       if (multicast) {
-        const MULTICAST_DELAY = 300;
+        const card = getBoardCardByID(gameState, {
+          playerIdx: playerID,
+          cardIdx: cardID,
+          location: "board",
+        });
         for (let i = 0; i < multicast - 1; i++) {
-          gameState.multicast.push({
-            tick: gameState.tick + (i + 1) * MULTICAST_DELAY,
-            playerID,
-            boardCardID: cardID,
-          });
+          card.internalCommandQueue.push(new FireCardCommand(locationID));
         }
       }
 
@@ -614,12 +619,11 @@ function processCard(
         ).execute(gameState);
       }
 
-      // Immediately fire the card
-      new FireCardCommand(locationID).execute(gameState);
+      card.internalCommandQueue.push(new FireCardCommand(locationID));
 
-      // Reset the card's tick if it has a cooldown
-      // To allow for overcharging an item, we remove the cooldown max instead of setting the tick to 0
       if ("CooldownMax" in card) {
+        // Reset the card's tick if it has a cooldown
+        // To allow for overcharging an item, we remove the cooldown max instead of setting the tick to 0
         new Commands.ModifyCardAttributeCommand(
           locationID,
           "tick",
@@ -627,6 +631,20 @@ function processCard(
           "subtract",
         ).execute(gameState);
       }
+    }
+  }
+
+  // Pop a command from the queue given the internalTick is >= than
+  if (card.internalCommandQueueCooldown > 0) {
+    card.internalCommandQueueCooldown -= 100;
+  }
+  console.log("internal cooldown", card.internalCommandQueueCooldown);
+  if (card.internalCommandQueueCooldown <= 0) {
+    const command = card.internalCommandQueue.shift();
+    console.log("shifted command", command);
+    if (command) {
+      command.execute(gameState);
+      card.internalCommandQueueCooldown = CARD_INTERNAL_TICK_RATE;
     }
   }
 

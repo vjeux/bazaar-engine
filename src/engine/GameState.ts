@@ -168,7 +168,7 @@ function _createBoardCardFromCard(
     Enchantment: enchantment,
     isDisabled: false,
     internalCommandQueue: [],
-    internalCommandQueuetick: 0,
+    internalCommandQueueCooldown: 0,
     registeredTriggers: new Map(),
   };
 
