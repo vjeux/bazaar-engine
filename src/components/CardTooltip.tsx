@@ -60,6 +60,26 @@ export default function CardTooltip({
     AttributeType.CooldownMax,
   );
 
+  const CritChance = getCardAttribute(
+    effectiveGameState,
+    {
+      playerIdx: playerID,
+      cardIdx: boardCardID,
+      location: "board",
+    },
+    AttributeType.CritChance,
+  );
+
+  const Multicast = getCardAttribute(
+    effectiveGameState,
+    {
+      playerIdx: playerID,
+      cardIdx: boardCardID,
+      location: "board",
+    },
+    AttributeType.Multicast,
+  );
+
   const visibleTags = gameState
     ? getCardAttribute(
         effectiveGameState,
@@ -81,6 +101,12 @@ export default function CardTooltip({
         {CooldownMax !== undefined && (
           <div className="text-muted-foreground text-sm">
             <p>Cooldown: {CooldownMax / 1000}s</p>
+            {CritChance !== undefined && CritChance > 0 && (
+              <p>Crit Chance: {CritChance}%</p>
+            )}
+            {Multicast !== undefined && Multicast > 1 && (
+              <p>Multicast: {Multicast}x</p>
+            )}
           </div>
         )}
         {getTooltips(effectiveGameState, {
