@@ -13,17 +13,16 @@ Start of fight poison and burn process a tick and apply before the fight starts.
 
 ### TODOS:
 
-- [ ] add better multicast
+- [x] add better multicast
+- [x] use getPlayerAttribute for the palces where it's needed.
+- [x] Carry charge onto next use, instead of simply loosing it. maybe just let items charge past CooldownMax and minus CooldownMax on fire?
 - [ ] Dont fire events until after the card has finished executing its commands. Some internal queue maybe idk.
-- [ ] use getPlayerAttribute for the palces where it's needed.
-- [ ] Carry charge onto next use, instead of simply loosing it. maybe just let items charge past CooldownMax and minus CooldownMax on fire?
-- [ ] Might be emitting cardFired events upon skill activation, need to check
 - [ ] Should probably modify the boardCard implementation to be a class that tracks its own attributes and enchantments etc.
+- [ ] use internal queue not only for multicast, but also for triggers, like "when you slow, deal damage", Proboscis should have an internal cooldown/max fire rate. https://www.howbazaar.gg/items?isShowingAdvancedFilters=true#Proboscis
 
 ### BUGS:
 
 - Atlatl cooldown not working
-- Multicast is currently disabled until I implement internal card queue system
 - Rapid Injection System - Ahexa encounter infinite loop
 
 ### ASSUMPTIONS (that might lead to bugs):
@@ -31,9 +30,3 @@ Start of fight poison and burn process a tick and apply before the fight starts.
 - We assume skills are defined as being on the board for their location
 - Assume monsters have no cards in stash (we get none from the api)
 - SelfBoard includes skills, while SelfHand is only CardItems
-
-
-make sure attribute setter for
-
-heal caps at maxhealth
-lifesteal caps at maxhealth
