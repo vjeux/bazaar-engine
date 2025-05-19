@@ -1,8 +1,9 @@
+// This component must be the top-most import in this file! according to ReactScan docs at https://github.com/aidenybai/react-scan/blob/main/docs/installation/next-js-app-router.md
+import { ReactScan } from "@/components/ReactScan";
 import { StrictMode } from "react";
 import "./globals.css";
 import Navbar from "./navbar";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { ReactScan } from "@/components/ReactScan";
 import Providers from "@/components/Providers";
 
 export default function RootLayout({
