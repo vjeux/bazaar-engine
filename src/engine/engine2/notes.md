@@ -19,6 +19,8 @@ Start of fight poison and burn process a tick and apply before the fight starts.
 - [ ] Dont fire events until after the card has finished executing its commands. Some internal queue maybe idk.
 - [ ] Should probably modify the boardCard implementation to be a class that tracks its own attributes and enchantments etc.
 - [ ] use internal queue not only for multicast, but also for triggers, like "when you slow, deal damage", Proboscis should have an internal cooldown/max fire rate. https://www.howbazaar.gg/items?isShowingAdvancedFilters=true#Proboscis
+- [ ] Fork [BazaarPlannerMod](https://github.com/oceanseth/BazaarPlannerMod) and implement websocket connection to client browser.
+- [ ] Fix last transformation actions. Will have to implement tooltip parsing since the transformation target it server side.
 
 ### BUGS:
 
