@@ -19,11 +19,13 @@ import {
   CardFiredEvent,
   CardItemUsedEvent,
   CardPerformedBurnEvent,
+  CardPerformedFreezeEvent,
   CardPerformedHasteEvent,
   CardPerformedHealEvent,
   CardPerformedPoisonEvent,
   CardPerformedRegenEvent,
   CardPerformedShieldEvent,
+  CardPerformedSlowEvent,
   CardReloadedEvent,
   GameEndedEvent,
   GameEvent,
@@ -564,6 +566,32 @@ export function createTriggerCheck(
       }
       case TriggerType.TTriggerOnCardPerformedHaste: {
         if (e instanceof CardPerformedHasteEvent) {
+          return checkSubjectAndTargetIfDefined(
+            gs,
+            ability,
+            locationID,
+            e.sourceCardID,
+            e,
+            "card",
+          );
+        }
+        return false;
+      }
+      case TriggerType.TTriggerOnCardPerformedSlow: {
+        if (e instanceof CardPerformedSlowEvent) {
+          return checkSubjectAndTargetIfDefined(
+            gs,
+            ability,
+            locationID,
+            e.sourceCardID,
+            e,
+            "card",
+          );
+        }
+        return false;
+      }
+      case TriggerType.TTriggerOnCardPerformedFreeze: {
+        if (e instanceof CardPerformedFreezeEvent) {
           return checkSubjectAndTargetIfDefined(
             gs,
             ability,

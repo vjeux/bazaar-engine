@@ -5,7 +5,7 @@ import { describe, expect, it } from "vitest";
 import { genCardsAndEncounters } from "../lib/Data";
 import { Tier } from "../types/shared";
 import { CARDS_VERSION } from "../lib/constants";
-import { getTooltips } from "@/engine/getTooltips";
+import { getTooltips } from "@/engine/engine2/getTooltips";
 const { Cards, Encounters } = await genCardsAndEncounters();
 
 function getTiers(startingTier: Tier): Tier[] {
@@ -46,7 +46,11 @@ describe("Tooltips should not throw", () => {
         ]);
 
         // This should not throw
-        getTooltips(gameState, 0, 0);
+        getTooltips(gameState, {
+          playerIdx: 0,
+          cardIdx: 0,
+          location: "board",
+        });
       });
     }, 5000);
   });
@@ -69,7 +73,11 @@ describe("Tooltip snapshots", () => {
             { type: "player", health: 1000, ...extension },
             { type: "player", health: 1000 },
           ]);
-          const tooltips = getTooltips(gameState, 0, 0);
+          const tooltips = getTooltips(gameState, {
+            playerIdx: 0,
+            cardIdx: 0,
+            location: "board",
+          });
           expect({
             cardName,
             tier,

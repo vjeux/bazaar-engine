@@ -1,12 +1,13 @@
 import { AttributeType, type ActionType } from "@/types/cardTypes";
-import { GameState, getCardAttribute, getActionValue } from "./Engine";
+import { CardLocationID, GameState } from "./engine2";
+import { getCardAttribute } from "./getAttribute";
+import { getActionValue } from "./getActionValue";
 
 export function getTooltips(
   gameState: GameState,
-  playerID: number,
-  boardCardID: number,
+  cardID: CardLocationID,
 ): string[] {
-  const boardCard = gameState.players[playerID].board[boardCardID];
+  const boardCard = gameState.players[cardID.playerIdx].board[cardID.cardIdx];
   const card = boardCard.card; // workaround to get abilitias and auras as they might not exist on the boardCard directly, if they are not a part of the tier, and the tooltips reference a different tiers values.
   return boardCard.TooltipIds.map((tooltipId: number) => {
     const tooltipObject = boardCard.Localization.Tooltips[tooltipId];
@@ -19,48 +20,23 @@ export function getTooltips(
         const action = card[type === "aura" ? "Auras" : "Abilities"][id].Action;
         if (action.$type === "TActionCardHaste") {
           return String(
-            getCardAttribute(
-              gameState,
-              playerID,
-              boardCardID,
-              AttributeType.HasteTargets,
-            ),
+            getCardAttribute(gameState, cardID, AttributeType.HasteTargets),
           );
         } else if (action.$type === "TActionCardSlow") {
           return String(
-            getCardAttribute(
-              gameState,
-              playerID,
-              boardCardID,
-              AttributeType.SlowTargets,
-            ),
+            getCardAttribute(gameState, cardID, AttributeType.SlowTargets),
           );
         } else if (action.$type === "TActionCardFreeze") {
           return String(
-            getCardAttribute(
-              gameState,
-              playerID,
-              boardCardID,
-              AttributeType.FreezeTargets,
-            ),
+            getCardAttribute(gameState, cardID, AttributeType.FreezeTargets),
           );
         } else if (action.$type === "TActionCardCharge") {
           return String(
-            getCardAttribute(
-              gameState,
-              playerID,
-              boardCardID,
-              AttributeType.ChargeTargets,
-            ),
+            getCardAttribute(gameState, cardID, AttributeType.ChargeTargets),
           );
         } else if (action.$type === "TActionCardReload") {
           return String(
-            getCardAttribute(
-              gameState,
-              playerID,
-              boardCardID,
-              AttributeType.ReloadTargets,
-            ),
+            getCardAttribute(gameState, cardID, AttributeType.ReloadTargets),
           );
         }
         return `{?${type}.${id}.targets}`;
@@ -75,14 +51,7 @@ export function getTooltips(
             return "";
           }
           return String(
-            getActionValue(
-              gameState,
-              action.Value.Modifier.Value,
-              playerID,
-              boardCardID,
-              playerID,
-              boardCardID,
-            ),
+            getActionValue(gameState, action.Value.Modifier.Value, cardID),
           );
         },
       )
@@ -94,14 +63,7 @@ export function getTooltips(
             card[type === "aura" ? "Auras" : "Abilities"][id].Action;
 
           if (action.Value) {
-            const actionValue = getActionValue(
-              gameState,
-              action.Value,
-              playerID,
-              boardCardID,
-              playerID,
-              boardCardID,
-            );
+            const actionValue = getActionValue(gameState, action.Value, cardID);
             if (
               action.$type === "TAuraActionCardModifyAttribute" &&
               (action.AttributeType === "SlowAmount" ||
@@ -119,14 +81,7 @@ export function getTooltips(
             case "TActionGameSpawnCards":
               if ("SpawnContext" in action && action.SpawnContext) {
                 return String(
-                  getActionValue(
-                    gameState,
-                    action.SpawnContext.Limit,
-                    playerID,
-                    boardCardID,
-                    playerID,
-                    boardCardID,
-                  ),
+                  getActionValue(gameState, action.SpawnContext.Limit, cardID),
                 );
               }
               return ""; // Ensure string return
@@ -134,8 +89,7 @@ export function getTooltips(
               return String(
                 getCardAttribute(
                   gameState,
-                  playerID,
-                  boardCardID,
+                  cardID,
                   AttributeType.DamageAmount,
                 ) ?? "",
               ); // Coalesce to empty string if undefined
@@ -143,26 +97,20 @@ export function getTooltips(
               return String(
                 getCardAttribute(
                   gameState,
-                  playerID,
-                  boardCardID,
+                  cardID,
                   AttributeType.ReloadAmount,
                 ) ?? "",
               );
             case "TActionPlayerHeal":
               return String(
-                getCardAttribute(
-                  gameState,
-                  playerID,
-                  boardCardID,
-                  AttributeType.HealAmount,
-                ) ?? "",
+                getCardAttribute(gameState, cardID, AttributeType.HealAmount) ??
+                  "",
               );
             case "TActionPlayerShieldApply":
               return String(
                 getCardAttribute(
                   gameState,
-                  playerID,
-                  boardCardID,
+                  cardID,
                   AttributeType.ShieldApplyAmount,
                 ) ?? "",
               );
@@ -170,8 +118,7 @@ export function getTooltips(
               return String(
                 getCardAttribute(
                   gameState,
-                  playerID,
-                  boardCardID,
+                  cardID,
                   AttributeType.PoisonApplyAmount,
                 ) ?? "",
               );
@@ -179,8 +126,7 @@ export function getTooltips(
               return String(
                 getCardAttribute(
                   gameState,
-                  playerID,
-                  boardCardID,
+                  cardID,
                   AttributeType.BurnApplyAmount,
                 ) ?? "",
               );
@@ -188,8 +134,7 @@ export function getTooltips(
               return String(
                 getCardAttribute(
                   gameState,
-                  playerID,
-                  boardCardID,
+                  cardID,
                   AttributeType.RegenApplyAmount,
                 ) ?? "",
               );
@@ -197,8 +142,7 @@ export function getTooltips(
               return String(
                 (getCardAttribute(
                   gameState,
-                  playerID,
-                  boardCardID,
+                  cardID,
                   AttributeType.FreezeAmount,
                 ) ?? 0) / 1000,
               );
@@ -206,8 +150,7 @@ export function getTooltips(
               return String(
                 (getCardAttribute(
                   gameState,
-                  playerID,
-                  boardCardID,
+                  cardID,
                   AttributeType.HasteAmount,
                 ) ?? 0) / 1000,
               );
@@ -215,8 +158,7 @@ export function getTooltips(
               return String(
                 (getCardAttribute(
                   gameState,
-                  playerID,
-                  boardCardID,
+                  cardID,
                   AttributeType.SlowAmount,
                 ) ?? 0) / 1000,
               );
@@ -224,8 +166,7 @@ export function getTooltips(
               return String(
                 (getCardAttribute(
                   gameState,
-                  playerID,
-                  boardCardID,
+                  cardID,
                   AttributeType.ChargeAmount,
                 ) ?? 0) / 1000,
               );
@@ -233,8 +174,7 @@ export function getTooltips(
               return String(
                 getCardAttribute(
                   gameState,
-                  playerID,
-                  boardCardID,
+                  cardID,
                   AttributeType.BurnRemoveAmount,
                 ) ?? "",
               );
@@ -242,8 +182,7 @@ export function getTooltips(
               return String(
                 getCardAttribute(
                   gameState,
-                  playerID,
-                  boardCardID,
+                  cardID,
                   AttributeType.PoisonRemoveAmount,
                 ) ?? "",
               );
