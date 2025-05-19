@@ -13,43 +13,46 @@ import { Label } from "@/components/ui/label";
 import { useSimulatorStore } from "@/lib/simulatorStore";
 import { Settings } from "lucide-react";
 import { useState, useEffect } from "react";
-import type { GameState } from "@/engine/Engine";
-import type { GameState as Engine2GameState } from "@/engine/engine2/engine2";
 
-export function PlayerStatsDialog() {
-  const playerConfig = useSimulatorStore((state) => state.playerConfig);
-  const setPlayerConfig = useSimulatorStore(
-    (state) => state.actions.setPlayerConfig,
+export function PlayerStatsDialog({ isEnemy = false }: { isEnemy?: boolean }) {
+  const config = useSimulatorStore((state) =>
+    isEnemy ? state.enemyConfig : state.playerConfig,
   );
+  const actions = useSimulatorStore((state) => state.actions);
 
-  const [health, setHealth] = useState(
-    playerConfig.health?.toString() || "2000",
-  );
+  const [health, setHealth] = useState(config.health?.toString() || "2000");
   const [healthRegen, setHealthRegen] = useState(
-    playerConfig.healthRegen?.toString() || "0",
+    config.healthRegen?.toString() || "0",
   );
-  const [income, setIncome] = useState(playerConfig.income?.toString() || "0");
-  const [gold, setGold] = useState(playerConfig.gold?.toString() || "0");
+  const [income, setIncome] = useState(config.income?.toString() || "0");
+  const [gold, setGold] = useState(config.gold?.toString() || "0");
   const [open, setOpen] = useState(false);
 
-  // Update local state when player config changes
+  // Update local state when config changes
   useEffect(() => {
     if (open) {
-      setHealth(playerConfig.health?.toString() || "2000");
-      setHealthRegen(playerConfig.healthRegen?.toString() || "0");
-      setIncome(playerConfig.income?.toString() || "0");
-      setGold(playerConfig.gold?.toString() || "0");
+      setHealth(config.health?.toString() || "2000");
+      setHealthRegen(config.healthRegen?.toString() || "0");
+      setIncome(config.income?.toString() || "0");
+      setGold(config.gold?.toString() || "0");
     }
-  }, [open, playerConfig]);
+  }, [open, config]);
 
   const handleSave = () => {
-    setPlayerConfig({
-      ...playerConfig,
+    const updatedConfig = {
+      ...config,
       health: parseInt(health) || 2000,
       healthRegen: parseInt(healthRegen) || 0,
       income: parseInt(income) || 0,
       gold: parseInt(gold) || 0,
-    });
+    };
+
+    if (isEnemy) {
+      actions.setEnemyConfig(updatedConfig);
+    } else {
+      actions.setPlayerConfig(updatedConfig);
+    }
+
     setOpen(false);
   };
 
@@ -66,9 +69,9 @@ export function PlayerStatsDialog() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Player Stats</DialogTitle>
+          <DialogTitle>{isEnemy ? "Enemy" : "Player"} Stats</DialogTitle>
           <DialogDescription>
-            Configure your player stats for the simulation.
+            Configure {isEnemy ? "enemy" : "player"} stats for the simulation.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -114,7 +117,9 @@ export function PlayerStatsDialog() {
           </div>
         </div>
         <DialogFooter>
-          <Button onClick={handleSave}>Save changes</Button>
+          <Button onClick={handleSave} className="hover:cursor-pointer">
+            Save changes
+          </Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>

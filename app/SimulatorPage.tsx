@@ -201,6 +201,8 @@ export default function SimulatorPage() {
                 <p>Clear Enemy Board</p>
               </TooltipContent>
             </Tooltip>
+            {/* Enemy Stats Dialog */}
+            <PlayerStatsDialog isEnemy={true} />
           </div>
         </div>
         {/* Enemy Health Bar*/}
@@ -255,7 +257,7 @@ export default function SimulatorPage() {
                 <p>Clear Board</p>
               </TooltipContent>
             </Tooltip>
-            <PlayerStatsDialog />
+            <PlayerStatsDialog isEnemy={false} />
           </div>
         </div>
       </div>
