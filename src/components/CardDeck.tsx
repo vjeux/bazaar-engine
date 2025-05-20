@@ -1,7 +1,6 @@
 "use client";
-import { BoardCard } from "@/engine/Engine.ts";
+import { BoardCard } from "@/engine/engine2/engine2";
 import { BoardCardElement } from "@/components/BoardCardElement";
-import { GameState } from "@/engine/Engine";
 import { useMemo } from "react";
 import { useSimulatorStore } from "@/lib/simulatorStore";
 import {
@@ -13,14 +12,14 @@ import {
 } from "@dnd-kit/core";
 import {
   horizontalListSortingStrategy,
-  rectSortingStrategy,
   SortableContext,
 } from "@dnd-kit/sortable";
 import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 import type { GameState as Engine2GameState } from "@/engine/engine2/engine2";
+import { ENEMY_PLAYER_IDX } from "@/lib/constants";
 
 interface CardDeckProps {
-  gameState: GameState | Engine2GameState;
+  gameState: Engine2GameState;
   playerId: number;
 }
 
@@ -68,7 +67,11 @@ export default function CardDeck({ gameState, playerId }: CardDeckProps) {
     if (active.id !== over?.id) {
       const oldIndex = playerBoardCards.findIndex((x) => x.uuid === active.id);
       const newIndex = playerBoardCards.findIndex((x) => x.uuid === over?.id);
-      simulatorStoreActions.movePlayerCard(oldIndex, newIndex);
+      simulatorStoreActions.moveCard(
+        oldIndex,
+        newIndex,
+        playerId === ENEMY_PLAYER_IDX,
+      );
     }
   }
 }
