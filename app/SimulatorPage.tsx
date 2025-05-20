@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { GoldIncomeDisplay } from "@/components/GoldIncomeDisplay";
-import { useSimulatorStore } from "@/lib/simulatorStore";
+import { useSelectedMonster, useSimulatorStore } from "@/lib/simulatorStore";
 import { Button } from "@/components/ui/button";
 import CardDeck from "@/components/CardDeck";
 import { Pause, Play, RotateCcw, Trash2 } from "lucide-react";
@@ -323,7 +323,7 @@ const EncounterSelector = memo(function EncounterSelector({
   encounters: FlattenedEncounter[];
 }) {
   const simulatorStoreActions = useSimulatorStore((state) => state.actions);
-  const selectedMonster = useSimulatorStore((state) => state.selectedMonster);
+  const selectedMonster = useSelectedMonster();
 
   const encounterItems = [
     {

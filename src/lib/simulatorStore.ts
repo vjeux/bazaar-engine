@@ -601,6 +601,8 @@ export const useWinrateCalculation = () => {
 
   return { isCalculating, winrate, progress, total, completed };
 };
+export const useSelectedMonster = () =>
+  useSimulatorStore((state) => state.selectedMonster);
 
 // For backward compatibility
 export const addPlayerCard = (card: PlayerCardConfig) =>
