@@ -28,8 +28,8 @@ import { EnchantmentType, Tier } from "@/types/shared";
 import CardTooltip from "./CardTooltip";
 import { Button } from "./ui/button";
 import { Bug, Settings, X } from "lucide-react";
-import { BoardCard, GameState } from "@/engine/engine2/engine2";
-import { getCardAttribute } from "@/engine/engine2/getAttribute";
+import { BoardCard, CardLocationID, GameState } from "@/engine/engine2/engine2";
+import { getCardAttributes } from "@/engine/engine2/getCardAttributes";
 
 // Enchantment color mappings
 const ENCHANTMENT_COLORS: Record<EnchantmentType, string> = {
@@ -95,7 +95,7 @@ export function BoardCardElement({
   }, [boardCard]);
 
   const {
-    attributes,
+    attributes: dragAttributes,
     listeners,
     setNodeRef,
     transform,
@@ -124,141 +124,33 @@ export function BoardCardElement({
   const paddingBottom = 0.1;
   const paddingRight = 0.04;
 
-  const DamageAmount = getCardAttribute(
-    gameState,
-    {
-      playerIdx,
-      cardIdx: boardCardIdx,
-      location: "board",
-    },
-    AttributeType.DamageAmount,
-  );
-  const HealAmount = getCardAttribute(
-    gameState,
-    {
-      playerIdx,
-      cardIdx: boardCardIdx,
-      location: "board",
-    },
-    AttributeType.HealAmount,
-  );
-  const BurnApplyAmount = getCardAttribute(
-    gameState,
-    {
-      playerIdx,
-      cardIdx: boardCardIdx,
-      location: "board",
-    },
-    AttributeType.BurnApplyAmount,
-  );
-  const PoisonApplyAmount = getCardAttribute(
-    gameState,
-    {
-      playerIdx,
-      cardIdx: boardCardIdx,
-      location: "board",
-    },
-    AttributeType.PoisonApplyAmount,
-  );
-  const ShieldApplyAmount = getCardAttribute(
-    gameState,
-    {
-      playerIdx,
-      cardIdx: boardCardIdx,
-      location: "board",
-    },
-    AttributeType.ShieldApplyAmount,
-  );
-  const Freeze = getCardAttribute(
-    gameState,
-    {
-      playerIdx,
-      cardIdx: boardCardIdx,
-      location: "board",
-    },
-    AttributeType.Freeze,
-  );
-  const Slow = getCardAttribute(
-    gameState,
-    {
-      playerIdx,
-      cardIdx: boardCardIdx,
-      location: "board",
-    },
-    AttributeType.Slow,
-  );
-  const Haste = getCardAttribute(
-    gameState,
-    {
-      playerIdx,
-      cardIdx: boardCardIdx,
-      location: "board",
-    },
-    AttributeType.Haste,
-  );
-  const CritChance = getCardAttribute(
-    gameState,
-    {
-      playerIdx,
-      cardIdx: boardCardIdx,
-      location: "board",
-    },
-    AttributeType.CritChance,
-  );
-  const SellPrice = getCardAttribute(
-    gameState,
-    {
-      playerIdx,
-      cardIdx: boardCardIdx,
-      location: "board",
-    },
-    AttributeType.SellPrice,
-  );
-  const Multicast = getCardAttribute(
-    gameState,
-    {
-      playerIdx,
-      cardIdx: boardCardIdx,
-      location: "board",
-    },
-    AttributeType.Multicast,
-  );
-  const AmmoMax = getCardAttribute(
-    gameState,
-    {
-      playerIdx,
-      cardIdx: boardCardIdx,
-      location: "board",
-    },
-    AttributeType.AmmoMax,
-  );
-  const Ammo = getCardAttribute(
-    gameState,
-    {
-      playerIdx,
-      cardIdx: boardCardIdx,
-      location: "board",
-    },
-    AttributeType.Ammo,
-  );
-  const CooldownMax = getCardAttribute(
-    gameState,
-    {
-      playerIdx,
-      cardIdx: boardCardIdx,
-      location: "board",
-    },
-    AttributeType.CooldownMax,
-  );
-  const Lifesteal = getCardAttribute(
-    gameState,
-    {
-      playerIdx,
-      cardIdx: boardCardIdx,
-      location: "board",
-    },
-    AttributeType.Lifesteal,
-  );
+  // Get all card attributes at once instead of individual calls
+  const cardLocation: CardLocationID = {
+    playerIdx,
+    cardIdx: boardCardIdx,
+    location: "board",
+  };
+
+  const cardAttributes = getCardAttributes(gameState, cardLocation);
+
+  // Destructure the attributes we need for rendering
+  const {
+    DamageAmount,
+    HealAmount,
+    BurnApplyAmount,
+    PoisonApplyAmount,
+    ShieldApplyAmount,
+    Freeze,
+    Slow,
+    Haste,
+    CritChance,
+    SellPrice,
+    Multicast,
+    AmmoMax,
+    Ammo,
+    CooldownMax,
+    Lifesteal,
+  } = cardAttributes;
 
   return (
     <div>
@@ -487,19 +379,14 @@ export function BoardCardElement({
                     className="h-6 w-6 p-0 hover:cursor-pointer"
                     onClick={() => {
                       console.log("boardCard", boardCard);
-                      const attrObject = {} as Record<AttributeType, unknown>;
-                      for (const attr of Object.values(AttributeType)) {
-                        attrObject[attr] = getCardAttribute(
-                          gameState,
-                          {
-                            playerIdx,
-                            cardIdx: boardCardIdx,
-                            location: "board",
-                          },
-                          attr,
-                        );
-                      }
-                      console.log("getAttributes", attrObject);
+                      console.log(
+                        "getCardAttributes",
+                        getCardAttributes(gameState, {
+                          playerIdx,
+                          cardIdx: boardCardIdx,
+                          location: "board",
+                        }),
+                      );
                     }}
                   >
                     <Bug className="h-4 w-4" />
@@ -507,7 +394,12 @@ export function BoardCardElement({
                 </div>
               )}
             {/* Card container */}
-            <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+            <div
+              ref={setNodeRef}
+              style={style}
+              {...dragAttributes}
+              {...listeners}
+            >
               <div
                 className={cn(
                   "relative m-[5px] mt-[5px]",

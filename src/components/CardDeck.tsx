@@ -14,7 +14,6 @@ import {
   horizontalListSortingStrategy,
   SortableContext,
 } from "@dnd-kit/sortable";
-import { restrictToHorizontalAxis } from "@dnd-kit/modifiers";
 import type { GameState as Engine2GameState } from "@/engine/engine2/engine2";
 import { ENEMY_PLAYER_IDX } from "@/lib/constants";
 
@@ -35,11 +34,7 @@ export default function CardDeck({ gameState, playerId }: CardDeckProps) {
   );
 
   return (
-    <DndContext
-      sensors={sensors}
-      onDragEnd={handleDragEnd}
-      modifiers={[restrictToHorizontalAxis]}
-    >
+    <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
       <div className="flex w-full items-center justify-center gap-2">
         <SortableContext
           items={playerBoardCards.map((x) => x.uuid)}
