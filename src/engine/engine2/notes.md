@@ -8,7 +8,6 @@ Card fired vs used
 - Fired uses ammo, on cooldownmax
 - used is multicast
 
-
 Start of fight poison and burn process a tick and apply before the fight starts. see https://youtu.be/drSgR3E8hyA?si=7bCT_ZmLYXBlySGM&t=635.
 
 ### TODOS:
@@ -21,11 +20,14 @@ Start of fight poison and burn process a tick and apply before the fight starts.
 - [ ] use internal queue not only for multicast, but also for triggers, like "when you slow, deal damage", Proboscis should have an internal cooldown/max fire rate. https://www.howbazaar.gg/items?isShowingAdvancedFilters=true#Proboscis
 - [ ] Fork [BazaarPlannerMod](https://github.com/oceanseth/BazaarPlannerMod) and implement websocket connection to client browser.
 - [ ] Fix last transformation actions. Will have to implement tooltip parsing since the transformation target it server side.
+- [ ] Add support for modifying skill tier
+- [ ] limit boardcard attribute values to .1 digits
 
 ### BUGS:
 
 - Atlatl cooldown not working
 - Rapid Injection System - Ahexa encounter infinite loop
+- Combobox search no longer works cuz i removed the encounter name at the start of the value, and just used the id. add the name back and split it again.
 
 ### ASSUMPTIONS (that might lead to bugs):
 
