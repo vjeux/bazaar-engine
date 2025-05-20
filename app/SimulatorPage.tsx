@@ -307,28 +307,55 @@ const BattleSpeedSelector = memo(function BattleSpeedSelector() {
   );
 });
 
+function encounterSelectionName(encounter: {
+  day: number;
+  name: string;
+}): string {
+  if (typeof encounter.day === "number") {
+    return `Day ${encounter.day} - ${encounter.name}`;
+  }
+  return `Event ${encounter.name}`;
+}
+
 const EncounterSelector = memo(function EncounterSelector({
   encounters,
 }: {
   encounters: FlattenedEncounter[];
 }) {
   const simulatorStoreActions = useSimulatorStore((state) => state.actions);
+  const selectedMonster = useSimulatorStore((state) => state.selectedMonster);
+
+  const encounterItems = [
+    {
+      value: "custom",
+      label: "Custom Enemy",
+    },
+  ].concat(
+    encounters.map((encounter) => ({
+      value: encounter.card.cardId,
+      label: encounterSelectionName(encounter),
+    })),
+  );
+
+  let selectPlaceholder = "Select an encounter";
+  if (selectedMonster === "custom") {
+    selectPlaceholder = "Custom Enemy";
+  } else if (selectedMonster) {
+    selectPlaceholder = encounterSelectionName(selectedMonster);
+  }
 
   return (
     <ComboBox
-      items={encounters.map((encounter) => ({
-        value: `${encounter.name}:${encounter.card.cardId}`,
-        label:
-          typeof encounter.day === "number"
-            ? `Day ${encounter.day} - ${encounter.name}`
-            : `Event ${encounter.name}`,
-      }))}
+      items={encounterItems}
       searchPlaceholder="Search encounters..."
-      selectPlaceholder={"Select encounter..."}
+      selectPlaceholder={selectPlaceholder}
       onChange={(value) => {
-        if (encounters.length === 0) return;
+        if (value === "custom") {
+          simulatorStoreActions.setEnemyToEmptyPlayer();
+          return;
+        }
         const encounter = encounters.find(
-          (encounter) => encounter.card.cardId === value.split(":")[1],
+          (encounter) => encounter.card.cardId === value,
         );
         if (encounter) {
           simulatorStoreActions.setEnemyFromMonster({

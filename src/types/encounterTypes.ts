@@ -82,5 +82,5 @@ export interface Skill {
 export interface FlattenedEncounter {
   name: string;
   card: { cardName: string; cardId: string };
-  day: number | string;
+  day: number;
 }

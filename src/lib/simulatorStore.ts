@@ -23,6 +23,7 @@ const { Cards: CardsData, Encounters: EncounterData } =
 type State = {
   playerConfig: PlayerConfig;
   enemyConfig: PlayerConfig;
+  selectedMonster: MonsterConfig | "custom";
   steps: GameState[];
   autoScroll: boolean;
   autoReset: boolean;
@@ -41,6 +42,7 @@ type Actions = {
     setPlayerConfig: (playerConfig: PlayerConfig) => void;
     setEnemyConfig: (enemyConfig: PlayerConfig) => void;
     setEnemyFromMonster: (monsterConfig: MonsterConfig) => void;
+    setEnemyToEmptyPlayer: () => void;
     addCard: (card: PlayerCardConfig, isEnemy?: boolean) => void;
     addSkill: (skill: PlayerSkillConfig, isEnemy?: boolean) => void;
     setAutoScroll: (autoScroll: boolean) => void;
@@ -168,8 +170,7 @@ function convertMonsterToPlayerConfig(
     };
   } catch (error) {
     console.error("Error converting monster to player config:", error);
-    // Return default enemy config if conversion fails
-    return { ...initialEnemy };
+    throw error;
   }
 }
 
@@ -198,6 +199,7 @@ const initialSteps = runWrapper(initialEnemyFromMonster, initialPlayer);
 const initialState: State = {
   playerConfig: initialPlayer,
   enemyConfig: initialEnemyFromMonster,
+  selectedMonster: initialMonster,
   steps: initialSteps,
   autoScroll: false,
   autoReset: false,
@@ -271,9 +273,18 @@ export const useSimulatorStore = create<State & Actions>()(
         setEnemyFromMonster: (monsterConfig: MonsterConfig) =>
           set((state) => {
             state.enemyConfig = convertMonsterToPlayerConfig(monsterConfig);
+            state.selectedMonster = monsterConfig;
             state.stepCount = 0;
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
+        setEnemyToEmptyPlayer: () => {
+          set((state) => {
+            state.enemyConfig = initialEnemy;
+            state.selectedMonster = "custom";
+            state.stepCount = 0;
+            runSimulationAndUpdateWinrate(state, get().actions);
+          });
+        },
         addCard: (card: PlayerCardConfig, isEnemy: boolean = false) =>
           set((state) => {
             const config = isEnemy ? state.enemyConfig : state.playerConfig;
@@ -523,6 +534,7 @@ export const useSimulatorStore = create<State & Actions>()(
       partialize: (state) => ({
         playerConfig: state.playerConfig,
         enemyConfig: state.enemyConfig,
+        selectedMonster: state.selectedMonster,
       }),
       merge: (persistedState: unknown, currentState: State & Actions) => {
         const typedState = persistedState as Partial<State>;
