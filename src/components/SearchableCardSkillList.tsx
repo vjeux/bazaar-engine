@@ -8,6 +8,8 @@ import { useSimulatorStore } from "@/lib/simulatorStore.ts";
 import { PlayerCardConfig, PlayerSkillConfig } from "@/engine/GameState.ts";
 import { CARDS_VERSION } from "@/lib/constants.ts";
 import { Virtuoso } from "react-virtuoso";
+import { Button } from "./ui/button";
+import { Ghost, UserIcon } from "lucide-react";
 
 const CARD_HEIGHT = 70;
 const SKILL_SIZE = 70;
@@ -15,6 +17,11 @@ const SKILL_SIZE = 70;
 export const SearchableCardSkillList = memo(SearchableCardSkillList_);
 function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
   const simulatorStoreActions = useSimulatorStore((state) => state.actions);
+  const [isEnemyMode, setIsEnemyMode] = useState(false);
+
+  const toggleTargetPlayer = useCallback(() => {
+    setIsEnemyMode((prev) => !prev);
+  }, []);
 
   const handleCardSelect = useCallback(
     (card: Card) => {
@@ -22,9 +29,9 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
         cardId: card.Id,
         tier: card.StartingTier,
       };
-      simulatorStoreActions.addCard(cardConfig, false);
+      simulatorStoreActions.addCard(cardConfig, isEnemyMode);
     },
-    [simulatorStoreActions],
+    [simulatorStoreActions, isEnemyMode],
   );
 
   const handleSkillSelect = useCallback(
@@ -33,9 +40,9 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
         cardId: card.Id,
         tier: card.StartingTier,
       };
-      simulatorStoreActions.addSkill(skillConfig, false);
+      simulatorStoreActions.addSkill(skillConfig, isEnemyMode);
     },
-    [simulatorStoreActions],
+    [simulatorStoreActions, isEnemyMode],
   );
 
   const [search, setSearch] = useState("");
@@ -81,9 +88,34 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
 
   return (
     <div className="bg-background border-border flex h-full min-w-96 flex-col overflow-x-visible rounded border p-3">
-      <h2 className="text-card-foreground mb-2 text-lg font-semibold">
-        Cards & Skills
-      </h2>
+      <div className="flex items-center justify-between pb-2">
+        <h2 className="text-card-foreground text-lg font-semibold">
+          Add Cards & Skills
+        </h2>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={toggleTargetPlayer}
+          title={
+            isEnemyMode
+              ? "Adding to Enemy (Click to switch to Player)"
+              : "Adding to Player (Click to switch to Enemy)"
+          }
+          className="flex items-center gap-1 hover:cursor-pointer"
+        >
+          {isEnemyMode ? (
+            <>
+              <Ghost size={16} />
+              Enemy
+            </>
+          ) : (
+            <>
+              <UserIcon size={16} />
+              Player
+            </>
+          )}
+        </Button>
+      </div>
       <input
         type="text"
         placeholder="Search cards & skills..."
