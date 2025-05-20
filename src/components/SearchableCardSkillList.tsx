@@ -10,6 +10,11 @@ import { CARDS_VERSION } from "@/lib/constants.ts";
 import { Virtuoso } from "react-virtuoso";
 import { Button } from "./ui/button";
 import { Ghost, UserIcon } from "lucide-react";
+import {
+  Tooltip as CNTooltip,
+  TooltipContent as CNTooltipContent,
+  TooltipTrigger as CNTooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const CARD_HEIGHT = 70;
 const SKILL_SIZE = 70;
@@ -92,29 +97,31 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
         <h2 className="text-card-foreground text-lg font-semibold">
           Add Cards & Skills
         </h2>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={toggleTargetPlayer}
-          title={
-            isEnemyMode
-              ? "Adding to Enemy (Click to switch to Player)"
-              : "Adding to Player (Click to switch to Enemy)"
-          }
-          className="flex items-center gap-1 hover:cursor-pointer"
-        >
-          {isEnemyMode ? (
-            <>
-              <Ghost size={16} />
-              Enemy
-            </>
-          ) : (
-            <>
-              <UserIcon size={16} />
-              Player
-            </>
-          )}
-        </Button>
+        <CNTooltip>
+          <CNTooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={toggleTargetPlayer}
+              className="flex items-center gap-1 hover:cursor-pointer"
+            >
+              {isEnemyMode ? (
+                <>
+                  <Ghost size={16} />
+                  Enemy
+                </>
+              ) : (
+                <>
+                  <UserIcon size={16} />
+                  Player
+                </>
+              )}
+            </Button>
+          </CNTooltipTrigger>
+          <CNTooltipContent>
+            {isEnemyMode ? "Add to Player" : "Add to Enemy"}
+          </CNTooltipContent>
+        </CNTooltip>
       </div>
       <input
         type="text"
