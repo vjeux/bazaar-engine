@@ -1,9 +1,4 @@
 "use client";
-import {
-  type BoardCard,
-  type GameState,
-  getCardAttribute,
-} from "@/engine/Engine";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import FramedCardOrSkill from "./FramedCardOrSkill";
@@ -11,11 +6,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
 import { useSimulatorStore, useEditingCardIndex } from "@/lib/simulatorStore";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import {
-  CARD_HEIGHT,
-  ENEMY_PLAYER_IDX,
-  PLAYER_PLAYER_IDX,
-} from "@/lib/constants";
+import { CARD_HEIGHT, ENEMY_PLAYER_IDX } from "@/lib/constants";
 import { AttributeType } from "@/types/cardTypes";
 import {
   Dialog,
@@ -33,6 +24,8 @@ import { EnchantmentType, Tier } from "@/types/shared";
 import CardTooltip from "./CardTooltip";
 import { Button } from "./ui/button";
 import { Bug, Settings, X } from "lucide-react";
+import { BoardCard, CardLocationID, GameState } from "@/engine/engine2/engine2";
+import { getCardAttributes } from "@/engine/engine2/getCardAttributes";
 
 // Enchantment color mappings
 const ENCHANTMENT_COLORS: Record<EnchantmentType, string> = {
@@ -98,7 +91,7 @@ export function BoardCardElement({
   }, [boardCard]);
 
   const {
-    attributes,
+    attributes: dragAttributes,
     listeners,
     setNodeRef,
     transform,
@@ -106,7 +99,6 @@ export function BoardCardElement({
     isSorting,
   } = useSortable({
     id: boardCard.uuid,
-    disabled: playerIdx === ENEMY_PLAYER_IDX,
   });
 
   const style = {
@@ -127,109 +119,41 @@ export function BoardCardElement({
   const paddingBottom = 0.1;
   const paddingRight = 0.04;
 
-  const DamageAmount = getCardAttribute(
-    gameState,
+  // Get all card attributes at once instead of individual calls
+  const cardLocation: CardLocationID = {
     playerIdx,
-    boardCardIdx,
-    AttributeType.DamageAmount,
-  );
-  const HealAmount = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.HealAmount,
-  );
-  const BurnApplyAmount = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.BurnApplyAmount,
-  );
-  const PoisonApplyAmount = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.PoisonApplyAmount,
-  );
-  const ShieldApplyAmount = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.ShieldApplyAmount,
-  );
-  const Freeze = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.Freeze,
-  );
-  const Slow = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.Slow,
-  );
-  const Haste = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.Haste,
-  );
-  const CritChance = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.CritChance,
-  );
-  const SellPrice = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.SellPrice,
-  );
-  const Multicast = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.Multicast,
-  );
-  const AmmoMax = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.AmmoMax,
-  );
-  const Ammo = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.Ammo,
-  );
-  const CooldownMax = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.CooldownMax,
-  );
-  const Lifesteal = getCardAttribute(
-    gameState,
-    playerIdx,
-    boardCardIdx,
-    AttributeType.Lifesteal,
-  );
+    cardIdx: boardCardIdx,
+    location: "board",
+  };
+
+  const cardAttributes = getCardAttributes(gameState, cardLocation);
+
+  // Destructure the attributes we need for rendering
+  const {
+    DamageAmount,
+    HealAmount,
+    BurnApplyAmount,
+    PoisonApplyAmount,
+    ShieldApplyAmount,
+    Freeze,
+    Slow,
+    Haste,
+    CritChance,
+    SellPrice,
+    Multicast,
+    AmmoMax,
+    Ammo,
+    CooldownMax,
+    Lifesteal,
+  } = cardAttributes;
 
   return (
     <div>
       <Tooltip placement="bottom" open={isSorting ? false : undefined}>
         <TooltipTrigger>
-          <div
-            className={cn(
-              "tooltipContainer relative",
-              playerIdx === PLAYER_PLAYER_IDX && "hover:cursor-grab",
-            )}
-          >
+          <div className={cn("tooltipContainer relative hover:cursor-grab")}>
             {/* Settings button */}
-            {playerIdx == PLAYER_PLAYER_IDX && !isSorting && (
+            {!isSorting && (
               <Dialog
                 open={editingCardIndex === boardCardIdx}
                 onOpenChange={(value) => {
@@ -253,6 +177,7 @@ export function BoardCardElement({
                     simulatorStoreActions.setCardAttributeOverrides(
                       boardCardIdx,
                       overrides,
+                      playerIdx === ENEMY_PLAYER_IDX,
                     );
                   }
                   simulatorStoreActions.setEditingCardIndex(
@@ -277,7 +202,10 @@ export function BoardCardElement({
                 </DialogTrigger>
                 <DialogContent className="max-h-[90vh] overflow-y-auto">
                   <DialogHeader>
-                    <DialogTitle>Edit Card</DialogTitle>
+                    <DialogTitle>
+                      Edit {playerIdx === ENEMY_PLAYER_IDX ? "Enemy" : "Player"}{" "}
+                      Card
+                    </DialogTitle>
                   </DialogHeader>
                   <DialogDescription>
                     NOTE: <br />
@@ -294,6 +222,7 @@ export function BoardCardElement({
                             simulatorStoreActions.setCardEnchantment(
                               boardCardIdx,
                               value,
+                              playerIdx === ENEMY_PLAYER_IDX,
                             );
                             simulatorStoreActions.setEditingCardIndex(
                               boardCardIdx,
@@ -333,6 +262,7 @@ export function BoardCardElement({
                             simulatorStoreActions.setCardTier(
                               boardCardIdx,
                               value,
+                              playerIdx === ENEMY_PLAYER_IDX,
                             );
                             simulatorStoreActions.setEditingCardIndex(
                               boardCardIdx,
@@ -406,14 +336,17 @@ export function BoardCardElement({
               </Dialog>
             )}
             {/* Remove button */}
-            {playerIdx == PLAYER_PLAYER_IDX && !isSorting && (
+            {!isSorting && (
               <div className="tooltip absolute top-0.5 left-0.5 z-50">
                 <Button
                   variant="secondary"
                   size="icon"
                   className="h-6 w-6 p-0 hover:cursor-pointer"
                   onClick={() =>
-                    simulatorStoreActions.removePlayerCard(boardCardIdx)
+                    simulatorStoreActions.removeCard(
+                      boardCardIdx,
+                      playerIdx === ENEMY_PLAYER_IDX,
+                    )
                   }
                 >
                   <X className="h-4 w-4" />
@@ -421,34 +354,35 @@ export function BoardCardElement({
               </div>
             )}
             {/* Debug button */}
-            {playerIdx == PLAYER_PLAYER_IDX &&
-              !isSorting &&
-              process.env.NODE_ENV === "development" && (
-                <div className="tooltip absolute right-0.5 bottom-0.5 z-50">
-                  <Button
-                    variant="secondary"
-                    size="icon"
-                    className="h-6 w-6 p-0 hover:cursor-pointer"
-                    onClick={() => {
-                      console.log("boardCard", boardCard);
-                      const attrObject = {} as Record<AttributeType, unknown>;
-                      for (const attr of Object.values(AttributeType)) {
-                        attrObject[attr] = getCardAttribute(
-                          gameState,
-                          playerIdx,
-                          boardCardIdx,
-                          attr,
-                        );
-                      }
-                      console.log("getAttributes", attrObject);
-                    }}
-                  >
-                    <Bug className="h-4 w-4" />
-                  </Button>
-                </div>
-              )}
+            {!isSorting && process.env.NODE_ENV === "development" && (
+              <div className="tooltip absolute right-0.5 bottom-0.5 z-50">
+                <Button
+                  variant="secondary"
+                  size="icon"
+                  className="h-6 w-6 p-0 hover:cursor-pointer"
+                  onClick={() => {
+                    console.log("boardCard", boardCard);
+                    console.log(
+                      "getCardAttributes",
+                      getCardAttributes(gameState, {
+                        playerIdx,
+                        cardIdx: boardCardIdx,
+                        location: "board",
+                      }),
+                    );
+                  }}
+                >
+                  <Bug className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
             {/* Card container */}
-            <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+            <div
+              ref={setNodeRef}
+              style={style}
+              {...dragAttributes}
+              {...listeners}
+            >
               <div
                 className={cn(
                   "relative m-[5px] mt-[5px]",

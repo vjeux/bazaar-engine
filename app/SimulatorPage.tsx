@@ -16,10 +16,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { GoldIncomeDisplay } from "@/components/GoldIncomeDisplay";
-import { useSimulatorStore } from "@/lib/simulatorStore";
+import {
+  State,
+  useSelectedMonster,
+  useSimulatorStore,
+} from "@/lib/simulatorStore";
 import { Button } from "@/components/ui/button";
 import CardDeck from "@/components/CardDeck";
-import { Pause, Play, RotateCcw } from "lucide-react";
+import { Pause, Play, RotateCcw, Trash2 } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -50,6 +54,7 @@ export default function SimulatorPage() {
   const battleSpeed = useSimulatorStore((state) => state.battleSpeed);
   const stepCount = useSimulatorStore((state) => state.stepCount);
   const simulatorStoreActions = useSimulatorStore((state) => state.actions);
+  const selectedMonster = useSelectedMonster();
 
   // If you live reload with a step higher than the length, it would throw.
   const boundedStepCount = Math.min(steps.length - 1, stepCount);
@@ -101,7 +106,10 @@ export default function SimulatorPage() {
       <div className="flex grow flex-col gap-2">
         <div className="flex gap-2">
           {/* Enemy Selection */}
-          <EncounterSelector encounters={flattenedEncounters} />
+          <EncounterSelector
+            encounters={flattenedEncounters}
+            selectedMonster={selectedMonster}
+          />
           {/* Reset button */}
           <Tooltip>
             <TooltipTrigger asChild>
@@ -179,10 +187,31 @@ export default function SimulatorPage() {
             gameState={currentGameState}
             playerId={ENEMY_PLAYER_IDX}
           />
-          <GoldIncomeDisplay
-            gameState={currentGameState}
-            playerId={ENEMY_PLAYER_IDX}
-          />
+          <div className="flex items-center gap-2">
+            <GoldIncomeDisplay
+              gameState={currentGameState}
+              playerId={ENEMY_PLAYER_IDX}
+            />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() =>
+                    simulatorStoreActions.clearPlayerBoard(ENEMY_PLAYER_IDX)
+                  }
+                  className="h-8 w-8 hover:cursor-pointer"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Clear Enemy Board</p>
+              </TooltipContent>
+            </Tooltip>
+            {/* Enemy Stats Dialog */}
+            <PlayerStatsDialog isEnemy={true} />
+          </div>
         </div>
         {/* Enemy Health Bar*/}
         <HealthBar gameState={currentGameState} playerId={ENEMY_PLAYER_IDX} />
@@ -219,7 +248,24 @@ export default function SimulatorPage() {
               gameState={currentGameState}
               playerId={PLAYER_PLAYER_IDX}
             />
-            <PlayerStatsDialog />
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  onClick={() =>
+                    simulatorStoreActions.clearPlayerBoard(PLAYER_PLAYER_IDX)
+                  }
+                  className="h-8 w-8 hover:cursor-pointer"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Clear Board</p>
+              </TooltipContent>
+            </Tooltip>
+            <PlayerStatsDialog isEnemy={false} />
           </div>
         </div>
       </div>
@@ -269,35 +315,68 @@ const BattleSpeedSelector = memo(function BattleSpeedSelector() {
   );
 });
 
+function encounterSelectionName(encounter: {
+  day: number;
+  name: string;
+}): string {
+  if (typeof encounter.day === "number") {
+    return `Day ${encounter.day} - ${encounter.name}`;
+  }
+  return `Event ${encounter.name}`;
+}
+
 const EncounterSelector = memo(function EncounterSelector({
   encounters,
+  selectedMonster,
 }: {
   encounters: FlattenedEncounter[];
+  selectedMonster: State["selectedMonster"];
 }) {
   const simulatorStoreActions = useSimulatorStore((state) => state.actions);
-  const selectedEncounter = useSimulatorStore((state) => state.monsterConfig);
+
+  const encounterItems = [
+    {
+      value: "custom",
+      label: "Custom Enemy",
+    },
+  ].concat(
+    encounters.map((encounter) => ({
+      value: encounter.card.cardId,
+      label: encounterSelectionName(encounter),
+    })),
+  );
+
+  let selectPlaceholder = "Select an encounter";
+  let initialValue = "";
+  if (selectedMonster === "custom") {
+    selectPlaceholder = "Custom Enemy";
+    initialValue = "custom";
+  } else {
+    selectPlaceholder = encounterSelectionName(selectedMonster);
+    initialValue =
+      encounters.find(
+        (encounter) =>
+          encounter.name === selectedMonster.name &&
+          encounter.day === selectedMonster.day,
+      )?.card.cardId || "";
+  }
+
   return (
     <ComboBox
-      items={encounters.map((encounter) => ({
-        value: `${encounter.name}:${encounter.card.cardId}`,
-        label:
-          typeof encounter.day === "number"
-            ? `Day ${encounter.day} - ${encounter.name}`
-            : `Event ${encounter.name}`,
-      }))}
+      items={encounterItems}
       searchPlaceholder="Search encounters..."
-      selectPlaceholder={
-        selectedEncounter?.name && encounters.length > 0
-          ? `Day ${encounters.find((e) => e.name === selectedEncounter.name && e.day === selectedEncounter.day)?.day ?? ""} - ${selectedEncounter.name}`
-          : "Select encounter..."
-      }
+      selectPlaceholder={selectPlaceholder}
+      overrideValue={initialValue}
       onChange={(value) => {
-        if (encounters.length === 0) return;
+        if (value === "custom") {
+          simulatorStoreActions.setEnemyToEmptyPlayer();
+          return;
+        }
         const encounter = encounters.find(
-          (encounter) => encounter.card.cardId === value.split(":")[1],
+          (encounter) => encounter.card.cardId === value,
         );
         if (encounter) {
-          simulatorStoreActions.setMonsterConfig({
+          simulatorStoreActions.setEnemyFromMonster({
             type: "monster",
             name: encounter.name,
             day: Number(encounter.day),

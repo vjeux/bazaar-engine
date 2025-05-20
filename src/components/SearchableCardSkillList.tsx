@@ -8,6 +8,13 @@ import { useSimulatorStore } from "@/lib/simulatorStore.ts";
 import { PlayerCardConfig, PlayerSkillConfig } from "@/engine/GameState.ts";
 import { CARDS_VERSION } from "@/lib/constants.ts";
 import { Virtuoso } from "react-virtuoso";
+import { Button } from "./ui/button";
+import { Ghost, UserIcon } from "lucide-react";
+import {
+  Tooltip as CNTooltip,
+  TooltipContent as CNTooltipContent,
+  TooltipTrigger as CNTooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const CARD_HEIGHT = 70;
 const SKILL_SIZE = 70;
@@ -15,8 +22,11 @@ const SKILL_SIZE = 70;
 export const SearchableCardSkillList = memo(SearchableCardSkillList_);
 function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
   const simulatorStoreActions = useSimulatorStore((state) => state.actions);
-  const addPlayerCard = simulatorStoreActions.addPlayerCard;
-  const addPlayerSkill = simulatorStoreActions.addPlayerSkill;
+  const [isEnemyMode, setIsEnemyMode] = useState(false);
+
+  const toggleTargetPlayer = useCallback(() => {
+    setIsEnemyMode((prev) => !prev);
+  }, []);
 
   const handleCardSelect = useCallback(
     (card: Card) => {
@@ -24,9 +34,9 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
         cardId: card.Id,
         tier: card.StartingTier,
       };
-      addPlayerCard(cardConfig);
+      simulatorStoreActions.addCard(cardConfig, isEnemyMode);
     },
-    [addPlayerCard],
+    [simulatorStoreActions, isEnemyMode],
   );
 
   const handleSkillSelect = useCallback(
@@ -35,9 +45,9 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
         cardId: card.Id,
         tier: card.StartingTier,
       };
-      addPlayerSkill(skillConfig);
+      simulatorStoreActions.addSkill(skillConfig, isEnemyMode);
     },
-    [addPlayerSkill],
+    [simulatorStoreActions, isEnemyMode],
   );
 
   const [search, setSearch] = useState("");
@@ -83,9 +93,36 @@ function SearchableCardSkillList_({ Cards }: { Cards: Cards }) {
 
   return (
     <div className="bg-background border-border flex h-full min-w-96 flex-col overflow-x-visible rounded border p-3">
-      <h2 className="text-card-foreground mb-2 text-lg font-semibold">
-        Cards & Skills
-      </h2>
+      <div className="flex items-center justify-between pb-2">
+        <h2 className="text-card-foreground text-lg font-semibold">
+          Add Cards & Skills
+        </h2>
+        <CNTooltip>
+          <CNTooltipTrigger asChild>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={toggleTargetPlayer}
+              className="flex items-center gap-1 hover:cursor-pointer"
+            >
+              {isEnemyMode ? (
+                <>
+                  <Ghost size={16} />
+                  Enemy
+                </>
+              ) : (
+                <>
+                  <UserIcon size={16} />
+                  Player
+                </>
+              )}
+            </Button>
+          </CNTooltipTrigger>
+          <CNTooltipContent>
+            {isEnemyMode ? "Add to Player" : "Add to Enemy"}
+          </CNTooltipContent>
+        </CNTooltip>
+      </div>
       <input
         type="text"
         placeholder="Search cards & skills..."

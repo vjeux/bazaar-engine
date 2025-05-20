@@ -253,7 +253,7 @@ export function getFlattenedEncounters(
           return day.map((group) => ({
             name: group.cardName,
             card: { cardName: group.cardName, cardId: group.cardId },
-            day: data.day,
+            day: Number(data.day),
           }));
         })
         .flat();

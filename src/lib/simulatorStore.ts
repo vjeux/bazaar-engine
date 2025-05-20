@@ -20,9 +20,10 @@ import { Draft } from "immer";
 const { Cards: CardsData, Encounters: EncounterData } =
   await genCardsAndEncounters();
 
-type State = {
+export type State = {
   playerConfig: PlayerConfig;
-  monsterConfig: MonsterConfig;
+  enemyConfig: PlayerConfig;
+  selectedMonster: MonsterConfig | "custom";
   steps: GameState[];
   autoScroll: boolean;
   autoReset: boolean;
@@ -39,30 +40,41 @@ type State = {
 type Actions = {
   actions: {
     setPlayerConfig: (playerConfig: PlayerConfig) => void;
-    setMonsterConfig: (monsterConfig: MonsterConfig) => void;
-    addPlayerCard: (card: PlayerCardConfig) => void;
-    addPlayerSkill: (skill: PlayerSkillConfig) => void;
+    setEnemyConfig: (enemyConfig: PlayerConfig) => void;
+    setEnemyFromMonster: (monsterConfig: MonsterConfig) => void;
+    setEnemyToEmptyPlayer: () => void;
+    addCard: (card: PlayerCardConfig, isEnemy?: boolean) => void;
+    addSkill: (skill: PlayerSkillConfig, isEnemy?: boolean) => void;
     setAutoScroll: (autoScroll: boolean) => void;
     setAutoReset: (autoReset: boolean) => void;
     setBattleSpeed: (battleSpeed: number) => void;
     setStepCount: (stepCount: number) => void;
     recalculateSteps: () => void;
-    removePlayerCard: (cardIndex: number) => void;
-    removePlayerSkill: (skillIndex: number) => void;
+    removeCard: (cardIndex: number, isEnemy?: boolean) => void;
+    removeSkill: (skillIndex: number, isEnemy?: boolean) => void;
     reset: () => void;
-    movePlayerCard: (oldIndex: number, newIndex: number) => void;
+    moveCard: (oldIndex: number, newIndex: number, isEnemy?: boolean) => void;
+    transferCardBetweenPlayers: (
+      sourceIndex: number,
+      targetIndex: number,
+      isSourceEnemy: boolean,
+      isTargetEnemy: boolean,
+    ) => void;
     setCardAttributeOverrides: (
       cardIndex: number,
       attributeOverrides: Partial<Record<AttributeType, number>>,
+      isEnemy?: boolean,
     ) => void;
     setCardEnchantment: (
       cardIndex: number,
       enchantment: EnchantmentType,
+      isEnemy?: boolean,
     ) => void;
-    setCardTier: (cardIndex: number, tier: Tier) => void;
+    setCardTier: (cardIndex: number, tier: Tier, isEnemy?: boolean) => void;
     setEditingCardIndex: (index: number | null) => void;
     calculateWinrate: (numSimulations?: number) => void;
     resetWinrateCalculation: () => void;
+    clearPlayerBoard: (playerIdx: number) => void;
   };
 };
 
@@ -75,14 +87,95 @@ const initialPlayer: PlayerConfig = {
   cards: [],
   skills: [],
 };
+
+const initialEnemy: PlayerConfig = {
+  type: "player",
+  health: 400,
+  healthRegen: 0,
+  income: 0,
+  gold: 0,
+  cards: [],
+  skills: [],
+};
+
 const initialMonster: MonsterConfig = {
   type: "monster",
   name: "Pyro",
   day: 1,
 };
 
-const runWrapper = (
+// Helper function to find monster in encounters data
+function findMonsterInEncounters(monsterName: string, day: number) {
+  // Find monster by both name and day to handle monsters with the same name across days
+  for (const encounterDay of EncounterData.data) {
+    // Check if this is the correct day
+    if (encounterDay.day === day) {
+      for (const group of encounterDay.groups) {
+        for (const monster of group) {
+          if (monster.cardName === monsterName) {
+            return monster;
+          }
+        }
+      }
+    }
+  }
+
+  // If not found by day and name, try just by name as fallback
+  for (const encounterDay of EncounterData.data) {
+    for (const group of encounterDay.groups) {
+      for (const monster of group) {
+        if (monster.cardName === monsterName) {
+          console.warn(`Monster "${monsterName}" found, but not on day ${day}`);
+          return monster;
+        }
+      }
+    }
+  }
+
+  throw new Error(`Monster "${monsterName}" not found in encounters data`);
+}
+
+// Helper function to convert monster to player config
+function convertMonsterToPlayerConfig(
   monsterConfig: MonsterConfig,
+): PlayerConfig {
+  try {
+    const monster = findMonsterInEncounters(
+      monsterConfig.name,
+      monsterConfig.day,
+    );
+
+    // Create cards from monster items (non-skills)
+    const cards: PlayerCardConfig[] = monster.items.map((item) => ({
+      cardId: item.card.id,
+      tier: item.tierType,
+      enchantment: item.enchantmentType,
+    }));
+
+    // Create skills from monster skills
+    const skills: PlayerSkillConfig[] = monster.skills.map((item) => ({
+      cardId: item.card.id,
+      tier: item.tierType,
+    }));
+
+    // Create player config from monster data
+    return {
+      type: "player",
+      health: monster.health,
+      healthRegen: 0,
+      income: 0,
+      gold: 0,
+      cards,
+      skills,
+    };
+  } catch (error) {
+    console.error("Error converting monster to player config:", error);
+    throw error;
+  }
+}
+
+const runWrapper = (
+  enemyConfig: PlayerConfig,
   playerConfig: PlayerConfig,
   randomSeed: number = 1,
 ) => {
@@ -90,7 +183,7 @@ const runWrapper = (
   const initialState = getInitialGameState2(
     CardsData,
     EncounterData,
-    [monsterConfig, playerConfig],
+    [enemyConfig, playerConfig],
     randomSeed,
   );
 
@@ -98,11 +191,15 @@ const runWrapper = (
   return run(initialState, 10000);
 };
 
-const initialSteps = runWrapper(initialMonster, initialPlayer);
+// Initial monster converted to player config for enemy
+const initialEnemyFromMonster = convertMonsterToPlayerConfig(initialMonster);
+
+const initialSteps = runWrapper(initialEnemyFromMonster, initialPlayer);
 
 const initialState: State = {
   playerConfig: initialPlayer,
-  monsterConfig: initialMonster,
+  enemyConfig: initialEnemyFromMonster,
+  selectedMonster: initialMonster,
   steps: initialSteps,
   autoScroll: false,
   autoReset: false,
@@ -144,7 +241,7 @@ const runSimulationAndUpdateWinrate = (
   actions: Actions["actions"],
 ) => {
   // Run the simulation and update steps
-  state.steps = runWrapper(state.monsterConfig, state.playerConfig);
+  state.steps = runWrapper(state.enemyConfig, state.playerConfig);
 
   // If winrate calculation is enabled, schedule recalculation after current update completes
   if (
@@ -167,20 +264,44 @@ export const useSimulatorStore = create<State & Actions>()(
             state.playerConfig = playerConfig;
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
-        setMonsterConfig: (monsterConfig: MonsterConfig) =>
+        setEnemyConfig: (enemyConfig: PlayerConfig) =>
           set((state) => {
-            state.monsterConfig = monsterConfig;
+            state.enemyConfig = enemyConfig;
+            state.stepCount = 0;
+            state.selectedMonster = "custom";
+            runSimulationAndUpdateWinrate(state, get().actions);
+          }),
+        setEnemyFromMonster: (monsterConfig: MonsterConfig) =>
+          set((state) => {
+            state.enemyConfig = convertMonsterToPlayerConfig(monsterConfig);
+            state.selectedMonster = monsterConfig;
             state.stepCount = 0;
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
-        addPlayerCard: (card: PlayerCardConfig) =>
+        setEnemyToEmptyPlayer: () => {
           set((state) => {
-            (state.playerConfig.cards ??= []).push(card);
+            state.enemyConfig = initialEnemy;
+            state.selectedMonster = "custom";
+            state.stepCount = 0;
+            runSimulationAndUpdateWinrate(state, get().actions);
+          });
+        },
+        addCard: (card: PlayerCardConfig, isEnemy: boolean = false) =>
+          set((state) => {
+            const config = isEnemy ? state.enemyConfig : state.playerConfig;
+            (config.cards ??= []).push(card);
+            if (isEnemy) {
+              state.selectedMonster = "custom";
+            }
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
-        addPlayerSkill: (skill: PlayerSkillConfig) =>
+        addSkill: (skill: PlayerSkillConfig, isEnemy: boolean = false) =>
           set((state) => {
-            (state.playerConfig.skills ??= []).push(skill);
+            const config = isEnemy ? state.enemyConfig : state.playerConfig;
+            (config.skills ??= []).push(skill);
+            if (isEnemy) {
+              state.selectedMonster = "custom";
+            }
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
         setAutoScroll: (autoScroll: boolean) =>
@@ -203,54 +324,133 @@ export const useSimulatorStore = create<State & Actions>()(
           set((state) => {
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
-        removePlayerCard: (cardIndex: number) =>
+        removeCard: (cardIndex: number, isEnemy: boolean = false) =>
           set((state) => {
-            state.playerConfig.cards?.splice(cardIndex, 1);
+            const config = isEnemy ? state.enemyConfig : state.playerConfig;
+            config.cards?.splice(cardIndex, 1);
+            if (isEnemy) {
+              state.selectedMonster = "custom";
+            }
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
-        removePlayerSkill: (skillIndex: number) =>
+        removeSkill: (skillIndex: number, isEnemy: boolean = false) =>
           set((state) => {
-            state.playerConfig.skills?.splice(skillIndex, 1);
+            const config = isEnemy ? state.enemyConfig : state.playerConfig;
+            config.skills?.splice(skillIndex, 1);
+            if (isEnemy) {
+              state.selectedMonster = "custom";
+            }
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
         reset: () => {
           set(initialState);
         },
-        movePlayerCard: (oldIndex: number, newIndex: number) =>
+        moveCard: (
+          oldIndex: number,
+          newIndex: number,
+          isEnemy: boolean = false,
+        ) =>
           set((state) => {
-            const newCards = arrayMove(
-              state.playerConfig.cards ?? [],
-              oldIndex,
-              newIndex,
-            );
-            state.playerConfig.cards = newCards;
+            const config = isEnemy ? state.enemyConfig : state.playerConfig;
+            const newCards = arrayMove(config.cards ?? [], oldIndex, newIndex);
+            config.cards = newCards;
+            if (isEnemy) {
+              state.selectedMonster = "custom";
+            }
+            runSimulationAndUpdateWinrate(state, get().actions);
+          }),
+        transferCardBetweenPlayers: (
+          sourceIndex: number,
+          targetIndex: number = -1, // -1 means add to the end
+          isSourceEnemy: boolean = false,
+          isTargetEnemy: boolean = false,
+        ) =>
+          set((state) => {
+            // Get source and target configs
+            const sourceConfig = isSourceEnemy
+              ? state.enemyConfig
+              : state.playerConfig;
+            const targetConfig = isTargetEnemy
+              ? state.enemyConfig
+              : state.playerConfig;
+
+            // Ensure cards arrays exist
+            if (
+              !sourceConfig.cards ||
+              sourceConfig.cards.length <= sourceIndex
+            ) {
+              return; // Source card doesn't exist
+            }
+
+            // Initialize target cards array if needed
+            targetConfig.cards = targetConfig.cards || [];
+
+            // Get the card to transfer
+            const cardToTransfer = sourceConfig.cards[sourceIndex];
+
+            // Remove from source
+            sourceConfig.cards.splice(sourceIndex, 1);
+
+            // Add to target at specific index or end
+            if (
+              targetIndex === -1 ||
+              targetIndex >= targetConfig.cards.length
+            ) {
+              targetConfig.cards.push(cardToTransfer);
+            } else {
+              targetConfig.cards.splice(targetIndex, 0, cardToTransfer);
+            }
+
+            state.selectedMonster = "custom";
+
+            // Recalculate simulation
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
         setCardAttributeOverrides: (
           cardIndex: number,
           attributeOverrides: Partial<Record<AttributeType, number>>,
+          isEnemy: boolean = false,
         ) =>
           set((state) => {
-            if (state.playerConfig.cards?.[cardIndex]) {
-              state.playerConfig.cards[cardIndex].attributeOverrides =
-                attributeOverrides;
+            const config = isEnemy ? state.enemyConfig : state.playerConfig;
+            if (config.cards?.[cardIndex]) {
+              config.cards[cardIndex].attributeOverrides = attributeOverrides;
+            }
+            if (isEnemy) {
+              state.selectedMonster = "custom";
             }
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
-        setCardEnchantment: (cardIndex: number, enchantment: EnchantmentType) =>
+        setCardEnchantment: (
+          cardIndex: number,
+          enchantment: EnchantmentType,
+          isEnemy: boolean = false,
+        ) =>
           set((state) => {
-            if (state.playerConfig.cards?.[cardIndex]) {
-              const card = state.playerConfig.cards[cardIndex];
+            const config = isEnemy ? state.enemyConfig : state.playerConfig;
+            if (config.cards?.[cardIndex]) {
+              const card = config.cards[cardIndex];
               card.enchantment = enchantment;
               card.attributeOverrides = {};
             }
+            if (isEnemy) {
+              state.selectedMonster = "custom";
+            }
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
-        setCardTier: (cardIndex: number, tier: Tier) =>
+        setCardTier: (
+          cardIndex: number,
+          tier: Tier,
+          isEnemy: boolean = false,
+        ) =>
           set((state) => {
-            if (state.playerConfig.cards?.[cardIndex]) {
-              state.playerConfig.cards[cardIndex].tier = tier;
-              state.playerConfig.cards[cardIndex].attributeOverrides = {};
+            const config = isEnemy ? state.enemyConfig : state.playerConfig;
+            if (config.cards?.[cardIndex]) {
+              config.cards[cardIndex].tier = tier;
+              config.cards[cardIndex].attributeOverrides = {};
+            }
+            if (isEnemy) {
+              state.selectedMonster = "custom";
             }
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
@@ -260,7 +460,7 @@ export const useSimulatorStore = create<State & Actions>()(
           }),
         calculateWinrate: (numSimulations = 100) => {
           const state = get();
-          const monsterConfig = { ...state.monsterConfig };
+          const enemyConfig = { ...state.enemyConfig };
           const playerConfig = { ...state.playerConfig };
 
           // Generate a new calculation ID
@@ -294,7 +494,7 @@ export const useSimulatorStore = create<State & Actions>()(
             const endSeed = Math.min(currentSeed + batchSize, numSimulations);
 
             for (let seed = currentSeed; seed < endSeed; seed++) {
-              const steps = runWrapper(monsterConfig, playerConfig, seed);
+              const steps = runWrapper(enemyConfig, playerConfig, seed);
               const winner = steps.at(-1)?.winner;
 
               // Count wins
@@ -337,6 +537,23 @@ export const useSimulatorStore = create<State & Actions>()(
             // Reset the calculation ID when canceling calculations
             state.calculationId = "";
           }),
+        clearPlayerBoard: (playerIdx: number) =>
+          set((state) => {
+            // Clear player's cards and skills based on playerIdx
+            if (playerIdx === 0) {
+              // Enemy
+              state.enemyConfig.cards = [];
+              state.enemyConfig.skills = [];
+              state.selectedMonster = "custom";
+            } else if (playerIdx === 1) {
+              // Player
+              state.playerConfig.cards = [];
+              state.playerConfig.skills = [];
+            }
+
+            // Recalculate steps after clearing
+            runSimulationAndUpdateWinrate(state, get().actions);
+          }),
       },
     })),
     {
@@ -344,13 +561,14 @@ export const useSimulatorStore = create<State & Actions>()(
       storage: createJSONStorage(() => persistentStorage),
       partialize: (state) => ({
         playerConfig: state.playerConfig,
-        monsterConfig: state.monsterConfig,
+        enemyConfig: state.enemyConfig,
+        selectedMonster: state.selectedMonster,
       }),
       merge: (persistedState: unknown, currentState: State & Actions) => {
         const typedState = persistedState as Partial<State>;
         // Simply recalculate steps
         const newSteps = runWrapper(
-          typedState.monsterConfig as MonsterConfig,
+          typedState.enemyConfig as PlayerConfig,
           typedState.playerConfig as PlayerConfig,
         );
         return {
@@ -383,3 +601,23 @@ export const useWinrateCalculation = () => {
 
   return { isCalculating, winrate, progress, total, completed };
 };
+export const useSelectedMonster = () =>
+  useSimulatorStore((state) => state.selectedMonster);
+
+// For backward compatibility
+export const addPlayerCard = (card: PlayerCardConfig) =>
+  useSimulatorStore.getState().actions.addCard(card, false);
+export const addPlayerSkill = (skill: PlayerSkillConfig) =>
+  useSimulatorStore.getState().actions.addSkill(skill, false);
+export const addEnemyCard = (card: PlayerCardConfig) =>
+  useSimulatorStore.getState().actions.addCard(card, true);
+export const addEnemySkill = (skill: PlayerSkillConfig) =>
+  useSimulatorStore.getState().actions.addSkill(skill, true);
+export const removePlayerCard = (cardIndex: number) =>
+  useSimulatorStore.getState().actions.removeCard(cardIndex, false);
+export const removePlayerSkill = (skillIndex: number) =>
+  useSimulatorStore.getState().actions.removeSkill(skillIndex, false);
+export const removeEnemyCard = (cardIndex: number) =>
+  useSimulatorStore.getState().actions.removeCard(cardIndex, true);
+export const removeEnemySkill = (skillIndex: number) =>
+  useSimulatorStore.getState().actions.removeSkill(skillIndex, true);
