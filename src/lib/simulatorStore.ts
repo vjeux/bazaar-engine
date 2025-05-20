@@ -52,6 +52,12 @@ type Actions = {
     removeSkill: (skillIndex: number, isEnemy?: boolean) => void;
     reset: () => void;
     moveCard: (oldIndex: number, newIndex: number, isEnemy?: boolean) => void;
+    transferCardBetweenPlayers: (
+      sourceIndex: number,
+      targetIndex: number,
+      isSourceEnemy: boolean,
+      isTargetEnemy: boolean,
+    ) => void;
     setCardAttributeOverrides: (
       cardIndex: number,
       attributeOverrides: Partial<Record<AttributeType, number>>,
@@ -324,6 +330,51 @@ export const useSimulatorStore = create<State & Actions>()(
             const config = isEnemy ? state.enemyConfig : state.playerConfig;
             const newCards = arrayMove(config.cards ?? [], oldIndex, newIndex);
             config.cards = newCards;
+            runSimulationAndUpdateWinrate(state, get().actions);
+          }),
+        transferCardBetweenPlayers: (
+          sourceIndex: number,
+          targetIndex: number = -1, // -1 means add to the end
+          isSourceEnemy: boolean = false,
+          isTargetEnemy: boolean = false,
+        ) =>
+          set((state) => {
+            // Get source and target configs
+            const sourceConfig = isSourceEnemy
+              ? state.enemyConfig
+              : state.playerConfig;
+            const targetConfig = isTargetEnemy
+              ? state.enemyConfig
+              : state.playerConfig;
+
+            // Ensure cards arrays exist
+            if (
+              !sourceConfig.cards ||
+              sourceConfig.cards.length <= sourceIndex
+            ) {
+              return; // Source card doesn't exist
+            }
+
+            // Initialize target cards array if needed
+            targetConfig.cards = targetConfig.cards || [];
+
+            // Get the card to transfer
+            const cardToTransfer = sourceConfig.cards[sourceIndex];
+
+            // Remove from source
+            sourceConfig.cards.splice(sourceIndex, 1);
+
+            // Add to target at specific index or end
+            if (
+              targetIndex === -1 ||
+              targetIndex >= targetConfig.cards.length
+            ) {
+              targetConfig.cards.push(cardToTransfer);
+            } else {
+              targetConfig.cards.splice(targetIndex, 0, cardToTransfer);
+            }
+
+            // Recalculate simulation
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
         setCardAttributeOverrides: (
