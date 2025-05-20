@@ -268,6 +268,7 @@ export const useSimulatorStore = create<State & Actions>()(
           set((state) => {
             state.enemyConfig = enemyConfig;
             state.stepCount = 0;
+            state.selectedMonster = "custom";
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
         setEnemyFromMonster: (monsterConfig: MonsterConfig) =>
@@ -289,12 +290,18 @@ export const useSimulatorStore = create<State & Actions>()(
           set((state) => {
             const config = isEnemy ? state.enemyConfig : state.playerConfig;
             (config.cards ??= []).push(card);
+            if (isEnemy) {
+              state.selectedMonster = "custom";
+            }
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
         addSkill: (skill: PlayerSkillConfig, isEnemy: boolean = false) =>
           set((state) => {
             const config = isEnemy ? state.enemyConfig : state.playerConfig;
             (config.skills ??= []).push(skill);
+            if (isEnemy) {
+              state.selectedMonster = "custom";
+            }
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
         setAutoScroll: (autoScroll: boolean) =>
@@ -321,12 +328,18 @@ export const useSimulatorStore = create<State & Actions>()(
           set((state) => {
             const config = isEnemy ? state.enemyConfig : state.playerConfig;
             config.cards?.splice(cardIndex, 1);
+            if (isEnemy) {
+              state.selectedMonster = "custom";
+            }
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
         removeSkill: (skillIndex: number, isEnemy: boolean = false) =>
           set((state) => {
             const config = isEnemy ? state.enemyConfig : state.playerConfig;
             config.skills?.splice(skillIndex, 1);
+            if (isEnemy) {
+              state.selectedMonster = "custom";
+            }
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
         reset: () => {
@@ -341,6 +354,9 @@ export const useSimulatorStore = create<State & Actions>()(
             const config = isEnemy ? state.enemyConfig : state.playerConfig;
             const newCards = arrayMove(config.cards ?? [], oldIndex, newIndex);
             config.cards = newCards;
+            if (isEnemy) {
+              state.selectedMonster = "custom";
+            }
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
         transferCardBetweenPlayers: (
@@ -385,6 +401,8 @@ export const useSimulatorStore = create<State & Actions>()(
               targetConfig.cards.splice(targetIndex, 0, cardToTransfer);
             }
 
+            state.selectedMonster = "custom";
+
             // Recalculate simulation
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
@@ -397,6 +415,9 @@ export const useSimulatorStore = create<State & Actions>()(
             const config = isEnemy ? state.enemyConfig : state.playerConfig;
             if (config.cards?.[cardIndex]) {
               config.cards[cardIndex].attributeOverrides = attributeOverrides;
+            }
+            if (isEnemy) {
+              state.selectedMonster = "custom";
             }
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
@@ -412,6 +433,9 @@ export const useSimulatorStore = create<State & Actions>()(
               card.enchantment = enchantment;
               card.attributeOverrides = {};
             }
+            if (isEnemy) {
+              state.selectedMonster = "custom";
+            }
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
         setCardTier: (
@@ -424,6 +448,9 @@ export const useSimulatorStore = create<State & Actions>()(
             if (config.cards?.[cardIndex]) {
               config.cards[cardIndex].tier = tier;
               config.cards[cardIndex].attributeOverrides = {};
+            }
+            if (isEnemy) {
+              state.selectedMonster = "custom";
             }
             runSimulationAndUpdateWinrate(state, get().actions);
           }),
@@ -517,6 +544,7 @@ export const useSimulatorStore = create<State & Actions>()(
               // Enemy
               state.enemyConfig.cards = [];
               state.enemyConfig.skills = [];
+              state.selectedMonster = "custom";
             } else if (playerIdx === 1) {
               // Player
               state.playerConfig.cards = [];
