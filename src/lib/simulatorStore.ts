@@ -20,7 +20,7 @@ import { Draft } from "immer";
 const { Cards: CardsData, Encounters: EncounterData } =
   await genCardsAndEncounters();
 
-type State = {
+export type State = {
   playerConfig: PlayerConfig;
   enemyConfig: PlayerConfig;
   selectedMonster: MonsterConfig | "custom";

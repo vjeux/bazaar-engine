@@ -16,7 +16,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { GoldIncomeDisplay } from "@/components/GoldIncomeDisplay";
-import { useSelectedMonster, useSimulatorStore } from "@/lib/simulatorStore";
+import {
+  State,
+  useSelectedMonster,
+  useSimulatorStore,
+} from "@/lib/simulatorStore";
 import { Button } from "@/components/ui/button";
 import CardDeck from "@/components/CardDeck";
 import { Pause, Play, RotateCcw, Trash2 } from "lucide-react";
@@ -50,6 +54,7 @@ export default function SimulatorPage() {
   const battleSpeed = useSimulatorStore((state) => state.battleSpeed);
   const stepCount = useSimulatorStore((state) => state.stepCount);
   const simulatorStoreActions = useSimulatorStore((state) => state.actions);
+  const selectedMonster = useSelectedMonster();
 
   // If you live reload with a step higher than the length, it would throw.
   const boundedStepCount = Math.min(steps.length - 1, stepCount);
@@ -101,7 +106,10 @@ export default function SimulatorPage() {
       <div className="flex grow flex-col gap-2">
         <div className="flex gap-2">
           {/* Enemy Selection */}
-          <EncounterSelector encounters={flattenedEncounters} />
+          <EncounterSelector
+            encounters={flattenedEncounters}
+            selectedMonster={selectedMonster}
+          />
           {/* Reset button */}
           <Tooltip>
             <TooltipTrigger asChild>
@@ -319,11 +327,12 @@ function encounterSelectionName(encounter: {
 
 const EncounterSelector = memo(function EncounterSelector({
   encounters,
+  selectedMonster,
 }: {
   encounters: FlattenedEncounter[];
+  selectedMonster: State["selectedMonster"];
 }) {
   const simulatorStoreActions = useSimulatorStore((state) => state.actions);
-  const selectedMonster = useSelectedMonster();
 
   const encounterItems = [
     {
@@ -338,10 +347,18 @@ const EncounterSelector = memo(function EncounterSelector({
   );
 
   let selectPlaceholder = "Select an encounter";
+  let initialValue = "";
   if (selectedMonster === "custom") {
     selectPlaceholder = "Custom Enemy";
-  } else if (selectedMonster) {
+    initialValue = "custom";
+  } else {
     selectPlaceholder = encounterSelectionName(selectedMonster);
+    initialValue =
+      encounters.find(
+        (encounter) =>
+          encounter.name === selectedMonster.name &&
+          encounter.day === selectedMonster.day,
+      )?.card.cardId || "";
   }
 
   return (
@@ -349,6 +366,7 @@ const EncounterSelector = memo(function EncounterSelector({
       items={encounterItems}
       searchPlaceholder="Search encounters..."
       selectPlaceholder={selectPlaceholder}
+      overrideValue={initialValue}
       onChange={(value) => {
         if (value === "custom") {
           simulatorStoreActions.setEnemyToEmptyPlayer();

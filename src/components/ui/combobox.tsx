@@ -27,6 +27,7 @@ export interface ComboBoxProps {
   searchPlaceholder?: string;
   selectPlaceholder?: string;
   onChange: (value: string) => void;
+  overrideValue?: string;
 }
 
 export function ComboBox({
@@ -34,9 +35,16 @@ export function ComboBox({
   searchPlaceholder,
   selectPlaceholder,
   onChange,
+  overrideValue,
 }: ComboBoxProps) {
   const [open, setOpen] = React.useState(false);
   const [value, setValue] = React.useState("");
+
+  React.useEffect(() => {
+    if (overrideValue) {
+      setValue(overrideValue);
+    }
+  }, [overrideValue]);
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
