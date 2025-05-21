@@ -154,21 +154,33 @@ export async function genCardsAndEncounters(): Promise<{
   Encounters: EncounterDays;
 }> {
   // Check if we're running in a browser environment
-  if (typeof window === "undefined") {
-    // Server-side or testing environment - directly import JSON files
-    const cards: Cards = (await import("../../public/json/cards.json"))
-      .default as Cards;
-    const encounters = await import(
-      "../../public/json/monsterEncounterDays.json"
-    );
+  // or in a web worker (where window is undefined but self exists)
+  const isBrowser = typeof window !== "undefined";
+  const isWorker =
+    typeof self !== "undefined" &&
+    typeof self.WorkerGlobalScope !== "undefined" &&
+    self instanceof self.WorkerGlobalScope;
 
-    // Filter cards before returning
-    const filteredCards = filterValidCards(cards);
+  if (!isBrowser || isWorker) {
+    // Server-side, testing environment, or web worker - directly import JSON files
+    try {
+      const cards: Cards = (await import("../../public/json/cards.json"))
+        .default as Cards;
+      const encounters = await import(
+        "../../public/json/monsterEncounterDays.json"
+      );
 
-    return {
-      Cards: filteredCards,
-      Encounters: encounters.default as EncounterDays,
-    };
+      // Filter cards before returning
+      const filteredCards = filterValidCards(cards);
+
+      return {
+        Cards: filteredCards,
+        Encounters: encounters.default as EncounterDays,
+      };
+    } catch (error) {
+      console.error("Error importing JSON files:", error);
+      throw error;
+    }
   }
 
   const storedVersion = await getStoredVersion();
