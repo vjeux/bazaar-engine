@@ -118,8 +118,18 @@ export function BoardSkillElement({
                 <div className="flex gap-2">
                   <Select
                     onValueChange={(value: Tier) => {
+                      const actualIndex = gameState.players[
+                        playerID
+                      ].board.findIndex((x) => x.uuid === boardSkill.uuid);
+                      const lastCardIndex = gameState.players[
+                        playerID
+                      ].board.findLastIndex(
+                        (x) => x.card.$type === CardType.TCardItem,
+                      );
+                      const skillIndex = actualIndex - lastCardIndex - 1;
+
                       simulatorStoreActions.setSkillTier(
-                        boardCardID,
+                        skillIndex,
                         value,
                         playerID === ENEMY_PLAYER_IDX,
                       );
