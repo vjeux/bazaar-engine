@@ -265,10 +265,8 @@ const runSimulationAndUpdateWinrate = () => {
 let workerInitialized = false;
 let workerInitializationPromise: Promise<void> | null = null;
 
-// Function to fetch JSON data directly without using IndexedDB
-async function fetchWorkerData() {
+async function initializeWorker() {
   try {
-    // Only load JSON once
     if (workerInitializationPromise) {
       return workerInitializationPromise;
     }
@@ -276,7 +274,7 @@ async function fetchWorkerData() {
     // Create a promise we can reuse
     workerInitializationPromise = (async () => {
       // Use CardsData and EncounterData that are already loaded
-      // This avoids IndexedDB issues in the worker
+      // This avoids passing large amounts of data to the worker, and resolves some window undefined issues with the worker and indexeddb
       await initSimulationWorker(CardsData, EncounterData);
       workerInitialized = true;
     })();
@@ -546,7 +544,7 @@ export const useSimulatorStore = create<State & Actions>()(
           try {
             // Initialize worker if not already done, using direct JSON loading
             if (!workerInitialized) {
-              await fetchWorkerData();
+              await initializeWorker();
             }
 
             // Use the worker to calculate winrate with progress updates
