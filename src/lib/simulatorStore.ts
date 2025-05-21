@@ -16,6 +16,11 @@ import { v4 as uuidv4 } from "uuid";
 import { getInitialGameState2, run } from "@/engine/engine2/engine2Adapter";
 import { GameState } from "@/engine/engine2/engine2";
 import type { CardLocationID } from "@/engine/engine2/engine2";
+import {
+  initSimulationWorker,
+  calculateWinrate as calculateWorkerWinrate,
+  cancelCalculation,
+} from "./workers/simulationService";
 
 const { Cards: CardsData, Encounters: EncounterData } =
   await genCardsAndEncounters();
@@ -256,6 +261,32 @@ const runSimulationAndUpdateWinrate = () => {
   }
 };
 
+// Initialize worker when module loads
+let workerInitialized = false;
+let workerInitializationPromise: Promise<void> | null = null;
+
+async function initializeWorker() {
+  try {
+    if (workerInitializationPromise) {
+      return workerInitializationPromise;
+    }
+
+    // Create a promise we can reuse
+    workerInitializationPromise = (async () => {
+      // Use CardsData and EncounterData that are already loaded
+      // This avoids passing large amounts of data to the worker, and resolves some window undefined issues with the worker and indexeddb
+      await initSimulationWorker(CardsData, EncounterData);
+      workerInitialized = true;
+    })();
+
+    return workerInitializationPromise;
+  } catch (error) {
+    console.error("Error initializing worker:", error);
+    workerInitializationPromise = null;
+    throw error;
+  }
+}
+
 export const useSimulatorStore = create<State & Actions>()(
   persist(
     immer((set, get) => ({
@@ -493,7 +524,7 @@ export const useSimulatorStore = create<State & Actions>()(
           set((state) => {
             state.editingCardLocation = location;
           }),
-        calculateWinrate: (numSimulations = 100) => {
+        calculateWinrate: async (numSimulations = 10) => {
           const state = get();
           const enemyConfig = { ...state.enemyConfig };
           const playerConfig = { ...state.playerConfig };
@@ -510,68 +541,60 @@ export const useSimulatorStore = create<State & Actions>()(
             state.calculationId = calculationId;
           });
 
-          let playerWins = 0;
-          let currentSeed = 0;
-
-          // Process simulations in batches to allow UI updates
-          const processBatch = () => {
-            // Get the current calculation ID to check if we should continue
-            const currentState = get();
-            const currentCalculationId = currentState.calculationId;
-
-            // If the calculation ID has changed, this calculation is obsolete
-            if (currentCalculationId !== calculationId) {
-              return;
+          try {
+            // Initialize worker if not already done
+            if (!workerInitialized) {
+              await initializeWorker();
             }
 
-            // Process a small batch of simulations (10 at a time)
-            const batchSize = 10;
-            const endSeed = Math.min(currentSeed + batchSize, numSimulations);
+            // Use the worker to calculate winrate with progress updates
+            const winrate = await calculateWorkerWinrate(
+              enemyConfig,
+              playerConfig,
+              numSimulations,
+              calculationId,
+              (progress) => {
+                // Update progress
+                set((state) => {
+                  state.completedSimulations = Math.floor(
+                    progress * numSimulations,
+                  );
+                });
+              },
+            );
 
-            for (let seed = currentSeed; seed < endSeed; seed++) {
-              const steps = runWrapper(enemyConfig, playerConfig, seed);
-              const winner = steps.at(-1)?.winner;
-
-              // Count wins
-              if (winner === "Player" || winner === "Draw") {
-                playerWins++;
-              }
-            }
-
-            // Update UI with progress (only if this calculation is still valid)
+            // Update final winrate (only if this calculation is still valid)
             set((state) => {
               if (state.calculationId === calculationId) {
-                state.completedSimulations = endSeed;
+                state.winrate = winrate;
+                state.isCalculatingWinrate = false;
+                state.completedSimulations = numSimulations;
               }
             });
+          } catch (error) {
+            console.error("Error calculating winrate:", error);
 
-            // If there are more simulations to run, schedule the next batch
-            if (endSeed < numSimulations) {
-              currentSeed = endSeed;
-              setTimeout(processBatch, 0);
-            } else {
-              // All done, calculate final winrate (only if this calculation is still valid)
-              const finalWinrate = playerWins / numSimulations;
-              set((state) => {
-                if (state.calculationId === calculationId) {
-                  state.winrate = finalWinrate;
-                  state.isCalculatingWinrate = false;
-                }
-              });
-            }
-          };
-
-          // Start the first batch
-          setTimeout(processBatch, 0);
+            // Handle error state
+            set((state) => {
+              if (state.calculationId === calculationId) {
+                state.isCalculatingWinrate = false;
+                // Keep winrate as null to indicate failure
+              }
+            });
+          }
         },
-        resetWinrateCalculation: () =>
+        resetWinrateCalculation: () => {
+          // Cancel the current calculation in the worker
+          cancelCalculation();
+
+          // Update the store state
           set((state) => {
             state.isCalculatingWinrate = false;
             state.winrate = null;
             state.completedSimulations = 0;
-            // Reset the calculation ID when canceling calculations
             state.calculationId = "";
-          }),
+          });
+        },
         clearPlayerBoard: (playerIdx: number) => {
           set((state) => {
             // Clear player's cards and skills based on playerIdx

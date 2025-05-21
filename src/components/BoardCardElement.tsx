@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import FramedCardOrSkill from "./FramedCardOrSkill";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
@@ -49,20 +49,18 @@ const ENCHANTMENT_COLORS: Record<EnchantmentType, string> = {
     "bg-gradient-to-r from-pink-400 to-indigo-400 text-white",
 };
 
-export function BoardCardElement({
+// Separate component for dialog content to isolate re-renders
+const CardConfigDialog = React.memo(function CardConfigDialog({
   boardCard,
-  gameState,
-  playerIdx,
   boardCardIdx,
+  playerIdx,
+  isOpen,
 }: {
   boardCard: BoardCard;
-  gameState: GameState;
-  playerIdx: number;
   boardCardIdx: number;
+  playerIdx: number;
+  isOpen: boolean;
 }) {
-  const simulatorStoreActions = useSimulatorStore((state) => state.actions);
-  const editingCardLocation = useEditingCardLocation();
-
   const [cardConfig, setCardConfig] = useState<
     Partial<{
       attributeOverrides: Partial<Record<AttributeType, number>>;
@@ -70,6 +68,21 @@ export function BoardCardElement({
       tier: Tier;
     }>
   >({});
+
+  // Get only the actions we need directly
+  const setCardAttributeOverrides = useSimulatorStore(
+    (state) => state.actions.setCardAttributeOverrides,
+  );
+  const setCardEnchantment = useSimulatorStore(
+    (state) => state.actions.setCardEnchantment,
+  );
+  const setCardTier = useSimulatorStore((state) => state.actions.setCardTier);
+  const setEditingCardLocation = useSimulatorStore(
+    (state) => state.actions.setEditingCardLocation,
+  );
+  const setAutoScroll = useSimulatorStore(
+    (state) => state.actions.setAutoScroll,
+  );
 
   // Initialize card config with all attributes defined in the card
   React.useEffect(() => {
@@ -93,6 +106,223 @@ export function BoardCardElement({
     }));
   }, [boardCard]);
 
+  // Handle dialog close
+  const handleOpenChange = useCallback(
+    (value: boolean) => {
+      if (!value) {
+        // Save changes when closing the dialog
+        const overrides = {} as Record<AttributeType, number>;
+        for (const attr of Object.keys(cardConfig.attributeOverrides ?? {})) {
+          if (
+            typeof cardConfig.attributeOverrides?.[
+              attr as keyof typeof cardConfig.attributeOverrides
+            ] === "number"
+          ) {
+            overrides[attr as AttributeType] = cardConfig.attributeOverrides?.[
+              attr as keyof typeof cardConfig.attributeOverrides
+            ] as number;
+          }
+        }
+        setCardAttributeOverrides(
+          boardCardIdx,
+          overrides,
+          playerIdx === ENEMY_PLAYER_IDX,
+        );
+      }
+      setEditingCardLocation(
+        value
+          ? {
+              cardIdx: boardCardIdx,
+              playerIdx,
+              location: "board",
+            }
+          : null,
+      );
+    },
+    [
+      boardCardIdx,
+      cardConfig,
+      playerIdx,
+      setCardAttributeOverrides,
+      setEditingCardLocation,
+    ],
+  );
+
+  const card = boardCard.card;
+
+  return (
+    <Dialog open={isOpen} onOpenChange={handleOpenChange} defaultOpen={isOpen}>
+      <DialogTrigger asChild>
+        <div className="tooltip absolute top-0.5 right-0.5 z-10">
+          <Button
+            variant="secondary"
+            size="icon"
+            className="h-6 w-6 p-0 hover:cursor-pointer"
+            onClick={() => {
+              setAutoScroll(false);
+            }}
+          >
+            <Settings className="h-4 w-4" />
+          </Button>
+        </div>
+      </DialogTrigger>
+      <DialogContent className="max-h-[90vh] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>
+            Edit {playerIdx === ENEMY_PLAYER_IDX ? "Enemy" : "Player"} Card
+          </DialogTitle>
+        </DialogHeader>
+        <DialogDescription>
+          NOTE: <br />
+          These are the BASE attributes, i.e. not taking into account the buffs
+          from other cards.
+        </DialogDescription>
+        <div className="flex flex-col gap-2">
+          {/* Enchantment */}
+          <div className="flex flex-col gap-2">
+            <Label htmlFor="enchantment">Enchantment</Label>
+            <div className="flex gap-2">
+              <Select
+                onValueChange={(value: EnchantmentType) => {
+                  setCardEnchantment(
+                    boardCardIdx,
+                    value,
+                    playerIdx === ENEMY_PLAYER_IDX,
+                  );
+                  setEditingCardLocation({
+                    cardIdx: boardCardIdx,
+                    playerIdx,
+                    location: "board",
+                  });
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue
+                    placeholder={boardCard.Enchantment ?? "Select Enchantment"}
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.keys(card.Enchantments ?? [])
+                    .toSorted()
+                    .map((enchantment) => (
+                      <SelectItem key={enchantment} value={enchantment}>
+                        {enchantment}
+                      </SelectItem>
+                    ))}
+                </SelectContent>
+              </Select>
+              <p className="flex items-center text-xs text-gray-500">
+                The attributes will get reset when changing enchantment.
+              </p>
+            </div>
+            {/* Tier Select */}
+            <Label htmlFor="tier">Tier</Label>
+            <div className="flex gap-2">
+              <Select
+                onValueChange={(value: Tier) => {
+                  setCardTier(
+                    boardCardIdx,
+                    value,
+                    playerIdx === ENEMY_PLAYER_IDX,
+                  );
+                  setEditingCardLocation({
+                    cardIdx: boardCardIdx,
+                    playerIdx,
+                    location: "board",
+                  });
+                }}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder={boardCard.tier} />
+                </SelectTrigger>
+                <SelectContent>
+                  {Object.keys(card.Tiers ?? {}).map((tier) => (
+                    <SelectItem key={tier} value={tier}>
+                      {tier}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <p className="flex items-center text-xs text-gray-500">
+                The attributes will get reset when changing tier.
+              </p>
+            </div>
+          </div>
+          {Object.keys(cardConfig.attributeOverrides ?? [])
+            .filter((attr) => attr != "Enchantment")
+            .map((attr) => {
+              return (
+                <div key={attr} className="flex flex-col gap-2">
+                  <Label htmlFor={attr}>{attr}</Label>
+                  <Input
+                    key={attr}
+                    type={
+                      typeof cardConfig.attributeOverrides?.[
+                        attr as keyof typeof cardConfig.attributeOverrides
+                      ] === "number"
+                        ? "number"
+                        : typeof cardConfig.attributeOverrides?.[
+                              attr as keyof typeof cardConfig.attributeOverrides
+                            ] === "boolean"
+                          ? "checkbox"
+                          : "text"
+                    }
+                    value={
+                      cardConfig.attributeOverrides?.[
+                        attr as keyof typeof cardConfig.attributeOverrides
+                      ]
+                    }
+                    onChange={(e) => {
+                      setCardConfig((prev) => ({
+                        ...prev,
+                        attributeOverrides: {
+                          ...prev.attributeOverrides,
+                          [attr]:
+                            typeof prev.attributeOverrides?.[
+                              attr as keyof typeof prev.attributeOverrides
+                            ] === "number"
+                              ? Number(e.target.value)
+                              : typeof prev.attributeOverrides?.[
+                                    attr as keyof typeof prev.attributeOverrides
+                                  ] === "boolean"
+                                ? e.target.checked
+                                : e.target.value,
+                        },
+                      }));
+                    }}
+                  />
+                </div>
+              );
+            })}
+        </div>
+      </DialogContent>
+    </Dialog>
+  );
+});
+
+// Main component for card element
+export const BoardCardElement = React.memo(function BoardCardElement({
+  boardCard,
+  gameState,
+  playerIdx,
+  boardCardIdx,
+}: {
+  boardCard: BoardCard;
+  gameState: GameState;
+  playerIdx: number;
+  boardCardIdx: number;
+}) {
+  const removeCard = useSimulatorStore((state) => state.actions.removeCard);
+
+  const editingCardLocation = useEditingCardLocation();
+
+  const isDialogOpen = useMemo(
+    () =>
+      editingCardLocation?.cardIdx === boardCardIdx &&
+      editingCardLocation?.playerIdx === playerIdx,
+    [editingCardLocation, boardCardIdx, playerIdx],
+  );
+
   const {
     attributes: dragAttributes,
     listeners,
@@ -110,26 +340,35 @@ export function BoardCardElement({
   };
 
   const card = boardCard.card;
-  const cardWidth =
-    card.Size === "Small"
-      ? CARD_HEIGHT / 2
-      : card.Size === "Medium"
-        ? CARD_HEIGHT
-        : CARD_HEIGHT * 1.5;
+
+  const cardWidth = useMemo(
+    () =>
+      card.Size === "Small"
+        ? CARD_HEIGHT / 2
+        : card.Size === "Medium"
+          ? CARD_HEIGHT
+          : CARD_HEIGHT * 1.5,
+    [card.Size],
+  );
 
   const paddingTop = 0.06;
   const paddingLeft = 0.03;
   const paddingBottom = 0.1;
   const paddingRight = 0.04;
 
-  // Get all card attributes at once instead of individual calls
-  const cardLocation: CardLocationID = {
-    playerIdx,
-    cardIdx: boardCardIdx,
-    location: "board",
-  };
+  const cardLocation: CardLocationID = useMemo(
+    () => ({
+      playerIdx,
+      cardIdx: boardCardIdx,
+      location: "board",
+    }),
+    [playerIdx, boardCardIdx],
+  );
 
-  const cardAttributes = getCardAttributes(gameState, cardLocation);
+  const cardAttributes = useMemo(
+    () => getCardAttributes(gameState, cardLocation),
+    [gameState, cardLocation],
+  );
 
   // Destructure the attributes we need for rendering
   const {
@@ -150,6 +389,23 @@ export function BoardCardElement({
     Lifesteal,
   } = cardAttributes;
 
+  // Memoize click handlers
+  const handleRemoveClick = useCallback(() => {
+    removeCard(boardCardIdx, playerIdx === ENEMY_PLAYER_IDX);
+  }, [removeCard, boardCardIdx, playerIdx]);
+
+  const handleDebugClick = useCallback(() => {
+    console.log("boardCard", boardCard);
+    console.log(
+      "getCardAttributes",
+      getCardAttributes(gameState, {
+        playerIdx,
+        cardIdx: boardCardIdx,
+        location: "board",
+      }),
+    );
+  }, [boardCard, gameState, playerIdx, boardCardIdx]);
+
   return (
     <div>
       <Tooltip placement="bottom" open={isSorting ? false : undefined}>
@@ -157,202 +413,12 @@ export function BoardCardElement({
           <div className={cn("tooltipContainer relative hover:cursor-grab")}>
             {/* Settings button */}
             {!isSorting && (
-              <Dialog
-                open={
-                  editingCardLocation?.cardIdx === boardCardIdx &&
-                  editingCardLocation?.playerIdx === playerIdx
-                }
-                onOpenChange={(value) => {
-                  if (!value) {
-                    // Save changes when closing the dialog
-                    const overrides = {} as Record<AttributeType, number>;
-                    for (const attr of Object.keys(
-                      cardConfig.attributeOverrides ?? {},
-                    )) {
-                      if (
-                        typeof cardConfig.attributeOverrides?.[
-                          attr as keyof typeof cardConfig.attributeOverrides
-                        ] === "number"
-                      ) {
-                        overrides[attr as AttributeType] = cardConfig
-                          .attributeOverrides?.[
-                          attr as keyof typeof cardConfig.attributeOverrides
-                        ] as number;
-                      }
-                    }
-                    simulatorStoreActions.setCardAttributeOverrides(
-                      boardCardIdx,
-                      overrides,
-                      playerIdx === ENEMY_PLAYER_IDX,
-                    );
-                  }
-                  simulatorStoreActions.setEditingCardLocation(
-                    value
-                      ? {
-                          cardIdx: boardCardIdx,
-                          playerIdx,
-                          location: "board",
-                        }
-                      : null,
-                  );
-                }}
-                defaultOpen={
-                  editingCardLocation?.cardIdx === boardCardIdx &&
-                  editingCardLocation?.playerIdx === playerIdx
-                }
-              >
-                <DialogTrigger asChild>
-                  <div className="tooltip absolute top-0.5 right-0.5 z-10">
-                    <Button
-                      variant="secondary"
-                      size="icon"
-                      className="h-6 w-6 p-0 hover:cursor-pointer"
-                      onClick={() => {
-                        simulatorStoreActions.setAutoScroll(false);
-                      }}
-                    >
-                      <Settings className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </DialogTrigger>
-                <DialogContent className="max-h-[90vh] overflow-y-auto">
-                  <DialogHeader>
-                    <DialogTitle>
-                      Edit {playerIdx === ENEMY_PLAYER_IDX ? "Enemy" : "Player"}{" "}
-                      Card
-                    </DialogTitle>
-                  </DialogHeader>
-                  <DialogDescription>
-                    NOTE: <br />
-                    These are the BASE attributes, i.e. not taking into account
-                    the buffs from other cards.
-                  </DialogDescription>
-                  <div className="flex flex-col gap-2">
-                    {/* Enchantment */}
-                    <div className="flex flex-col gap-2">
-                      <Label htmlFor="enchantment">Enchantment</Label>
-                      <div className="flex gap-2">
-                        <Select
-                          onValueChange={(value: EnchantmentType) => {
-                            simulatorStoreActions.setCardEnchantment(
-                              boardCardIdx,
-                              value,
-                              playerIdx === ENEMY_PLAYER_IDX,
-                            );
-                            simulatorStoreActions.setEditingCardLocation({
-                              cardIdx: boardCardIdx,
-                              playerIdx,
-                              location: "board",
-                            });
-                          }}
-                        >
-                          <SelectTrigger>
-                            <SelectValue
-                              placeholder={
-                                boardCard.Enchantment ?? "Select Enchantment"
-                              }
-                            />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {Object.keys(card.Enchantments ?? [])
-                              .toSorted()
-                              .map((enchantment) => (
-                                <SelectItem
-                                  key={enchantment}
-                                  value={enchantment}
-                                >
-                                  {enchantment}
-                                </SelectItem>
-                              ))}
-                          </SelectContent>
-                        </Select>
-                        <p className="flex items-center text-xs text-gray-500">
-                          The attributes will get reset when changing
-                          enchantment.
-                        </p>
-                      </div>
-                      {/* Tier Select */}
-                      <Label htmlFor="tier">Tier</Label>
-                      <div className="flex gap-2">
-                        <Select
-                          onValueChange={(value: Tier) => {
-                            simulatorStoreActions.setCardTier(
-                              boardCardIdx,
-                              value,
-                              playerIdx === ENEMY_PLAYER_IDX,
-                            );
-                            simulatorStoreActions.setEditingCardLocation({
-                              cardIdx: boardCardIdx,
-                              playerIdx,
-                              location: "board",
-                            });
-                          }}
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder={boardCard.tier} />
-                          </SelectTrigger>
-                          <SelectContent>
-                            {Object.keys(card.Tiers ?? {}).map((tier) => (
-                              <SelectItem key={tier} value={tier}>
-                                {tier}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <p className="flex items-center text-xs text-gray-500">
-                          The attributes will get reset when changing tier.
-                        </p>
-                      </div>
-                    </div>
-                    {Object.keys(cardConfig.attributeOverrides ?? [])
-                      .filter((attr) => attr != "Enchantment")
-                      .map((attr) => {
-                        return (
-                          <div key={attr} className="flex flex-col gap-2">
-                            <Label htmlFor={attr}>{attr}</Label>
-                            <Input
-                              key={attr}
-                              type={
-                                typeof cardConfig.attributeOverrides?.[
-                                  attr as keyof typeof cardConfig.attributeOverrides
-                                ] === "number"
-                                  ? "number"
-                                  : typeof cardConfig.attributeOverrides?.[
-                                        attr as keyof typeof cardConfig.attributeOverrides
-                                      ] === "boolean"
-                                    ? "checkbox"
-                                    : "text"
-                              }
-                              value={
-                                cardConfig.attributeOverrides?.[
-                                  attr as keyof typeof cardConfig.attributeOverrides
-                                ]
-                              }
-                              onChange={(e) => {
-                                setCardConfig((prev) => ({
-                                  ...prev,
-                                  attributeOverrides: {
-                                    ...prev.attributeOverrides,
-                                    [attr]:
-                                      typeof prev.attributeOverrides?.[
-                                        attr as keyof typeof prev.attributeOverrides
-                                      ] === "number"
-                                        ? Number(e.target.value)
-                                        : typeof prev.attributeOverrides?.[
-                                              attr as keyof typeof prev.attributeOverrides
-                                            ] === "boolean"
-                                          ? e.target.checked
-                                          : e.target.value,
-                                  },
-                                }));
-                              }}
-                            />
-                          </div>
-                        );
-                      })}
-                  </div>
-                </DialogContent>
-              </Dialog>
+              <CardConfigDialog
+                boardCard={boardCard}
+                boardCardIdx={boardCardIdx}
+                playerIdx={playerIdx}
+                isOpen={isDialogOpen}
+              />
             )}
             {/* Remove button */}
             {!isSorting && (
@@ -361,12 +427,7 @@ export function BoardCardElement({
                   variant="secondary"
                   size="icon"
                   className="h-6 w-6 p-0 hover:cursor-pointer"
-                  onClick={() =>
-                    simulatorStoreActions.removeCard(
-                      boardCardIdx,
-                      playerIdx === ENEMY_PLAYER_IDX,
-                    )
-                  }
+                  onClick={handleRemoveClick}
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -379,17 +440,7 @@ export function BoardCardElement({
                   variant="secondary"
                   size="icon"
                   className="h-6 w-6 p-0 hover:cursor-pointer"
-                  onClick={() => {
-                    console.log("boardCard", boardCard);
-                    console.log(
-                      "getCardAttributes",
-                      getCardAttributes(gameState, {
-                        playerIdx,
-                        cardIdx: boardCardIdx,
-                        location: "board",
-                      }),
-                    );
-                  }}
+                  onClick={handleDebugClick}
                 >
                   <Bug className="h-4 w-4" />
                 </Button>
@@ -570,4 +621,4 @@ export function BoardCardElement({
       </Tooltip>
     </div>
   );
-}
+});
