@@ -241,7 +241,9 @@ const runSimulationAndUpdateWinrate = () => {
   const state = useSimulatorStore.getState();
   const actions = state.actions;
   // Run the simulation and update steps
-  state.steps = runWrapper(state.enemyConfig, state.playerConfig);
+  useSimulatorStore.setState((state) => {
+    state.steps = runWrapper(state.enemyConfig, state.playerConfig);
+  });
 
   // If winrate calculation is enabled, schedule recalculation after current update completes
   if (
