@@ -20,7 +20,7 @@ Start of fight poison and burn process a tick and apply before the fight starts.
 - [ ] use internal queue not only for multicast, but also for triggers, like "when you slow, deal damage", Proboscis should have an internal cooldown/max fire rate. https://www.howbazaar.gg/items?isShowingAdvancedFilters=true#Proboscis
 - [ ] Fork [BazaarPlannerMod](https://github.com/oceanseth/BazaarPlannerMod) and implement websocket connection to client browser.
 - [ ] Fix last transformation actions. Will have to implement tooltip parsing since the transformation target it server side.
-- [ ] Add support for modifying skill tier
+- [x] Add support for modifying skill tier
 - [x] limit boardcard attribute values to .1 digits
 
 ### BUGS:
