@@ -16,10 +16,10 @@ export default function WinrateCalculator() {
   );
   const steps = useSimulatorStore((state) => state.steps);
   const [simCount, setSimCount] = useState(
-    targetSimulations > 0 ? targetSimulations : 100,
+    targetSimulations > 0 ? targetSimulations : 10,
   );
   const lastCalculatedCountRef = useRef(
-    targetSimulations > 0 ? targetSimulations : 100,
+    targetSimulations > 0 ? targetSimulations : 10,
   );
   const isEnabled = isCalculating || winrate !== null;
 
@@ -34,7 +34,7 @@ export default function WinrateCalculator() {
 
   // Only update the input value, but don't trigger recalculation
   const handleSimCountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value) || 100;
+    const value = parseInt(e.target.value) || 10;
     setSimCount(value);
   };
 
@@ -67,7 +67,7 @@ export default function WinrateCalculator() {
           <>
             <Input
               type="number"
-              min="10"
+              min="2"
               max="1000"
               value={simCount}
               onChange={handleSimCountChange}
