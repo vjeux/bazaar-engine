@@ -27,7 +27,6 @@ Start of fight poison and burn process a tick and apply before the fight starts.
 
 - Atlatl cooldown not working
 - Rapid Injection System - Ahexa encounter infinite loop
-- Combobox search no longer works cuz i removed the encounter name at the start of the value, and just used the id. add the name back and split it again.
 
 ### ASSUMPTIONS (that might lead to bugs):
 

@@ -341,7 +341,7 @@ const EncounterSelector = memo(function EncounterSelector({
     },
   ].concat(
     encounters.map((encounter) => ({
-      value: encounter.card.cardId,
+      value: `${encounterSelectionName(encounter)}:${encounter.card.cardId}`,
       label: encounterSelectionName(encounter),
     })),
   );
@@ -353,12 +353,14 @@ const EncounterSelector = memo(function EncounterSelector({
     initialValue = "custom";
   } else {
     selectPlaceholder = encounterSelectionName(selectedMonster);
-    initialValue =
-      encounters.find(
-        (encounter) =>
-          encounter.name === selectedMonster.name &&
-          encounter.day === selectedMonster.day,
-      )?.card.cardId || "";
+    const foundEncounter = encounters.find(
+      (encounter) =>
+        encounter.name === selectedMonster.name &&
+        encounter.day === selectedMonster.day,
+    );
+    initialValue = foundEncounter
+      ? `${encounterSelectionName(foundEncounter)}:${foundEncounter.card.cardId}`
+      : "";
   }
 
   return (
@@ -372,8 +374,9 @@ const EncounterSelector = memo(function EncounterSelector({
           simulatorStoreActions.setEnemyToEmptyPlayer();
           return;
         }
+        const cardId = value.split(":")[1];
         const encounter = encounters.find(
-          (encounter) => encounter.card.cardId === value,
+          (encounter) => encounter.card.cardId === cardId,
         );
         if (encounter) {
           simulatorStoreActions.setEnemyFromMonster({
