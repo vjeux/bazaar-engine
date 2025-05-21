@@ -34,17 +34,6 @@ export default function Navbar() {
         >
           FAQ
         </Link>
-        <Link
-          href="/worker-test"
-          className={cn(
-            "hover:text-primary text-sm font-medium transition-colors",
-            pathname === "/worker-test"
-              ? "text-primary font-bold"
-              : "text-muted-foreground",
-          )}
-        >
-          Worker Test
-        </Link>
         <ModeToggle />
         <Link href="https://github.com/vjeux/bazaar-engine" target="_blank">
           <svg
