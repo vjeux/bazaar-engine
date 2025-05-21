@@ -21,7 +21,7 @@ Start of fight poison and burn process a tick and apply before the fight starts.
 - [ ] Fork [BazaarPlannerMod](https://github.com/oceanseth/BazaarPlannerMod) and implement websocket connection to client browser.
 - [ ] Fix last transformation actions. Will have to implement tooltip parsing since the transformation target it server side.
 - [ ] Add support for modifying skill tier
-- [ ] limit boardcard attribute values to .1 digits
+- [x] limit boardcard attribute values to .1 digits
 
 ### BUGS:
 

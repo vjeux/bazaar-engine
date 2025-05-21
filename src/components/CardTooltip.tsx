@@ -100,7 +100,7 @@ export default function CardTooltip({
         </div>
         {CooldownMax !== undefined && (
           <div className="text-muted-foreground text-sm">
-            <p>Cooldown: {CooldownMax / 1000}s</p>
+            <p>Cooldown: {parseFloat((CooldownMax / 1000).toFixed(1))}s</p>
             {CritChance !== undefined && CritChance > 0 && (
               <p>Crit Chance: {CritChance}%</p>
             )}

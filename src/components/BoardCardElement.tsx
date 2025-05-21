@@ -472,38 +472,38 @@ export function BoardCardElement({
                           : "bg-red-600",
                       )}
                     >
-                      {DamageAmount}
+                      {parseFloat(DamageAmount?.toFixed(1))}
                     </div>
                   )}
                   {HealAmount !== undefined && (
                     <div className="m-[0_2px] rounded-[5px] bg-lime-500 p-[2px_5px] text-white">
-                      {HealAmount}
+                      {parseFloat(HealAmount?.toFixed(1))}
                     </div>
                   )}
                   {BurnApplyAmount !== undefined && (
                     <div className="m-[0_2px] rounded-[5px] bg-orange-500 p-[2px_5px] text-white">
-                      {BurnApplyAmount}
+                      {parseFloat(BurnApplyAmount?.toFixed(1))}
                     </div>
                   )}
                   {PoisonApplyAmount !== undefined && (
                     <div className="m-[0_2px] rounded-[5px] bg-purple-600 p-[2px_5px] text-white">
-                      {PoisonApplyAmount}
+                      {parseFloat(PoisonApplyAmount?.toFixed(1))}
                     </div>
                   )}
                   {ShieldApplyAmount !== undefined && (
                     <div className="m-[0_2px] rounded-[5px] bg-yellow-400 p-[2px_5px]">
-                      {ShieldApplyAmount}
+                      {parseFloat(ShieldApplyAmount?.toFixed(1))}
                     </div>
                   )}
                 </div>
                 {CritChance != null && CritChance > 0 && (
                   <div className="absolute top-6 left-0 rounded-[5px] bg-red-600 p-[1px_3px] text-[9pt] text-white">
-                    🎯 {CritChance + "%"}
+                    🎯 {parseFloat(CritChance?.toFixed(1)) + "%"}
                   </div>
                 )}
                 {SellPrice !== undefined && (
                   <div className="absolute bottom-1 left-0 rounded-[5px] bg-orange-500 p-[1px_3px] text-[9pt] text-white">
-                    💰 {SellPrice}
+                    💰 {parseFloat(SellPrice?.toFixed(1))}
                   </div>
                 )}
                 {Multicast !== undefined && Multicast > 1 && (
