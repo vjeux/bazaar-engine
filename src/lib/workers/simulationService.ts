@@ -15,8 +15,12 @@ type BattleSimulatorType = {
     enemyConfig: MonsterConfig | PlayerConfig,
     playerConfig: PlayerConfig,
     numSimulations: number,
+    calculationId: string,
     progressCallback?: (progress: number) => void,
   ) => Promise<number>;
+
+  setActiveCalculation: (calculationId: string) => Promise<void>;
+  cancelCalculation: () => Promise<void>;
 
   [Comlink.releaseProxy]: () => void;
 };
@@ -92,6 +96,7 @@ export async function calculateWinrate(
   enemyConfig: MonsterConfig | PlayerConfig,
   playerConfig: PlayerConfig,
   numSimulations: number,
+  calculationId: string,
   onProgress?: (progress: number) => void,
 ): Promise<number> {
   if (!simulatorProxy) {
@@ -108,10 +113,10 @@ export async function calculateWinrate(
       enemyConfig,
       playerConfig,
       numSimulations,
+      calculationId,
       progressCallback,
     );
   } finally {
-    // Release the proxy when done to avoid memory leaks
     if (progressCallback) {
       // Cast to unknown first for safety
       const proxy = progressCallback as unknown;
@@ -126,9 +131,18 @@ export async function calculateWinrate(
         }
       } catch (e) {
         // Ignore errors during cleanup
-        console.warn("Error releasing proxy:", e);
+        console.warn("Error releasing progress proxy:", e);
       }
     }
+  }
+}
+
+/**
+ * Cancel the current calculation
+ */
+export function cancelCalculation(): void {
+  if (simulatorProxy) {
+    simulatorProxy.cancelCalculation();
   }
 }
 

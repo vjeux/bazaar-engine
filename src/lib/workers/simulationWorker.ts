@@ -13,6 +13,7 @@ class BattleSimulator {
   private cards: Cards;
   private encounters: EncounterDays;
   private initialized: boolean = false;
+  private activeCalculationId: string | null = null;
 
   constructor(cards: Cards, encounters: EncounterDays) {
     try {
@@ -27,17 +28,33 @@ class BattleSimulator {
   }
 
   /**
+   * Set the active calculation ID
+   */
+  async setActiveCalculation(calculationId: string) {
+    console.log(`Setting active calculation to ${calculationId}`);
+    this.activeCalculationId = calculationId;
+  }
+
+  /**
+   * Cancel the current calculation
+   */
+  async cancelCalculation() {
+    console.log(`Cancelling calculation ${this.activeCalculationId}`);
+    this.activeCalculationId = null;
+  }
+
+  /**
    * Run a single simulation and return if the player won
    * @param enemyConfig Enemy configuration
    * @param playerConfig Player configuration
    * @param seed Random seed for deterministic results
    * @returns true if player won, false if enemy won or draw
    */
-  runSimulation(
+  async runSimulation(
     enemyConfig: MonsterConfig | PlayerConfig,
     playerConfig: PlayerConfig,
     seed: number,
-  ): boolean {
+  ): Promise<boolean> {
     if (!this.initialized) {
       throw new Error("BattleSimulator not properly initialized");
     }
@@ -69,40 +86,65 @@ class BattleSimulator {
    * @param enemyConfig Enemy configuration
    * @param playerConfig Player configuration
    * @param numSimulations Number of simulations to run
+   * @param calculationId Unique ID for this calculation
+   * @param progressCallback Callback to report progress
    * @returns Winrate as a number between 0 and 1
    */
-  calculateWinrate(
+  async calculateWinrate(
     enemyConfig: MonsterConfig | PlayerConfig,
     playerConfig: PlayerConfig,
     numSimulations: number,
+    calculationId: string,
     progressCallback?: (progress: number) => void,
-  ): number {
+  ): Promise<number> {
     if (!this.initialized) {
       throw new Error("BattleSimulator not properly initialized");
     }
 
+    // Set this as the active calculation
+    await this.setActiveCalculation(calculationId);
+
     let wins = 0;
     const batchSize = 5; // Smaller batch size for more frequent progress updates
+    let totalRun = 0;
 
     try {
       // Run simulations in batches
       for (let i = 0; i < numSimulations; i += batchSize) {
+        // Check if this calculation is still active
+        if (this.activeCalculationId !== calculationId) {
+          console.log(
+            `Calculation ${calculationId} was canceled, stopping early`,
+          );
+          break;
+        }
+
         const endBatch = Math.min(i + batchSize, numSimulations);
 
         // Run a batch of simulations
         for (let seed = i; seed < endBatch; seed++) {
-          if (this.runSimulation(enemyConfig, playerConfig, seed)) {
+          const result = await this.runSimulation(
+            enemyConfig,
+            playerConfig,
+            seed,
+          );
+          if (result) {
             wins++;
           }
+          totalRun++;
         }
 
         // Report progress after each batch
         if (progressCallback) {
           progressCallback(endBatch / numSimulations);
         }
+
+        // Add small delay between batches to allow for cancellation to be processed
+        await new Promise((resolve) => setTimeout(resolve, 0));
       }
 
-      return wins / numSimulations;
+      // If we didn't run all simulations due to cancellation, calculate based on what we have
+      return totalRun > 0 ? wins / totalRun : 0;
     } catch (error) {
       console.error("Error calculating winrate:", error);
       throw error;

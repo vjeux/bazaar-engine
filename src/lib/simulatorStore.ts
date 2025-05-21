@@ -19,6 +19,7 @@ import type { CardLocationID } from "@/engine/engine2/engine2";
 import {
   initSimulationWorker,
   calculateWinrate as calculateWorkerWinrate,
+  cancelCalculation,
 } from "./workers/simulationService";
 
 const { Cards: CardsData, Encounters: EncounterData } =
@@ -553,16 +554,14 @@ export const useSimulatorStore = create<State & Actions>()(
               enemyConfig,
               playerConfig,
               numSimulations,
+              calculationId,
               (progress) => {
-                // Check if this calculation is still valid
-                const currentState = get();
-                if (currentState.calculationId === calculationId) {
-                  set((state) => {
-                    state.completedSimulations = Math.floor(
-                      progress * numSimulations,
-                    );
-                  });
-                }
+                // Update progress
+                set((state) => {
+                  state.completedSimulations = Math.floor(
+                    progress * numSimulations,
+                  );
+                });
               },
             );
 
@@ -587,11 +586,14 @@ export const useSimulatorStore = create<State & Actions>()(
           }
         },
         resetWinrateCalculation: () => {
+          // Cancel the current calculation in the worker
+          cancelCalculation();
+
+          // Update the store state
           set((state) => {
             state.isCalculatingWinrate = false;
             state.winrate = null;
             state.completedSimulations = 0;
-            // Reset the calculation ID when canceling calculations
             state.calculationId = "";
           });
         },
