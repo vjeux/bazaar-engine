@@ -3,7 +3,10 @@ import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import FramedCardOrSkill from "./FramedCardOrSkill";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./Tooltip";
-import { useSimulatorStore, useEditingCardIndex } from "@/lib/simulatorStore";
+import {
+  useSimulatorStore,
+  useEditingCardLocation,
+} from "@/lib/simulatorStore";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { CARD_HEIGHT, ENEMY_PLAYER_IDX } from "@/lib/constants";
@@ -58,7 +61,7 @@ export function BoardCardElement({
   boardCardIdx: number;
 }) {
   const simulatorStoreActions = useSimulatorStore((state) => state.actions);
-  const editingCardIndex = useEditingCardIndex();
+  const editingCardLocation = useEditingCardLocation();
 
   const [cardConfig, setCardConfig] = useState<
     Partial<{
@@ -155,7 +158,10 @@ export function BoardCardElement({
             {/* Settings button */}
             {!isSorting && (
               <Dialog
-                open={editingCardIndex === boardCardIdx}
+                open={
+                  editingCardLocation?.cardIdx === boardCardIdx &&
+                  editingCardLocation?.playerIdx === playerIdx
+                }
                 onOpenChange={(value) => {
                   if (!value) {
                     // Save changes when closing the dialog
@@ -180,11 +186,20 @@ export function BoardCardElement({
                       playerIdx === ENEMY_PLAYER_IDX,
                     );
                   }
-                  simulatorStoreActions.setEditingCardIndex(
-                    value ? boardCardIdx : null,
+                  simulatorStoreActions.setEditingCardLocation(
+                    value
+                      ? {
+                          cardIdx: boardCardIdx,
+                          playerIdx,
+                          location: "board",
+                        }
+                      : null,
                   );
                 }}
-                defaultOpen={editingCardIndex === boardCardIdx}
+                defaultOpen={
+                  editingCardLocation?.cardIdx === boardCardIdx &&
+                  editingCardLocation?.playerIdx === playerIdx
+                }
               >
                 <DialogTrigger asChild>
                   <div className="tooltip absolute top-0.5 right-0.5 z-10">
@@ -224,9 +239,11 @@ export function BoardCardElement({
                               value,
                               playerIdx === ENEMY_PLAYER_IDX,
                             );
-                            simulatorStoreActions.setEditingCardIndex(
-                              boardCardIdx,
-                            );
+                            simulatorStoreActions.setEditingCardLocation({
+                              cardIdx: boardCardIdx,
+                              playerIdx,
+                              location: "board",
+                            });
                           }}
                         >
                           <SelectTrigger>
@@ -264,9 +281,11 @@ export function BoardCardElement({
                               value,
                               playerIdx === ENEMY_PLAYER_IDX,
                             );
-                            simulatorStoreActions.setEditingCardIndex(
-                              boardCardIdx,
-                            );
+                            simulatorStoreActions.setEditingCardLocation({
+                              cardIdx: boardCardIdx,
+                              playerIdx,
+                              location: "board",
+                            });
                           }}
                         >
                           <SelectTrigger>
