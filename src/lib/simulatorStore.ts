@@ -542,7 +542,7 @@ export const useSimulatorStore = create<State & Actions>()(
           });
 
           try {
-            // Initialize worker if not already done, using direct JSON loading
+            // Initialize worker if not already done
             if (!workerInitialized) {
               await initializeWorker();
             }
