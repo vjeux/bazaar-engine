@@ -257,10 +257,14 @@ export function getCardAttribute(
 
             // If targeted by an aura, assume the value is 0
             if (value === undefined) {
-              console.warn(
-                `Attribute ${attribute} was undefined, but target ${cardID.playerIdx}-${cardID.cardIdx} was targeted by an aura, so it was set to 0`,
-              );
-              value = 0;
+              if (attribute === AttributeType.Multicast) {
+                value = 1;
+              } else {
+                console.warn(
+                  `Attribute ${attribute} was undefined, but target ${cardID.playerIdx}-${cardID.cardIdx} was targeted by an aura`,
+                );
+                value = 0;
+              }
             }
 
             // Apply the modification based on operation type

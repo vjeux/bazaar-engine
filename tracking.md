@@ -21,7 +21,7 @@
 ## Bugs
 
 - [x] Adrenal converter gives double Regen, Triggers do nout account for if Subject and Target is same
-- [ ] Z-Shield, no multicast
+- [x] Z-Shield, no multicast
 - [ ] Rapid Injection System - Ahexa encounter infinite loop
 
 ```
