@@ -3269,6 +3269,14 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Brewmaster" 1`]
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Brewmaster" 2`] = `
+{
+  "cardName": "Brewmaster",
+  "error": "Snapshot \`Tooltip snapshots > Snapshot equality for tooltips for "Brewmaster" 1\` mismatched",
+  "tier": "Diamond",
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Brick Buddy" 1`] = `
 {
   "cardName": "Brick Buddy",
@@ -6284,6 +6292,14 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Crimson Dash" 1
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Crimson Dash" 2`] = `
+{
+  "cardName": "Crimson Dash",
+  "error": "Snapshot \`Tooltip snapshots > Snapshot equality for tooltips for "Crimson Dash" 1\` mismatched",
+  "tier": "Diamond",
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Critical Aid" 1`] = `
 {
   "cardName": "Critical Aid",
@@ -7722,6 +7738,14 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Draconic Rage" 
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Draconic Rage" 2`] = `
+{
+  "cardName": "Draconic Rage",
+  "error": "Snapshot \`Tooltip snapshots > Snapshot equality for tooltips for "Draconic Rage" 1\` mismatched",
+  "tier": "Diamond",
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Dragon Heart" 1`] = `
 {
   "cardName": "Dragon Heart",
@@ -7861,6 +7885,14 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Dual Wield" 1`]
   "tooltips": [
     "If you have exactly 2 Weapons, your items have +50% Crit Chance.",
   ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Dual Wield" 2`] = `
+{
+  "cardName": "Dual Wield",
+  "error": "Snapshot \`Tooltip snapshots > Snapshot equality for tooltips for "Dual Wield" 1\` mismatched",
+  "tier": "Diamond",
 }
 `;
 
@@ -9744,7 +9776,7 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Forklift" 1`] =
   "cardName": "Forklift",
   "tier": "Silver",
   "tooltips": [
-    "Deal 350 damage.",
+    "Deal 100 damage.",
     "When you use an Adjacent item, Charge this 1 second(s).",
     "If you have another Tool, Apparel, Tech, Weapon, or Friend, this has +50 Damage for each.",
   ],
@@ -9756,7 +9788,7 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Forklift" 2`] =
   "cardName": "Forklift",
   "tier": "Gold",
   "tooltips": [
-    "Deal 600 damage.",
+    "Deal 100 damage.",
     "When you use an Adjacent item, Charge this 1.5 second(s).",
     "If you have another Tool, Apparel, Tech, Weapon, or Friend, this has +100 Damage for each.",
   ],
@@ -9768,7 +9800,7 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Forklift" 3`] =
   "cardName": "Forklift",
   "tier": "Diamond",
   "tooltips": [
-    "Deal 850 damage.",
+    "Deal 100 damage.",
     "When you use an Adjacent item, Charge this 2 second(s).",
     "If you have another Tool, Apparel, Tech, Weapon, or Friend, this has +150 Damage for each.",
   ],
@@ -21096,6 +21128,14 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Robotic Factory
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Robotic Factory" 2`] = `
+{
+  "cardName": "Robotic Factory",
+  "error": "Snapshot \`Tooltip snapshots > Snapshot equality for tooltips for "Robotic Factory" 1\` mismatched",
+  "tier": "Diamond",
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Rocket Boots" 1`] = `
 {
   "cardName": "Rocket Boots",
@@ -22690,6 +22730,14 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Shipwreck" 1`] 
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Shipwreck" 2`] = `
+{
+  "cardName": "Shipwreck",
+  "error": "Snapshot \`Tooltip snapshots > Snapshot equality for tooltips for "Shipwreck" 1\` mismatched",
+  "tier": "Diamond",
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Shoe Blade" 1`] = `
 {
   "cardName": "Shoe Blade",
@@ -23538,6 +23586,14 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Snowflake" 1`] 
 }
 `;
 
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Snowflake" 2`] = `
+{
+  "cardName": "Snowflake",
+  "error": "Snapshot \`Tooltip snapshots > Snapshot equality for tooltips for "Snowflake" 1\` mismatched",
+  "tier": "Diamond",
+}
+`;
+
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Snowmobile" 1`] = `
 {
   "cardName": "Snowmobile",
@@ -23847,10 +23903,16 @@ exports[`Tooltip snapshots > Snapshot equality for tooltips for "Speedrunner" 3`
 exports[`Tooltip snapshots > Snapshot equality for tooltips for "Spices" 1`] = `
 {
   "cardName": "Spices",
+  "error": "Cannot read properties of undefined (reading 'playerIdx')",
   "tier": "Diamond",
-  "tooltips": [
-    "Your weapons gain damage equal to your weakest weapon's damage for the fight. [0]",
-  ],
+}
+`;
+
+exports[`Tooltip snapshots > Snapshot equality for tooltips for "Spices" 2`] = `
+{
+  "cardName": "Spices",
+  "error": "Snapshot \`Tooltip snapshots > Snapshot equality for tooltips for "Spices" 1\` mismatched",
+  "tier": "Diamond",
 }
 `;
 

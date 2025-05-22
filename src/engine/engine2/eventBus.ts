@@ -547,10 +547,13 @@ function processCard(
     AttributeType.CooldownMax,
   );
 
-  if (!cooldownMax) {
+  if (cooldownMax === undefined || cooldownMax === null) {
     throw new Error(
       "getCardAttribtue CooldownMax returned undefined when base card CooldownMax was defined",
     );
+  }
+  if (cooldownMax === 0) {
+    throw new Error("getCardAttribtue CooldownMax returned 0");
   }
 
   // For non-AttributeType values, access directly or from draft/snapshot

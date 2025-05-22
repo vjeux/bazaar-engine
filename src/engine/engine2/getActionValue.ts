@@ -1,4 +1,4 @@
-import { Value, AttributeType } from "@/types/cardTypes";
+import { Value } from "@/types/cardTypes";
 import { Player } from "../Engine";
 import { GameState, CardLocationID } from "./engine2";
 import { getCardAttribute } from "./getAttribute";
@@ -22,11 +22,56 @@ export function getActionValue(
     case "TFixedValue":
       amount = value.Value;
       break;
-    case "TReferenceValueCardAttribute":
+    case "TReferenceValueCardAttribute": {
+      if (!value.Target) {
+        throw new Error(
+          "Target must exist for action reference value card attribute",
+        );
+      }
+      if (!value.AttributeType) {
+        throw new Error(
+          "Attribute type must exist for action reference value card attribute",
+        );
+      }
+      const targetCard = getTargetCards(
+        gameState,
+        value.Target,
+        sourceCardID,
+        event,
+      );
+      if (targetCard.length > 1) {
+        throw new Error(
+          "Target card not found for action reference value card attribute, or multiple target cards found",
+        );
+      }
+
+      if (targetCard.length === 0) {
+        if (value.DefaultValue !== undefined && value.DefaultValue !== null) {
+          amount = value.DefaultValue;
+        } else {
+          throw new Error(
+            "Target card not found for action reference value card attribute, and no default value provided",
+          );
+        }
+      } else {
+        amount = getCardAttribute(
+          gameState,
+          targetCard[0],
+          value.AttributeType,
+        );
+      }
+
+      break;
+    }
     case "TReferenceValueCardAttributeAggregate": {
       if (!value.Target) {
         throw new Error(
           "Target must exist for action reference value card attribute",
+        );
+      }
+      if (!value.AttributeType) {
+        throw new Error(
+          "Attribute type must exist for action reference value card attribute",
         );
       }
       const targetCards = getTargetCards(
@@ -35,20 +80,16 @@ export function getActionValue(
         sourceCardID,
         event,
       );
-      amount = value.DefaultValue;
+      amount = value.DefaultValue ?? 0;
       targetCards.forEach((valueTargetCard) => {
         if (!value.AttributeType) {
           throw new Error(
             "Attribute type must exist for action reference value card attribute",
           );
         }
-        amount =
-          (amount ?? 0) +
-          (getCardAttribute(
-            gameState,
-            valueTargetCard,
-            value.AttributeType as AttributeType,
-          ) ?? 0);
+        amount! +=
+          getCardAttribute(gameState, valueTargetCard, value.AttributeType) ??
+          0;
       });
       break;
     }
@@ -146,10 +187,15 @@ export function getActionValue(
       sourceCardID,
       event,
     );
+    if (modifierValue === null || modifierValue === undefined) {
+      throw new Error(
+        "Modifier value is null or undefined for action reference value card attribute",
+      );
+    }
     if (value.Modifier.ModifyMode === "Multiply") {
       amount *= modifierValue;
     }
   }
 
-  return amount ?? 0;
+  return amount || 0;
 }

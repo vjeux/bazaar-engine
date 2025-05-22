@@ -8,6 +8,7 @@ import {
 } from "./engine2";
 import { getActionValue } from "./getActionValue";
 import { getTargetCards, getTargetPlayers } from "./targeting";
+import { checkPrerequisite } from "./prereq";
 
 /**
  * Recursion guards to prevent infinite recursion when checking attributes
@@ -222,6 +223,24 @@ export function getCardAttribute(
           );
 
           if (isTargeted) {
+            // Check that aura prerequisites are met
+            if (aura.Prerequisites) {
+              const isMet = aura.Prerequisites.every((prereq) =>
+                checkPrerequisite(
+                  prereq,
+                  {
+                    playerIdx: playerIdx,
+                    cardIdx: cardIdx,
+                    location: "board",
+                  },
+                  gameState,
+                ),
+              );
+              if (!isMet) {
+                return;
+              }
+            }
+
             // Get the value to apply from the aura
             const actionValue = getActionValue(
               gameState,
@@ -229,6 +248,12 @@ export function getCardAttribute(
               auraSourceCardID,
               undefined,
             );
+
+            if (actionValue === undefined) {
+              console.error(
+                `Aura action value is undefined for card ${auraSourceCardID.playerIdx}-${auraSourceCardID.cardIdx}`,
+              );
+            }
 
             // If targeted by an aura, assume the value is 0
             if (value === undefined) {
@@ -372,6 +397,24 @@ export function getPlayerAttribute<K extends keyof Player>(
 
             // Check if our player is among the targets
             if (targetPlayers.includes(playerID)) {
+              // Check that aura prerequisites are met
+              if (aura.Prerequisites) {
+                const isMet = aura.Prerequisites.every((prereq) =>
+                  checkPrerequisite(
+                    prereq,
+                    {
+                      playerIdx: playerIdx,
+                      cardIdx: cardIdx,
+                      location: "board",
+                    },
+                    gameState,
+                  ),
+                );
+                if (!isMet) {
+                  return;
+                }
+              }
+
               // Get the value to apply from the aura
               const actionValue = getActionValue(
                 gameState,

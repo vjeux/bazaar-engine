@@ -48,11 +48,11 @@ export function createPrerequisitesCheck(
   };
 }
 
-function checkPrerequisite(
+export function checkPrerequisite(
   prereq: AbilityPrerequisite,
   locationID: CardLocationID,
   gs: GameState,
-  event: GameEvent,
+  event?: GameEvent,
 ): boolean {
   switch (prereq.$type) {
     case "TPrerequisiteCardCount":
