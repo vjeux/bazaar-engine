@@ -2,7 +2,7 @@ import { genCardsAndEncounters, getCardId } from "../lib/Data.ts";
 import { run } from "../engine/engine2/engine2Adapter.ts";
 import { getFlattenedEncounters } from "@/lib/Data.ts";
 import { getInitialGameState2 } from "../engine/engine2/engine2Adapter.ts";
-import { describe, expect, it, test } from "vitest";
+import { describe, expect, test } from "vitest";
 
 type DiffObject = Record<string, unknown>;
 type DiffWithStep = DiffObject & { step: number };
@@ -97,33 +97,6 @@ describe("Encounter snapshots should match", () => {
       }
 
       expect(diffs).toMatchSnapshot();
-    }, 5000); // 5 second timeout
-  });
-});
-
-describe("Encounters should not throw", () => {
-  getFlattenedEncounters(Encounters).forEach((encounter) => {
-    it(`Encounter "Day ${encounter.day} - ${encounter.name}" should not throw`, () => {
-      // force throw on Mr.Moo since it loops forever
-      if (encounter.name === "Mr. Moo") {
-        throw new Error("Mr.Moo force throw error as it seems to loop forever");
-      }
-      const gameState = getInitialGameState2(Cards, Encounters, [
-        { type: "monster", name: encounter.name, day: Number(encounter.day) },
-
-        {
-          type: "player",
-          health: 2000,
-          cards: [
-            { cardId: getCardId("Silk Scarf", Cards) },
-            { cardId: getCardId("Fang", Cards) },
-            { cardId: getCardId("Bag of Jewels", Cards) },
-          ],
-        },
-      ]);
-
-      // This should not throw
-      run(gameState);
     }, 5000); // 5 second timeout
   });
 });

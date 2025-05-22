@@ -1,14 +1,14 @@
 import validItemIds from "../../public/json/ValidItemIds.json";
 import validSkillIds from "../../public/json/ValidSkillIds.json";
 import { getInitialGameState2 } from "../engine/engine2/engine2Adapter";
-import { describe, expect, it } from "vitest";
+import { describe, it } from "vitest";
 import { genCardsAndEncounters } from "../lib/Data";
 import { Tier } from "../types/shared";
 import { CARDS_VERSION } from "../lib/constants";
 import { getTooltips } from "@/engine/engine2/getTooltips";
 const { Cards, Encounters } = await genCardsAndEncounters();
 
-function getTiers(startingTier: Tier): Tier[] {
+export function getTiers(startingTier: Tier): Tier[] {
   if (startingTier === Tier.Legendary) {
     return [Tier.Legendary];
   }
@@ -51,45 +51,6 @@ describe("Tooltips should not throw", () => {
           cardIdx: 0,
           location: "board",
         });
-      });
-    }, 5000);
-  });
-});
-
-describe("Tooltip snapshots", () => {
-  [...validItemIds, ...validSkillIds].forEach((cardId: string) => {
-    const card = Cards[CARDS_VERSION].find((c) => c.Id === cardId);
-    const cardName = card?.Localization.Title.Text;
-    if (!card || !cardName) {
-      throw new Error(`Card "${cardId}" not found or it's Id is missing`);
-    }
-    it(`Snapshot equality for tooltips for "${cardName}"`, () => {
-      getTiers(card.StartingTier).forEach((tier) => {
-        try {
-          const extension = validItemIds.includes(cardId)
-            ? { cards: [{ cardId: cardId, tier }] }
-            : { skills: [{ cardId: cardId, tier }] };
-          const gameState = getInitialGameState2(Cards, Encounters, [
-            { type: "player", health: 1000, ...extension },
-            { type: "player", health: 1000 },
-          ]);
-          const tooltips = getTooltips(gameState, {
-            playerIdx: 0,
-            cardIdx: 0,
-            location: "board",
-          });
-          expect({
-            cardName,
-            tier,
-            tooltips,
-          }).toMatchSnapshot();
-        } catch (error) {
-          expect({
-            cardName,
-            tier,
-            error: (error as Error).message,
-          }).toMatchSnapshot();
-        }
       });
     }, 5000);
   });
