@@ -1,9 +1,4 @@
-import {
-  GameState,
-  CardLocationID,
-  BoardCard,
-  cardLocationIdIsEqual,
-} from "./engine2";
+import { GameState, CardLocationID, cardLocationIdIsEqual } from "./engine2";
 import {
   Source,
   Target,
