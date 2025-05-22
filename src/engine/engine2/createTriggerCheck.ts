@@ -21,6 +21,11 @@ import {
   PlayerAttributeChangedEvent,
   PlayerDiedEvent,
   PlayerOverhealedEvent,
+  CardPerformedReloadEvent,
+  MultipleTargetPlayerEvent,
+  SingleTargetPlayerEvent,
+  SingleTargetCardEvent,
+  MultipleTargetCardEvent,
 } from "./events";
 import { getTargetCards, getTargetPlayers } from "./targeting";
 
@@ -58,27 +63,47 @@ function checkSubjectAndTargetIfDefined(
 
   if (ability.Trigger.Target && targetType) {
     if (targetType === "player") {
-      // Check if target player is same as ability target
-      const targetPlayers = getTargetPlayers(
+      // Check if any target player is same as ability target
+      const abilityTargetPlayers = getTargetPlayers(
         gs,
         ability.Trigger.Target,
         checkIfTriggeringID,
         e,
       );
 
-      return targetPlayers.some(
-        (playerIdx) => playerIdx === checkIfTriggeringID.playerIdx,
+      // Get event target players array from the event
+      const eventTargetPlayers: number[] = [];
+      if (e instanceof SingleTargetPlayerEvent) {
+        eventTargetPlayers.push(e.targetPlayerIdx);
+      } else if (e instanceof MultipleTargetPlayerEvent) {
+        eventTargetPlayers.push(...e.targetPlayerIdxs);
+      }
+
+      // Check if any of the target players match any ability target player
+      return abilityTargetPlayers.some((playerIdx) =>
+        eventTargetPlayers.includes(playerIdx),
       );
     } else if (targetType === "card") {
-      const targetCards = getTargetCards(
+      const abilityTargetCards = getTargetCards(
         gs,
         ability.Trigger.Target,
         checkIfTriggeringID,
         e,
       );
 
-      return targetCards.some((card) =>
-        cardLocationIdIsEqual(card, eventSourceID),
+      // Get event target cards array from the event
+      const eventTargetCards: CardLocationID[] = [];
+      if (e instanceof SingleTargetCardEvent) {
+        eventTargetCards.push(e.targetCardID);
+      } else if (e instanceof MultipleTargetCardEvent) {
+        eventTargetCards.push(...e.targetCardIDs);
+      }
+
+      // Check if any of the target cards match any ability target card
+      return abilityTargetCards.some((abilityCard) =>
+        eventTargetCards.some((eventCard) =>
+          cardLocationIdIsEqual(abilityCard, eventCard),
+        ),
       );
     }
   }
@@ -173,7 +198,7 @@ export const triggerTypeToTriggerCheck: Record<
           e,
         );
         return subjects.some((subject) => {
-          if (cardLocationIdIsEqual(subject, e.modifiedLocationID)) {
+          if (cardLocationIdIsEqual(subject, e.targetCardID)) {
             if (
               e.attribute === ability.Trigger.AttributeChanged &&
               ((ability.Trigger.ChangeType === "Gain" &&
@@ -314,7 +339,7 @@ export const triggerTypeToTriggerCheck: Record<
           ability.Trigger.Subject,
           locationID,
         );
-        return subjects.some((subject) => subject === e.playerIdx);
+        return subjects.some((subject) => subject === e.targetPlayerIdx);
       }
       return false;
     };
@@ -349,6 +374,7 @@ export const triggerTypeToTriggerCheck: Record<
       return false;
     };
   },
+  // When a card gets reloaded, it emits this event itself
   [TriggerType.TTriggerOnCardReloaded]: (ability, locationID) => {
     return (gs: GameState, e: GameEvent): boolean => {
       if (e instanceof CardReloadedEvent) {
@@ -364,10 +390,11 @@ export const triggerTypeToTriggerCheck: Record<
       return false;
     };
   },
+  // When a card reloads another card
   [TriggerType.TTriggerOnCardPerformedReload]: (ability, locationID) => {
     // Using the same logic as TTriggerOnCardReloaded
     return (gs: GameState, e: GameEvent): boolean => {
-      if (e instanceof CardReloadedEvent) {
+      if (e instanceof CardPerformedReloadEvent) {
         return checkSubjectAndTargetIfDefined(
           gs,
           ability,

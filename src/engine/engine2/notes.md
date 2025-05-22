@@ -27,6 +27,7 @@ Start of fight poison and burn process a tick and apply before the fight starts.
 
 - Atlatl cooldown not working
 - Rapid Injection System - Ahexa encounter infinite loop
+- The item edit dialog takes the current steps attribute values. Should probably use first step to avoid accidentaly setting Haste/Freeze etc if it is frozen when you edit the item
 
 ### ASSUMPTIONS (that might lead to bugs):
 

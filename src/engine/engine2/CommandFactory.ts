@@ -116,9 +116,11 @@ const actionTypeToCommandCreation: Record<
       sourceCardID,
       event,
     );
-    for (const targetPlayer of targetPlayers) {
+
+    // Create a single damage command for all targets
+    if (targetPlayers.length > 0) {
       commands.addCommand(
-        new DamagePlayerCommand(targetPlayer, damage, sourceCardID),
+        new DamagePlayerCommand(targetPlayers, damage, sourceCardID),
       );
     }
 
@@ -156,9 +158,11 @@ const actionTypeToCommandCreation: Record<
       sourceCardID,
       event,
     );
-    for (const targetPlayer of targetPlayers) {
+
+    // Create a single heal command for all targets
+    if (targetPlayers.length > 0) {
       commands.addCommand(
-        new HealPlayerCommand(targetPlayer, healAmount, sourceCardID),
+        new HealPlayerCommand(targetPlayers, healAmount, sourceCardID),
       );
     }
 
@@ -201,9 +205,11 @@ const actionTypeToCommandCreation: Record<
       sourceCardID,
       event,
     );
-    for (const targetPlayer of targetPlayers) {
+
+    // Create a single burn command for all targets
+    if (targetPlayers.length > 0) {
       commands.addCommand(
-        new ApplyBurnCommand(targetPlayer, burnAmount, sourceCardID),
+        new ApplyBurnCommand(targetPlayers, burnAmount, sourceCardID),
       );
     }
 
@@ -246,9 +252,11 @@ const actionTypeToCommandCreation: Record<
       sourceCardID,
       event,
     );
-    for (const targetPlayer of targetPlayers) {
+
+    // Create a single poison command for all targets
+    if (targetPlayers.length > 0) {
       commands.addCommand(
-        new ApplyPoisonCommand(targetPlayer, poisonAmount, sourceCardID),
+        new ApplyPoisonCommand(targetPlayers, poisonAmount, sourceCardID),
       );
     }
 
@@ -291,9 +299,11 @@ const actionTypeToCommandCreation: Record<
       sourceCardID,
       event,
     );
-    for (const targetPlayer of targetPlayers) {
+
+    // Create a single shield command for all targets
+    if (targetPlayers.length > 0) {
       commands.addCommand(
-        new ApplyShieldCommand(targetPlayer, shieldAmount, sourceCardID),
+        new ApplyShieldCommand(targetPlayers, shieldAmount, sourceCardID),
       );
     }
 
@@ -336,9 +346,11 @@ const actionTypeToCommandCreation: Record<
       sourceCardID,
       event,
     );
-    for (const targetPlayer of targetPlayers) {
+
+    // Create a single regen command for all targets
+    if (targetPlayers.length > 0) {
       commands.addCommand(
-        new ApplyRegenCommand(targetPlayer, regenAmount, sourceCardID),
+        new ApplyRegenCommand(targetPlayers, regenAmount, sourceCardID),
       );
     }
 
@@ -543,16 +555,17 @@ const actionTypeToCommandCreation: Record<
 
     if (targetCount === undefined) {
       // Apply to all target cards
-      for (const targetCard of targetCards) {
+      if (targetCards.length > 0) {
         commands.addCommand(
-          new ApplySlowCommand(sourceCardID, targetCard, slowAmount),
+          new ApplySlowCommand(sourceCardID, targetCards, slowAmount),
         );
       }
     } else {
       // Apply to the first targetCount cards
-      for (const targetCard of targetCards.slice(0, targetCount)) {
+      const limitedTargets = targetCards.slice(0, targetCount);
+      if (limitedTargets.length > 0) {
         commands.addCommand(
-          new ApplySlowCommand(sourceCardID, targetCard, slowAmount),
+          new ApplySlowCommand(sourceCardID, limitedTargets, slowAmount),
         );
       }
     }
@@ -575,9 +588,15 @@ const actionTypeToCommandCreation: Record<
       AttributeType.DisableTargets,
     );
 
-    for (const targetCard of targetCards.slice(0, targetCount)) {
-      commands.addCommand(new DisableCardCommand(targetCard));
+    const targetsToApply =
+      targetCount === undefined
+        ? targetCards
+        : targetCards.slice(0, targetCount);
+
+    if (targetsToApply.length > 0) {
+      commands.addCommand(new DisableCardCommand(targetsToApply));
     }
+
     return commands;
   },
   [ActionType.TActionCardFreeze]: (action, sourceCardID, gameState, event) => {
@@ -609,11 +628,17 @@ const actionTypeToCommandCreation: Record<
       event,
     );
 
-    for (const targetCard of targetCards.slice(0, targetCount)) {
+    const targetsToApply =
+      targetCount === undefined
+        ? targetCards
+        : targetCards.slice(0, targetCount);
+
+    if (targetsToApply.length > 0) {
       commands.addCommand(
-        new ApplyFreezeCommand(sourceCardID, targetCard, freezeAmount),
+        new ApplyFreezeCommand(sourceCardID, targetsToApply, freezeAmount),
       );
     }
+
     return commands;
   },
   [ActionType.TActionCardHaste]: (action, sourceCardID, gameState, event) => {
@@ -647,16 +672,17 @@ const actionTypeToCommandCreation: Record<
 
     if (targetCount === undefined) {
       // Apply to all target cards
-      for (const targetCard of targetCards) {
+      if (targetCards.length > 0) {
         commands.addCommand(
-          new ApplyHasteCommand(sourceCardID, targetCard, hasteAmount),
+          new ApplyHasteCommand(sourceCardID, targetCards, hasteAmount),
         );
       }
     } else {
       // Apply to the first targetCount cards
-      for (const targetCard of targetCards.slice(0, targetCount)) {
+      const limitedTargets = targetCards.slice(0, targetCount);
+      if (limitedTargets.length > 0) {
         commands.addCommand(
-          new ApplyHasteCommand(sourceCardID, targetCard, hasteAmount),
+          new ApplyHasteCommand(sourceCardID, limitedTargets, hasteAmount),
         );
       }
     }
@@ -691,11 +717,16 @@ const actionTypeToCommandCreation: Record<
       throw new Error("Reload amount is undefined");
     }
 
-    for (const targetCard of targetCards.slice(0, targetCount)) {
+    const targetsToApply =
+      targetCount === undefined
+        ? targetCards
+        : targetCards.slice(0, targetCount);
+    if (targetsToApply.length > 0) {
       commands.addCommand(
-        new ReloadCardCommand(sourceCardID, targetCard, reloadAmount),
+        new ReloadCardCommand(sourceCardID, targetsToApply, reloadAmount),
       );
     }
+
     return commands;
   },
   [ActionType.TActionCardCharge]: (action, sourceCardID, gameState, event) => {
@@ -726,11 +757,17 @@ const actionTypeToCommandCreation: Record<
       throw new Error("Charge amount is undefined");
     }
 
-    for (const targetCard of targetCards.slice(0, targetCount)) {
+    const targetsToApply =
+      targetCount === undefined
+        ? targetCards
+        : targetCards.slice(0, targetCount);
+
+    if (targetsToApply.length > 0) {
       commands.addCommand(
-        new ChargeCardCommand(sourceCardID, targetCard, chargeAmount),
+        new ChargeCardCommand(sourceCardID, targetsToApply, chargeAmount),
       );
     }
+
     return commands;
   },
   [ActionType.TActionCardBeginSandstorm]: (
@@ -997,7 +1034,12 @@ const actionTypeToCommandCreation: Record<
       AttributeType.DestroyTargets,
     );
 
-    for (const targetCard of targetCards.slice(0, destroyAmount)) {
+    const targetsToDestroy =
+      destroyAmount === undefined
+        ? targetCards
+        : targetCards.slice(0, destroyAmount);
+
+    for (const targetCard of targetsToDestroy) {
       commands.addCommand(new RemoveCardCommand(targetCard)); // TODO: use implement and use destroy event, and destroy command
       console.warn(
         "calling remove card command for destroy action, TODO: implement emit destroy event, and destroy command",

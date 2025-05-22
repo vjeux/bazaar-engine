@@ -351,7 +351,7 @@ export function processPoisonAndRegen(gameState: GameState): void {
       );
 
       new Commands.DamagePlayerCommand(
-        playerID,
+        [playerID],
         poison,
         null, // System-caused damage
       ).execute(gameState);
@@ -401,7 +401,7 @@ export function processBurn(gameState: GameState): void {
 
       // Apply burn damage
       new Commands.DamagePlayerCommand(
-        playerID,
+        [playerID],
         burnDamage,
         null, // System-caused damage
       ).execute(gameState);
@@ -685,7 +685,7 @@ function processSandstorm(gameState: GameState): void {
       );
 
       new Commands.DamagePlayerCommand(
-        playerID,
+        [playerID],
         sandstormDamage,
         null, // System-caused damage
       ).execute(gameState);

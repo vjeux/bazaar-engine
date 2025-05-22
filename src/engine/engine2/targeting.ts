@@ -88,7 +88,7 @@ export function getTargetCards(
       ) {
         results.push(event.sourceCardID);
       } else if (event instanceof CardAttributeChangedEvent) {
-        results.push(event.modifiedLocationID);
+        results.push(event.targetCardID);
       } else {
         throw new Error(
           "sourceCardID is required for TTargetCardTriggerSource",
