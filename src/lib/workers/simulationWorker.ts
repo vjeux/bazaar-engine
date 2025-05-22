@@ -105,7 +105,7 @@ class BattleSimulator {
     await this.setActiveCalculation(calculationId);
 
     let wins = 0;
-    const batchSize = 5; // Smaller batch size for more frequent progress updates
+    const batchSize = 1; // Smaller batch size for more frequent progress updates
     let totalRun = 0;
 
     try {
