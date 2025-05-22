@@ -23,10 +23,6 @@ Start of fight poison and burn process a tick and apply before the fight starts.
 - [x] Add support for modifying skill tier
 - [x] limit boardcard attribute values to .1 digits
 
-### BUGS:
-
-- Atlatl cooldown not working
-- Rapid Injection System - Ahexa encounter infinite loop
 
 ### ASSUMPTIONS (that might lead to bugs):
 

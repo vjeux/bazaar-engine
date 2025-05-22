@@ -260,12 +260,10 @@ const runSimulationAndUpdateWinrate = () => {
     state.initialGameState = initialGameState;
   });
 
-  // If winrate calculation is enabled, schedule recalculation after current update completes
   if (
     state.isCalculatingWinrate ||
     (state.winrate !== null && state.targetSimulations > 0)
   ) {
-    // Need setTimeout to ensure UI updates properly between state changes
     const simCount = state.targetSimulations;
     actions.calculateWinrate(simCount);
   }

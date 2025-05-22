@@ -11,17 +11,18 @@
 - [x] Move gold/income to separate UI component
 - [x] Fix bug: having to doubleclick the red X to remove a card
 - [x] Add state saving to URL. Should probably use Zustand.
-- [ ] Add player config for health, level, regen, income, gold, etc.
-- [ ] Add card config, to set dmg, shield etc. Which can be boosted outside of combat.
-- [ ] Win percentage for RNG in battles
+- [x] Win percentage for RNG in battles
+- [x] Change the code to support custom monsters/encounters
+- [x] Add player config for health, level, regen, income, gold, etc.
+- [x] Add card config, to set dmg, shield etc. Which can be boosted outside of combat.
 - [ ] Show storm damage UI
 - [ ] Damage numbers above health
-- [ ] Change the code to support custom monsters/encounters
 
-## Bugged Items
+## Bugs
 
+- [x] Adrenal converter gives double Regen, Triggers do nout account for if Subject and Target is same
 - [ ] Z-Shield, no multicast
-- [ ] Adrenal converter gives double Regen, Triggers do nout account for if Subject and Target is same
+- [ ] Rapid Injection System - Ahexa encounter infinite loop
 
 ```
  "2": {
