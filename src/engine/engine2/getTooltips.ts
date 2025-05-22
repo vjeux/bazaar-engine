@@ -1,7 +1,27 @@
-import { AttributeType, type ActionType } from "@/types/cardTypes";
-import { CardLocationID, GameState } from "./engine2";
+import { AttributeType, Card, type ActionType } from "@/types/cardTypes";
+import { BoardCard, CardLocationID, GameState } from "./engine2";
 import { getCardAttribute } from "./getAttribute";
 import { getActionValue } from "./getActionValue";
+
+function getActionIfDefinedFromBoardCardElseCard(
+  boardCard: BoardCard,
+  card: Card,
+  type: "aura" | "ability" | (string & {}),
+  id: string | number,
+) {
+  const type_ = type === "aura" ? "Auras" : "Abilities";
+  if (boardCard[type_][id]) {
+    return boardCard[type_][id].Action;
+  } else if (card[type_][id]) {
+    return card[type_][id].Action;
+  }
+  throw new Error(
+    "Action not found in boardCard or card for id: " +
+      id +
+      " and type: " +
+      type,
+  );
+}
 
 export function getTooltips(
   gameState: GameState,
@@ -17,7 +37,12 @@ export function getTooltips(
     const tooltip: string = tooltipObject.Content.Text.replace(
       /\{([a-z]+)\.([a-z0-9]+)\.targets\}/g,
       (_: string, type: string, id: string | number): string => {
-        const action = card[type === "aura" ? "Auras" : "Abilities"][id].Action;
+        const action = getActionIfDefinedFromBoardCardElseCard(
+          boardCard,
+          card,
+          type,
+          id,
+        );
         if (action.$type === "TActionCardHaste") {
           return String(
             getCardAttribute(gameState, cardID, AttributeType.HasteTargets),
@@ -45,8 +70,12 @@ export function getTooltips(
       .replace(
         /\{([a-z]+)\.([a-z0-9]+)\.mod\}/g,
         (_: string, type: string, id: string | number): string => {
-          const action =
-            card[type === "aura" ? "Auras" : "Abilities"][id].Action;
+          const action = getActionIfDefinedFromBoardCardElseCard(
+            boardCard,
+            card,
+            type,
+            id,
+          );
           if (!action.Value || !action.Value.Modifier) {
             return "";
           }
@@ -59,8 +88,12 @@ export function getTooltips(
         /\{([a-z]+)\.([a-z0-9]+)\}/g,
         (_: string, type: string, id: string | number): string => {
           // Ensure a string is always returned
-          const action =
-            card[type === "aura" ? "Auras" : "Abilities"][id].Action;
+          const action = getActionIfDefinedFromBoardCardElseCard(
+            boardCard,
+            card,
+            type,
+            id,
+          );
 
           if (action.Value) {
             const actionValue = getActionValue(gameState, action.Value, cardID);
