@@ -69,7 +69,9 @@ const CardConfigDialog = React.memo(function CardConfigDialog({
     }>
   >({});
 
-  // Get only the actions we need directly
+  // Get attributes from initialgamestate instead of currently viewed step
+  const initialGameState = useSimulatorStore((state) => state.initialGameState);
+
   const setCardAttributeOverrides = useSimulatorStore(
     (state) => state.actions.setCardAttributeOverrides,
   );
@@ -86,25 +88,26 @@ const CardConfigDialog = React.memo(function CardConfigDialog({
 
   // Initialize card config with all attributes defined in the card
   React.useEffect(() => {
+    const bc = initialGameState.players[playerIdx].board[boardCardIdx];
     Object.values(AttributeType)
       .filter((attr) => {
-        return boardCard[attr] != undefined;
+        return bc[attr] != undefined;
       })
       .forEach((attr) => {
         setCardConfig((prev) => ({
           ...prev,
           attributeOverrides: {
             ...prev.attributeOverrides,
-            [attr]: boardCard[attr],
+            [attr]: bc[attr],
           },
         }));
       });
     setCardConfig((prev) => ({
       ...prev,
-      enchantment: boardCard.Enchantment ?? undefined,
-      tier: boardCard.tier ?? undefined,
+      enchantment: bc.Enchantment ?? undefined,
+      tier: bc.tier ?? undefined,
     }));
-  }, [boardCard]);
+  }, [initialGameState, playerIdx, boardCardIdx]);
 
   // Handle dialog close
   const handleOpenChange = useCallback(

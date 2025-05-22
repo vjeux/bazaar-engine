@@ -30,6 +30,7 @@ export type State = {
   enemyConfig: PlayerConfig;
   selectedMonster: MonsterConfig | "custom";
   steps: GameState[];
+  initialGameState: GameState;
   autoScroll: boolean;
   autoReset: boolean;
   battleSpeed: number;
@@ -194,19 +195,23 @@ const runWrapper = (
   );
 
   // Run the simulation with Engine2
-  return run(initialState, 10000);
+  return { steps: run(initialState, 10000), initialGameState: initialState };
 };
 
 // Initial monster converted to player config for enemy
 const initialEnemyFromMonster = convertMonsterToPlayerConfig(initialMonster);
 
-const initialSteps = runWrapper(initialEnemyFromMonster, initialPlayer);
+const { steps: initialSteps, initialGameState } = runWrapper(
+  initialEnemyFromMonster,
+  initialPlayer,
+);
 
 const initialState: State = {
   playerConfig: initialPlayer,
   enemyConfig: initialEnemyFromMonster,
   selectedMonster: initialMonster,
   steps: initialSteps,
+  initialGameState: initialGameState,
   autoScroll: false,
   autoReset: false,
   battleSpeed: 1,
@@ -247,7 +252,12 @@ const runSimulationAndUpdateWinrate = () => {
   const actions = state.actions;
   // Run the simulation and update steps
   useSimulatorStore.setState((state) => {
-    state.steps = runWrapper(state.enemyConfig, state.playerConfig);
+    const { steps, initialGameState } = runWrapper(
+      state.enemyConfig,
+      state.playerConfig,
+    );
+    state.steps = steps;
+    state.initialGameState = initialGameState;
   });
 
   // If winrate calculation is enabled, schedule recalculation after current update completes
@@ -626,14 +636,16 @@ export const useSimulatorStore = create<State & Actions>()(
       merge: (persistedState: unknown, currentState: State & Actions) => {
         const typedState = persistedState as Partial<State>;
         // Simply recalculate steps
-        const newSteps = runWrapper(
-          typedState.enemyConfig as PlayerConfig,
-          typedState.playerConfig as PlayerConfig,
-        );
+        const { steps: newSteps, initialGameState: newInitialGameState } =
+          runWrapper(
+            typedState.enemyConfig as PlayerConfig,
+            typedState.playerConfig as PlayerConfig,
+          );
         return {
           ...currentState,
           ...typedState,
           steps: newSteps,
+          initialGameState: newInitialGameState,
         };
       },
     },
