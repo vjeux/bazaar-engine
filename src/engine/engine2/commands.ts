@@ -27,6 +27,9 @@ import {
   CardPerformedChargeEvent,
   CardPerformedRegenEvent,
   CardPerformedFreezeEvent,
+  CardDisabledEvent,
+  CardReloadedEvent,
+  CardPerformedReloadEvent,
 } from "./events";
 import { GameEvent } from "./events";
 import { getBoardCardByID } from "./targeting";
@@ -437,40 +440,46 @@ export class ModifyPlayerAttributeCommand implements Command {
  */
 export class DamagePlayerCommand implements Command {
   constructor(
-    private targetPlayerIdx: number,
+    private targetPlayerIdxs: number[],
     private amount: number,
     private sourceCardID: CardLocationID | null,
   ) {}
 
   execute(gameState: GameState): void {
-    const targetPlayerShield = getPlayerAttribute(
-      gameState,
-      this.targetPlayerIdx,
-      "Shield",
-    );
+    const damagedPlayers: number[] = [];
 
-    if (targetPlayerShield >= this.amount) {
-      new ModifyPlayerAttributeCommand(
-        this.targetPlayerIdx,
+    this.targetPlayerIdxs.forEach((targetPlayerIdx) => {
+      const targetPlayerShield = getPlayerAttribute(
+        gameState,
+        targetPlayerIdx,
         "Shield",
-        "subtract",
-        this.amount,
-      ).execute(gameState);
-    } else {
-      const remainingDamage = this.amount - targetPlayerShield;
-      new ModifyPlayerAttributeCommand(
-        this.targetPlayerIdx,
-        "Shield",
-        "subtract",
-        targetPlayerShield,
-      ).execute(gameState);
-      new ModifyPlayerAttributeCommand(
-        this.targetPlayerIdx,
-        "Health",
-        "subtract",
-        remainingDamage,
-      ).execute(gameState);
-    }
+      );
+
+      if (targetPlayerShield >= this.amount) {
+        new ModifyPlayerAttributeCommand(
+          targetPlayerIdx,
+          "Shield",
+          "subtract",
+          this.amount,
+        ).execute(gameState);
+      } else {
+        const remainingDamage = this.amount - targetPlayerShield;
+        new ModifyPlayerAttributeCommand(
+          targetPlayerIdx,
+          "Shield",
+          "subtract",
+          targetPlayerShield,
+        ).execute(gameState);
+        new ModifyPlayerAttributeCommand(
+          targetPlayerIdx,
+          "Health",
+          "subtract",
+          remainingDamage,
+        ).execute(gameState);
+      }
+
+      damagedPlayers.push(targetPlayerIdx);
+    });
 
     // Delay events as we want to process them after the command is executed
     const delayedEvents: Array<GameEvent> = [];
@@ -490,7 +499,8 @@ export class DamagePlayerCommand implements Command {
           this.sourceCardID,
           AttributeType.Lifesteal,
         ) ?? 0;
-      let lifestealAmount = this.amount * (lifestealPercent / 100);
+      let lifestealAmount =
+        this.amount * damagedPlayers.length * (lifestealPercent / 100); // Doesnt really make sense when we target multiple players.
 
       // Make sure we dont add more than to the max health
       const maxHealth = getPlayerAttribute(
@@ -524,14 +534,9 @@ export class DamagePlayerCommand implements Command {
       );
     }
 
-    if (this.sourceCardID) {
-      // Emit damage event
+    if (damagedPlayers.length > 0) {
       delayedEvents.push(
-        new PlayerDamagedEvent(
-          this.targetPlayerIdx,
-          this.amount,
-          this.sourceCardID,
-        ),
+        new PlayerDamagedEvent(damagedPlayers, this.amount, this.sourceCardID),
       );
     }
 
@@ -542,11 +547,17 @@ export class DamagePlayerCommand implements Command {
   }
 
   toLogString(): string {
-    if (!this.sourceCardID) {
-      return `Dealt ${this.amount} damage to ${playerName(this.targetPlayerIdx)}`;
+    if (this.targetPlayerIdxs.length === 1) {
+      if (!this.sourceCardID) {
+        return `Dealt ${this.amount} damage to ${playerName(this.targetPlayerIdxs[0])}`;
+      }
+      return `Dealt ${this.amount} damage to ${playerName(this.targetPlayerIdxs[0])} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
     }
 
-    return `Dealt ${this.amount} damage to ${playerName(this.targetPlayerIdx)} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+    if (!this.sourceCardID) {
+      return `Dealt ${this.amount} damage to ${this.targetPlayerIdxs.length} players`;
+    }
+    return `Dealt ${this.amount} damage to ${this.targetPlayerIdxs.length} players from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
@@ -555,39 +566,62 @@ export class DamagePlayerCommand implements Command {
  */
 export class HealPlayerCommand implements Command {
   constructor(
-    private targetPlayerID: number,
+    private targetPlayerIDs: number[],
     private amount: number,
     private sourceCardID: CardLocationID,
   ) {}
 
   execute(gameState: GameState): void {
-    const player = gameState.players[this.targetPlayerID];
-    const currentHealth = player.Health;
-    const maxHealth = player.HealthMax;
+    const overhealed: number[] = [];
+    const healed: number[] = [];
+    const partialOverhealed: number[] = [];
 
-    // Check if player is at max health
-    if (currentHealth < maxHealth) {
-      // Use add operation instead of calculating and setting
-      new ModifyPlayerAttributeCommand(
-        this.targetPlayerID,
-        "Health",
-        "add",
-        this.amount,
-      ).execute(gameState);
+    // Process each target player
+    this.targetPlayerIDs.forEach((targetPlayerID) => {
+      const player = gameState.players[targetPlayerID];
+      const currentHealth = player.Health;
+      const maxHealth = player.HealthMax;
 
-      // Emit heal event
-      gameState.eventBus.emit(
-        new CardPerformedHealEvent(
-          this.targetPlayerID,
+      // Check if player is at max health
+      if (currentHealth >= maxHealth) {
+        // Already at max health, complete overheal
+        overhealed.push(targetPlayerID);
+      } else if (currentHealth + this.amount > maxHealth) {
+        // Heal would exceed max health, partial overheal
+
+        new ModifyPlayerAttributeCommand(
+          targetPlayerID,
+          "Health",
+          "add",
           this.amount,
-          this.sourceCardID,
-        ),
+        ).execute(gameState);
+
+        healed.push(targetPlayerID);
+        partialOverhealed.push(targetPlayerID);
+      } else {
+        // Normal heal, not reaching max health
+        new ModifyPlayerAttributeCommand(
+          targetPlayerID,
+          "Health",
+          "add",
+          this.amount,
+        ).execute(gameState);
+
+        healed.push(targetPlayerID);
+      }
+    });
+
+    if (healed.length > 0) {
+      gameState.eventBus.emit(
+        new CardPerformedHealEvent(healed, this.amount, this.sourceCardID),
       );
-    } else {
-      // Emit overheal event if player was already at max health
+    }
+
+    const allOverhealed = [...overhealed, ...partialOverhealed];
+    if (allOverhealed.length > 0) {
       gameState.eventBus.emit(
         new PlayerOverhealedEvent(
-          this.targetPlayerID,
+          allOverhealed,
           this.amount,
           this.sourceCardID,
         ),
@@ -596,41 +630,44 @@ export class HealPlayerCommand implements Command {
   }
 
   toLogString(): string {
-    if (!this.sourceCardID) {
-      return `Healed ${playerName(this.targetPlayerID)} for ${this.amount} health`;
+    if (this.targetPlayerIDs.length === 1) {
+      return `Healed ${playerName(this.targetPlayerIDs[0])} for ${this.amount} health from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
     }
-
-    return `Healed ${playerName(this.targetPlayerID)} for ${this.amount} health from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+    return `Healed ${this.targetPlayerIDs.length} players for ${this.amount} health from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
 export class ApplyRegenCommand implements Command {
   constructor(
-    private targetPlayerID: number,
+    private targetPlayerIDs: number[],
     private amount: number,
     private sourceCardID: CardLocationID,
   ) {}
 
   execute(gameState: GameState): void {
-    new ModifyPlayerAttributeCommand(
-      this.targetPlayerID,
-      "HealthRegen",
-      "add",
-      this.amount,
-    ).execute(gameState);
+    this.targetPlayerIDs.forEach((targetPlayerID) => {
+      new ModifyPlayerAttributeCommand(
+        targetPlayerID,
+        "HealthRegen",
+        "add",
+        this.amount,
+      ).execute(gameState);
+    });
 
-    // Emit event
     gameState.eventBus.emit(
       new CardPerformedRegenEvent(
         this.sourceCardID,
-        this.targetPlayerID,
+        this.targetPlayerIDs,
         this.amount,
       ),
     );
   }
 
   toLogString(): string {
-    return `Applied ${this.amount} regen to ${playerName(this.targetPlayerID)} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+    if (this.targetPlayerIDs.length === 1) {
+      return `Applied ${this.amount} regen to ${playerName(this.targetPlayerIDs[0])} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+    }
+    return `Applied ${this.amount} regen to ${this.targetPlayerIDs.length} players from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
@@ -655,23 +692,24 @@ export class FireCardCommand implements Command {
  */
 export class ApplyShieldCommand implements Command {
   constructor(
-    private targetPlayerID: number,
+    private targetPlayerIDs: number[],
     private amount: number,
     private sourceCardID: CardLocationID,
   ) {}
 
   execute(gameState: GameState): void {
-    new ModifyPlayerAttributeCommand(
-      this.targetPlayerID,
-      "Shield",
-      "add",
-      this.amount,
-    ).execute(gameState);
+    this.targetPlayerIDs.forEach((targetPlayerID) => {
+      new ModifyPlayerAttributeCommand(
+        targetPlayerID,
+        "Shield",
+        "add",
+        this.amount,
+      ).execute(gameState);
+    });
 
-    // Emit shield applied event
     gameState.eventBus.emit(
       new CardPerformedShieldEvent(
-        this.targetPlayerID,
+        this.targetPlayerIDs,
         this.sourceCardID,
         this.amount,
       ),
@@ -679,11 +717,10 @@ export class ApplyShieldCommand implements Command {
   }
 
   toLogString(): string {
-    if (!this.sourceCardID) {
-      return `Applied ${this.amount} shield to ${playerName(this.targetPlayerID)}`;
+    if (this.targetPlayerIDs.length === 1) {
+      return `Applied ${this.amount} shield to ${playerName(this.targetPlayerIDs[0])} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
     }
-
-    return `Applied ${this.amount} shield to ${playerName(this.targetPlayerID)} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+    return `Applied ${this.amount} shield to ${this.targetPlayerIDs.length} players from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
@@ -692,24 +729,24 @@ export class ApplyShieldCommand implements Command {
  */
 export class ApplyPoisonCommand implements Command {
   constructor(
-    private targetPlayerID: number,
+    private targetPlayerIDs: number[],
     private amount: number,
     private sourceCardID: CardLocationID,
   ) {}
 
   execute(gameState: GameState): void {
-    // Use add operation instead of calculating and setting
-    new ModifyPlayerAttributeCommand(
-      this.targetPlayerID,
-      "Poison",
-      "add",
-      this.amount,
-    ).execute(gameState);
+    this.targetPlayerIDs.forEach((targetPlayerID) => {
+      new ModifyPlayerAttributeCommand(
+        targetPlayerID,
+        "Poison",
+        "add",
+        this.amount,
+      ).execute(gameState);
+    });
 
-    // Emit poison applied event
     gameState.eventBus.emit(
       new CardPerformedPoisonEvent(
-        this.targetPlayerID,
+        this.targetPlayerIDs,
         this.sourceCardID,
         this.amount,
       ),
@@ -717,11 +754,10 @@ export class ApplyPoisonCommand implements Command {
   }
 
   toLogString(): string {
-    if (!this.sourceCardID) {
-      return `Applied ${this.amount} poison to ${playerName(this.targetPlayerID)}`;
+    if (this.targetPlayerIDs.length === 1) {
+      return `Applied ${this.amount} poison to ${playerName(this.targetPlayerIDs[0])} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
     }
-
-    return `Applied ${this.amount} poison to ${playerName(this.targetPlayerID)} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+    return `Applied ${this.amount} poison to ${this.targetPlayerIDs.length} players from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
@@ -730,23 +766,24 @@ export class ApplyPoisonCommand implements Command {
  */
 export class ApplyBurnCommand implements Command {
   constructor(
-    private targetPlayerID: number,
+    private targetPlayerIDs: number[],
     private amount: number,
     private sourceCardID: CardLocationID,
   ) {}
 
   execute(gameState: GameState): void {
-    new ModifyPlayerAttributeCommand(
-      this.targetPlayerID,
-      "Burn",
-      "add",
-      this.amount,
-    ).execute(gameState);
+    this.targetPlayerIDs.forEach((targetPlayerID) => {
+      new ModifyPlayerAttributeCommand(
+        targetPlayerID,
+        "Burn",
+        "add",
+        this.amount,
+      ).execute(gameState);
+    });
 
-    // Emit burn applied event
     gameState.eventBus.emit(
       new CardPerformedBurnEvent(
-        this.targetPlayerID,
+        this.targetPlayerIDs,
         this.sourceCardID,
         this.amount,
       ),
@@ -754,11 +791,10 @@ export class ApplyBurnCommand implements Command {
   }
 
   toLogString(): string {
-    if (!this.sourceCardID) {
-      return `Applied ${this.amount} burn to ${playerName(this.targetPlayerID)}`;
+    if (this.targetPlayerIDs.length === 1) {
+      return `Applied ${this.amount} burn to ${playerName(this.targetPlayerIDs[0])} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
     }
-
-    return `Applied ${this.amount} burn to ${playerName(this.targetPlayerID)} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+    return `Applied ${this.amount} burn to ${this.targetPlayerIDs.length} players from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
@@ -768,87 +804,105 @@ export class ApplyBurnCommand implements Command {
 export class ApplyHasteCommand implements Command {
   constructor(
     private sourceCardID: CardLocationID,
-    private targetCardID: CardLocationID,
+    private targetCardIDs: CardLocationID[],
     private amount: number,
   ) {}
 
   execute(gameState: GameState): void {
-    new ModifyCardAttributeCommand(
-      this.targetCardID,
-      AttributeType.Haste,
-      this.amount,
-      "add",
-    ).execute(gameState);
+    this.targetCardIDs.forEach((targetCardID) => {
+      new ModifyCardAttributeCommand(
+        targetCardID,
+        AttributeType.Haste,
+        this.amount,
+        "add",
+      ).execute(gameState);
+    });
 
     gameState.eventBus.emit(
       new CardPerformedHasteEvent(
-        this.targetCardID,
         this.sourceCardID,
+        this.targetCardIDs,
         this.amount,
       ),
     );
   }
 
   toLogString(): string {
-    return `Applied ${this.amount} haste to ${playerName(this.targetCardID.playerIdx)}'s card ${this.targetCardID.cardIdx} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+    if (this.targetCardIDs.length === 1) {
+      const targetCard = this.targetCardIDs[0];
+      return `Applied ${this.amount} haste to ${playerName(targetCard.playerIdx)}'s card ${targetCard.cardIdx} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+    }
+    return `Applied ${this.amount} haste to ${this.targetCardIDs.length} cards from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
 export class ApplySlowCommand implements Command {
   constructor(
     private sourceCardID: CardLocationID,
-    private targetCardID: CardLocationID,
+    private targetCardIDs: CardLocationID[],
     private amount: number,
   ) {}
 
   execute(gameState: GameState): void {
-    new ModifyCardAttributeCommand(
-      this.targetCardID,
-      AttributeType.Slow,
-      this.amount,
-      "add",
-    ).execute(gameState);
+    this.targetCardIDs.forEach((targetCardID) => {
+      new ModifyCardAttributeCommand(
+        targetCardID,
+        AttributeType.Slow,
+        this.amount,
+        "add",
+      ).execute(gameState);
+    });
 
     gameState.eventBus.emit(
       new CardPerformedSlowEvent(
         this.sourceCardID,
-        this.targetCardID,
+        this.targetCardIDs,
         this.amount,
       ),
     );
   }
 
   toLogString(): string {
-    return `Applied ${this.amount} slow to ${playerName(this.targetCardID.playerIdx)}'s card ${this.targetCardID.cardIdx} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+    if (this.targetCardIDs.length === 1) {
+      const targetCard = this.targetCardIDs[0];
+      return `Applied ${this.amount} slow to ${playerName(targetCard.playerIdx)}'s card ${targetCard.cardIdx} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+    }
+    return `Applied ${this.amount} slow to ${this.targetCardIDs.length} cards from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
 export class ApplyFreezeCommand implements Command {
   constructor(
     private sourceCardID: CardLocationID,
-    private targetCardID: CardLocationID,
+    private targetCardIDs: CardLocationID[],
     private amount: number,
   ) {}
 
   execute(gameState: GameState): void {
-    new ModifyCardAttributeCommand(
-      this.targetCardID,
-      AttributeType.Freeze,
-      this.amount,
-      "add",
-    ).execute(gameState);
+    this.targetCardIDs.forEach((targetCardID) => {
+      new ModifyCardAttributeCommand(
+        targetCardID,
+        AttributeType.Freeze,
+        this.amount,
+        "add",
+      ).execute(gameState);
+    });
 
     gameState.eventBus.emit(
       new CardPerformedFreezeEvent(
         this.sourceCardID,
-        this.targetCardID,
+        this.targetCardIDs,
         this.amount,
       ),
     );
   }
 
   toLogString(): string {
-    return `Applied ${this.amount} freeze to ${playerName(this.targetCardID.playerIdx)}'s card ${this.targetCardID.cardIdx} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+    if (this.targetCardIDs.length === 1) {
+      const targetCard = this.targetCardIDs[0];
+      return `Applied ${this.amount} freeze to ${playerName(targetCard.playerIdx)}'s card ${targetCard.cardIdx} from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+    }
+    return `Applied ${this.amount} freeze to ${this.targetCardIDs.length} cards from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
@@ -976,62 +1030,89 @@ export class ApplyAttributeDraftsCommand implements Command {
 }
 
 /**
- * Command to disable a card
+ * Command to disable cards
  */
 export class DisableCardCommand implements Command {
-  constructor(private locationID: CardLocationID) {}
+  constructor(private locationIDs: CardLocationID[]) {}
 
   execute(gameState: GameState): void {
-    const { playerIdx, cardIdx } = this.locationID;
-    gameState.players[playerIdx].board[cardIdx].isDisabled = true;
+    this.locationIDs.forEach((locationID) => {
+      const { playerIdx, cardIdx } = locationID;
+      gameState.players[playerIdx].board[cardIdx].isDisabled = true;
+    });
+
+    gameState.eventBus.emit(new CardDisabledEvent(this.locationIDs));
   }
 
   toLogString(): string {
-    return `Disabled ${playerName(this.locationID.playerIdx)}'s card ${this.locationID.cardIdx}`;
+    if (this.locationIDs.length === 1) {
+      const locationID = this.locationIDs[0];
+      return `Disabled ${playerName(locationID.playerIdx)}'s card ${locationID.cardIdx}`;
+    }
+    return `Disabled ${this.locationIDs.length} cards`;
   }
 }
 
 /**
- * Command to reload a card's ammo
+ * Command to reload cards' ammo
  */
 export class ReloadCardCommand implements Command {
   constructor(
     private sourceCardID: CardLocationID,
-    private targetCardID: CardLocationID,
+    private targetCardIDs: CardLocationID[],
     private reloadAmount: number,
   ) {}
 
   execute(gameState: GameState): void {
-    const currentAmmo = getCardAttribute(
-      gameState,
-      this.targetCardID,
-      AttributeType.Ammo,
-    );
-    const ammoMax = getCardAttribute(
-      gameState,
-      this.targetCardID,
-      AttributeType.AmmoMax,
-    );
+    const reloadedCards: CardLocationID[] = [];
 
-    // If the card has no ammo or ammo max, don't do anything
-    if (currentAmmo === undefined || ammoMax === undefined) {
-      return;
-    }
-
-    // Only reload if we're not at max ammo already
-    if (currentAmmo < ammoMax) {
-      // Use add operation instead of calculating and setting
-      new ModifyCardAttributeCommand(
-        this.targetCardID,
+    this.targetCardIDs.forEach((targetCardID) => {
+      const currentAmmo = getCardAttribute(
+        gameState,
+        targetCardID,
         AttributeType.Ammo,
-        this.reloadAmount,
-        "add",
-      ).execute(gameState);
+      );
+      const ammoMax = getCardAttribute(
+        gameState,
+        targetCardID,
+        AttributeType.AmmoMax,
+      );
+
+      // If the card has no ammo or ammo max, don't do anything
+      if (currentAmmo === undefined || ammoMax === undefined) {
+        return;
+      }
+
+      // Only reload if we're not at max ammo already
+      if (currentAmmo < ammoMax) {
+        // Use add operation instead of calculating and setting
+        new ModifyCardAttributeCommand(
+          targetCardID,
+          AttributeType.Ammo,
+          this.reloadAmount,
+          "add",
+        ).execute(gameState);
+
+        reloadedCards.push(targetCardID);
+      }
+    });
+
+    if (reloadedCards.length > 0) {
+      gameState.eventBus.emit(
+        new CardPerformedReloadEvent(this.sourceCardID, reloadedCards),
+      );
     }
+    reloadedCards.forEach((targetCardID) => {
+      gameState.eventBus.emit(new CardReloadedEvent(targetCardID));
+    });
   }
 
   toLogString(): string {
-    return `Reloaded ${playerName(this.targetCardID.playerIdx)}'s card ${this.targetCardID.cardIdx} with ${this.reloadAmount} ammo`;
+    if (this.targetCardIDs.length === 1) {
+      const targetCard = this.targetCardIDs[0];
+      return `Reloaded ${playerName(targetCard.playerIdx)}'s card ${targetCard.cardIdx} with ${this.reloadAmount} ammo`;
+    }
+    return `Reloaded ${this.targetCardIDs.length} cards with ${this.reloadAmount} ammo`;
   }
 }
 
@@ -1041,42 +1122,48 @@ export class ReloadCardCommand implements Command {
 export class ChargeCardCommand implements Command {
   constructor(
     private sourceCardID: CardLocationID,
-    private targetCardID: CardLocationID,
+    private targetCardIDs: CardLocationID[],
     private chargeAmount: number,
   ) {}
 
   execute(gameState: GameState): void {
-    const cooldownMax = getCardAttribute(
-      gameState,
-      this.targetCardID,
-      AttributeType.CooldownMax,
-    );
+    this.targetCardIDs.forEach((targetCardID) => {
+      const cooldownMax = getCardAttribute(
+        gameState,
+        targetCardID,
+        AttributeType.CooldownMax,
+      );
 
-    // If the card has no cooldown max, don't do anything
-    if (cooldownMax === undefined) {
-      return;
-    }
+      // If the card has no cooldown max, don't do anything
+      if (cooldownMax === undefined) {
+        return;
+      }
 
-    if (this.chargeAmount !== 0) {
-      new ModifyCardAttributeCommand(
-        this.targetCardID,
-        "tick",
-        this.chargeAmount,
-        "add",
-      ).execute(gameState);
-    }
+      if (this.chargeAmount !== 0) {
+        new ModifyCardAttributeCommand(
+          targetCardID,
+          "tick",
+          this.chargeAmount,
+          "add",
+        ).execute(gameState);
+      }
+    });
 
     gameState.eventBus.emit(
       new CardPerformedChargeEvent(
-        this.targetCardID,
         this.sourceCardID,
+        this.targetCardIDs,
         this.chargeAmount,
       ),
     );
   }
 
   toLogString(): string {
-    return `Charged ${playerName(this.targetCardID.playerIdx)}'s card ${this.targetCardID.cardIdx} by ${this.chargeAmount}`;
+    if (this.targetCardIDs.length === 1) {
+      const targetCard = this.targetCardIDs[0];
+      return `Charged ${playerName(targetCard.playerIdx)}'s card ${targetCard.cardIdx} by ${this.chargeAmount}`;
+    }
+    return `Charged ${this.targetCardIDs.length} cards by ${this.chargeAmount}`;
   }
 }
 

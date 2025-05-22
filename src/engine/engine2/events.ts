@@ -9,6 +9,43 @@ export abstract class GameEvent {
   abstract readonly type: string;
   abstract getDescription(): string;
 }
+
+/**
+ * Base class for events targeting a single player
+ */
+export abstract class SingleTargetPlayerEvent extends GameEvent {
+  constructor(public readonly targetPlayerIdx: number) {
+    super();
+  }
+}
+
+/**
+ * Base class for events targeting multiple players
+ */
+export abstract class MultipleTargetPlayerEvent extends GameEvent {
+  constructor(public readonly targetPlayerIdxs: number[]) {
+    super();
+  }
+}
+
+/**
+ * Base class for events targeting a single card
+ */
+export abstract class SingleTargetCardEvent extends GameEvent {
+  constructor(public readonly targetCardID: CardLocationID) {
+    super();
+  }
+}
+
+/**
+ * Base class for events targeting multiple cards
+ */
+export abstract class MultipleTargetCardEvent extends GameEvent {
+  constructor(public readonly targetCardIDs: CardLocationID[]) {
+    super();
+  }
+}
+
 /**
  * Game Events
  */
@@ -99,7 +136,7 @@ export class CardItemUsedEvent extends GameEvent {
 export class CardAttributeChangedEvent extends GameEvent {
   readonly type = "card:attributeChanged";
   constructor(
-    public readonly modifiedLocationID: CardLocationID,
+    public readonly targetCardID: CardLocationID,
     public readonly attribute: AttributeType | "tick",
     public readonly oldValue: number,
     public readonly newValue: number,
@@ -108,7 +145,7 @@ export class CardAttributeChangedEvent extends GameEvent {
   }
 
   getDescription(): string {
-    return `${playerName(this.modifiedLocationID.playerIdx)}'s card ${this.modifiedLocationID.cardIdx} ${this.attribute} changed from ${this.oldValue} to ${this.newValue}`;
+    return `${playerName(this.targetCardID.playerIdx)}'s card ${this.targetCardID.cardIdx} ${this.attribute} changed from ${this.oldValue} to ${this.newValue}`;
   }
 }
 
@@ -140,75 +177,90 @@ export class CardRemovedEvent extends GameEvent {
  * Player Events
  */
 
-export class PlayerDamagedEvent extends GameEvent {
+export class PlayerDamagedEvent extends MultipleTargetPlayerEvent {
   readonly type = "player:damaged";
   constructor(
-    public readonly playerIdx: number,
+    targetPlayerIdxs: number[],
     public readonly amount: number,
     public readonly sourceCardID: CardLocationID | null,
   ) {
-    super();
+    super(targetPlayerIdxs);
   }
 
   getDescription(): string {
-    if (!this.sourceCardID) {
-      return `${playerName(this.playerIdx)} took ${this.amount} damage`;
+    if (this.targetPlayerIdxs.length === 0) return `No players were damaged`;
+
+    if (this.targetPlayerIdxs.length === 1) {
+      if (!this.sourceCardID) {
+        return `${playerName(this.targetPlayerIdxs[0])} took ${this.amount} damage`;
+      }
+      return `${playerName(this.targetPlayerIdxs[0])} took ${this.amount} damage from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
     }
-    return `${playerName(this.playerIdx)} took ${this.amount} damage from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+
+    if (!this.sourceCardID) {
+      return `${this.targetPlayerIdxs.length} players took ${this.amount} damage`;
+    }
+    return `${this.targetPlayerIdxs.length} players took ${this.amount} damage from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
-export class CardPerformedHealEvent extends GameEvent {
+export class CardPerformedHealEvent extends MultipleTargetPlayerEvent {
   readonly type = "player:healed";
   constructor(
-    public readonly targetPlayerIdx: number,
+    targetPlayerIdx: number[],
     public readonly amount: number,
     public readonly sourceCardID: CardLocationID,
   ) {
-    super();
+    super(targetPlayerIdx);
   }
 
   getDescription(): string {
-    if (!this.sourceCardID) {
-      return `${playerName(this.targetPlayerIdx)} was healed for ${this.amount}`;
+    if (this.targetPlayerIdxs.length === 0) return `No players were healed`;
+
+    if (this.targetPlayerIdxs.length === 1) {
+      return `${playerName(this.targetPlayerIdxs[0])} was healed for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
     }
-    return `${playerName(this.targetPlayerIdx)} was healed for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+
+    return `${this.targetPlayerIdxs.length} players were healed for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
-export class PlayerOverhealedEvent extends GameEvent {
+export class PlayerOverhealedEvent extends MultipleTargetPlayerEvent {
   readonly type = "player:overhealed";
   constructor(
-    public readonly playerIdx: number,
+    playerIdxs: number[],
     public readonly amount: number,
     public readonly sourceCardID: CardLocationID,
   ) {
-    super();
+    super(playerIdxs);
   }
 
   getDescription(): string {
-    if (!this.sourceCardID) {
-      return `${playerName(this.playerIdx)} was overhealed for ${this.amount}`;
+    if (this.targetPlayerIdxs.length === 0) return `No players were overhealed`;
+
+    if (this.targetPlayerIdxs.length === 1) {
+      return `${playerName(this.targetPlayerIdxs[0])} was overhealed for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
     }
-    return `${playerName(this.playerIdx)} was overhealed for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+
+    return `${this.targetPlayerIdxs.length} players were overhealed for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
-export class PlayerLifestealHealEvent extends GameEvent {
+export class PlayerLifestealHealEvent extends SingleTargetPlayerEvent {
   readonly type = "player:lifestealheal";
   constructor(
-    public readonly playerIdx: number,
+    targetPlayerIdx: number,
     public readonly amount: number,
     public readonly sourceCardID: CardLocationID | null,
   ) {
-    super();
+    super(targetPlayerIdx);
   }
 
   getDescription(): string {
     if (!this.sourceCardID) {
-      return `${playerName(this.playerIdx)} healed ${this.amount} from lifesteal`;
+      return `${playerName(this.targetPlayerIdx)} healed ${this.amount} from lifesteal`;
     }
-    return `${playerName(this.playerIdx)} healed ${this.amount} from lifesteal via ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+    return `${playerName(this.targetPlayerIdx)} healed ${this.amount} from lifesteal via ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
@@ -244,157 +296,208 @@ export class PlayerAttributeChangeHandledEvent extends GameEvent {
   }
 }
 
-export class PlayerDiedEvent extends GameEvent {
+export class PlayerDiedEvent extends SingleTargetPlayerEvent {
   readonly type = "player:died";
-  constructor(public readonly playerIdx: number) {
-    super();
+  constructor(targetPlayerIdx: number) {
+    super(targetPlayerIdx);
   }
 
   getDescription(): string {
-    return `${playerName(this.playerIdx)} died`;
+    return `${playerName(this.targetPlayerIdx)} died`;
   }
 }
 
-export class CardPerformedShieldEvent extends GameEvent {
+export class CardPerformedShieldEvent extends MultipleTargetPlayerEvent {
   readonly type = "player:shieldApplied";
   constructor(
-    public readonly targetPlayerIdx: number,
+    targetPlayerIdxs: number[],
     public readonly sourceCardID: CardLocationID,
     public readonly amount: number,
   ) {
-    super();
+    super(targetPlayerIdxs);
   }
 
   getDescription(): string {
-    if (!this.sourceCardID) {
-      return `${playerName(this.targetPlayerIdx)} gained ${this.amount} shield`;
+    if (this.targetPlayerIdxs.length === 0) return `No players gained shield`;
+
+    if (this.targetPlayerIdxs.length === 1) {
+      return `${playerName(this.targetPlayerIdxs[0])} gained ${this.amount} shield from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
     }
-    return `${playerName(this.targetPlayerIdx)} gained ${this.amount} shield from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+
+    return `${this.targetPlayerIdxs.length} players gained ${this.amount} shield from ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
-export class CardPerformedPoisonEvent extends GameEvent {
+export class CardPerformedPoisonEvent extends MultipleTargetPlayerEvent {
   readonly type = "card:performedPoison";
   constructor(
-    public readonly targetPlayerIdx: number,
+    targetPlayerIdxs: number[],
     public readonly sourceCardID: CardLocationID,
     public readonly amount: number,
   ) {
-    super();
+    super(targetPlayerIdxs);
   }
 
   getDescription(): string {
-    if (!this.sourceCardID) {
-      return `${playerName(this.targetPlayerIdx)} was poisoned for ${this.amount}`;
+    if (this.targetPlayerIdxs.length === 0) return `No players were poisoned`;
+
+    if (this.targetPlayerIdxs.length === 1) {
+      return `${playerName(this.targetPlayerIdxs[0])} was poisoned for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
     }
-    return `${playerName(this.targetPlayerIdx)} was poisoned for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+
+    return `${this.targetPlayerIdxs.length} players were poisoned for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
-export class CardPerformedBurnEvent extends GameEvent {
+export class CardPerformedBurnEvent extends MultipleTargetPlayerEvent {
   readonly type = "card:performedBurn";
   constructor(
-    public readonly targetPlayerIdx: number,
+    targetPlayerIdxs: number[],
     public readonly sourceCardID: CardLocationID,
     public readonly amount: number,
   ) {
-    super();
+    super(targetPlayerIdxs);
   }
 
   getDescription(): string {
-    if (!this.sourceCardID) {
-      return `${playerName(this.targetPlayerIdx)} was burned for ${this.amount}`;
+    if (this.targetPlayerIdxs.length === 0) return `No players were burned`;
+
+    if (this.targetPlayerIdxs.length === 1) {
+      return `${playerName(this.targetPlayerIdxs[0])} was burned for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
     }
-    return `${playerName(this.targetPlayerIdx)} was burned for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
+
+    return `${this.targetPlayerIdxs.length} players were burned for ${this.amount} by ${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx}`;
   }
 }
 
-export class CardPerformedDestructionEvent extends GameEvent {
+export class CardPerformedDestructionEvent extends MultipleTargetCardEvent {
   readonly type = "card:performedDestruction";
   constructor(
     public readonly sourceCardID: CardLocationID,
-    public readonly destroyedCardID: CardLocationID,
+    destroyedCardIDs: CardLocationID[],
   ) {
-    super();
+    super(destroyedCardIDs);
   }
 
   getDescription(): string {
-    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} destroyed ${playerName(this.destroyedCardID.playerIdx)}'s card ${this.destroyedCardID.cardIdx}`;
+    if (this.targetCardIDs.length === 0) return `No cards were destroyed`;
+
+    if (this.targetCardIDs.length === 1) {
+      const destroyedCard = this.targetCardIDs[0];
+      return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} destroyed ${playerName(destroyedCard.playerIdx)}'s card ${destroyedCard.cardIdx}`;
+    }
+
+    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} destroyed ${this.targetCardIDs.length} cards`;
   }
 }
 
-export class CardPerformedFreezeEvent extends GameEvent {
+export class CardPerformedFreezeEvent extends MultipleTargetCardEvent {
   readonly type = "card:performedFreeze";
   constructor(
     public readonly sourceCardID: CardLocationID,
-    public readonly frozenCardID: CardLocationID,
+    frozenCardIDs: CardLocationID[],
     public readonly amount: number,
   ) {
-    super();
+    super(frozenCardIDs);
   }
 
   getDescription(): string {
-    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} froze ${playerName(this.frozenCardID.playerIdx)}'s card ${this.frozenCardID.cardIdx}`;
+    if (this.targetCardIDs.length === 0) return `No cards were frozen`;
+
+    if (this.targetCardIDs.length === 1) {
+      const frozenCard = this.targetCardIDs[0];
+      return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} froze ${playerName(frozenCard.playerIdx)}'s card ${frozenCard.cardIdx}`;
+    }
+
+    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} froze ${this.targetCardIDs.length} cards`;
   }
 }
 
-export class CardPerformedHasteEvent extends GameEvent {
+export class CardPerformedHasteEvent extends MultipleTargetCardEvent {
   readonly type = "card:performedHaste";
   constructor(
     public readonly sourceCardID: CardLocationID,
-    public readonly hastenedCardID: CardLocationID,
+    hastenedCardIDs: CardLocationID[],
     public readonly amount: number,
   ) {
-    super();
+    super(hastenedCardIDs);
   }
 
   getDescription(): string {
-    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} hastened ${playerName(this.hastenedCardID.playerIdx)}'s card ${this.hastenedCardID.cardIdx}`;
+    if (this.targetCardIDs.length === 0) return `No cards were hastened`;
+
+    if (this.targetCardIDs.length === 1) {
+      const hastenedCard = this.targetCardIDs[0];
+      return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} hastened ${playerName(hastenedCard.playerIdx)}'s card ${hastenedCard.cardIdx}`;
+    }
+
+    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} hastened ${this.targetCardIDs.length} cards`;
   }
 }
 
-export class CardPerformedChargeEvent extends GameEvent {
+export class CardPerformedChargeEvent extends MultipleTargetCardEvent {
   readonly type = "card:performedCharge";
   constructor(
     public readonly sourceCardID: CardLocationID,
-    public readonly chargedCardID: CardLocationID,
+    chargedCardIDs: CardLocationID[],
     public readonly amount: number,
   ) {
-    super();
+    super(chargedCardIDs);
   }
 
   getDescription(): string {
-    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} charged ${playerName(this.chargedCardID.playerIdx)}'s card ${this.chargedCardID.cardIdx}`;
+    if (this.targetCardIDs.length === 0) return `No cards were charged`;
+
+    if (this.targetCardIDs.length === 1) {
+      const chargedCard = this.targetCardIDs[0];
+      return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} charged ${playerName(chargedCard.playerIdx)}'s card ${chargedCard.cardIdx}`;
+    }
+
+    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} charged ${this.targetCardIDs.length} cards`;
   }
 }
 
-export class CardPerformedSlowEvent extends GameEvent {
+export class CardPerformedSlowEvent extends MultipleTargetCardEvent {
   readonly type = "card:performedSlow";
   constructor(
     public readonly sourceCardID: CardLocationID,
-    public readonly slowedCardID: CardLocationID,
+    slowedCardIDs: CardLocationID[],
     public readonly amount: number,
   ) {
-    super();
+    super(slowedCardIDs);
   }
 
   getDescription(): string {
-    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} slowed ${playerName(this.slowedCardID.playerIdx)}'s card ${this.slowedCardID.cardIdx}`;
+    if (this.targetCardIDs.length === 0) return `No cards were slowed`;
+
+    if (this.targetCardIDs.length === 1) {
+      const slowedCard = this.targetCardIDs[0];
+      return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} slowed ${playerName(slowedCard.playerIdx)}'s card ${slowedCard.cardIdx}`;
+    }
+
+    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} slowed ${this.targetCardIDs.length} cards`;
   }
 }
 
-export class CardPerformedRegenEvent extends GameEvent {
+export class CardPerformedRegenEvent extends MultipleTargetPlayerEvent {
   readonly type = "card:performedRegen";
   constructor(
     public readonly sourceCardID: CardLocationID,
-    public readonly targetPlayerIdx: number,
+    targetPlayerIdxs: number[],
     public readonly amount: number,
   ) {
-    super();
+    super(targetPlayerIdxs);
   }
 
   getDescription(): string {
-    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} gave ${playerName(this.targetPlayerIdx)} ${this.amount} health regeneration`;
+    if (this.targetPlayerIdxs.length === 0)
+      return `No players gained regeneration`;
+
+    if (this.targetPlayerIdxs.length === 1) {
+      return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} gave ${playerName(this.targetPlayerIdxs[0])} ${this.amount} health regeneration`;
+    }
+
+    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} gave ${this.targetPlayerIdxs.length} players ${this.amount} health regeneration`;
   }
 }
 
@@ -406,5 +509,44 @@ export class CardReloadedEvent extends GameEvent {
 
   getDescription(): string {
     return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} reloaded`;
+  }
+}
+
+export class CardPerformedReloadEvent extends MultipleTargetCardEvent {
+  readonly type = "card:performedReload";
+  constructor(
+    public readonly sourceCardID: CardLocationID,
+    targetCardIDs: CardLocationID[],
+  ) {
+    super(targetCardIDs);
+  }
+
+  getDescription(): string {
+    if (this.targetCardIDs.length === 0) return `No cards were reloaded`;
+
+    if (this.targetCardIDs.length === 1) {
+      const targetCard = this.targetCardIDs[0];
+      return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} reloaded ${playerName(targetCard.playerIdx)}'s card ${targetCard.cardIdx}`;
+    }
+
+    return `${playerName(this.sourceCardID.playerIdx)}'s card ${this.sourceCardID.cardIdx} reloaded ${this.targetCardIDs.length} cards`;
+  }
+}
+
+export class CardDisabledEvent extends MultipleTargetCardEvent {
+  readonly type = "card:disabled";
+  constructor(disabledCardIDs: CardLocationID[]) {
+    super(disabledCardIDs);
+  }
+
+  getDescription(): string {
+    if (this.targetCardIDs.length === 0) return `No cards were disabled`;
+
+    if (this.targetCardIDs.length === 1) {
+      const disabledCard = this.targetCardIDs[0];
+      return `${playerName(disabledCard.playerIdx)}'s card ${disabledCard.cardIdx} was disabled`;
+    }
+
+    return `${this.targetCardIDs.length} cards were disabled`;
   }
 }
