@@ -481,7 +481,7 @@ function processCard(
   }
 
   // Skip cards without cooldown
-  if (card.CooldownMax === undefined) {
+  if (card.CooldownMax === undefined || card.CooldownMax === 0) {
     return false;
   }
 
