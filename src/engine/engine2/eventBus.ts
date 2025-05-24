@@ -390,26 +390,39 @@ export function processBurn(gameState: GameState): void {
   gameState.players.forEach((player, playerID) => {
     const burn = getPlayerAttribute(gameState, playerID, "Burn");
     if (burn > 0) {
-      const burnDamage = burn / 2;
+      let burnDamage = burn;
 
-      // Log specific player burn damage
+      // If player has shield, shield counts as 2x the health / halves burn damage
+      const shield = getPlayerAttribute(gameState, playerID, "Shield");
+      const nextShield = Math.max(0, shield - burnDamage / 2);
+      const shieldDiff = shield - nextShield;
+
+      if (nextShield > 0) {
+        new Commands.ModifyPlayerAttributeCommand(
+          playerID,
+          "Shield",
+          "subtract",
+          shieldDiff,
+        ).execute(gameState);
+      } else {
+        burnDamage = burnDamage - shield * 2;
+        new Commands.ModifyPlayerAttributeCommand(
+          playerID,
+          "Shield",
+          "subtract",
+          shield,
+        ).execute(gameState);
+        new Commands.ModifyPlayerAttributeCommand(
+          playerID,
+          "Health",
+          "subtract",
+          burnDamage,
+        ).execute(gameState);
+      }
+      // Log burn damage
       gameState.eventBus.addCommandToLog(
         new Commands.SystemCommand(
-          `Player ${playerID} takes ${burnDamage} burn damage`,
-        ),
-      );
-
-      // Apply burn damage
-      new Commands.DamagePlayerCommand(
-        [playerID],
-        burnDamage,
-        null, // System-caused damage
-      ).execute(gameState);
-
-      // Reduce burn counter
-      gameState.eventBus.addCommandToLog(
-        new Commands.SystemCommand(
-          `Player ${playerID} burn reduced from ${burn} to ${burn - 1}`,
+          `Player ${playerID} burned for ${burnDamage}`,
         ),
       );
 
