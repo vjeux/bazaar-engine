@@ -11,10 +11,6 @@ const { Cards, Encounters } = await genCardsAndEncounters();
 describe("Encounters should not throw", () => {
   getFlattenedEncounters(Encounters).forEach((encounter) => {
     test(`Encounter "Day ${encounter.day} - ${encounter.name}" should not throw`, () => {
-      // force throw on Mr.Moo since it loops forever
-      if (encounter.name === "Mr. Moo") {
-        throw new Error("Mr.Moo force throw error as it seems to loop forever");
-      }
       const gameState = getInitialGameState2(Cards, Encounters, [
         { type: "monster", name: encounter.name, day: Number(encounter.day) },
 
