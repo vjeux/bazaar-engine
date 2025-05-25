@@ -179,6 +179,10 @@ export function getCardAttribute(
       | number
       | undefined;
 
+    if (value === undefined) {
+      return undefined;
+    }
+
     // Apply aura effects
     gameState.players.forEach((player, playerIdx) => {
       player.board.forEach((boardCard, cardIdx) => {

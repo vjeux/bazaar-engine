@@ -41,6 +41,9 @@ function _createBoardCardFromCard(
   baseAttributes.Slow = 0;
   baseAttributes.Freeze = 0;
 
+  // Default multicast to 1, can be overridden by the card
+  baseAttributes.Multicast = 1;
+
   // Combine with other required properties
   let attributes = {
     ...baseAttributes,
