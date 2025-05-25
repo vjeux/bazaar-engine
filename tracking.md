@@ -29,6 +29,8 @@
 - [ ] Rapid Injection System - Ahexa encounter infinite loop
 - [ ] Gunner skill - seems to slow down the Hooverbike Hooligan fight A LOT (to 1 sim per 3 seconds). Also other enemies have different stuff that also slows it down. 
 - [ ] MOD - attributes / overrides include aura effects.
+- [ ] Gorgon Noble petrifying gaze does not work.
+- [ ] Eccentirc Etherwright, Rigged skill does not work
 
 ```
  "2": {
