@@ -17,12 +17,18 @@
 - [x] Add card config, to set dmg, shield etc. Which can be boosted outside of combat.
 - [ ] Show storm damage UI
 - [ ] Damage numbers above health
+- [x] Fork [BazaarPlannerMod](https://github.com/oceanseth/BazaarPlannerMod) and implement open in bazaar-engine
+- [ ] Implement websocket connection for mod
+- [ ] Card summary similar to the game at the end of the round.
+- [ ] DPS, calculate and show. Maybe a query over all events to calculate? Need to remove storm damage.
 
 ## Bugs
 
 - [x] Adrenal converter gives double Regen, Triggers do nout account for if Subject and Target is same
 - [x] Z-Shield, no multicast
 - [ ] Rapid Injection System - Ahexa encounter infinite loop
+- [ ] Gunner skill - seems to slow down the Hooverbike Hooligan fight A LOT (to 1 sim per 3 seconds). Also other enemies have different stuff that also slows it down. 
+- [ ] MOD - attributes / overrides include aura effects.
 
 ```
  "2": {
