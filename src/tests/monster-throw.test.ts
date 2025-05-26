@@ -1,4 +1,4 @@
-import { run } from "@/engine/Engine";
+import { run } from "@/engine/engine2/engine2Adapter";
 import { getInitialGameState2 } from "@/engine/engine2/engine2Adapter";
 import {
   getFlattenedEncounters,

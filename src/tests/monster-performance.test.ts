@@ -1,4 +1,4 @@
-import { run } from "@/engine/Engine";
+import { run } from "@/engine/engine2/engine2Adapter";
 import { getInitialGameState2 } from "@/engine/engine2/engine2Adapter";
 import {
   getFlattenedEncounters,
@@ -18,7 +18,6 @@ describe("Monster Battle Performance", () => {
 
     // Run all monster battles and collect timing data
     flattenedEncounters.forEach((encounter) => {
-
       const gameState = getInitialGameState2(Cards, Encounters, [
         { type: "monster", name: encounter.name, day: Number(encounter.day) },
         {
