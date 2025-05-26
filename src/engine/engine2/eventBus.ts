@@ -600,7 +600,6 @@ function processCard(
 
   // Check if card should trigger
   if (updatedTick >= cooldownMax) {
-    const ammo = getCardAttribute(gameState, locationID, AttributeType.Ammo);
     const ammoMax = getCardAttribute(
       gameState,
       locationID,
