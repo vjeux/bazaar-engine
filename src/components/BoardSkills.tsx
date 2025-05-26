@@ -1,6 +1,9 @@
 "use client";
-import type { BoardCard, GameState } from "@/engine/Engine";
-import type { GameState as Engine2GameState } from "@/engine/engine2/engine2";
+import type {
+  BoardCard,
+  GameState as Engine2GameState,
+  GameState,
+} from "@/engine/engine2/engine2";
 import { BoardSkillElement } from "@/components/BoardSkillElement";
 
 interface BoardSkillsProps {

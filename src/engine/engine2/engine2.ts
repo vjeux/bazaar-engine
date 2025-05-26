@@ -1,4 +1,3 @@
-import { Multicast } from "../Engine";
 import {
   Ability,
   Card,
@@ -158,7 +157,6 @@ export interface GameState {
   step: number;
   isPlaying: boolean;
   players: Player[];
-  multicast: Multicast[];
   randomGen: RandomGenerator;
   winner?: "Player" | "Enemy" | "Draw";
   sandstormStartTick: number;
@@ -262,7 +260,6 @@ export class Engine2 {
         ...player,
         board: player.board.map((boardCard) => ({ ...boardCard })),
       })),
-      multicast: [...this.gameState.multicast],
     };
 
     return copy;

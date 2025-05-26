@@ -358,7 +358,6 @@ export function getInitialGameState(
         );
       }
     }),
-    multicast: [],
     randomGen: prand.xoroshiro128plus(randomSeed),
   };
 }

@@ -1,8 +1,7 @@
-import type { GameState } from "@/engine/Engine";
 import type { GameState as Engine2GameState } from "@/engine/engine2/engine2";
 
 interface GoldIncomeDisplayProps {
-  gameState: GameState | Engine2GameState;
+  gameState: Engine2GameState;
   playerId: number;
 }
 

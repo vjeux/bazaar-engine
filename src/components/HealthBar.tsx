@@ -1,9 +1,9 @@
 import { AttributeType } from "@/types/cardTypes.ts";
-import { getPlayerAttribute, type GameState } from "../engine/Engine.ts";
 import type { GameState as Engine2GameState } from "@/engine/engine2/engine2";
+import { getPlayerAttribute } from "@/engine/engine2/getAttribute";
 
 interface HealthBarProps {
-  gameState: GameState | Engine2GameState;
+  gameState: Engine2GameState;
   playerId: number;
 }
 
